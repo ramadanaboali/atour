@@ -1,0 +1,68 @@
+<?php
+
+return [
+    'plural' => 'Contact us',
+    'singular' => 'Connection',
+    'singular2' => 'Connection',
+    'empty' => 'No contacts',
+    'select' => 'Choose',
+    'name' => 'the name',
+    'email' => 'E-mail',
+    'subject' => 'the address',
+    'notes' => 'the message',
+    'select-type' => 'everyone',
+    'perPage' => 'Number of results per page',
+    'filter' => 'Find a connection',
+    'actions' => [
+        'list' => 'view all',
+        'show' => 'Show',
+        'create' => 'add contact',
+        'edit' => 'Edit',
+        'delete' => 'delete',
+        'restore' => 'Recovery',
+        'save' => 'save',
+        'filter' => 'Search',
+        'back' => 'Go back',
+    ],
+    'messages' => [
+        'created' => 'The connection has been added successfully.',
+        'updated' => 'The connection has been modified successfully.',
+        'deleted' => 'The connection has been successfully deleted.',
+        'restored' => 'The connection has been restored successfully.',
+        'deleted_bulk' => 'The selected units have been deleted successfully.',
+    ],
+    'attributes' => [
+        'name' => 'contact name',
+        '%name%' => 'contact name',
+    ],
+    'default' => [
+        'name' => 'contact name',
+    ],
+    'dialogs' => [
+        'delete' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to delete the connection?',
+            'confirm' => 'delete',
+            'cancel' => 'cancellation',
+        ],
+        'restore' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to restore the connection?',
+            'confirm' => 'Recovery',
+            'cancel' => 'cancellation',
+        ],
+    ],
+    'save' => 'save',
+    'options' => 'commands',
+    'created_at' => 'Date created',
+    'advanced_filter' => 'advanced search',
+    'search' => 'Search',
+    'cancel' => 'Cancel',
+    'delete_selected' => 'Clear selected',
+    'restore_trashed' => 'Return the selected one',
+    'description' => 'the description',
+    'reason' => 'Subject',
+    'problem' => 'Message',
+    'no_orders' => 'No results',
+
+];
