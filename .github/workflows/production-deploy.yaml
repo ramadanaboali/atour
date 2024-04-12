@@ -1,0 +1,73 @@
+name: Production Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-on-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Branch ${{ github.ref_name }}
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && git fetch origin ${{ github.ref_name }}
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Checkout to ${{ github.ref_name }}
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && git checkout ${{ github.ref_name }}
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Pull from ${{ github.ref_name }}
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && git pull origin ${{ github.ref_name }}
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Composer Install
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && composer install
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Migration
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && php artisan migrate --force
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Install Permissions
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && php artisan install:permissions
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}
+
+      - name: Clear Cache
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd public_html/test.mechanical-valley.com && php artisan optimize:clear
+          host: ${{ secrets.PRODUCTION_SERVER_IP }}
+          port: ${{ secrets.PRODUCTION_SERVER_PORT }}
+          username: ${{ secrets.PRODUCTION_SERVER_USER }}
+          privateKey: ${{ secrets.PRODUCTION_SERVER_KEY }}

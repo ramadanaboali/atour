@@ -1,0 +1,218 @@
+header {
+    box-shadow: 0 0 25px 0 rgb(0 0 0 / 10%);
+    background-color: #fffFFFff;
+    padding: 0 0 10.6px;
+}
+.btn{
+    padding: 8px 22px!important;
+    font-size: 16px!important;
+}
+.btn.btn-bordered {
+    border: 1px solid #5D42F2;
+    color: #5D42F2!important;
+    background: 0 0!important;
+}
+.btn.rounded{
+    border-radius: 100px!important;
+}
+.navbar-brand img{
+    height: 50px;
+}
+.bordered{
+    border: 2px solid #5D42F2;
+}
+.rounded{
+    border-radius: 15px !important;
+}
+.rounded-img{
+    border-radius: 15px 15px 0 0 !important;
+}
+.rounded-bottom{
+    border-radius: 0 0 15px 15px !important;
+}
+.font-30{ font-size: 30px;}
+.font-20{ font-size: 20px;}
+a{ text-decoration: none;}
+.btn-gradient-green{
+    background-image: linear-gradient(to right,#22002270 7%,#5D42F2 91%);
+    border: none;
+}
+.form-control{
+    font-size: 25px;
+    border-radius: 11px;
+}
+.user-stat{
+}
+.user-stat h1{
+    font-size: 5rem;
+}
+.user-stat i{
+    font-size: 3rem;
+    margin-top: 1.5rem;
+}
+.user-stat1 {
+    background: rgba(2,107,176,.1);
+}
+.user-stat1 h1 {
+    color: #026bb0;
+}
+.user-stat1 i {
+    color: rgba(2,107,176,.5);
+}
+.user-stat2 {
+    background: rgba(229,29,116,.1) !important;
+}
+.user-stat2 h1 {
+    color: #e51d74;
+}
+.user-stat2 i {
+    color: rgba(229,29,116,.5);
+}
+.user-stat3 {
+    background: rgba(120,181,23,.1);
+}
+.user-stat3 h1 {
+    color: #78b517;
+}
+.user-stat3 i {
+    color: rgba(120,181,23,.5);
+}
+.user-stat4 {
+    background: rgba(245,170,0,.1);
+}
+.user-stat4 h1 {
+    color: #f5aa00;
+}
+.user-stat4 i {
+    color: rgba(245,170,0,.5);
+}
+.bg-gray{
+    background: #f2f4f4;
+}
+.bg-primary,.btn-primary{ background: #7367F0 !important; }
+.font-14{ font-size: 14px !important; }
+.font-16{ font-size: 16px !important; }
+.navbar-light .navbar-nav .nav-link {
+    color: #000;
+    font-size: 17px;
+    font-weight: bold;
+}
+.shadow{box-shadow: 0 0 25px 0 rgb(0 0 0 / 10%);}
+.img-circle{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.video_container{
+    border-radius: 14px;
+    overflow: hidden;
+}
+.nav-tabs {
+    border: none;
+    margin-bottom: 15px;
+}
+.nav-tabs .nav-link {
+    color: #000 !important;
+    font-size: 25px;
+    border: none;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active,
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover{
+    border-bottom: 5px solid #5D42F2;
+}
+.accordion-item:first-of-type,
+.accordion-item:last-of-type .accordion-button.collapsed{
+    border-top-right-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+}
+.accordion-button {
+    font-size: 1.5rem;
+    background: transparent;
+}
+.accordion-item {
+    background-color: #f2f4f4;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: none;
+}
+.accordion-button::after {
+    width: 30px;
+    height: 30px;
+    color: #5D42F2;
+    border: 2px solid #5D42F2;
+    border-radius: 50%;
+    line-height: 30px;
+    text-align: center;
+    background-position: center;
+}
+.accordion-button:not(.collapsed) {
+    color: #000;
+    background-color: transparent;
+    box-shadow: none;
+}
+.accordion-body {
+    border-top: 2px solid #e9ecef;
+}
+.checkbox-label{
+    font-size: 22px;
+}
+.alert {
+    margin-top: 20px;
+    font-size: 22px;
+}
+.comment{
+    border: 2px solid #f2f4f4;
+}
+.comment .user_avatar img{
+    height: 40px !important;
+    width: 40px;
+}
+.mh-400{
+    min-height: 400px;
+}
+td,th {
+    font-size: 19px;
+}
+.font-17{ font-size: 17px !important;}
+.btn-circle{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    line-height: 50px;
+    text-align: center !important;
+    color: #FFF;
+    display: inline-block;
+    padding: 0 !important;
+}
+.btn.btn-xs {
+    padding: 1px 6px!important;
+    font-size: 14px!important;
+}
+.bg-red{
+    background: red !important;
+}
+.error{ color: red !important;}
+.profile .dropdown-toggle::after{
+    display: none;
+}
+.h1, h1 {
+    font-size: 2.1rem;
+}
+.fw-bold{ font-weight: bold; }
+.cursor-pointer{ cursor: pointer; }
+.detect_browser{
+    background: #FFF;
+    padding: 20px 0;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+@media only screen and (max-width: 600px) {
+    /*.detect_browser{*/
+    /*    display: block;*/
+    /*}*/
+}

@@ -1,0 +1,45 @@
+@font-face{
+    font-family:quest;
+    font-style:normal;
+    font-display:swap;
+    src:url(../webfonts/Questv1-Bold.otf) format('truetype');
+    font-weight:500
+}
+@font-face{
+    font-family:myriad_arabic_regular;
+    font-style:normal;
+    font-display:swap;
+    src:url(../webfonts/myriad_arabic_regular.otf) format('truetype');
+}
+@font-face{
+    font-family:myriad_arabic_bold;
+    font-style:normal;
+    font-display:swap;
+    src:url(../webfonts/myriad_arabic_bold.otf) format('truetype');
+}
+@font-face{
+    font-family:HelveticaNeue;
+    font-style:normal;
+    font-display:swap;
+    src:url(../webfonts/HelveticaNeueW23forSKY-Reg.woff) format('truetype');
+}
+body, a, h1, h2, h3, h4, h5, h6, input, button, select, .media-body, .text, tspan, textarea, text, .btn, input, textarea,
+li, p, label, .ps-widget--worktime p strong, .tp-caption, .heading-wrapper span {
+    font-family: 'HelveticaNeue', sans-serif !important;
+    letter-spacing: 0 !important;
+}
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    font-family: 'HelveticaNeue', sans-serif !important;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    font-family: 'HelveticaNeue', sans-serif !important;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    font-family: 'HelveticaNeue', sans-serif !important;
+}
+:-moz-placeholder { /* Firefox 18- */
+    font-family: 'HelveticaNeue', sans-serif !important;
+}
+input{
+    text-align: right;
+}
