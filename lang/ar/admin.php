@@ -146,6 +146,10 @@ return [
     'register' => 'انشاء حساب',
     'coupons' => 'الكوبونات',
     'countries' => 'الدول',
+    'jobs' => 'الوظائف',
+    'offers' => 'العروض',
+    'suppliers' => 'الموردين',
+    'clients' => 'العملاء',
 
 
 ];

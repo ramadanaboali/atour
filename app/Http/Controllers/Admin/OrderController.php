@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\OrderRequest;
+use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class CategoryController extends Controller
+class OrderController extends Controller
 {
-    private $viewIndex  = 'admin.pages.categories.index';
-    private $viewEdit   = 'admin.pages.categories.create_edit';
-    private $viewShow   = 'admin.pages.categories.show';
-    private $route      = 'admin.categories';
+    private $viewIndex  = 'admin.pages.orders.index';
+    private $viewEdit   = 'admin.pages.orders.create_edit';
+    private $viewShow   = 'admin.pages.orders.show';
+    private $route      = 'admin.orders';
 
     public function index(Request $request): View
     {
@@ -31,35 +31,35 @@ class CategoryController extends Controller
 
     public function edit($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = Order::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = Order::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = Order::findOrFail($id);
         if ($item->delete()) {
-            flash(__('categories.messages.deleted'))->success();
+            flash(__('orders.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(CategoryRequest $request): RedirectResponse
+    public function store(OrderRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('categories.messages.created'))->success();
+            flash(__('orders.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Category::distinct()
+       $data = Order::distinct()
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -81,37 +81,32 @@ class CategoryController extends Controller
     }
 
 
-    public function update(CategoryRequest $request, $id): RedirectResponse
+    public function update(OrderRequest $request, $id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = Order::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('categories.messages.updated'))->success();
+            flash(__('orders.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Category|null
+    protected function processForm($request, $id = null): Order|null
     {
-        $item = $id == null ? new Category() : Category::find($id);
+        $item = $id == null ? new Order() : Order::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-        if($request->filled('active')){
-            $item->active = 1;
-        }else{
-            $item->active = 0;
-        }
-        if ($id == null) {
-            $item->created_by = auth()->user()->id;
-        }else{
-            $item->updated_by = auth()->user()->id;
-        }
+            if($request->filled('active')){
+                $item->active = 1;
+            }else{
+                $item->active = 0;
+            }
         if ($item->save()) {
 
             if ($request->hasFile('image')) {
                 $image= $request->file('image');
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/categories'), $fileName);
+                $item->image->move(public_path('storage/orders'), $fileName);
                 $item->image = $fileName;
                 $item->save();
             }
@@ -122,7 +117,7 @@ class CategoryController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Category::select('*');
+        $data = Order::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {

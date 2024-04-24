@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\ClientRequest;
+use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class CategoryController extends Controller
+class ClientController extends Controller
 {
-    private $viewIndex  = 'admin.pages.categories.index';
-    private $viewEdit   = 'admin.pages.categories.create_edit';
-    private $viewShow   = 'admin.pages.categories.show';
-    private $route      = 'admin.categories';
+    private $viewIndex  = 'admin.pages.clients.index';
+    private $viewEdit   = 'admin.pages.clients.create_edit';
+    private $viewShow   = 'admin.pages.clients.show';
+    private $route      = 'admin.clients';
 
     public function index(Request $request): View
     {
@@ -31,35 +31,35 @@ class CategoryController extends Controller
 
     public function edit($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = Client::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = Client::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = Client::findOrFail($id);
         if ($item->delete()) {
-            flash(__('categories.messages.deleted'))->success();
+            flash(__('clients.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(CategoryRequest $request): RedirectResponse
+    public function store(ClientRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('categories.messages.created'))->success();
+            flash(__('clients.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Category::distinct()
+       $data = Client::distinct()
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -81,37 +81,32 @@ class CategoryController extends Controller
     }
 
 
-    public function update(CategoryRequest $request, $id): RedirectResponse
+    public function update(ClientRequest $request, $id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = Client::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('categories.messages.updated'))->success();
+            flash(__('clients.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Category|null
+    protected function processForm($request, $id = null): Client|null
     {
-        $item = $id == null ? new Category() : Category::find($id);
+        $item = $id == null ? new Client() : Client::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-        if($request->filled('active')){
-            $item->active = 1;
-        }else{
-            $item->active = 0;
-        }
-        if ($id == null) {
-            $item->created_by = auth()->user()->id;
-        }else{
-            $item->updated_by = auth()->user()->id;
-        }
+            if($request->filled('active')){
+                $item->active = 1;
+            }else{
+                $item->active = 0;
+            }
         if ($item->save()) {
 
             if ($request->hasFile('image')) {
                 $image= $request->file('image');
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/categories'), $fileName);
+                $item->image->move(public_path('storage/clients'), $fileName);
                 $item->image = $fileName;
                 $item->save();
             }
@@ -122,7 +117,7 @@ class CategoryController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Category::select('*');
+        $data = Client::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {

@@ -105,7 +105,91 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
 
-            //addnewrouteheredontdeletemeplease
+            
+        
+        
+        
+        
+        
+        //addnewrouteheredontdeletemeplease
+
+            Route::get('jobs/select', [App\Http\Controllers\Admin\JobController::class, 'select'])->name('jobs.select');
+            Route::delete('jobs/bulk', [App\Http\Controllers\Admin\JobController::class, 'deleteBulk'])->name('jobs.deleteBulk')->middleware('permission:jobs.delete');
+            Route::get('jobs/list', [App\Http\Controllers\Admin\JobController::class, 'list'])->name('jobs.list')->middleware('permission:jobs.view');
+            Route::post('jobs', [App\Http\Controllers\Admin\JobController::class, 'store'])->name('jobs.store')->middleware('permission:jobs.create');
+            Route::delete('jobs/{id}', [App\Http\Controllers\Admin\JobController::class, 'destroy'])->name('jobs.destroy')->middleware('permission:jobs.delete');
+            Route::get('jobs', [App\Http\Controllers\Admin\JobController::class, 'index'])->name('jobs.index')->middleware('permission:jobs.view');
+            Route::get('jobs/create', [App\Http\Controllers\Admin\JobController::class, 'create'])->name('jobs.create')->middleware('permission:jobs.create');
+            Route::match(['PUT', 'PATCH'], 'jobs/{id}', [App\Http\Controllers\Admin\JobController::class, 'update'])->name('jobs.update')->middleware('permission:jobs.edit');
+            Route::get('jobs/{id}/edit', [App\Http\Controllers\Admin\JobController::class, 'edit'])->name('jobs.edit')->middleware('permission:jobs.edit');
+
+
+        
+
+            Route::get('offers/select', [App\Http\Controllers\Admin\OfferController::class, 'select'])->name('offers.select');
+            Route::delete('offers/bulk', [App\Http\Controllers\Admin\OfferController::class, 'deleteBulk'])->name('offers.deleteBulk')->middleware('permission:offers.delete');
+            Route::get('offers/list', [App\Http\Controllers\Admin\OfferController::class, 'list'])->name('offers.list')->middleware('permission:offers.view');
+            Route::post('offers', [App\Http\Controllers\Admin\OfferController::class, 'store'])->name('offers.store')->middleware('permission:offers.create');
+            Route::delete('offers/{id}', [App\Http\Controllers\Admin\OfferController::class, 'destroy'])->name('offers.destroy')->middleware('permission:offers.delete');
+            Route::get('offers', [App\Http\Controllers\Admin\OfferController::class, 'index'])->name('offers.index')->middleware('permission:offers.view');
+            Route::get('offers/create', [App\Http\Controllers\Admin\OfferController::class, 'create'])->name('offers.create')->middleware('permission:offers.create');
+            Route::match(['PUT', 'PATCH'], 'offers/{id}', [App\Http\Controllers\Admin\OfferController::class, 'update'])->name('offers.update')->middleware('permission:offers.edit');
+            Route::get('offers/{id}/edit', [App\Http\Controllers\Admin\OfferController::class, 'edit'])->name('offers.edit')->middleware('permission:offers.edit');
+
+
+        
+
+            Route::get('orders/select', [App\Http\Controllers\Admin\OrderController::class, 'select'])->name('orders.select');
+            Route::delete('orders/bulk', [App\Http\Controllers\Admin\OrderController::class, 'deleteBulk'])->name('orders.deleteBulk')->middleware('permission:orders.delete');
+            Route::get('orders/list', [App\Http\Controllers\Admin\OrderController::class, 'list'])->name('orders.list')->middleware('permission:orders.view');
+            Route::post('orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store')->middleware('permission:orders.create');
+            Route::delete('orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:orders.delete');
+            Route::get('orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('permission:orders.view');
+            Route::get('orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create')->middleware('permission:orders.create');
+            Route::match(['PUT', 'PATCH'], 'orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'update'])->name('orders.update')->middleware('permission:orders.edit');
+            Route::get('orders/{id}/edit', [App\Http\Controllers\Admin\OrderController::class, 'edit'])->name('orders.edit')->middleware('permission:orders.edit');
+
+
+        
+
+            Route::get('suppliers/select', [App\Http\Controllers\Admin\SupplierController::class, 'select'])->name('suppliers.select');
+            Route::delete('suppliers/bulk', [App\Http\Controllers\Admin\SupplierController::class, 'deleteBulk'])->name('suppliers.deleteBulk')->middleware('permission:suppliers.delete');
+            Route::get('suppliers/list', [App\Http\Controllers\Admin\SupplierController::class, 'list'])->name('suppliers.list')->middleware('permission:suppliers.view');
+            Route::post('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'store'])->name('suppliers.store')->middleware('permission:suppliers.create');
+            Route::delete('suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'destroy'])->name('suppliers.destroy')->middleware('permission:suppliers.delete');
+            Route::get('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('suppliers.index')->middleware('permission:suppliers.view');
+            Route::get('suppliers/create', [App\Http\Controllers\Admin\SupplierController::class, 'create'])->name('suppliers.create')->middleware('permission:suppliers.create');
+            Route::match(['PUT', 'PATCH'], 'suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'update'])->name('suppliers.update')->middleware('permission:suppliers.edit');
+            Route::get('suppliers/{id}/edit', [App\Http\Controllers\Admin\SupplierController::class, 'edit'])->name('suppliers.edit')->middleware('permission:suppliers.edit');
+
+
+        
+
+            Route::get('clients/select', [App\Http\Controllers\Admin\ClientController::class, 'select'])->name('clients.select');
+            Route::delete('clients/bulk', [App\Http\Controllers\Admin\ClientController::class, 'deleteBulk'])->name('clients.deleteBulk')->middleware('permission:clients.delete');
+            Route::get('clients/list', [App\Http\Controllers\Admin\ClientController::class, 'list'])->name('clients.list')->middleware('permission:clients.view');
+            Route::post('clients', [App\Http\Controllers\Admin\ClientController::class, 'store'])->name('clients.store')->middleware('permission:clients.create');
+            Route::delete('clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->name('clients.destroy')->middleware('permission:clients.delete');
+            Route::get('clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index')->middleware('permission:clients.view');
+            Route::get('clients/create', [App\Http\Controllers\Admin\ClientController::class, 'create'])->name('clients.create')->middleware('permission:clients.create');
+            Route::match(['PUT', 'PATCH'], 'clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'update'])->name('clients.update')->middleware('permission:clients.edit');
+            Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('permission:clients.edit');
+
+
+        
+
+            Route::get('cities/select', [App\Http\Controllers\Admin\CityController::class, 'select'])->name('cities.select');
+            Route::delete('cities/bulk', [App\Http\Controllers\Admin\CityController::class, 'deleteBulk'])->name('cities.deleteBulk')->middleware('permission:cities.delete');
+            Route::get('cities/list', [App\Http\Controllers\Admin\CityController::class, 'list'])->name('cities.list')->middleware('permission:cities.view');
+            Route::post('cities', [App\Http\Controllers\Admin\CityController::class, 'store'])->name('cities.store')->middleware('permission:cities.create');
+            Route::delete('cities/{id}', [App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('cities.destroy')->middleware('permission:cities.delete');
+            Route::get('cities', [App\Http\Controllers\Admin\CityController::class, 'index'])->name('cities.index')->middleware('permission:cities.view');
+            Route::get('cities/create', [App\Http\Controllers\Admin\CityController::class, 'create'])->name('cities.create')->middleware('permission:cities.create');
+            Route::match(['PUT', 'PATCH'], 'cities/{id}', [App\Http\Controllers\Admin\CityController::class, 'update'])->name('cities.update')->middleware('permission:cities.edit');
+            Route::get('cities/{id}/edit', [App\Http\Controllers\Admin\CityController::class, 'edit'])->name('cities.edit')->middleware('permission:cities.edit');
+
+
+        
 
 
         });

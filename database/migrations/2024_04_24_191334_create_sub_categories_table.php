@@ -12,12 +12,12 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('sub_categories', function (Blueprint $table) {
             $table->id();
             $table->string('title_en');
             $table->string('title_ar');
-            $table->string('image');
             $table->boolean('active')->default(true);
+            $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
             $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
@@ -33,6 +33,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('sub_categories');
     }
 };

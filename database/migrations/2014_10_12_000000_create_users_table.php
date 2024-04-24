@@ -19,12 +19,14 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique();
             $table->string('email')->nullable();
             $table->string('image')->nullable();
-            $table->boolean('active')->default(true);
             $table->tinyInteger('type');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('reset_code')->nullable();
             $table->rememberToken();
+            $table->boolean('active')->default(true);
+            $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

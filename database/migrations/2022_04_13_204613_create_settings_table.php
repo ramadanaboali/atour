@@ -16,6 +16,11 @@ return new class () extends Migration {
             $table->id();
             $table->string('key');
             $table->longText('value')->nullable();
+            $table->boolean('active')->default(true);
+            $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }
