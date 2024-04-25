@@ -105,13 +105,27 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
 
-            
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         //addnewrouteheredontdeletemeplease
+
+            Route::get('sub_categories/select', [App\Http\Controllers\Admin\SubCategoryController::class, 'select'])->name('sub_categories.select');
+            Route::delete('sub_categories/bulk', [App\Http\Controllers\Admin\SubCategoryController::class, 'deleteBulk'])->name('sub_categories.deleteBulk')->middleware('permission:sub_categories.delete');
+            Route::get('sub_categories/list', [App\Http\Controllers\Admin\SubCategoryController::class, 'list'])->name('sub_categories.list')->middleware('permission:sub_categories.view');
+            Route::post('sub_categories', [App\Http\Controllers\Admin\SubCategoryController::class, 'store'])->name('sub_categories.store')->middleware('permission:sub_categories.create');
+            Route::delete('sub_categories/{id}', [App\Http\Controllers\Admin\SubCategoryController::class, 'destroy'])->name('sub_categories.destroy')->middleware('permission:sub_categories.delete');
+            Route::get('sub_categories', [App\Http\Controllers\Admin\SubCategoryController::class, 'index'])->name('sub_categories.index')->middleware('permission:sub_categories.view');
+            Route::get('sub_categories/create', [App\Http\Controllers\Admin\SubCategoryController::class, 'create'])->name('sub_categories.create')->middleware('permission:sub_categories.create');
+            Route::match(['PUT', 'PATCH'], 'sub_categories/{id}', [App\Http\Controllers\Admin\SubCategoryController::class, 'update'])->name('sub_categories.update')->middleware('permission:sub_categories.edit');
+            Route::get('sub_categories/{id}/edit', [App\Http\Controllers\Admin\SubCategoryController::class, 'edit'])->name('sub_categories.edit')->middleware('permission:sub_categories.edit');
+
+
+
 
             Route::get('jobs/select', [App\Http\Controllers\Admin\JobController::class, 'select'])->name('jobs.select');
             Route::delete('jobs/bulk', [App\Http\Controllers\Admin\JobController::class, 'deleteBulk'])->name('jobs.deleteBulk')->middleware('permission:jobs.delete');
@@ -124,7 +138,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('jobs/{id}/edit', [App\Http\Controllers\Admin\JobController::class, 'edit'])->name('jobs.edit')->middleware('permission:jobs.edit');
 
 
-        
+
 
             Route::get('offers/select', [App\Http\Controllers\Admin\OfferController::class, 'select'])->name('offers.select');
             Route::delete('offers/bulk', [App\Http\Controllers\Admin\OfferController::class, 'deleteBulk'])->name('offers.deleteBulk')->middleware('permission:offers.delete');
@@ -137,7 +151,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('offers/{id}/edit', [App\Http\Controllers\Admin\OfferController::class, 'edit'])->name('offers.edit')->middleware('permission:offers.edit');
 
 
-        
+
 
             Route::get('orders/select', [App\Http\Controllers\Admin\OrderController::class, 'select'])->name('orders.select');
             Route::delete('orders/bulk', [App\Http\Controllers\Admin\OrderController::class, 'deleteBulk'])->name('orders.deleteBulk')->middleware('permission:orders.delete');
@@ -150,7 +164,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('orders/{id}/edit', [App\Http\Controllers\Admin\OrderController::class, 'edit'])->name('orders.edit')->middleware('permission:orders.edit');
 
 
-        
+
 
             Route::get('suppliers/select', [App\Http\Controllers\Admin\SupplierController::class, 'select'])->name('suppliers.select');
             Route::delete('suppliers/bulk', [App\Http\Controllers\Admin\SupplierController::class, 'deleteBulk'])->name('suppliers.deleteBulk')->middleware('permission:suppliers.delete');
@@ -163,7 +177,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('suppliers/{id}/edit', [App\Http\Controllers\Admin\SupplierController::class, 'edit'])->name('suppliers.edit')->middleware('permission:suppliers.edit');
 
 
-        
+
 
             Route::get('clients/select', [App\Http\Controllers\Admin\ClientController::class, 'select'])->name('clients.select');
             Route::delete('clients/bulk', [App\Http\Controllers\Admin\ClientController::class, 'deleteBulk'])->name('clients.deleteBulk')->middleware('permission:clients.delete');
@@ -176,7 +190,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('permission:clients.edit');
 
 
-        
+
 
             Route::get('cities/select', [App\Http\Controllers\Admin\CityController::class, 'select'])->name('cities.select');
             Route::delete('cities/bulk', [App\Http\Controllers\Admin\CityController::class, 'deleteBulk'])->name('cities.deleteBulk')->middleware('permission:cities.delete');
@@ -189,7 +203,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('cities/{id}/edit', [App\Http\Controllers\Admin\CityController::class, 'edit'])->name('cities.edit')->middleware('permission:cities.edit');
 
 
-        
+
 
 
         });

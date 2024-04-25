@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CityRequest extends FormRequest
+class SubCategoryRequest extends FormRequest
 {
     public function authorize()
     {
@@ -17,7 +17,7 @@ class CityRequest extends FormRequest
         return [
             'title_ar' => 'required',
             'title_en' => 'required',
-            'country_id' => 'required',
+            'category_id'=>'required'
         ];
     }
 }

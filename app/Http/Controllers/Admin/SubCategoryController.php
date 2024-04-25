@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
+use App\Http\Requests\SubCategoryRequest;
+use App\Models\SubCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class CategoryController extends Controller
+class SubCategoryController extends Controller
 {
-    private $viewIndex  = 'admin.pages.categories.index';
-    private $viewEdit   = 'admin.pages.categories.create_edit';
-    private $viewShow   = 'admin.pages.categories.show';
-    private $route      = 'admin.categories';
+    private $viewIndex  = 'admin.pages.sub_categories.index';
+    private $viewEdit   = 'admin.pages.sub_categories.create_edit';
+    private $viewShow   = 'admin.pages.sub_categories.show';
+    private $route      = 'admin.sub_categories';
 
     public function index(Request $request): View
     {
@@ -31,35 +31,35 @@ class CategoryController extends Controller
 
     public function edit($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = SubCategory::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Category::findOrFail($id);
+        $item = SubCategory::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = SubCategory::findOrFail($id);
         if ($item->delete()) {
-            flash(__('categories.messages.deleted'))->success();
+            flash(__('sub_categories.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(CategoryRequest $request): RedirectResponse
+    public function store(SubCategoryRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('categories.messages.created'))->success();
+            flash(__('sub_categories.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Category::distinct()
+       $data = SubCategory::distinct()
                 ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
@@ -82,18 +82,18 @@ class CategoryController extends Controller
     }
 
 
-    public function update(CategoryRequest $request, $id): RedirectResponse
+    public function update(SubCategoryRequest $request, $id): RedirectResponse
     {
-        $item = Category::findOrFail($id);
+        $item = SubCategory::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('categories.messages.updated'))->success();
+            flash(__('sub_categories.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Category|null
+    protected function processForm($request, $id = null): SubCategory|null
     {
-        $item = $id == null ? new Category() : Category::find($id);
+        $item = $id == null ? new SubCategory() : SubCategory::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
@@ -109,13 +109,7 @@ class CategoryController extends Controller
         }
         if ($item->save()) {
 
-            if ($request->hasFile('image')) {
-                $image= $request->file('image');
-                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/categories'), $fileName);
-                $item->image = $fileName;
-                $item->save();
-            }
+
             return $item;
         }
         return null;
@@ -123,11 +117,11 @@ class CategoryController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Category::select('*');
+        $data = SubCategory::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+        ->addColumn('category', function ($item) {
+            return $item->category?->title;
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
@@ -139,7 +133,7 @@ class CategoryController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['photo','active'])
+        ->rawColumns(['category','active'])
         ->make(true);
     }
 }

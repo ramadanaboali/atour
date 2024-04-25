@@ -1,18 +1,18 @@
 <?php
 
 return [
-    'plural' => 'Category',
-    'singular' => 'Category',
-    'singular2' => 'Category',
-    'empty' => 'There is no Category',
+    'plural' => 'Offer',
+    'singular' => 'Offer',
+    'singular2' => 'Offer',
+    'empty' => 'There is no Offer',
     'select' => 'Choose',
     'select-type' => 'everyone',
     'perPage' => 'Number of results per page',
-    'filter' => 'Find a Category',
+    'filter' => 'Find a Offer',
     'actions' => [
         'list' => 'view all',
         'show' => 'Show',
-        'create' => 'Add a Category',
+        'create' => 'Add a Offer',
         'edit' => 'Edit',
         'delete' => 'delete',
         'restore' => 'Recovery',
@@ -21,10 +21,10 @@ return [
         'back' => 'Go back',
     ],
     'messages' => [
-        'created' => 'The Category has been added successfully.',
-        'updated' => 'The Category has been successfully modified.',
-        'deleted' => 'Category has been successfully deleted.',
-        'restored' => 'Category was successfully restored.',
+        'created' => 'The Offer has been added successfully.',
+        'updated' => 'The Offer has been successfully modified.',
+        'deleted' => 'Offer has been successfully deleted.',
+        'restored' => 'Offer was successfully restored.',
         'deleted_bulk' => 'The selected partition was successfully deleted.',
     ],
     'attributes' => [
@@ -37,13 +37,13 @@ return [
     'dialogs' => [
         'delete' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to delete the Category?',
+            'info' => 'Are you sure you want to delete the Offer?',
             'confirm' => 'delete',
             'cancel' => 'cancellation',
         ],
         'restore' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to restore Category?',
+            'info' => 'Are you sure you want to restore Offer?',
             'confirm' => 'Recovery',
             'cancel' => 'cancellation',
         ],
@@ -64,7 +64,7 @@ return [
     'sort' => 'arrangement',
     'active' => 'active',
     'available' => 'Available',
-    'category'=>'Category',
+    'Offer'=>'Offer',
 
 
 ];

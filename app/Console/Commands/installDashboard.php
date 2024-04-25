@@ -27,12 +27,12 @@ class installDashboard extends Command
      */
     public function handle()
     {
-        $this->recurseCopy("cities", 'City');
-        $this->recurseCopy("clients", 'Client');
-        $this->recurseCopy("suppliers", 'Supplier');
-        $this->recurseCopy("orders", 'Order');
-        $this->recurseCopy("offers", 'Offer');
-        $this->recurseCopy("jobs", 'Job');
+        // $this->recurseCopy("sub_categories", 'SubCategory');
+        // $this->recurseCopy("clients", 'Client');
+        // $this->recurseCopy("suppliers", 'Supplier');
+        // $this->recurseCopy("orders", 'Order');
+        // $this->recurseCopy("offers", 'Offer');
+        // $this->recurseCopy("jobs", 'Job');
 
         return 0;
     }

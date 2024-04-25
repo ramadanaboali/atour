@@ -60,6 +60,7 @@ class CityController extends Controller
     public function select(Request $request): JsonResponse|string
     {
        $data = City::distinct()
+                ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -117,14 +118,14 @@ class CityController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = City::select('*');
+        $data = City::with('country')->select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+        ->addColumn('country', function ($item) {
+            return $item->country?->title;
         })
         ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->active==1 ? '<button class=" btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
         ->filterColumn('title', function ($query, $keyword) {
                  if(App::isLocale('en')) {
@@ -133,7 +134,7 @@ class CityController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['photo','active'])
+        ->rawColumns(['country','active'])
         ->make(true);
     }
 }

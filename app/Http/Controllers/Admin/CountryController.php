@@ -60,6 +60,7 @@ class CountryController extends Controller
     public function select(Request $request): JsonResponse|string
     {
        $data = Country::distinct()
+                ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {

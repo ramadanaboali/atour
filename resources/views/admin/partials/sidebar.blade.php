@@ -31,6 +31,14 @@
                 </a>
             </li>
             @endcan
+            @can('clients.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.clients.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.clients') }}</span>
+                    </a>
+                </li>
+            @endcan
             @can('categories.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.categories.index') }} ">
@@ -39,15 +47,60 @@
                 </a>
             </li>
             @endcan
-
-            @can('coupons.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.coupons.index') }} ">
-                    <i data-feather="codesandbox"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.coupons') }}</span>
-                </a>
-            </li>
+  @can('sub_categories.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.sub_categories.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.sub_categories') }}</span>
+                    </a>
+                </li>
             @endcan
+
+
+
+           {{-- @can('jobs.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.jobs.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.jobs') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+
+
+           @can('offers.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.offers') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+
+
+           @can('orders.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.orders.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.orders') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+
+
+           @can('suppliers.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.suppliers.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.suppliers') }}</span>
+                    </a>
+                </li>
+            @endcan --}}
+
+
             @can('companies.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.companies.index') }} ">
@@ -81,6 +134,14 @@
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.countries') }}</span>
                 </a>
             </li>
+            @endcan
+               @can('cities.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.cities.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.cities') }}</span>
+                    </a>
+                </li>
             @endcan
              @can('roles.view')
             <li>
@@ -131,81 +192,19 @@
                 </li>
             @endcan
 
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         {{--addnewrouteheredontdeletemeplease--}}
 
-           @can('jobs.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.jobs.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.jobs') }}</span>
-                    </a>
-                </li>
-            @endcan
 
-        
 
-           @can('offers.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.offers') }}</span>
-                    </a>
-                </li>
-            @endcan
 
-        
 
-           @can('orders.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.orders.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.orders') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-        
-
-           @can('suppliers.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.suppliers.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.suppliers') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-        
-
-           @can('clients.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.clients.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.clients') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-        
-
-           @can('cities.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.cities.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.cities') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-        
-
-         
 
 
         </ul>

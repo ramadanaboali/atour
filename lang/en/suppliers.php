@@ -1,18 +1,18 @@
 <?php
 
 return [
-    'plural' => 'Category',
-    'singular' => 'Category',
-    'singular2' => 'Category',
-    'empty' => 'There is no Category',
+    'plural' => 'Supplier',
+    'singular' => 'Supplier',
+    'singular2' => 'Supplier',
+    'empty' => 'There is no Supplier',
     'select' => 'Choose',
     'select-type' => 'everyone',
     'perPage' => 'Number of results per page',
-    'filter' => 'Find a Category',
+    'filter' => 'Find a Supplier',
     'actions' => [
         'list' => 'view all',
         'show' => 'Show',
-        'create' => 'Add a Category',
+        'create' => 'Add a Supplier',
         'edit' => 'Edit',
         'delete' => 'delete',
         'restore' => 'Recovery',
@@ -21,10 +21,10 @@ return [
         'back' => 'Go back',
     ],
     'messages' => [
-        'created' => 'The Category has been added successfully.',
-        'updated' => 'The Category has been successfully modified.',
-        'deleted' => 'Category has been successfully deleted.',
-        'restored' => 'Category was successfully restored.',
+        'created' => 'The Supplier has been added successfully.',
+        'updated' => 'The Supplier has been successfully modified.',
+        'deleted' => 'Supplier has been successfully deleted.',
+        'restored' => 'Supplier was successfully restored.',
         'deleted_bulk' => 'The selected partition was successfully deleted.',
     ],
     'attributes' => [
@@ -37,13 +37,13 @@ return [
     'dialogs' => [
         'delete' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to delete the Category?',
+            'info' => 'Are you sure you want to delete the Supplier?',
             'confirm' => 'delete',
             'cancel' => 'cancellation',
         ],
         'restore' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to restore Category?',
+            'info' => 'Are you sure you want to restore Supplier?',
             'confirm' => 'Recovery',
             'cancel' => 'cancellation',
         ],
@@ -64,7 +64,6 @@ return [
     'sort' => 'arrangement',
     'active' => 'active',
     'available' => 'Available',
-    'category'=>'Category',
 
 
 ];

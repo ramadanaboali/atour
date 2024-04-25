@@ -1,10 +1,10 @@
 @extends('admin.layouts.master')
 @section('title')
-    <title>{{ config('app.name') }} | {{ __('cities.plural') }}</title>
+    <title>{{ config('app.name') }} | {{ __('sub_categories.plural') }}</title>
 @endsection
 @section('content')
     <form method='post' enctype="multipart/form-data"  id="jquery-val-form"
-          action="{{ isset($item) ? route('admin.cities.update', $item->id) : route('admin.cities.store') }}">
+          action="{{ isset($item) ? route('admin.sub_categories.update', $item->id) : route('admin.sub_categories.store') }}">
         <input type="hidden" name="_method" value="{{ isset($item) ? 'PUT' : 'POST' }}">
         @csrf
         <div class="content-header row">
@@ -13,7 +13,7 @@
                     <div class="col-12">
                         <h1 class="bold mb-0 mt-1 text-dark">
                             <i data-feather="box" class="font-medium-2"></i>
-                            <span>{{ isset($item) ? __('cities.actions.edit') : __('cities.actions.create') }}</span>
+                            <span>{{ isset($item) ? __('sub_categories.actions.edit') : __('sub_categories.actions.create') }}</span>
                         </h1>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-primary me-1 waves-effect">
                             <i data-feather="save"></i>
-                            <span class="active-sorting text-primary">{{ __('cities.actions.save') }}</span>
+                            <span class="active-sorting text-primary">{{ __('sub_categories.actions.save') }}</span>
                         </button>
                     </div>
                 </div>
@@ -49,37 +49,48 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        </div>
-                        <div class="row">
-                         <div class="mb-1 col-md-6  @error('country_id') is-invalid @enderror">
-                            <label class="form-label" for="country_id">{{ __('cities.country') }}</label>
-                            <select name="country_id" id="country_id" class="form-control ajax_select2 extra_field"
-                                    data-ajax--url="{{ route('admin.countries.select') }}"
+
+                       <div class="mb-1 col-md-6  @error('category_id') is-invalid @enderror">
+                            <label class="form-label" for="category_id">{{ __('sub_categories.category') }}</label>
+                            <select name="category_id" id="category_id" class="form-control ajax_select2 extra_field"
+                                    data-ajax--url="{{ route('admin.categories.select') }}"
                                     data-ajax--cache="true">
-                                @isset($item->country)
-                                    <option value="{{ $item->country->id }}" selected>{{ $item->country->title }}</option>
+                                @isset($item->category)
+                                    <option value="{{ $item->category->id }}" selected>{{ $item->category->title }}</option>
                                 @endisset
                             </select>
-                            @error('country_id')
+                            @error('category_id')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
 
-                        <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
+                        <div class="mb-1 col-md-6  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="active"
                                         value="1" id="active"
                                     @checked($item->active ?? false )/>
-                                <label class="form-check-label" for="active">{{ __('cities.active') }}</label>
+                                <label class="form-check-label" for="active">{{ __('sub_categories.active') }}</label>
                             </div>
                             @error('active')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
 
-
-                    </div>
+                       {{-- <div class="mb-1 col-md-6  @error('sub_category_id') is-invalid @enderror">
+                            <label class="form-label" for="parent_id">{{ __('sub_categories.category') }}</label>
+                            <select name="parent_id" id="parent_id" class="form-control ajax_select2 extra_field"
+                                    data-ajax--url="{{ route('admin.categories.select') }}"
+                                    data-ajax--cache="true">
+                                @isset($item->parent)
+                                    <option value="{{ $item->parent->id }}" selected>{{ $item->parent->title }}</option>
+                                @endisset
+                            </select>
+                            @error('parent_id')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

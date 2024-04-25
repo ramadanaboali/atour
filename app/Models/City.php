@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
-class SubCategory extends Model
+class City extends Model
 {
-     use HasFactory,SoftDeletes;
-     protected $table = 'sub_categories';
-    protected $fillable = ['title_en','title_ar', 'category_id','created_by','updated_by','active','parent_id'];
+    use HasFactory,SoftDeletes;
+     protected $table = 'cities';
+    protected $fillable = ['title_en','title_ar', 'country_id','created_by','updated_by','active'];
     protected $appends = ['title','text'];
 
     public function getTextAttribute()
@@ -32,13 +32,9 @@ class SubCategory extends Model
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
         }
     }
-    public function category(): ?BelongsTo
+    public function country(): ?BelongsTo
     {
-        return $this->belongsTo(Category::class,'category_id');
-    }
-    public function parent(): ?BelongsTo
-    {
-        return $this->belongsTo(SubCategory::class,'parent_id');
+        return $this->belongsTo(Country::class,'country_id');
     }
     public function createdBy(): ?BelongsTo
     {

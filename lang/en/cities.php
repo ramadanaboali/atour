@@ -1,18 +1,18 @@
 <?php
 
 return [
-    'plural' => 'Category',
-    'singular' => 'Category',
-    'singular2' => 'Category',
-    'empty' => 'There is no Category',
+    'plural' => 'City',
+    'singular' => 'City',
+    'singular2' => 'City',
+    'empty' => 'There is no City',
     'select' => 'Choose',
     'select-type' => 'everyone',
     'perPage' => 'Number of results per page',
-    'filter' => 'Find a Category',
+    'filter' => 'Find a City',
     'actions' => [
         'list' => 'view all',
         'show' => 'Show',
-        'create' => 'Add a Category',
+        'create' => 'Add a City',
         'edit' => 'Edit',
         'delete' => 'delete',
         'restore' => 'Recovery',
@@ -21,10 +21,10 @@ return [
         'back' => 'Go back',
     ],
     'messages' => [
-        'created' => 'The Category has been added successfully.',
-        'updated' => 'The Category has been successfully modified.',
-        'deleted' => 'Category has been successfully deleted.',
-        'restored' => 'Category was successfully restored.',
+        'created' => 'The City has been added successfully.',
+        'updated' => 'The City has been successfully modified.',
+        'deleted' => 'City has been successfully deleted.',
+        'restored' => 'City was successfully restored.',
         'deleted_bulk' => 'The selected partition was successfully deleted.',
     ],
     'attributes' => [
@@ -37,13 +37,13 @@ return [
     'dialogs' => [
         'delete' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to delete the Category?',
+            'info' => 'Are you sure you want to delete the City?',
             'confirm' => 'delete',
             'cancel' => 'cancellation',
         ],
         'restore' => [
             'title' => 'warning !',
-            'info' => 'Are you sure you want to restore Category?',
+            'info' => 'Are you sure you want to restore City?',
             'confirm' => 'Recovery',
             'cancel' => 'cancellation',
         ],
@@ -64,7 +64,7 @@ return [
     'sort' => 'arrangement',
     'active' => 'active',
     'available' => 'Available',
-    'category'=>'Category',
+    'City'=>'City',
 
 
 ];
