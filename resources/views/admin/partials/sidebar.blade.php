@@ -100,7 +100,7 @@
                 </li>
             @endcan --}}
 
-
+{{--
             @can('companies.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.companies.index') }} ">
@@ -108,7 +108,7 @@
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.companies') }}</span>
                 </a>
             </li>
-            @endcan
+            @endcan --}}
 
             {{-- @can('contacts.view')
             <li>
