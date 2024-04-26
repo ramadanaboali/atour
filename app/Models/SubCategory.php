@@ -36,6 +36,10 @@ class SubCategory extends Model
     {
         return $this->belongsTo(Category::class,'category_id');
     }
+    public function subCategory(): ?BelongsTo
+    {
+        return $this->belongsTo(SubCategory::class,'parent_id');
+    }
     public function parent(): ?BelongsTo
     {
         return $this->belongsTo(SubCategory::class,'parent_id');

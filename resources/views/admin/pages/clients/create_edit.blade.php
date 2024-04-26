@@ -33,36 +33,104 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="mb-1 col-md-4  @error('title_en') is-invalid @enderror">
-                            <label class="form-label" for="title_en">{{ __('admin.title_en') }}</label>
-                            <input type="text" name="title_en" id="title_en" class="form-control" placeholder=""
-                                   value="{{ $item->title_en ?? old('title_en') }}" required/>
-                            @error('title_en')
+                        <div class="mb-1 col-md-4  @error('name') is-invalid @enderror">
+                            <label class="form-label" for="name">{{ __('admin.name') }}</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder=""
+                                   value="{{ $item->name ?? old('name') }}" required/>
+                            @error('name')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-4  @error('title_ar') is-invalid @enderror">
-                            <label class="form-label" for="title_ar">{{ __('admin.title_ar') }}</label>
-                            <input type="text" name="title_ar" id="title_ar" class="form-control" placeholder=""
-                                   value="{{ $item->title_ar ?? old('title_ar') }}" required/>
-                            @error('title_ar')
+
+                        <div class="mb-1 col-md-4  @error('code') is-invalid @enderror">
+                            <label class="form-label" for="code">{{ __('clients.code') }}</label>
+                            <input type="text" name="code" id="code" class="form-control" placeholder=""
+                                   value="{{ $item->code ?? old('code') }}" required/>
+                            @error('code')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                       
+                        <div class="mb-1 col-md-4  @error('email') is-invalid @enderror">
+                            <label class="form-label" for="email">{{ __('admin.email') }}</label>
+                            <input type="email" name="email" id="email" class="form-control" placeholder=""
+                                   value="{{ $item->email ?? old('email') }}" required/>
+                            @error('email')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('phone') is-invalid @enderror">
+                            <label class="form-label" for="phone">{{ __('admin.phone') }}</label>
+                            <input type="number" name="phone" id="phone" class="form-control" placeholder=""
+                                   value="{{ $item->phone ?? old('phone') }}" required/>
+                            @error('phone')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('address') is-invalid @enderror">
+                            <label class="form-label" for="address">{{ __('admin.address') }}</label>
+                            <input type="text" name="address" id="address" class="form-control" placeholder=""
+                                   value="{{ $item->address ?? old('address') }}" />
+                            @error('address')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('nationality') is-invalid @enderror">
+                            <label class="form-label" for="nationality">{{ __('clients.nationality') }}</label>
+                            <input type="text" name="nationality" id="nationality" class="form-control" placeholder=""
+                                   value="{{ $item->nationality ?? old('nationality') }}" />
+                            @error('nationality')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('birthdate') is-invalid @enderror">
+                            <label class="form-label" for="birthdate">{{ __('clients.birthdate') }}</label>
+                            <input type="text" name="birthdate" id="birthdate" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->birthdate ?? old('birthdate') }}" />
+                            @error('birthdate')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('joining_date_from') is-invalid @enderror">
+                            <label class="form-label" for="joining_date_from">{{ __('clients.joining_date_from') }}</label>
+                            <input type="text" name="joining_date_from" id="joining_date_from" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->joining_date_from ?? old('joining_date_from') }}" />
+                            @error('joining_date_from')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('joining_date_to') is-invalid @enderror">
+                            <label class="form-label" for="joining_date_to">{{ __('clients.joining_date_to') }}</label>
+                            <input type="text" name="joining_date_to" id="joining_date_to" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->joining_date_to ?? old('joining_date_to') }}" />
+                            @error('joining_date_to')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('city_id') is-invalid @enderror">
+                            <label class="form-label" for="city_id">{{ __('clients.city') }}</label>
+                            <select name="city_id" id="city_id" class="form-control ajax_select2 extra_field"
+                                    data-ajax--url="{{ route('admin.cities.select') }}"
+                                    data-ajax--cache="true">
+                                @isset($item->city)
+                                    <option value="{{ $item->city->id }}" selected>{{ $item->city->title }}</option>
+                                @endisset
+                            </select>
+                            @error('city_id')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="active"
                                         value="1" id="active"
-                                    @checked($item->active ?? false )/>
+                                        @checked($item->active ?? false )/>
                                 <label class="form-check-label" for="active">{{ __('clients.active') }}</label>
                             </div>
                             @error('active')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-
                         <div class="mb-1 col-md-6 @error('image') is-invalid @enderror">
                             <label class="form-label" for="image">{{ __('clients.file') }}</label>
                             <input type="file" class="form-control input" name="image" id="image">

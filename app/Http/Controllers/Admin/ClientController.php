@@ -94,7 +94,6 @@ class ClientController extends Controller
     {
         $item = $id == null ? new Client() : Client::find($id);
         $data= $request->except(['_token', '_method']);
-
         $item = $item->fill($data);
             if($request->filled('active')){
                 $item->active = 1;
@@ -106,7 +105,7 @@ class ClientController extends Controller
             if ($request->hasFile('image')) {
                 $image= $request->file('image');
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/clients'), $fileName);
+                $item->image->move(public_path('storage/users'), $fileName);
                 $item->image = $fileName;
                 $item->save();
             }
@@ -121,19 +120,19 @@ class ClientController extends Controller
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+            return $item->photo?'<img src="' . $item->photo . '" height="100px" width="100px">':'';
+        })
+        ->addColumn('joining_date', function ($item) {
+            return $item->joining_date_from.' - '.$item->joining_date_to;
+        })
+        ->addColumn('order_count', function ($item) {
+            return 0;
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
-        ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-        ->rawColumns(['photo','active'])
+
+        ->rawColumns(['photo','active','joining_date'])
         ->make(true);
     }
 }

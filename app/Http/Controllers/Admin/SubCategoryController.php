@@ -69,6 +69,12 @@ class SubCategoryController extends Controller
                         return $query->where('title_ar', 'like', '%'.$request->q.'%');
                     }
                 }
+                if ($request->filled('item_id') && !empty ($request->item_id)) {
+                    $query->where('id', '!=', $request->item_id);
+                }
+                if ($request->filled('category_id') && !empty ($request->category_id)) {
+                    $query->where('category_id', $request->category_id);
+                }
                 })->select('id', 'title_en', 'title_ar')->get();
 
         if ($request->filled('pure_select')) {
@@ -123,6 +129,9 @@ class SubCategoryController extends Controller
         ->addColumn('category', function ($item) {
             return $item->category?->title;
         })
+        ->addColumn('subCategory', function ($item) {
+            return $item->subCategory?->title;
+        })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
@@ -133,7 +142,7 @@ class SubCategoryController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['category','active'])
+        ->rawColumns(['category','active','subCategory'])
         ->make(true);
     }
 }

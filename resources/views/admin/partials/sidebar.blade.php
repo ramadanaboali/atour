@@ -34,7 +34,7 @@
             @can('clients.view')
                 <li>
                     <a class='d-flex align-items-center' href='{{ route('admin.clients.index') }} '>
-                        <i data-feather='key'></i>
+                        <i data-feather='user'></i>
                         <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.clients') }}</span>
                     </a>
                 </li>

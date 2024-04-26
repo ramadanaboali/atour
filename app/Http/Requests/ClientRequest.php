@@ -14,17 +14,27 @@ class ClientRequest extends FormRequest
 
     public function rules()
     {
-        if ($this->method() == 'PUT') {
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-            ];
-        }else{
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-                'image' => 'required',
+
+
+$data= [
+           'name' => 'required|string|min:2',
+           'phone' => 'required|string|min:2||unique:users,phone,'.$this->id,
+           'email' => 'required|unique:users,email,'.$this->id,
+           'address' => 'required|string|min:2',
+           'code' => 'required|unique:users,code,'.$this->id,
+           'birthdate' => 'required|string|min:2',
+           'joining_date_from' => 'nullable|date',
+           'joining_date_to' => 'nullable|date|after:joining_date_from',
+           'city_id' => 'required|exists:cities,id',
+           'image' => 'nullable|image',
+        ];
+        if ($this->method() == 'POST') {
+            $data= [
+                'password' => 'required|string|min:8|confirmed',
             ];
         }
+        return $data;
+
+
     }
 }

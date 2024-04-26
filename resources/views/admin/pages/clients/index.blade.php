@@ -24,18 +24,26 @@
                         </a>
                     </div>
                 @endcan
+                @include('admin.pages.clients.filter')
             </div>
         </div>
     </div>
     <div class="content-body">
         <div class="card">
-            <div class="card-datatable">
+            <div class="card-datatable table-responsive">
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('clients.default.name') }}</th>
-                        <th>{{ __('clients.active') }}</th>
+                        <th>{{ __('clients.code') }}</th>
                         <th>{{ __('clients.image') }}</th>
+                        <th>{{ __('clients.name') }}</th>
+                        <th>{{ __('clients.email') }}</th>
+                        <th>{{ __('clients.phone') }}</th>
+                        <th>{{ __('clients.birthdate') }}</th>
+                        <th>{{ __('clients.address') }}</th>
+                        <th>{{ __('clients.active') }}</th>
+                        <th>{{ __('clients.joining_date') }}</th>
+                        <th>{{ __('clients.orders_count') }}</th>
                         @canany('clients.edit','clients.delete')
                             <th width="15%" class="text-center">{{ __('clients.options') }}</th>
                         @endcanany
@@ -75,9 +83,16 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
-                {data: 'active', name: 'active'},
+                {data: 'code', name: 'code'},
                 {data: 'photo', name: 'photo'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'phone', name: 'phone'},
+                {data: 'birthdate', name: 'birthdate'},
+                {data: 'address', name: 'address'},
+                {data: 'active', name: 'active'},
+                {data: 'joining_date', name: 'joining_date'},
+                {data: 'order_count', name: 'order_count',orderable: false,searchable: false},
                 @canany('clients.edit','clients.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany
