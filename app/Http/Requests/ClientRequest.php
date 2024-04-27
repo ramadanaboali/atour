@@ -16,20 +16,20 @@ class ClientRequest extends FormRequest
     {
 
 
-$data= [
-           'name' => 'required|string|min:2',
-           'phone' => 'required|string|min:2||unique:users,phone,'.$this->id,
-           'email' => 'required|unique:users,email,'.$this->id,
-           'address' => 'required|string|min:2',
-           'code' => 'required|unique:users,code,'.$this->id,
-           'birthdate' => 'required|string|min:2',
-           'joining_date_from' => 'nullable|date',
-           'joining_date_to' => 'nullable|date|after:joining_date_from',
-           'city_id' => 'required|exists:cities,id',
-           'image' => 'nullable|image',
-        ];
+        $data = [
+                   'name' => 'required|string|min:2',
+                   'phone' => 'required|string|min:2||unique:users,phone,'.$this->id,
+                   'email' => 'required|unique:users,email,'.$this->id,
+                   'address' => 'required|string|min:2',
+                   'code' => 'required|unique:users,code,'.$this->id,
+                   'birthdate' => 'required|string|min:2',
+                   'joining_date_from' => 'nullable|date',
+                   'joining_date_to' => 'nullable|date|after:joining_date_from',
+                   'city_id' => 'nullable|exists:cities,id',
+                   'image' => 'nullable|image',
+                ];
         if ($this->method() == 'POST') {
-            $data= [
+            $data = [
                 'password' => 'required|string|min:8|confirmed',
             ];
         }

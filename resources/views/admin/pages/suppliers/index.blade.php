@@ -16,26 +16,34 @@
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('suppliers.create')
-                    <div class="dropdown">
+                <div class="dropdown">
+                        @can('suppliers.create')
                         <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.suppliers.create') }}">
                             <i data-feather="plus"></i>
                             <span class="active-sorting text-primary">{{ __('suppliers.actions.create') }}</span>
                         </a>
+                        @endcan
+                        @include('admin.pages.suppliers.filter')
                     </div>
-                @endcan
             </div>
         </div>
     </div>
     <div class="content-body">
         <div class="card">
-            <div class="card-datatable">
+            <div class="card-datatable table-responsive">
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('suppliers.default.name') }}</th>
-                        <th>{{ __('suppliers.active') }}</th>
+                        <th>{{ __('suppliers.code') }}</th>
                         <th>{{ __('suppliers.image') }}</th>
+                        <th>{{ __('suppliers.name') }}</th>
+                        <th>{{ __('suppliers.email') }}</th>
+                        <th>{{ __('suppliers.phone') }}</th>
+                        <th>{{ __('suppliers.birthdate') }}</th>
+                        <th>{{ __('suppliers.address') }}</th>
+                        <th>{{ __('suppliers.active') }}</th>
+                        <th>{{ __('suppliers.joining_date') }}</th>
+                        <th>{{ __('suppliers.orders_count') }}</th>
                         @canany('suppliers.edit','suppliers.delete')
                             <th width="15%" class="text-center">{{ __('suppliers.options') }}</th>
                         @endcanany
@@ -67,7 +75,13 @@
             ajax: {
                 url: "{{ route('admin.suppliers.list') }}",
                 data: function (d) {
-                    d.name   = $('#filterForm #name').val();
+                    d.name  = $('#filterForm #name').val();
+                    d.email  = $('#filterForm #email').val();
+                    d.phone  = $('#filterForm #phone').val();
+                    d.birthdate  = $('#filterForm #birthdate').val();
+                    d.city_id  = $('#filterForm #city_id').val();
+                    d.joining_date  = $('#filterForm #joining_date').val();
+                    d.active  = $('#filterForm #active').val();
                 }
             },
             drawCallback: function (settings) {
@@ -75,9 +89,16 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
-                {data: 'active', name: 'active'},
+                {data: 'code', name: 'code'},
                 {data: 'photo', name: 'photo'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'phone', name: 'phone'},
+                {data: 'birthdate', name: 'birthdate'},
+                {data: 'address', name: 'address'},
+                {data: 'active', name: 'active'},
+                {data: 'joining_date', name: 'joining_date'},
+                {data: 'order_count', name: 'order_count',orderable: false,searchable: false},
                 @canany('suppliers.edit','suppliers.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany

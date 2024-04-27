@@ -39,6 +39,15 @@
                     </a>
                 </li>
             @endcan
+
+           {{-- @can('suppliers.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.suppliers.index') }} '>
+                        <i data-feather='users'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.suppliers') }}</span>
+                    </a>
+                </li>
+            @endcan --}}
             @can('categories.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.categories.index') }} ">
@@ -91,16 +100,6 @@
 
 
 
-           @can('suppliers.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.suppliers.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.suppliers') }}</span>
-                    </a>
-                </li>
-            @endcan --}}
-
-{{--
             @can('companies.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.companies.index') }} ">

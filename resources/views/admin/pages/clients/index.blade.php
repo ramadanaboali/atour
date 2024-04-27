@@ -16,15 +16,15 @@
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('clients.create')
-                    <div class="dropdown">
+                <div class="dropdown">
+                        @can('clients.create')
                         <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.clients.create') }}">
                             <i data-feather="plus"></i>
                             <span class="active-sorting text-primary">{{ __('clients.actions.create') }}</span>
                         </a>
+                        @endcan
+                        @include('admin.pages.clients.filter')
                     </div>
-                @endcan
-                @include('admin.pages.clients.filter')
             </div>
         </div>
     </div>
@@ -75,7 +75,13 @@
             ajax: {
                 url: "{{ route('admin.clients.list') }}",
                 data: function (d) {
-                    d.name   = $('#filterForm #name').val();
+                    d.name  = $('#filterForm #name').val();
+                    d.email  = $('#filterForm #email').val();
+                    d.phone  = $('#filterForm #phone').val();
+                    d.birthdate  = $('#filterForm #birthdate').val();
+                    d.city_id  = $('#filterForm #city_id').val();
+                    d.joining_date  = $('#filterForm #joining_date').val();
+                    d.active  = $('#filterForm #active').val();
                 }
             },
             drawCallback: function (settings) {

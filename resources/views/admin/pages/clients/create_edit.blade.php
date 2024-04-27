@@ -119,6 +119,22 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-1 col-md-4  @error('password') is-invalid @enderror">
+                            <label class="form-label">{{ __('users.password') }}</label>
+                            <input class="form-control input" name="password"  placeholder="" type="password"
+                                   autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
+                            @error('password')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('password_confirmation') is-invalid @enderror">
+                            <label class="form-label">{{ __('users.password_confirmation') }}</label>
+                            <input class="form-control input" name="password_confirmation"  placeholder="" type="password"
+                                   autocomplete="false" readonly onfocus="this.removeAttribute('readonly');">
+                            @error('password_confirmation')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
