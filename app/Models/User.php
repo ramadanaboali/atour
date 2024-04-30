@@ -40,7 +40,8 @@ class User extends Authenticatable
     ];
 
     public const TYPE_ADMIN = 1;
-    public const TYPE_CLIENT = 2;
+    public const TYPE_SUPPLIER = 2;
+    public const TYPE_CLIENT = 3;
 
 
     protected $appends = ['photo'];
@@ -49,5 +50,8 @@ class User extends Authenticatable
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : null) : null;
     }
 
+    public function supplier(){
+        return $this->hasOne(Supplier::class,'user_id');
+    }
 
 }

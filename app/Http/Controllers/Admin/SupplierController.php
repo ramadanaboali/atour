@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
@@ -31,7 +33,7 @@ class SupplierController extends Controller
 
     public function edit($id): View
     {
-        $item = Supplier::findOrFail($id);
+        $item = User::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
@@ -83,7 +85,7 @@ class SupplierController extends Controller
 
     public function update(SupplierRequest $request, $id): RedirectResponse
     {
-        $item = Supplier::findOrFail($id);
+        $item = User::findOrFail($id);
         if ($this->processForm($request, $id)) {
             flash(__('suppliers.messages.updated'))->success();
         }
@@ -92,47 +94,79 @@ class SupplierController extends Controller
 
     protected function processForm($request, $id = null): Supplier|null
     {
-        $item = $id == null ? new Supplier() : Supplier::find($id);
+        $item = $id == null ? new User() : User::find($id);
         $data= $request->except(['_token', '_method']);
 
-        $item = $item->fill($data);
+        $supplierData = [
+            'profission_guide'=> $request->profission_guide,
+                'url'=> $request->url,
+                'job'=> $request->job,
+                'language'=> $request->language,
+                'banck_name'=> $request->banck_name,
+                'banck_number'=> $request->banck_number,
+                'experience_info'=> $request->experience_info,
+                'bio'=> $request->bio,
+                'description'=> $request->description,
+                'streat'=> $request->streat,
+                'postal_code'=> $request->postal_code,
+                'active'=> $request->active,
+                'city_id'=> $request->city_id,
+                'country_id'=> $request->country_id,
+                'user_id'=> $request->user_id
+            ];
             if($request->filled('active')){
-                $item->active = 1;
+                $active = 1;
             }else{
-                $item->active = 0;
+                $active = 0;
             }
-        if ($item->save()) {
+            $userData = [
+                'name'=>$request->name,
+                'phone'=>$request->phone,
+                'email'=>$request->email,
+                'type'=>User::TYPE_SUPPLIER,
+                'active'=>$active,
+                'address'=>$request->address,
+                'city_id'=>$request->city_id,
+            ];
+            $item = $item->fill($userData);
 
+        if ($item->save()) {
             if ($request->hasFile('image')) {
                 $image= $request->file('image');
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/suppliers'), $fileName);
+                $request->image->move(public_path('storage/suppliers'), $fileName);
                 $item->image = $fileName;
                 $item->save();
+
             }
-            return $item;
+
+            if ($request->filled('password')) {
+                $item->password = Hash::make($request->password);
+                $item->save();
+            }
+
+            $supplierData['user_id'] = $item->id;
+           $supplier= $id == null ? new Supplier() : Supplier::where('user_id',$id)->first();
+           $supplier->fill($supplierData);
+           $supplier->save();
+            return $supplier;
         }
         return null;
     }
 
     public function list(Request $request): JsonResponse
     {
-        $data = Supplier::select('*');
+        $data = User::with(['supplier'])->select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+            return '<img src="' . $item->user?->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->user?->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
-        ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+
+
         ->rawColumns(['photo','active'])
         ->make(true);
     }

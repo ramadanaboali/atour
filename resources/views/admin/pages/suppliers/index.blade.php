@@ -34,7 +34,6 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('suppliers.code') }}</th>
                         <th>{{ __('suppliers.image') }}</th>
                         <th>{{ __('suppliers.name') }}</th>
                         <th>{{ __('suppliers.email') }}</th>
@@ -42,8 +41,6 @@
                         <th>{{ __('suppliers.birthdate') }}</th>
                         <th>{{ __('suppliers.address') }}</th>
                         <th>{{ __('suppliers.active') }}</th>
-                        <th>{{ __('suppliers.joining_date') }}</th>
-                        <th>{{ __('suppliers.orders_count') }}</th>
                         @canany('suppliers.edit','suppliers.delete')
                             <th width="15%" class="text-center">{{ __('suppliers.options') }}</th>
                         @endcanany
@@ -89,16 +86,13 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'code', name: 'code'},
                 {data: 'photo', name: 'photo'},
-                {data: 'name', name: 'name'},
+                {data: 'name', name: 'users.name'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
                 {data: 'birthdate', name: 'birthdate'},
                 {data: 'address', name: 'address'},
                 {data: 'active', name: 'active'},
-                {data: 'joining_date', name: 'joining_date'},
-                {data: 'order_count', name: 'order_count',orderable: false,searchable: false},
                 @canany('suppliers.edit','suppliers.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany
