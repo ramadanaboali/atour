@@ -7,7 +7,8 @@
                 <!-- Login v1 -->
                 <div class="card mb-0">
                     <div class="card-body" >
-                      
+            @include('flash::message')
+
                         <h2 class="col-md-12 text-center">Atour</h2>
                         <form class="auth-login-form mt-2" action="{{ route('admin.postLogin') }}" method="POST">
                             @csrf
@@ -23,11 +24,11 @@
                             <div class="mb-1 @error('password') is-invalid @enderror">
                                 <div class="d-flex justify-content-between">
                                     <label class="form-label" for="login-password">{{ __('admin.password') }}</label>
-                                    {{-- @if (Route::has('password.request'))
+                                    @if (Route::has('password.request'))
                                         <a href="{{ route('password.request') }}">
                                             <small>{{ __('admin.forgot_password') }}</small>
                                         </a>
-                                    @endif --}}
+                                    @endif
                                 </div>
                                 <div class="input-group input-group-merge form-password-toggle">
                                     <input type="password" class="form-control form-control-merge" id="login-password" name="password" tabindex="2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="login-password" />

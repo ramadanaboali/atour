@@ -5,10 +5,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
+Auth::routes();
 Route::get('/privacy', [HomeController::class, 'privacy']);
 Route::get('/language', [HomeController::class, 'language'])->name('language');
-Auth::routes();
 Route::get('/storage-link', function () {
     Artisan::call('storage:link');
     return 'Storage link created';
@@ -22,3 +21,9 @@ Route::get('/install-permissions', function () {
     return 'Permission updated';
 });
 
+
+Route::post('sendcode', [App\Http\Controllers\Api\V1\AuthController::class, 'sendCode'])->name('sendcode');
+
+Route::post('send/email', [App\Http\Controllers\Admin\AuthController::class, 'resetPassword'])->name('password.reset');
+Route::get('confirm/email', [App\Http\Controllers\Admin\AuthController::class, 'resetConfirm'])->name('password.confirm');
+Route::post('password/save', [App\Http\Controllers\Admin\AuthController::class, 'savePassword'])->name('password.save');

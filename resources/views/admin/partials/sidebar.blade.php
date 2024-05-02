@@ -19,34 +19,104 @@
             <li class=" nav-item">
                 <a class="d-flex align-items-center" href="{{ route('admin.home') }}">
                     <i data-feather="home"></i>
-                    <span class="menu-title text-truncate" data-i18n="Dashboards">{{ __('admin.dashboard') }}</span>
+                    <span class="menu-title text-truncate" data-i18n="Dashboards">{{ __('admin.statistics') }}</span>
                 </a>
             </li>
 
-            @can('sliders.view')
+            <li class=" nav-item {{ request()->routeIs('admin.clients*')|| request()->routeIs('admin.new_clients*')||request()->routeIs('admin.current_clients*') ? 'open active' : '' }}">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.clients*')|| request()->routeIs('admin.new_clients*')||request()->routeIs('admin.current_clients*') ? 'active' : '' }}" href="#">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.clients_list') }}</span>
+                </a>
+                <ul class="menu-content">
+                        @can('new_clients.view')
+                        <li class=" nav-item  {{ request()->routeIs('admin.new_clients.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.new_clients.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.new_clients') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('current_clients.view')
+                        <li class=" nav-item  {{ request()->routeIs('admin.current_clients.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.current_clients.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_clients') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                </ul>
+            </li>
+
+            <li class=" nav-item {{ request()->routeIs('admin.suppliers*')|| request()->routeIs('admin.new_suppliers*')||request()->routeIs('admin.current_suppliers*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.suppliers*')|| request()->routeIs('admin.new_suppliers*')||request()->routeIs('admin.current_suppliers*') ? 'active' : '' }}" href="#">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.suppliers_list') }}</span>
+                </a>
+                <ul class="menu-content">
+                        @can('new_suppliers.view')
+                        <li class=" nav-item {{ request()->routeIs('admin.new_suppliers.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.new_suppliers.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.new_suppliers') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('current_suppliers.view')
+                        <li class=" nav-item  {{ request()->routeIs('admin.current_suppliers.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.current_suppliers.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_suppliers') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item  {{ request()->routeIs('admin.currents_suppliers.index')?'active':''}}">
+                            <a class="d-flex align-items-center" title="{{ __('admin.suppliers_requests') }}" href="{{ route('admin.current_suppliers.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppliers_requests') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                </ul>
+            </li>
+            <li class=" nav-item {{ request()->routeIs('admin.orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'active' : '' }}" href="#">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.orders_list') }}</span>
+                </a>
+                <ul class="menu-content">
+                        @can('new_orders.view')
+                        <li class=" nav-item {{ request()->routeIs('admin.new_orders.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.new_orders.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_orders') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('current_orders.view')
+                    <li class=" nav-item  {{ request()->routeIs('admin.current_orders.index')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.current_orders.index') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.old_orders') }}</span>
+                        </a>
+                    </li>
+                    <li class=" nav-item  {{ request()->routeIs('admin.currents_orders.index')?'active':''}}">
+                        <a class="d-flex align-items-center" title="{{ __('admin.orders_requests') }}" href="{{ route('admin.current_orders.index') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.canceled_orders') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+            </ul>
+        </li>
+
+
+             @can('sliders.view')
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.sliders.index') }} ">
                     <i data-feather="image"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.sliders') }}</span>
                 </a>
             </li>
-            @endcan
-            @can('clients.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.clients.index') }} '>
-                        <i data-feather='user'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.clients') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-           @can('suppliers.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.suppliers.index') }} '>
-                        <i data-feather='users'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.suppliers') }}</span>
-                    </a>
-                </li>
             @endcan
             @can('categories.view')
             <li>

@@ -158,7 +158,13 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('orders/list', [App\Http\Controllers\Admin\OrderController::class, 'list'])->name('orders.list')->middleware('permission:orders.view');
             Route::post('orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store')->middleware('permission:orders.create');
             Route::delete('orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:orders.delete');
-            Route::get('orders', [App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index')->middleware('permission:orders.view');
+
+
+Route::get('orders', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('orders.index')->middleware('permission:orders.view');
+Route::get('new-orders', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('new_orders.index')->middleware('permission:new_orders.view');
+Route::get('current-orders', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('current_orders.index')->middleware('permission:current_orders.view');
+
+
             Route::get('orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create')->middleware('permission:orders.create');
             Route::match(['PUT', 'PATCH'], 'orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'update'])->name('orders.update')->middleware('permission:orders.edit');
             Route::get('orders/{id}/edit', [App\Http\Controllers\Admin\OrderController::class, 'edit'])->name('orders.edit')->middleware('permission:orders.edit');
@@ -171,7 +177,11 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('suppliers/list', [App\Http\Controllers\Admin\SupplierController::class, 'list'])->name('suppliers.list')->middleware('permission:suppliers.view');
             Route::post('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'store'])->name('suppliers.store')->middleware('permission:suppliers.create');
             Route::delete('suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'destroy'])->name('suppliers.destroy')->middleware('permission:suppliers.delete');
+
             Route::get('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('suppliers.index')->middleware('permission:suppliers.view');
+            Route::get('new-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('new_suppliers.index')->middleware('permission:new_suppliers.view');
+            Route::get('current-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('current_suppliers.index')->middleware('permission:current_suppliers.view');
+
             Route::get('suppliers/create', [App\Http\Controllers\Admin\SupplierController::class, 'create'])->name('suppliers.create')->middleware('permission:suppliers.create');
             Route::match(['PUT', 'PATCH'], 'suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'update'])->name('suppliers.update')->middleware('permission:suppliers.edit');
             Route::get('suppliers/{id}/edit', [App\Http\Controllers\Admin\SupplierController::class, 'edit'])->name('suppliers.edit')->middleware('permission:suppliers.edit');
@@ -185,6 +195,8 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('clients', [App\Http\Controllers\Admin\ClientController::class, 'store'])->name('clients.store')->middleware('permission:clients.create');
             Route::delete('clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->name('clients.destroy')->middleware('permission:clients.delete');
             Route::get('clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index')->middleware('permission:clients.view');
+            Route::get('new-clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('new_clients.index')->middleware('permission:new_clients.view');
+            Route::get('current-clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('current_clients.index')->middleware('permission:current_clients.view');
             Route::get('clients/create', [App\Http\Controllers\Admin\ClientController::class, 'create'])->name('clients.create')->middleware('permission:clients.create');
             Route::match(['PUT', 'PATCH'], 'clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'update'])->name('clients.update')->middleware('permission:clients.edit');
             Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('permission:clients.edit');

@@ -148,8 +148,20 @@ return [
     'countries' => 'الدول',
     'jobs' => 'الوظائف',
     'offers' => 'العروض',
-    'suppliers' => 'الموردين',
     'clients' => 'العملاء',
+    'new_clients' => 'العملاء الجدد',
+    'current_clients' => 'العملاء الحالين',
+    'clients_list' => 'قائمة العملاء',
+    'suppliers' => 'الموردين',
+    'new_suppliers' => 'الموردين الجدد',
+    'current_suppliers' => 'الموردين الحالين',
+    'suppliers_list' => 'قائمة الموردين',
+    'suppliers_requests' => 'طلبات الانضمام الى المنصة',
+    'old_orders' => 'الطلبات السابقة',
+    'current_orders' => 'الطلبات الحالية',
+    'orders_list' => 'قائمة الطلبات',
+    'canceled_orders' => 'الطلبات الملغية',
+    'code' => 'الكود',
 
 
 ];
