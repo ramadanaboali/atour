@@ -19,6 +19,8 @@ return [
         'save' => 'حفظ',
         'filter' => 'بحث',
         'back' => 'العودة للخلف',
+        'status' => 'الحالة',
+
     ],
     'messages' => [
         'created' => 'تم إضافة العميل بنجاح .',
@@ -63,6 +65,7 @@ return [
     'image' => 'الصورة',
     'sort' => 'الترتيب',
     'active' => 'نشط',
+    'notactive' => 'غيري نشط',
     'available' => 'المنتج متوفر',
     'nationality' => 'الجنسية',
     'code' => 'رقم العميل',

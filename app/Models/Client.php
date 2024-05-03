@@ -12,7 +12,7 @@ class Client extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table = 'users';
-    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by'];
+    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by','status'];
 
     public function city(): ?BelongsTo
     {

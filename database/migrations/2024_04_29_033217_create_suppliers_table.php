@@ -15,6 +15,8 @@ return new class () extends Migration {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->boolean('profission_guide')->default(false);
+            $table->string('tax_number')->nullable();
+            $table->string('files')->nullable();
             $table->string('url')->nullable();
             $table->string('job')->nullable();
             $table->string('language')->nullable();
@@ -22,6 +24,8 @@ return new class () extends Migration {
             $table->string('banck_number')->nullable();
             $table->string('experience_info')->nullable();
             $table->longText('bio')->nullable();
+            $table->longText('rerequest_reason')->nullable();
+            $table->enum('type', ['company','indivedual'])->default('company');
             $table->longText('description')->nullable();
             $table->string('streat')->nullable();
             $table->string('postal_code')->nullable();

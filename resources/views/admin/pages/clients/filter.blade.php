@@ -67,18 +67,17 @@
                                 </div>
                             </div>
                         </div>
-
-                         <div class="mb-1 col-md-12  @error('active') is-invalid @enderror">
-                            <br>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="active"
-                                        value="1" id="active"
-                                        @checked($item->active ?? false )/>
-                                <label class="form-check-label" for="active">{{ __('clients.active') }}</label>
+                        <div class="mb-1 col-md-12"  >
+                            <div class="form-group row">
+                                <label for=" active" class="col-sm-2 col-form-label">{{ __('clients.active') }}</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="active">
+                                        <option value="">{{ __('admin.select') }}</option>
+                                        <option value="1">{{ __('clients.active') }}</option>
+                                        <option value="1">{{ __('clients.notactive') }}</option>
+                                    </select>
+                                </div>
                             </div>
-                            @error('active')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
                         </div>
                         <div class="col-md-12">
                             <button type="button" class="btn btn-primary btn_filter">{{ __('clients.search') }}</button>

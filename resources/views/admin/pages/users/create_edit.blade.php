@@ -57,18 +57,18 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-4  @error('type') is-invalid @enderror">
-                            <label class="form-label">{{ __('users.type') }}</label>
-                            <select class="form-control input" name="type">
+                        <div class="mb-1 col-md-4  @error('role') is-invalid @enderror">
+                            <label class="form-label">{{ __('users.role') }}</label>
+                            <select class="form-control input" name="role_id">
                                 <option value="">{{ __('users.select') }}</option>
-                                    <option value="1" {{ ($item->type ?? null) == 1 ? 'selected' : '' }}>{{ __('users.types.1') }}</option>
-                                    <option value="2" {{ ($item->type ?? null) == 2 ? 'selected' : '' }}>{{ __('users.types.2') }}</option>
+                                @foreach(\Spatie\Permission\Models\Role::all() as $role)
+                                    <option value="{{ $role->id }}" {{ in_array($role->id, $userRoles) ? 'selected' : '' }}>{{ $role->display_name }}</option>
+                                @endforeach
                             </select>
-                            @error('type')
+                            @error('role_id')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-
                         <div class="mb-1 col-md-4  @error('phone') is-invalid @enderror">
                             <label class="form-label">{{ __('users.phone') }}</label>
                             <input class="form-control" name="phone" type="text" value="{{ $item->phone ?? old('phone') }}">

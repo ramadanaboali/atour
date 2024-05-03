@@ -40,8 +40,8 @@ class User extends Authenticatable
     ];
 
     public const TYPE_ADMIN = 1;
-    public const TYPE_SUPPLIER = 2;
-    public const TYPE_CLIENT = 3;
+    public const TYPE_CLIENT = 2;
+    public const TYPE_SUPPLIER = 3;
 
 
     protected $appends = ['photo'];

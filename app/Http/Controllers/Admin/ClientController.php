@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,34 @@ class ClientController extends Controller
 
     public function index(Request $request): View
     {
+
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function newClients(Request $request): View
+    {
+        $status = "pendding";
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function status($id)
+    {
+        $item=Client::findOrFail($id);
+        if($item->active == 0){
+            $item->active = 1;
+            $item->status = "accepted";
+
+        }else{
+            $item->active = 0;
+        }
+        $item->save();
+
+        flash(__('clients.messages.updated'))->success();
+
+        return back();
+    }
+    public function currentClients(Request $request): View
+    {
+
+        $status = "accepted";
         return view($this->viewIndex, get_defined_vars());
     }
 
@@ -100,6 +129,8 @@ class ClientController extends Controller
         } else {
             $item->active = 0;
         }
+        $item->type = User::TYPE_CLIENT;
+
         if ($item->save()) {
 
             if ($request->hasFile('image')) {
@@ -118,7 +149,7 @@ class ClientController extends Controller
     {
         $data = Client::where(function ($query) use ($request) {
             if ($request->filled('name')) {
-                $query->where('name','like','%'. $request->name .'%');
+                $query->where('name', 'like', '%'. $request->name .'%');
             }
             if ($request->filled('email')) {
                 $query->where('email', $request->email);
@@ -138,20 +169,24 @@ class ClientController extends Controller
             if ($request->filled('joining_date')) {
                 $query->where('joining_date_from', $request->joining_date);
             }
-        })->select('*');
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+        })->where('type',User::TYPE_CLIENT)->select('*');
         return FacadesDataTables::of($data)
-        ->addIndexColumn()
-        ->addColumn('photo', function ($item) {
-            return $item->photo ? '<img src="' . $item->photo . '" height="100px" width="100px">' : '';
-        })
-        ->addColumn('joining_date', function ($item) {
-            return $item->joining_date_from.' - '.$item->joining_date_to;
-        })
-        ->addColumn('order_count', function ($item) {
-            return 0;
-        })
-        ->editColumn('active', function ($item) {
-            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            ->addIndexColumn()
+            ->addColumn('photo', function ($item) {
+                return $item->photo ? '<img src="' . $item->photo . '" height="100px" width="100px">' : '';
+            })
+            ->addColumn('joining_date', function ($item) {
+                return $item->joining_date_from . ' - ' . $item->joining_date_to;
+            })
+            ->addColumn('order_count', function ($item) {
+                return 0;
+            })
+            ->editColumn('active', function ($item) {
+            $route = route('admin.clients.status', ['id' => $item->id]);
+            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect " ><i data-feather="x" ></i></button>';
         })
 
         ->rawColumns(['photo','active','joining_date'])

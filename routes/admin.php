@@ -93,8 +93,17 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
             Route::get('settings/general', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index')->middleware('permission:settings.general');
+            Route::get('settings/site_Settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.site')->middleware('permission:settings.general');
+            Route::get('settings/header_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.header')->middleware('permission:settings.general');
+            Route::get('settings/footer_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.footer')->middleware('permission:settings.general');
+            Route::get('settings/home_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.home')->middleware('permission:settings.general');
+            Route::get('settings/slider_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.slider')->middleware('permission:settings.general');
+            Route::get('settings/booking_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.why_atour_booking_settings')->middleware('permission:settings.general');
+            Route::get('settings/about_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.about')->middleware('permission:settings.general');
+            Route::get('settings/terms_preivasy_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.terms_preivasy')->middleware('permission:settings.general');
+            Route::get('settings/experience_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.experience')->middleware('permission:settings.general');
             Route::get('settings/about', [App\Http\Controllers\Admin\SettingController::class, 'about'])->name('settings.about')->middleware('permission:settings.about');
-            Route::get('settings/privacy', [App\Http\Controllers\Admin\SettingController::class, 'privacy'])->name('settings.privacy')->middleware('permission:settings.privacy');
+            Route::get('settings/term-privacy', [App\Http\Controllers\Admin\SettingController::class, 'privacy'])->name('settings.term_condition')->middleware('permission:settings.privacy');
             Route::get('settings/terms', [App\Http\Controllers\Admin\SettingController::class, 'terms'])->name('settings.terms')->middleware('permission:settings.terms');
             Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update')->middleware('permission:settings.edit');
 
@@ -195,8 +204,9 @@ Route::get('current-orders', [App\Http\Controllers\Admin\SupplierController::cla
             Route::post('clients', [App\Http\Controllers\Admin\ClientController::class, 'store'])->name('clients.store')->middleware('permission:clients.create');
             Route::delete('clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->name('clients.destroy')->middleware('permission:clients.delete');
             Route::get('clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index')->middleware('permission:clients.view');
-            Route::get('new-clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('new_clients.index')->middleware('permission:new_clients.view');
-            Route::get('current-clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('current_clients.index')->middleware('permission:current_clients.view');
+            Route::get('clients/status/{id}', [App\Http\Controllers\Admin\ClientController::class, 'status'])->name('clients.status')->middleware('permission:clients.status');
+            Route::get('new-clients', [App\Http\Controllers\Admin\ClientController::class, 'newClients'])->name('new_clients.index')->middleware('permission:new_clients.view');
+            Route::get('current-clients', [App\Http\Controllers\Admin\ClientController::class, 'currentClients'])->name('current_clients.index')->middleware('permission:current_clients.view');
             Route::get('clients/create', [App\Http\Controllers\Admin\ClientController::class, 'create'])->name('clients.create')->middleware('permission:clients.create');
             Route::match(['PUT', 'PATCH'], 'clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'update'])->name('clients.update')->middleware('permission:clients.edit');
             Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('permission:clients.edit');

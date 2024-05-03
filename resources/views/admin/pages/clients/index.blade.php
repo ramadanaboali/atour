@@ -53,8 +53,8 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="hiddenstatus" value="{{ $status??null }}">
 @stop
-
 @push('scripts')
     <script>
         var dt_ajax_table = $('.datatables-ajax');
@@ -75,6 +75,7 @@
             ajax: {
                 url: "{{ route('admin.clients.list') }}",
                 data: function (d) {
+                    d.status  = $('#hiddenstatus').val();
                     d.name  = $('#filterForm #name').val();
                     d.email  = $('#filterForm #email').val();
                     d.phone  = $('#filterForm #phone').val();
@@ -114,6 +115,8 @@
 
                         var deleteUrl = '{{ route("admin.clients.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
+                        var statusUrl = '{{ route("admin.clients.status", ":id") }}';
+                        statusUrl = statusUrl.replace(':id', row.id);
 
                         return `
                                <div class="dropdown">
@@ -133,6 +136,12 @@
                                              <span>{{ __('clients.actions.delete') }}</span>
                                         </a>
                                         @endcan
+                        @can('clients.status')
+                        <a class="dropdown-item client_status" data-url="`+statusUrl+`" href="#">
+                            <i data-feather="circle" class="font-medium-2"></i>
+                                <span>{{ __('clients.actions.status') }}</span>
+                        </a>
+                        @endcan
                         </div>
                    </div>
                     `;

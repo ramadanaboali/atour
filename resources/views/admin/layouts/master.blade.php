@@ -146,6 +146,25 @@
         </form>
     </div>
 </div>
+<div class="modal fade text-start" id="ClientStatus" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="StatusForm" method="get" action="#">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.client_status.title') }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ __('admin.dialogs.client_status.info') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-success">{{ __('admin.dialogs.client_status.confirm') }}</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">{{ __('admin.dialogs.client_status.cancel') }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
  <div class="modal fade text-start" id="modalRestore" tabindex="-1" aria-labelledby="myModalLabel1"
         aria-hidden="true">
@@ -233,6 +252,13 @@
             var url= $(this).attr('data-url');
             $('#deleteForm').attr('action', url)
             $('#modalDelete').modal('show')
+            return false;
+        });
+
+        $('body').on('click', '.client_status', function (){
+            var url= $(this).attr('data-url');
+              $('#StatusForm').attr('action', url)
+            $('#ClientStatus').modal('show')
             return false;
         });
         $('body').on('click', '.restore_item', function (){

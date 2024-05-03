@@ -118,154 +118,113 @@
                 </a>
             </li>
             @endcan
-            @can('categories.view')
             <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.categories.index') }} ">
-                    <i data-feather="list"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.categories') }}</span>
+                <a class="d-flex align-items-center" href="">
+                    <i data-feather="image"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.accountants') }}</span>
                 </a>
             </li>
-            @endcan
-  @can('sub_categories.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.sub_categories.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.sub_categories') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-           {{-- @can('jobs.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.jobs.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.jobs') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-           @can('offers.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.offers') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-           @can('orders.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.orders.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.orders') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-            @can('companies.view')
             <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.companies.index') }} ">
-                    <i data-feather="command"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.companies') }}</span>
+                <a class="d-flex align-items-center" href="">
+                    <i data-feather="image"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppports_contact_us') }}</span>
                 </a>
             </li>
-            @endcan --}}
+            <li>
+                <a class="d-flex align-items-center" href="">
+                    <i data-feather="image"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.articles_news') }}</span>
+                </a>
+            </li>
+            <li>
+                <a class="d-flex align-items-center" href="">
+                    <i data-feather="image"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.jobs') }}</span>
+                </a>
+            </li>
+              <li class=" nav-item {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'active' : '' }}" href="#">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.users_roles') }}</span>
+                </a>
+                <ul class="menu-content">
+                        @can('users.view')
+                        <li class=" nav-item {{ request()->routeIs('admin.users.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.users.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.users') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('roles.view')
+                    <li class=" nav-item  {{ request()->routeIs('admin.roles.index')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.roles.index') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.roles') }}</span>
+                        </a>
+                    </li>
 
-            {{-- @can('contacts.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.contacts.index') }} ">
-                    <i data-feather="phone"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.contacts') }}</span>
-                </a>
-            </li>
-            @endcan --}}
+                    @endcan
+            </ul>
+        </li>
 
-             @can('users.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.users.index') }} ">
-                    <i data-feather="users"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.users') }}</span>
-                </a>
-            </li>
-            @endcan
-            @can('countries.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.countries.index') }} ">
-                    <i data-feather="globe"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.countries') }}</span>
-                </a>
-            </li>
-            @endcan
-               @can('cities.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.cities.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.cities') }}</span>
-                    </a>
-                </li>
-            @endcan
-             @can('roles.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.roles.index') }} ">
-                    <i data-feather="lock"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.roles') }}</span>
-                </a>
-            </li>
-            @endcan
-            @can('settings.general')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.settings.index') }} ">
+              <li class=" nav-item {{ request()->routeIs('admin.settings*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="#">
                     <i data-feather="settings"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.company_details') }}</span>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.site_Settings') }}</span>
                 </a>
-            </li>
-            @endcan
-            {{-- @can('settings.about')
-                <li>
-                    <a class="d-flex align-items-center" href="{{ route('admin.settings.about') }} ">
-                        <i data-feather="info"></i>
-                        <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.about') }}</span>
-                    </a>
-                </li>
-            @endcan
-            @can('notifications.view')
-                <li>
-                    <a class="d-flex align-items-center" href="{{ route('admin.notifications.index') }} ">
-                        <i data-feather="circle"></i>
-                        <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.notifications') }}</span>
-                    </a>
-                </li>
-            @endcan --}}
-            @can('settings.privacy')
-                <li>
-                    <a class="d-flex align-items-center" href="{{ route('admin.settings.privacy') }} ">
-                        <i data-feather="help-circle"></i>
-                        <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.privacy') }}</span>
-                    </a>
-                </li>
-            @endcan
-            @can('settings.terms')
-                <li>
-                    <a class="d-flex align-items-center" href="{{ route('admin.settings.terms') }} ">
-                        <i data-feather="key"></i>
-                        <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.terms') }}</span>
-                    </a>
-                </li>
-            @endcan
+                <ul class="menu-content">
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.header')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.header') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.header_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.footer')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.footer') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.footer_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.home')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.home') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.home_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.slider')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.slider') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.slider_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.why_atour_booking_settings')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.why_atour_booking_settings') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.why_atour_booking_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.about')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.about') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.about_settings') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.term_condition')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.term_condition') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.term_condition') }}</span>
+                            </a>
+                        </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.experience')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.experience') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.experience_settings') }}</span>
+                            </a>
+                        </li>
 
-
-
-
-
-
+            </ul>
+        </li>
 
 
         {{--addnewrouteheredontdeletemeplease--}}
