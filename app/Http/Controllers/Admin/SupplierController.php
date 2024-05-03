@@ -156,7 +156,7 @@ class SupplierController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = User::with(['supplier'])->select('*');
+        $data = User::with(['supplier'])->where('type',User::TYPE_SUPPLIER)->select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {
