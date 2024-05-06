@@ -33,7 +33,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('sliders', [App\Http\Controllers\Api\V1\PageController::class,'sliders']);
         Route::get('countries', [App\Http\Controllers\Api\V1\PageController::class,'countries']);
         Route::get('categories', [App\Http\Controllers\Api\V1\PageController::class,'categories']);
-        Route::get('home', [App\Http\Controllers\Api\V1\PageController::class,'home']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////

@@ -262,9 +262,13 @@ if (!function_exists('convertArabicNumbers')) {
 if (!function_exists('storeFile')) {
     function storeFile($image, $destination)
     {
+
         $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('storage/'.$destination), $fileName);
+        $image->storeAs('public/' . $destination, $fileName);
         return $fileName;
+        // $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+        // $image->move(public_path('storage/'.$destination), $fileName);
+        // return $fileName;
     }
 }
 

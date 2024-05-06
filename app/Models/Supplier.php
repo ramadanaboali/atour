@@ -12,7 +12,30 @@ class Supplier extends Model
      use HasFactory;
     use SoftDeletes;
     protected $table = 'suppliers';
-    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by'];
+    protected $fillable = [
+        'tour_guid',
+        'rerequest_reason',
+        'type',
+        'country_id',
+        'city_id',
+        'streat',
+        'postal_code',
+        'user_id',
+        'description',
+        'short_description',
+        'url',
+        'profission_guide',
+        'job',
+        'experience_info',
+        'languages',
+        'banck_name',
+        'banck_number',
+        'tax_number',
+        'place_summary',
+        'place_content',
+        'expectations',
+        'created_by',
+        'updated_by'];
 
     public function user(): ?BelongsTo
     {

@@ -21,6 +21,7 @@ return [
         'deleted' => 'تم الحذف بنجاح.',
         'cant_change' => 'عفوا لا يمكنك تحديث اسم هذه الصلاحية.',
         'charged' => 'تم الشحن بنجاح',
+        'donthavepermissions'=>'ليس لديك صلاحية',
     ],
     'actions' => [
         'create' => 'اضافة',
@@ -181,6 +182,16 @@ return [
     'orders_list' => 'قائمة الطلبات',
     'canceled_orders' => 'الطلبات الملغية',
     'code' => 'الكود',
+    'next' => 'التالى',
+    'save_next' => 'حفظ والتالى ',
+    'previous' => 'السابق',
+    'notificationslevel' => [
+        'success' => 'نجاح',
+        'error' => 'خطأ',
+        'danger' => 'خطأ',
+        'warning' => 'تحذير',
+        'info' => 'معلومة',
+    ],
 
 
 ];

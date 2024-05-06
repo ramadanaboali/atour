@@ -76,5 +76,9 @@ return [
     'joining_date' => 'تاريخ الانضمام',
     'phone' => 'الهاتف',
     'orders_count' => 'عدد الطلبات',
+    'password' => 'كلمة المرور',
     'password_confirmation' => 'تأكيد كلمة المرور',
+    'company' => 'شركة',
+    'indivedual' => 'فرد',
+    'type' => 'النوع',
 ];

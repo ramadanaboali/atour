@@ -23,14 +23,15 @@ class CreateUsersTable extends Migration
             $table->date('birthdate')->nullable();
             $table->date('joining_date_from')->nullable();
             $table->date('joining_date_to')->nullable();
-            $table->string('address');
-            $table->string('nationality');
+            $table->string('address')->nullable();
+            $table->string('nationality')->nullable();
             $table->tinyInteger('type');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('reset_code')->nullable();
             $table->rememberToken();
             $table->boolean('active')->default(true);
+            $table->enum('status', ['pendding','accepted','rejected'])->default('pendding');
             $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();

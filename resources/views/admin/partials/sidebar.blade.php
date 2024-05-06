@@ -222,6 +222,24 @@
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.experience_settings') }}</span>
                             </a>
                         </li>
+                        @can('countries.view')
+
+                        <li class=" nav-item {{ request()->routeIs('admin.countries.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.countries.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.countries') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('cities.view')
+
+                        <li class=" nav-item {{ request()->routeIs('admin.cities.index')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.cities.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.cities') }}</span>
+                            </a>
+                        </li>
+                        @endcan
 
             </ul>
         </li>

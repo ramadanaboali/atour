@@ -53,5 +53,8 @@ class User extends Authenticatable
     public function supplier(){
         return $this->hasOne(Supplier::class,'user_id');
     }
+    public function attachments(){
+        return $this->hasMany(Attachment::class,'model_id')->where('model_type','user');
+    }
 
 }
