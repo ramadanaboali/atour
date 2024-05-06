@@ -14,17 +14,13 @@ class JobRequest extends FormRequest
 
     public function rules()
     {
-        if ($this->method() == 'PUT') {
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-            ];
-        }else{
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-                'image' => 'required',
-            ];
-        }
+        return [
+            'title_ar' => 'required',
+            'title_en' => 'required',
+            'location' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'department_id' => 'required',
+        ];
     }
 }

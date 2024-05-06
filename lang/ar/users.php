@@ -98,5 +98,6 @@ return [
     ],
     'licence' => 'الرخصة التجارية',
     'passport' => 'الهوية او الجواز',
+    'password_confirmation' => 'تأكيد كلمة المرور',
     'xxxxxx' => 'xxxxxx',
 ];

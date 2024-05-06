@@ -228,6 +228,7 @@
 <script>
 
     $(window).on('load', function() {
+   
         if (feather) {
             feather.replace({
                 width: 14,

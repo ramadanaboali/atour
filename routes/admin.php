@@ -121,7 +121,35 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+
+
         //addnewrouteheredontdeletemeplease
+
+            Route::get('departments/select', [App\Http\Controllers\Admin\DepartmentController::class, 'select'])->name('departments.select');
+            Route::delete('departments/bulk', [App\Http\Controllers\Admin\DepartmentController::class, 'deleteBulk'])->name('departments.deleteBulk')->middleware('adminPermission:departments.delete');
+            Route::get('departments/list', [App\Http\Controllers\Admin\DepartmentController::class, 'list'])->name('departments.list')->middleware('adminPermission:departments.view');
+            Route::post('departments', [App\Http\Controllers\Admin\DepartmentController::class, 'store'])->name('departments.store')->middleware('adminPermission:departments.create');
+            Route::delete('departments/{id}', [App\Http\Controllers\Admin\DepartmentController::class, 'destroy'])->name('departments.destroy')->middleware('adminPermission:departments.delete');
+            Route::get('departments', [App\Http\Controllers\Admin\DepartmentController::class, 'index'])->name('departments.index')->middleware('adminPermission:departments.view');
+            Route::get('departments/create', [App\Http\Controllers\Admin\DepartmentController::class, 'create'])->name('departments.create')->middleware('adminPermission:departments.create');
+            Route::match(['PUT', 'PATCH'], 'departments/{id}', [App\Http\Controllers\Admin\DepartmentController::class, 'update'])->name('departments.update')->middleware('adminPermission:departments.edit');
+            Route::get('departments/{id}/edit', [App\Http\Controllers\Admin\DepartmentController::class, 'edit'])->name('departments.edit')->middleware('adminPermission:departments.edit');
+
+
+
+
+            Route::get('articles/select', [App\Http\Controllers\Admin\ArticleController::class, 'select'])->name('articles.select');
+            Route::delete('articles/bulk', [App\Http\Controllers\Admin\ArticleController::class, 'deleteBulk'])->name('articles.deleteBulk')->middleware('adminPermission:articles.delete');
+            Route::get('articles/list', [App\Http\Controllers\Admin\ArticleController::class, 'list'])->name('articles.list')->middleware('adminPermission:articles.view');
+            Route::post('articles', [App\Http\Controllers\Admin\ArticleController::class, 'store'])->name('articles.store')->middleware('adminPermission:articles.create');
+            Route::delete('articles/{id}', [App\Http\Controllers\Admin\ArticleController::class, 'destroy'])->name('articles.destroy')->middleware('adminPermission:articles.delete');
+            Route::get('articles', [App\Http\Controllers\Admin\ArticleController::class, 'index'])->name('articles.index')->middleware('adminPermission:articles.view');
+            Route::get('articles/create', [App\Http\Controllers\Admin\ArticleController::class, 'create'])->name('articles.create')->middleware('adminPermission:articles.create');
+            Route::match(['PUT', 'PATCH'], 'articles/{id}', [App\Http\Controllers\Admin\ArticleController::class, 'update'])->name('articles.update')->middleware('adminPermission:articles.edit');
+            Route::get('articles/{id}/edit', [App\Http\Controllers\Admin\ArticleController::class, 'edit'])->name('articles.edit')->middleware('adminPermission:articles.edit');
+
+
+
 
             Route::get('sub_categories/select', [App\Http\Controllers\Admin\SubCategoryController::class, 'select'])->name('sub_categories.select');
             Route::delete('sub_categories/bulk', [App\Http\Controllers\Admin\SubCategoryController::class, 'deleteBulk'])->name('sub_categories.deleteBulk')->middleware('adminPermission:sub_categories.delete');
@@ -174,6 +202,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('current-orders', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('current_orders.index')->middleware('adminPermission:current_orders.view');
 
 
+
             Route::get('orders/create', [App\Http\Controllers\Admin\OrderController::class, 'create'])->name('orders.create')->middleware('adminPermission:orders.create');
             Route::match(['PUT', 'PATCH'], 'orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'update'])->name('orders.update')->middleware('adminPermission:orders.edit');
             Route::get('orders/{id}/edit', [App\Http\Controllers\Admin\OrderController::class, 'edit'])->name('orders.edit')->middleware('adminPermission:orders.edit');
@@ -185,11 +214,13 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::delete('suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'destroy'])->name('suppliers.destroy')->middleware('adminPermission:suppliers.delete');
 
             Route::get('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('suppliers.index')->middleware('adminPermission:suppliers.view');
-            Route::get('new-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('new_suppliers.index')->middleware('adminPermission:new_suppliers.view');
-            Route::get('current-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('current_suppliers.index')->middleware('adminPermission:current_suppliers.view');
 
             Route::match(['PUT', 'PATCH'], 'suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'update'])->name('suppliers.update')->middleware('adminPermission:suppliers.edit');
             Route::get('suppliers/{id}/edit', [App\Http\Controllers\Admin\SupplierController::class, 'edit'])->name('suppliers.edit')->middleware('adminPermission:suppliers.edit');
+            Route::get('suppliers-new', [App\Http\Controllers\Admin\SupplierController::class, 'newSuppliers'])->name('suppliers.new')->middleware('adminPermission:suppliers.new');
+            Route::get('current-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'currentSuppliers'])->name('suppliers.current')->middleware('adminPermission:suppliers.current');
+            Route::get('suppliers-request', [App\Http\Controllers\Admin\SupplierController::class, 'requestJoin'])->name('suppliers.requests')->middleware('adminPermission:suppliers.requests');
+            Route::get('suppliers/status/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'status'])->name('suppliers.status')->middleware('adminPermission:suppliers.status');
 
 
 

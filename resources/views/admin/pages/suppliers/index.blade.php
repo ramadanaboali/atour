@@ -44,6 +44,8 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="status" value="{{ $status }}">
+    <input type="hidden" id="created_at" value="{{ $created_at }}">
 @stop
 
 @push('scripts')
@@ -70,6 +72,8 @@
                     d.type  = $('#filterForm #type').val();
                     d.city_id  = $('#filterForm #city_id').val();
                     d.active  = $('#filterForm #active').val();
+                    d.status  = $('#status').val();
+                    d.created_at  = $('#created_at').val();
                 }
             },
             drawCallback: function (settings) {
@@ -99,24 +103,28 @@
                         var deleteUrl = '{{ route("admin.suppliers.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
 
+                        var statusUrl = '{{ route("admin.suppliers.status", ":id") }}';
+                        statusUrl = statusUrl.replace(':id', row.id);
+
                         return `
                                <div class="dropdown">
                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light" data-bs-toggle="dropdown">
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        @can('suppliers.edit')
-                        <a class="dropdown-item" href="`+editUrl+`">
-                                        <i data-feather="edit-2" class="font-medium-2"></i>
-                                            <span>{{ __('suppliers.actions.edit') }}</span>
-                                        </a>
-                                        @endcan
+
                         @can('suppliers.delete')
                         <a class="dropdown-item delete_item" data-url="`+deleteUrl+`" href="#">
                                             <i data-feather="trash" class="font-medium-2"></i>
                                              <span>{{ __('suppliers.actions.delete') }}</span>
                                         </a>
                                         @endcan
+                                         @can('clients.status')
+                        <a class="dropdown-item client_status" data-url="`+statusUrl+`" href="#">
+                            <i data-feather="circle" class="font-medium-2"></i>
+                                <span>{{ __('clients.actions.status') }}</span>
+                        </a>
+                        @endcan
                         </div>
                    </div>
                     `;

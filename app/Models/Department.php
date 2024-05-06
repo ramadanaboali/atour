@@ -2,25 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
-class Category extends Model
+class Department extends Model
 {
-    use SoftDeletes;
-    protected $fillable = ['title_en','title_ar', 'image','active'];
-    protected $table = 'categories';
-    protected $appends = ['photo','title','text'];
+    use HasFactory;
+     use SoftDeletes;
+    protected $fillable = ['title_en','title_ar','active'];
+     protected $table = 'departments';
+    protected $appends = ['title','text'];
 
-
-
-
-    public function getPhotoAttribute()
-    {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/categories/' . $this->attributes['image']) : null) : null;
-
-    }
 
     public function getTextAttribute()
     {

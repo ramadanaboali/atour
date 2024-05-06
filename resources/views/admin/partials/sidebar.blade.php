@@ -54,23 +54,25 @@
                     <span class="menu-title text-truncate" data-i18n="">{{ __('admin.suppliers_list') }}</span>
                 </a>
                 <ul class="menu-content">
-                        @can('new_suppliers.view')
-                        <li class=" nav-item {{ request()->routeIs('admin.new_suppliers.index')?'active':''}}">
-                            <a class="d-flex align-items-center" href="{{ route('admin.new_suppliers.index') }} ">
+                        @can('suppliers.new')
+                        <li class=" nav-item {{ request()->routeIs('admin.suppliers.new')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.suppliers.new') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.new_suppliers') }}</span>
                             </a>
                         </li>
                         @endcan
-                        @can('current_suppliers.view')
-                        <li class=" nav-item  {{ request()->routeIs('admin.current_suppliers.index')?'active':''}}">
-                            <a class="d-flex align-items-center" href="{{ route('admin.current_suppliers.index') }} ">
+                        @can('suppliers.current')
+                        <li class=" nav-item  {{ request()->routeIs('admin.suppliers.current')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.suppliers.current') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_suppliers') }}</span>
                             </a>
                         </li>
-                        <li class=" nav-item  {{ request()->routeIs('admin.currents_suppliers.index')?'active':''}}">
-                            <a class="d-flex align-items-center" title="{{ __('admin.suppliers_requests') }}" href="{{ route('admin.current_suppliers.index') }} ">
+                        @endcan
+                        @can('suppliers.requests')
+                        <li class=" nav-item  {{ request()->routeIs('admin.suppliers.requests')?'active':''}}">
+                            <a class="d-flex align-items-center" title="{{ __('admin.suppliers_requests') }}" href="{{ route('admin.suppliers.requests') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppliers_requests') }}</span>
                             </a>
@@ -130,12 +132,15 @@
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppports_contact_us') }}</span>
                 </a>
             </li>
+            @can('articles.view')
+
             <li>
-                <a class="d-flex align-items-center" href="">
+                <a class="d-flex align-items-center" href="{{ route('admin.articles.index') }}">
                     <i data-feather="image"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.articles_news') }}</span>
                 </a>
             </li>
+            @endcan
             <li>
                 <a class="d-flex align-items-center" href="">
                     <i data-feather="image"></i>
@@ -240,12 +245,29 @@
                             </a>
                         </li>
                         @endcan
+                         @can('departments.view')
+                            <li>
+                                <a class='d-flex align-items-center' href='{{ route('admin.departments.index') }} '>
+                                    <i data-feather='key'></i>
+                                    <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.departments') }}</span>
+                                </a>
+                            </li>
+                        @endcan
 
             </ul>
         </li>
 
 
+
+
         {{--addnewrouteheredontdeletemeplease--}}
+
+
+
+
+
+
+
 
 
 

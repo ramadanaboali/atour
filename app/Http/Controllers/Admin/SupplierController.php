@@ -21,8 +21,29 @@ class SupplierController extends Controller
 
     public function index(Request $request): View
     {
+        $status = null;
+        $created_at = null;
         return view($this->viewIndex, get_defined_vars());
     }
+    public function requestJoin(Request $request): View
+    {
+        $status = 'pendding';
+        $created_at = null ;
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function newSuppliers(Request $request): View
+    {
+        $status = null;
+        $created_at = date('Y-m-d');
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function currentSuppliers(Request $request): View
+    {
+        $status = 'accepted';
+        $created_at = null ;
+        return view($this->viewIndex, get_defined_vars());
+    }
+
 
     public function create(): View
     {
@@ -41,6 +62,23 @@ class SupplierController extends Controller
         return view($this->viewShow, get_defined_vars());
     }
 
+
+     public function status($id)
+    {
+        $item=User::findOrFail($id);
+        if($item->active == 0){
+            $item->active = 1;
+            $item->status = "accepted";
+
+        }else{
+            $item->active = 0;
+        }
+        $item->save();
+
+        flash(__('suppliers.messages.updated'))->success();
+
+        return back();
+    }
     public function destroy($id): RedirectResponse
     {
         $item = Supplier::findOrFail($id);
@@ -52,16 +90,16 @@ class SupplierController extends Controller
 
     public function select(Request $request): JsonResponse|string
     {
-       $data = Supplier::distinct()
-                ->where(function ($query) use ($request) {
-                if ($request->filled('q')) {
-                    if(App::isLocale('en')) {
-                        return $query->where('title_en', 'like', '%'.$request->q.'%');
-                    } else {
-                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                    }
-                }
-                })->select('id', 'title_en', 'title_ar')->get();
+        $data = Supplier::distinct()
+                 ->where(function ($query) use ($request) {
+                     if ($request->filled('q')) {
+                         if(App::isLocale('en')) {
+                             return $query->where('title_en', 'like', '%'.$request->q.'%');
+                         } else {
+                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                         }
+                     }
+                 })->select('id', 'title_en', 'title_ar')->get();
 
         if ($request->filled('pure_select')) {
             $html = '<option value="">'. __('category.select') .'</option>';
@@ -73,9 +111,10 @@ class SupplierController extends Controller
         return response()->json($data);
     }
 
-    public function list(Request $request): JsonResponse
+
+    public function list(Request $request)
     {
-        $data = User::leftJoin('suppliers','suppliers.user_id','users.id')
+        $data = User::leftJoin('suppliers', 'suppliers.user_id', 'users.id')
         ->where(function ($query) use ($request) {
             if ($request->filled('name')) {
                 $query->where('users.name', 'like', '%'. $request->name .'%');
@@ -90,14 +129,25 @@ class SupplierController extends Controller
             if ($request->filled('type')) {
                 $query->where('suppliers.type', $request->type);
             }
-        })->where('users.type',User::TYPE_SUPPLIER)->select(['users.*']);
+            if ($request->filled('status')) {
+                $query->where('users.status', $request->status);
+            }
+            if ($request->filled('created_at')) {
+
+                $query->where('users.created_at','>=', $request->created_at.' 00:00:00');
+            }else{
+                $query->where('users.created_at','<', $request->created_at.' 00:00:00');
+
+            }
+
+        })->where('users.type', User::TYPE_SUPPLIER)->select(['users.*']);
         return DataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {
             return '<img src="' . $item?->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
-            return $item?->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
 
 
