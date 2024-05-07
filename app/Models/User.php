@@ -18,7 +18,7 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $table = 'users';
-    protected $fillable = ['name', 'phone', 'email', 'image', 'description', 'type', 'active', 'passport', 'licence','isVerified','address','reset_code','password','fcm_token','deleted_at','rate','phone_code','verifaid','language'];
+    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -41,13 +41,20 @@ class User extends Authenticatable
 
     public const TYPE_ADMIN = 1;
     public const TYPE_CLIENT = 2;
+    public const TYPE_SUPPLIER = 3;
 
 
     protected $appends = ['photo'];
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('public/storage/users/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : null) : null;
     }
 
+    public function supplier(){
+        return $this->hasOne(Supplier::class,'user_id');
+    }
+    public function attachments(){
+        return $this->hasMany(Attachment::class,'model_id')->where('model_type','user');
+    }
 
 }

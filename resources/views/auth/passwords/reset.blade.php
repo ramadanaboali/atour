@@ -12,17 +12,16 @@
                 <!-- Login v1 -->
                 <div class="card mb-0">
                     <div class="card-body">
-                        <a href="#" class="brand-logo">
-                            <img src="{{ $assetsPath }}/images/logo.png" height="40">
-                        </a>
 
-                        <form class="auth-login-form mt-2" action="{{ route('password.update') }}" method="POST">
+            @include('flash::message')
+
+                        <form class="auth-login-form mt-2" action="{{ route('password.save') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="token" value="{{ $token }}">
-                            <div class="mb-1 @error('email') is-invalid @enderror">
-                                <label for="login-email" class="form-label">{{ __('admin.email') }}</label>
-                                <input type="email" class="form-control" id="login-email" name="email" placeholder="" aria-describedby="login-email" tabindex="1" autofocus value="{{ old('email') }}" />
-                                @error('email')
+
+                            <div class="mb-1 @error('code') is-invalid @enderror">
+                                <label for="login-code" class="form-label">{{ __('admin.code') }}</label>
+                                <input type="number" class="form-control" id="login-code" name="code" placeholder="" aria-describedby="login-code" tabindex="1" autofocus value="{{ old('code') }}" />
+                                @error('code')
                                 <span class="error">{{ $message }}</span>
                                 @enderror
                             </div>

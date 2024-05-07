@@ -82,6 +82,7 @@ class UserController extends Controller
         $item = $id == null ? new User() : User::find($id);
         $data= $request->except(['_token', '_method', 'password']);
         $item = $item->fill($data);
+        $item->type = User::TYPE_ADMIN;
         if ($item->save()) {
             if ($request->filled('password')) {
                 $item->password = Hash::make($request->password);
@@ -106,9 +107,9 @@ class UserController extends Controller
     public function list(Request $request)
     {
         if($request->filled('is_archived')){
-            $data = User::select('*')->onlyTrashed();
+            $data = User::where('type',User::TYPE_ADMIN)->select('*')->onlyTrashed();
         }else{
-            $data = User::select('*');
+            $data = User::where('type',User::TYPE_ADMIN)->select('*');
         }
 
         return DataTables::of($data)

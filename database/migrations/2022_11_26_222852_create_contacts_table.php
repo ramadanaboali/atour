@@ -18,7 +18,11 @@ class CreateContactsTable extends Migration
             $table->string('name');
             $table->string('reason');
             $table->text('problem');
+            $table->boolean('active')->default(true);
+            $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
+
             $table->timestamps();
         });
     }

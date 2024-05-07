@@ -27,7 +27,15 @@ class installDashboard extends Command
      */
     public function handle()
     {
-        $this->recurseCopy("cities",'City');
+        // $this->recurseCopy("sub_categories", 'SubCategory');
+        // $this->recurseCopy("clients", 'Client');
+        // $this->recurseCopy("suppliers", 'Supplier');
+        // $this->recurseCopy("orders", 'Order');
+        // $this->recurseCopy("offers", 'Offer');
+        // $this->recurseCopy("jobs", 'Job');
+        // $this->recurseCopy("articles", 'Article');
+        // $this->recurseCopy("departments", 'Department');
+
 
         return 0;
     }
@@ -36,22 +44,23 @@ class installDashboard extends Command
         string $model_name,
         string $model
     ): void {
-        $directory = opendir('resources/views/admin/pages/categories');
-        if (is_dir('resources/views/admin/pages/cities') === false) {
-            mkdir('resources/views/admin/pages/cities');
+        $copy = 'resources/views/admin/pages/categories';
+        $directory = opendir($copy);
+        if (is_dir('resources/views/admin/pages/'.$model_name) === false) {
+            mkdir('resources/views/admin/pages/'.$model_name);
         }
         while (($file = readdir($directory)) !== false) {
             if ($file === '.' || $file === '..') {
                 continue;
             }
-            if (is_dir("resources/views/admin/pages/categories/$file") === true) {
-                recurseCopy("resources/views/admin/pages/categories/$file", "resources/views/admin/pages/cities/$file");
+            if (is_dir("$copy/$file") === true) {
+                recurseCopy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
             } else {
-                copy("resources/views/admin/pages/categories/$file", "resources/views/admin/pages/cities/$file");
+                copy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
             }
-            $file_content = file_get_contents("resources/views/admin/pages/cities/$file");
+            $file_content = file_get_contents("resources/views/admin/pages/$model_name/$file");
             $str = str_replace("categories", $model_name, $file_content);
-            file_put_contents("resources/views/admin/pages/cities/$file", $str);
+            file_put_contents("resources/views/admin/pages/$model_name/$file", $str);
         }
         copy('app/Http/Controllers/Admin/CategoryController.php', 'app/Http/Controllers/Admin/'.$model.'Controller.php');
 
@@ -88,7 +97,7 @@ class installDashboard extends Command
 
         ";
         $str = str_replace("//addnewrouteheredontdeletemeplease", $routes, $file_content);
-        file_put_contents('routes/admin.php',$str);
+        file_put_contents('routes/admin.php', $str);
 
         $file_content = file_get_contents('resources\views\admin\partials\sidebar.blade.php');
         $routes = "
@@ -105,7 +114,7 @@ class installDashboard extends Command
 
         ";
         $str = str_replace("{{--addnewrouteheredontdeletemeplease--}}", $routes, $file_content);
-        file_put_contents('resources\views\admin\partials\sidebar.blade.php',$str);
+        file_put_contents('resources\views\admin\partials\sidebar.blade.php', $str);
 
         closedir($directory);
     }

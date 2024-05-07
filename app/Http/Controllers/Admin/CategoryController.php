@@ -60,6 +60,7 @@ class CategoryController extends Controller
     public function select(Request $request): JsonResponse|string
     {
        $data = Category::distinct()
+                ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -96,11 +97,16 @@ class CategoryController extends Controller
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-            if($request->filled('active')){
-                $item->active = 1;
-            }else{
-                $item->active = 0;
-            }
+        if($request->filled('active')){
+            $item->active = 1;
+        }else{
+            $item->active = 0;
+        }
+        if ($id == null) {
+            $item->created_by = auth()->user()->id;
+        }else{
+            $item->updated_by = auth()->user()->id;
+        }
         if ($item->save()) {
 
             if ($request->hasFile('image')) {

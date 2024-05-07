@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\App;
 class Category extends Model
 {
     use SoftDeletes;
-    protected $table = 'categories';
     protected $fillable = ['title_en','title_ar', 'image','active'];
+    protected $table = 'categories';
     protected $appends = ['photo','title','text'];
 
 
