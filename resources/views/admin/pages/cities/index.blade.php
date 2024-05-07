@@ -34,8 +34,8 @@
                     <thead>
                     <tr>
                         <th>{{ __('cities.default.name') }}</th>
+                        <th>{{ __('cities.country') }}</th>
                         <th>{{ __('cities.active') }}</th>
-                        <th>{{ __('cities.image') }}</th>
                         @canany('cities.edit','cities.delete')
                             <th width="15%" class="text-center">{{ __('cities.options') }}</th>
                         @endcanany
@@ -76,8 +76,8 @@
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
                 {data: 'title', name: 'title',orderable: false},
+                {data: 'country', name: 'country.id'},
                 {data: 'active', name: 'active'},
-                {data: 'photo', name: 'photo'},
                 @canany('cities.edit','cities.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany

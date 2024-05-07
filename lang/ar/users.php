@@ -52,7 +52,7 @@ return [
     'save' => 'حفظ',
     'options' => 'الأوامر',
     'created_at' => 'تاريخ الإنشاء',
-    'advanced_filter' => 'بحث متقدم',
+    'advanced_filter' => 'فلتر',
     'search' => 'بحـــــث',
     'cancel' => 'الغــــاء',
     'delete_selected' => 'مسح المحدد',
@@ -92,11 +92,12 @@ return [
     'type' => 'النوع',
     'types' => [
         '1' => 'مسؤل',
-        '2' => 'مستخدم',
+        '2' => 'عميل',
         '4' => 'مورد',
         '3' => 'فرد'
     ],
     'licence' => 'الرخصة التجارية',
     'passport' => 'الهوية او الجواز',
+    'password_confirmation' => 'تأكيد كلمة المرور',
     'xxxxxx' => 'xxxxxx',
 ];

@@ -33,7 +33,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="mb-1 col-md-4  @error('title_en') is-invalid @enderror">
+                        <div class="mb-1 col-md-6  @error('title_en') is-invalid @enderror">
                             <label class="form-label" for="title_en">{{ __('admin.title_en') }}</label>
                             <input type="text" name="title_en" id="title_en" class="form-control" placeholder=""
                                    value="{{ $item->title_en ?? old('title_en') }}" required/>
@@ -41,7 +41,7 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-4  @error('title_ar') is-invalid @enderror">
+                        <div class="mb-1 col-md-6  @error('title_ar') is-invalid @enderror">
                             <label class="form-label" for="title_ar">{{ __('admin.title_ar') }}</label>
                             <input type="text" name="title_ar" id="title_ar" class="form-control" placeholder=""
                                    value="{{ $item->title_ar ?? old('title_ar') }}" required/>
@@ -49,7 +49,22 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                       
+                        </div>
+                        <div class="row">
+                         <div class="mb-1 col-md-6  @error('country_id') is-invalid @enderror">
+                            <label class="form-label" for="country_id">{{ __('cities.country') }}</label>
+                            <select name="country_id" id="country_id" class="form-control ajax_select2 extra_field"
+                                    data-ajax--url="{{ route('admin.countries.select') }}"
+                                    data-ajax--cache="true">
+                                @isset($item->country)
+                                    <option value="{{ $item->country->id }}" selected>{{ $item->country->title }}</option>
+                                @endisset
+                            </select>
+                            @error('country_id')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
@@ -63,20 +78,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-1 col-md-6 @error('image') is-invalid @enderror">
-                            <label class="form-label" for="image">{{ __('cities.file') }}</label>
-                            <input type="file" class="form-control input" name="image" id="image">
-                            @error('image')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                            <div>
-                                <br>
-                                @if(isset($item) && !empty($item->image))
-                                    <img src="{{ $item->photo }}"
-                                         class="img-fluid img-thumbnail">
-                                @endif
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>

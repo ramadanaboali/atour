@@ -55,7 +55,7 @@ return [
     'save' => 'حفظ',
     'options' => 'الأوامر',
     'created_at' => 'تاريخ الإنشاء',
-    'advanced_filter' => 'بحث متقدم',
+    'advanced_filter' => 'فلتر',
     'search' => 'بحـــــث',
     'cancel' => 'الغــــاء',
     'delete_selected' => 'مسح المحدد',

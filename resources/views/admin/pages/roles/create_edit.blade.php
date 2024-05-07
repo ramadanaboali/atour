@@ -36,9 +36,20 @@
                             @error('display_name')
                             <span class="error">{{ $message }}</span>
                             @enderror
-                            <input class="form-control" name="name" type="hidden" value="{{ $item->name ?? old('name') }}">
 
                         </div>
+                        @isset($item)
+                        <input class="form-control" name="name" type="hidden" value="{{ $item->name ?? old('name') }}">
+                        @else
+                        <div class="mb-1 col-md-12  @error('name') is-invalid @enderror">
+                            <label class="form-label">{{ __('roles.name_english') }}</label>
+                            <input class="form-control" name="name" type="text" value="{{ $item->name ?? old('name') }}">
+                            @error('name')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+
+                        </div>
+                    @endisset
                     </div>
                 </div>
             </div>

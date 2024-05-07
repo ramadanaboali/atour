@@ -1,0 +1,70 @@
+<?php
+
+return [
+    'plural' => 'Category',
+    'singular' => 'Category',
+    'singular2' => 'Category',
+    'empty' => 'There is no Category',
+    'select' => 'Choose',
+    'select-type' => 'everyone',
+    'perPage' => 'Number of results per page',
+    'filter' => 'Find a Category',
+    'actions' => [
+        'list' => 'view all',
+        'show' => 'Show',
+        'create' => 'Add a Category',
+        'edit' => 'Edit',
+        'delete' => 'delete',
+        'restore' => 'Recovery',
+        'save' => 'save',
+        'filter' => 'Search',
+        'back' => 'Go back',
+    ],
+    'messages' => [
+        'created' => 'The Category has been added successfully.',
+        'updated' => 'The Category has been successfully modified.',
+        'deleted' => 'Category has been successfully deleted.',
+        'restored' => 'Category was successfully restored.',
+        'deleted_bulk' => 'The selected partition was successfully deleted.',
+    ],
+    'attributes' => [
+        'name' => 'Department Name',
+        '%name%' => 'Department Name',
+    ],
+    'default' => [
+        'name' => 'Department Name',
+    ],
+    'dialogs' => [
+        'delete' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to delete the Category?',
+            'confirm' => 'delete',
+            'cancel' => 'cancellation',
+        ],
+        'restore' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to restore Category?',
+            'confirm' => 'Recovery',
+            'cancel' => 'cancellation',
+        ],
+    ],
+    'save' => 'save',
+    'options' => 'commands',
+    'created_at' => 'Date created',
+    'advanced_filter' => 'advanced search',
+    'search' => 'Search',
+    'cancel' => 'Cancel',
+    'delete_selected' => 'Clear selected',
+    'restore_trashed' => 'Return the selected one',
+    'unarchived' => 'Show what is hidden',
+    'description' => 'the description',
+    'attachments' => 'attachments',
+    'file' => 'file',
+    'image' => 'Image',
+    'sort' => 'arrangement',
+    'active' => 'active',
+    'available' => 'Available',
+    'category'=>'Category',
+
+
+];

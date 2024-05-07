@@ -24,5 +24,9 @@ return [
     'title' => 'عنوان',
     'image' => 'صورة',
     'video_url' => 'رابط الفديو',
+    'snapchat' => 'سناب شات',
+    'google_play' => 'رابط الاندرونيد',
+    'app_store' => 'رابط الايفون',
+    'tiktok' => 'تيك توك',
     'xxxxxx' => 'xxxxxx',
 ];

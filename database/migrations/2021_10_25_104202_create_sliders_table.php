@@ -20,7 +20,10 @@ class CreateSlidersTable extends Migration
             $table->string('title_ar')->nullable();
             $table->string('url')->nullable();
             $table->boolean('active')->default(true);
+            $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();
+
             $table->timestamps();
         });
     }

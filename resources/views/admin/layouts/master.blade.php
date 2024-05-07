@@ -50,6 +50,8 @@
     <link rel="stylesheet" type="text/css" href="{{ $assetsPath }}/css-rtl/plugins/forms/pickers/form-flat-pickr.css">
 
     <link rel="stylesheet" type="text/css" href="{{ $assetsPath }}/css/custom.css">
+    <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/responsive.css">
+
     @stack('styles')
 </head>
 
@@ -105,16 +107,28 @@
         <div class="content-header row">
         </div>
         <div class="content-body">
+
             @include('flash::message')
             @include('admin.partials.errors')
-
             @yield('content')
+
         </div>
     </div>
 </div>
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 
+    <div class="toasts toasts " id="toas_container">
+  <div class="toast-content ">
+
+      <div class="message">
+      <span class="text text-1" id="toast_header" ></span>
+      <span class="text text-2" id="toast_message"></span>
+      </div>
+  </div>
+  <i class="fa fa-times close"></i>
+  <div class="progress " id="toas_progress"></div>
+  </div>
 <footer class="footer footer-static footer-light">
     <p class="clearfix mb-0">
         <span class="float-md-start d-block d-md-inline-block mt-25">
@@ -146,6 +160,25 @@
         </form>
     </div>
 </div>
+<div class="modal fade text-start" id="ClientStatus" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="StatusForm" method="get" action="#">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.client_status.title') }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ __('admin.dialogs.client_status.info') }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-success">{{ __('admin.dialogs.client_status.confirm') }}</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">{{ __('admin.dialogs.client_status.cancel') }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
  <div class="modal fade text-start" id="modalRestore" tabindex="-1" aria-labelledby="myModalLabel1"
         aria-hidden="true">
@@ -172,6 +205,8 @@
         </div>
     </div>
 <script src="{{ $assetsPath }}/vendors/js/vendors.min.js"></script>
+<script src="{{ $assetsPath }}/vendors/js/extensions/toastr.min.js"></script>
+<script src="{{ $assetsPath }}/js/scripts/extensions/ext-component-toastr.min.js"></script>
 <script src="{{ $assetsPath }}/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
 <script src="{{ $assetsPath }}/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
 <script src="{{ $assetsPath }}/vendors/js/forms/select/select2.full.min.js"></script>
@@ -194,6 +229,7 @@
 <script>
 
     $(window).on('load', function() {
+
         if (feather) {
             feather.replace({
                 width: 14,
@@ -233,6 +269,13 @@
             var url= $(this).attr('data-url');
             $('#deleteForm').attr('action', url)
             $('#modalDelete').modal('show')
+            return false;
+        });
+
+        $('body').on('click', '.client_status', function (){
+            var url= $(this).attr('data-url');
+              $('#StatusForm').attr('action', url)
+            $('#ClientStatus').modal('show')
             return false;
         });
         $('body').on('click', '.restore_item', function (){

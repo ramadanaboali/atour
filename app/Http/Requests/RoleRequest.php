@@ -23,7 +23,7 @@ class RoleRequest extends FormRequest
      */
     public function rules()
     {
-        $rules['name'] = 'required';
+        $rules['name'] = 'required|alpha_dash|unique:roles,name,'.$this->id;
         $rules['display_name'] = 'required';
         $rules['permissions.*'] = '';
         return $rules;

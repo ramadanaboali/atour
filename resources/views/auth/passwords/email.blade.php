@@ -12,11 +12,10 @@
                 <!-- Login v1 -->
                 <div class="card mb-0">
                     <div class="card-body">
-                        <a href="#" class="brand-logo">
-                            <img src="{{ $assetsPath }}/images/logo.png" height="40">
-                        </a>
+            @include('flash::message')
 
-                        <form class="auth-login-form mt-2" action="{{ route('password.email') }}" method="POST">
+
+                        <form class="auth-login-form mt-2" action="{{ route('password.reset') }}" method="POST">
                             @csrf
                             <div class="mb-1 @error('email') is-invalid @enderror">
                                 <label for="login-email" class="form-label">{{ __('admin.email') }}</label>
