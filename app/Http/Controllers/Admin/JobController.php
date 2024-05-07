@@ -102,6 +102,7 @@ class JobController extends Controller
                 $item->active = 0;
             }
         if ($item->save()) {
+
             return $item;
         }
         return null;
@@ -114,6 +115,7 @@ class JobController extends Controller
         ->addIndexColumn()
         ->addColumn('department', function ($item) {
             return  $item->department?->title;
+
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';

@@ -110,6 +110,7 @@
 
             @include('flash::message')
             @include('admin.partials.errors')
+
             @yield('content')
 
         </div>

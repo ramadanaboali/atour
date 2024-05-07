@@ -66,4 +66,5 @@ return [
     'available' => 'المنتج متوفر',
     'department' => 'القسم',
     'location' => 'الموقع',
+
 ];
