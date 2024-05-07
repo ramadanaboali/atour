@@ -1,0 +1,70 @@
+<?php
+
+return [
+    'plural' => 'Offer',
+    'singular' => 'Offer',
+    'singular2' => 'Offer',
+    'empty' => 'There is no Offer',
+    'select' => 'Choose',
+    'select-type' => 'everyone',
+    'perPage' => 'Number of results per page',
+    'filter' => 'Find a Offer',
+    'actions' => [
+        'list' => 'view all',
+        'show' => 'Show',
+        'create' => 'Add a Offer',
+        'edit' => 'Edit',
+        'delete' => 'delete',
+        'restore' => 'Recovery',
+        'save' => 'save',
+        'filter' => 'Search',
+        'back' => 'Go back',
+    ],
+    'messages' => [
+        'created' => 'The Offer has been added successfully.',
+        'updated' => 'The Offer has been successfully modified.',
+        'deleted' => 'Offer has been successfully deleted.',
+        'restored' => 'Offer was successfully restored.',
+        'deleted_bulk' => 'The selected partition was successfully deleted.',
+    ],
+    'attributes' => [
+        'name' => 'Department Name',
+        '%name%' => 'Department Name',
+    ],
+    'default' => [
+        'name' => 'Department Name',
+    ],
+    'dialogs' => [
+        'delete' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to delete the Offer?',
+            'confirm' => 'delete',
+            'cancel' => 'cancellation',
+        ],
+        'restore' => [
+            'title' => 'warning !',
+            'info' => 'Are you sure you want to restore Offer?',
+            'confirm' => 'Recovery',
+            'cancel' => 'cancellation',
+        ],
+    ],
+    'save' => 'save',
+    'options' => 'commands',
+    'created_at' => 'Date created',
+    'advanced_filter' => 'advanced search',
+    'search' => 'Search',
+    'cancel' => 'Cancel',
+    'delete_selected' => 'Clear selected',
+    'restore_trashed' => 'Return the selected one',
+    'unarchived' => 'Show what is hidden',
+    'description' => 'the description',
+    'attachments' => 'attachments',
+    'file' => 'file',
+    'image' => 'Image',
+    'sort' => 'arrangement',
+    'active' => 'active',
+    'available' => 'Available',
+    'Offer'=>'Offer',
+
+
+];

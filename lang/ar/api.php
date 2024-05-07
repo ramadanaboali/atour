@@ -1,0 +1,36 @@
+<?php
+
+return [
+    'wallet_charged' => ' تم شحن رصيدك بقيمة :amount ورصيدك الان :wallet',
+    'charged_before' => 'لقد تم شحن الكود من قبل',
+    'code_not_found' => 'عفوا هذا الكود غير موجود',
+    'validation_error' => 'يوجد خطأ ما',
+    'not_found' => 'غير موجود',
+    'answered_before' => 'لقد قمت بالاجابة سابقا',
+    'entered_before' => 'قمت بالدخول سابقا',
+    'reset_link_will_send' => 'سوف يتم ارسال كود تغيير كلمة المرور',
+    'not_authorized' => 'بيانات الدخول غير صحيحة',
+    'wallet_not_enough' => 'الرصيد غير كافى...برجاء الشحن',
+    'purchased_before' => 'تم شراء هذه الحصة من قبل',
+    'sent_before' => 'قمت بالارسال مسبقا',
+    'competition_cancelled' => 'تم اغلاق المنافسة',
+    'device_not_registered' => 'عفوا لا هذا الجهاز غير مطابق مع الجهاز السابق... الرجاء الرجوع للادارة',
+    'not_verify' => 'الرجاء تاكيد رقم الهاتف',
+    'update_success' => 'تم التعديل بنجاح',
+    'cant_update' => 'لم يتم التعديل',
+    'code_success' => 'الكود صحيح',
+    'code_error' => 'الكود غير صحيح',
+    'new_payment_success' => 'تم اتمام عملية طلب بنجاح',
+    'add_to_saved' => 'تم اضافة :item الى المحفوظات',
+    'removed_from_saved_success' => 'تم حذف :item من المحفوظات',
+
+    'notification_title' => 'scoffoling',
+    'order_confirmed' => ' تم تأكيد الطلب رقم :code ',
+    'order_onway' => '  الطلب رقم :code فى الطريق اليك',
+    'order_canceled' => 'تم رفض الطلب رقم :code بسبب :reason',
+    'order_progress' => 'الطلب رقم :code  قيد المعالجة',
+    'order_deliverd' => 'تم تسليم الطلب رقم :code',
+    'order_on_the_way' => ' الطلب رقم :code فى الطريق اليك',
+    'new_order_request' => 'لديك طلب جديد',
+    'doublicate_rate'=>'لقد قمت بالتقيم مسبقا'
+];
