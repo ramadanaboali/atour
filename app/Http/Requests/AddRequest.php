@@ -18,11 +18,21 @@ class AddRequest extends FormRequest
             return [
                 'title_ar' => 'required',
                 'title_en' => 'required',
+                'description_ar' => 'required',
+                'description_en' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'location' => 'required',
             ];
         }else{
             return [
                 'title_ar' => 'required',
                 'title_en' => 'required',
+                'description_ar' => 'required',
+                'description_en' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'location' => 'required',
                 'image' => 'required',
             ];
         }

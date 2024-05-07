@@ -90,16 +90,13 @@ class SupplierController extends Controller
 
     public function select(Request $request): JsonResponse|string
     {
-        $data = Supplier::distinct()
+        $data = User::distinct()
                  ->where(function ($query) use ($request) {
                      if ($request->filled('q')) {
-                         if(App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
+                         return $query->where('name', 'like', '%'.$request->q.'%');
+
                      }
-                 })->select('id', 'title_en', 'title_ar')->get();
+                 })->select('id', 'name as text')->get();
 
         if ($request->filled('pure_select')) {
             $html = '<option value="">'. __('category.select') .'</option>';

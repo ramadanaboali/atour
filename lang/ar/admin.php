@@ -167,7 +167,6 @@ return [
     'register' => 'انشاء حساب',
     'coupons' => 'الكوبونات',
     'countries' => 'الدول',
-    'jobs' => 'الوظائف',
     'offers' => 'العروض',
     'clients' => 'العملاء',
     'new_clients' => 'العملاء الجدد',

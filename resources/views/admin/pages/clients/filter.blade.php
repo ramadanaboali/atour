@@ -74,7 +74,7 @@
                                     <select class="form-control" id="active">
                                         <option value="">{{ __('admin.select') }}</option>
                                         <option value="1">{{ __('clients.active') }}</option>
-                                        <option value="1">{{ __('clients.notactive') }}</option>
+                                        <option value="0">{{ __('clients.notactive') }}</option>
                                     </select>
                                 </div>
                             </div>

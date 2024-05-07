@@ -16,14 +16,14 @@
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('adds.create')
-                    <div class="dropdown">
+                <div class="dropdown">
+                        @can('adds.create')
                         <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.adds.create') }}">
                             <i data-feather="plus"></i>
                             <span class="active-sorting text-primary">{{ __('adds.actions.create') }}</span>
                         </a>
+                        @endcan
                     </div>
-                @endcan
             </div>
         </div>
     </div>
@@ -34,6 +34,10 @@
                     <thead>
                     <tr>
                         <th>{{ __('adds.default.name') }}</th>
+                        <th>{{ __('adds.date') }}</th>
+                        <th>{{ __('adds.description') }}</th>
+                        <th>{{ __('adds.views') }}</th>
+                        <th>{{ __('adds.location') }}</th>
                         <th>{{ __('adds.active') }}</th>
                         <th>{{ __('adds.image') }}</th>
                         @canany('adds.edit','adds.delete')
@@ -76,6 +80,10 @@
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
                 {data: 'title', name: 'title',orderable: false},
+                {data: 'date', name: 'start_date'},
+                {data: 'description', name: 'description',orderable: false},
+                {data: 'views', name: 'views'},
+                {data: 'location', name: 'location'},
                 {data: 'active', name: 'active'},
                 {data: 'photo', name: 'photo'},
                 @canany('adds.edit','adds.delete')

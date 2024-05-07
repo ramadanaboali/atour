@@ -7,25 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
-class Add extends Model
+class Offer extends Model
 {
-   use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'description_en',
         'description_ar',
-        'location',
+        'discount',
         'start_date',
         'end_date',
         'title_en',
         'title_ar',
         'active',
-        'image',
-        'views',
+        'user_id',
         'created_by',
         'updated_by'
     ];
-     protected $table = 'adds';
-    protected $appends = ['title','text','description','photo'];
+    protected $table = 'offers';
+    protected $appends = ['title','text','description'];
+
+    public function supplier(){
+        return $this->belongsTo(User::class,'user_id');
+    }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'offer_services','offer_id','category_id');
+    }
+    public function benfits_numbers()
+    {
+        return 0;
+    }
 
     public function getTextAttribute()
     {
@@ -36,11 +48,6 @@ class Add extends Model
         }
     }
 
-    public function getPhotoAttribute()
-    {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/adds/' . $this->attributes['image']) : null) : null;
-
-    }
 
     public function getTitleAttribute()
     {

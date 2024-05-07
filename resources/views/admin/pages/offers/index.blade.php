@@ -16,14 +16,15 @@
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('offers.create')
-                    <div class="dropdown">
+                <div class="dropdown">
+                        @can('offers.create')
                         <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.offers.create') }}">
                             <i data-feather="plus"></i>
                             <span class="active-sorting text-primary">{{ __('offers.actions.create') }}</span>
                         </a>
+                        @endcan
+                        @include('admin.pages.offers.filter')
                     </div>
-                @endcan
             </div>
         </div>
     </div>
@@ -33,9 +34,13 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('offers.default.name') }}</th>
+                        <th>{{ __('offers.supplier_name') }}</th>
+                        <th>{{ __('offers.supplier_email') }}</th>
+                        <th>{{ __('offers.supplier_phone') }}</th>
                         <th>{{ __('offers.active') }}</th>
-                        <th>{{ __('offers.image') }}</th>
+                        <th>{{ __('offers.services') }}</th>
+                        <th>{{ __('offers.benfits_numbers') }}</th>
+                        <th>{{ __('offers.discount') }}</th>
                         @canany('offers.edit','offers.delete')
                             <th width="15%" class="text-center">{{ __('offers.options') }}</th>
                         @endcanany
@@ -68,6 +73,14 @@
                 url: "{{ route('admin.offers.list') }}",
                 data: function (d) {
                     d.name   = $('#filterForm #name').val();
+                    d.services= $('#filterForm #services').val();
+                    d.start_date= $('#filterForm #start_date').val();
+                    d.end_date= $('#filterForm #end_date').val();
+                    d.discount= $('#filterForm #discount').val();
+                    d.email= $('#filterForm #email').val();
+                    d.phone= $('#filterForm #phone').val();
+                    d.city_id= $('#filterForm #city_id').val();
+                    d.active= $('#filterForm #active').val();
                 }
             },
             drawCallback: function (settings) {
@@ -75,9 +88,13 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
+                {data: 'supplier_name', name: 'supplier_name'},
+                {data: 'supplier_email', name: 'supplier_email'},
+                {data: 'supplier_phone', name: 'supplier_phone'},
                 {data: 'active', name: 'active'},
-                {data: 'photo', name: 'photo'},
+                {data: 'services', name: 'services'},
+                {data: 'benfits_numbers', name: 'benfits_numbers'},
+                {data: 'discount', name: 'discount'},
                 @canany('offers.edit','offers.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OfferRequest;
 use App\Models\Offer;
+use App\Models\OfferService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -110,6 +111,12 @@ class OfferController extends Controller
                 $item->image = $fileName;
                 $item->save();
             }
+
+            $item->categories()->detach();
+            $item->categories()->attach($request->services);
+
+
+                $item->categories()->sync($request->services);
             return $item;
         }
         return null;
@@ -117,11 +124,59 @@ class OfferController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Offer::select('*');
+        $data = Offer::with(['supplier','categories'])
+        ->leftJoin('users','users.id','offers.user_id')
+        ->leftJoin('suppliers','users.id','suppliers.user_id')
+        ->leftJoin('offer_services','offers.id','offer_services.offer_id')
+        ->where(function($query)use($request){
+            if($request->filled('name')){
+                $query->where('users.name', 'like','%'.$request->name.'%');
+            }
+            if($request->filled('email')){
+                $query->where('users.email',$request->email);
+            }
+            if($request->filled('phone')){
+                $query->where('users.phone',$request->phone);
+            }
+            if($request->filled('phone')){
+                $query->where('users.phone',$request->phone);
+            }
+            if($request->filled('start_date')){
+                $query->where('offers.start_date',$request->start_date);
+            }
+            if($request->filled('end_date')){
+                $query->where('offers.end_date',$request->end_date);
+            }
+            if($request->filled('discount')){
+                $query->where('offers.discount',$request->discount);
+            }
+
+            if($request->filled('active')){
+                $query->where('users.active',$request->active);
+            }
+            if($request->filled('city_id')){
+                $query->where('suppliers.city_id',$request->city_id);
+            }
+            if($request->filled('services')){
+                $query->whereIn('offer_services.category_id',$request->services);
+            }
+        })->groupBy('offers.id')->select('offers.*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+        ->addColumn('supplier_name', function ($item) {
+            return $item->supplier?->name;
+        })
+        ->addColumn('supplier_phone', function ($item) {
+            return $item->supplier?->phone;
+        })
+        ->addColumn('supplier_email', function ($item) {
+            return $item->supplier?->email;
+        })
+        ->addColumn('benfits_numbers', function ($item) {
+            return $item->benfits_numbers();
+        })
+        ->addColumn('services', function ($item) {
+            return $item->categories()->pluck('title_'.app()->getLocale())->toArray();
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
@@ -133,7 +188,7 @@ class OfferController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['photo','active'])
+        ->rawColumns(['photo','active','supplier_name','supplier_phone','supplier_email','benfits_numbers','services'])
         ->make(true);
     }
 }
