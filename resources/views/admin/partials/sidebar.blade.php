@@ -112,14 +112,15 @@
         </li>
 
 
-             @can('sliders.view')
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.sliders.index') }} ">
-                    <i data-feather="image"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.sliders') }}</span>
-                </a>
-            </li>
+           @can('adds.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.adds.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.adds') }}</span>
+                    </a>
+                </li>
             @endcan
+
             <li>
                 <a class="d-flex align-items-center" href="">
                     <i data-feather="image"></i>
@@ -142,7 +143,7 @@
             </li>
             @endcan
             <li>
-                <a class="d-flex align-items-center" href="">
+                <a class="d-flex align-items-center" href="{{ route('admin.jobs.index') }}">
                     <i data-feather="image"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.jobs') }}</span>
                 </a>
@@ -198,17 +199,19 @@
                             </a>
                         </li>
                         <li class=" nav-item {{ request()->routeIs('admin.settings.slider')?'active':''}}">
-                            <a class="d-flex align-items-center" href="{{ route('admin.settings.slider') }} ">
+                            <a class="d-flex align-items-center" href="{{ route('admin.sliders.index') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.slider_settings') }}</span>
                             </a>
                         </li>
-                        <li class=" nav-item {{ request()->routeIs('admin.settings.why_atour_booking_settings')?'active':''}}">
-                            <a class="d-flex align-items-center" href="{{ route('admin.settings.why_atour_booking_settings') }} ">
-                                <i data-feather="circle"></i>
-                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.why_atour_booking_settings') }}</span>
-                            </a>
-                        </li>
+                        @can('why_bookings.view')
+                            <li>
+                                <a class='d-flex align-items-center' href='{{ route('admin.why_bookings.index') }} '>
+                                    <i data-feather='circle'></i>
+                                    <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.why_atour_booking_settings') }}</span>
+                                </a>
+                            </li>
+                        @endcan
                         <li class=" nav-item {{ request()->routeIs('admin.settings.about')?'active':''}}">
                             <a class="d-flex align-items-center" href="{{ route('admin.settings.about') }} ">
                                 <i data-feather="circle"></i>
@@ -260,7 +263,10 @@
 
 
 
+
+
         {{--addnewrouteheredontdeletemeplease--}}
+
 
 
 

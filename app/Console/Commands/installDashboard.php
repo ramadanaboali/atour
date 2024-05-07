@@ -36,6 +36,7 @@ class installDashboard extends Command
         // $this->recurseCopy("articles", 'Article');
         // $this->recurseCopy("departments", 'Department');
 
+
         return 0;
     }
 

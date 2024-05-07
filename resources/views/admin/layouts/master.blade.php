@@ -108,6 +108,8 @@
         </div>
         <div class="content-body">
 
+            @include('flash::message')
+            @include('admin.partials.errors')
 
             @yield('content')
 
@@ -228,7 +230,7 @@
 <script>
 
     $(window).on('load', function() {
-   
+
         if (feather) {
             feather.replace({
                 width: 14,

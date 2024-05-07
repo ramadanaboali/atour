@@ -95,10 +95,9 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('settings/general', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index')->middleware('adminPermission:settings.general');
             Route::get('settings/site_Settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.site')->middleware('adminPermission:settings.general');
             Route::get('settings/header_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.header')->middleware('adminPermission:settings.general');
-            Route::get('settings/footer_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.footer')->middleware('adminPermission:settings.general');
+            Route::get('settings/footer_settings', [App\Http\Controllers\Admin\SettingController::class, 'footer_settings'])->name('settings.footer')->middleware('adminPermission:settings.general');
             Route::get('settings/home_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.home')->middleware('adminPermission:settings.general');
             Route::get('settings/slider_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.slider')->middleware('adminPermission:settings.general');
-            Route::get('settings/booking_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.why_atour_booking_settings')->middleware('adminPermission:settings.general');
             Route::get('settings/about_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.about')->middleware('adminPermission:settings.general');
             Route::get('settings/terms_preivasy_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.terms_preivasy')->middleware('adminPermission:settings.general');
             Route::get('settings/experience_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.experience')->middleware('adminPermission:settings.general');
@@ -115,15 +114,33 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
-
-
-
-
-
-
-
-
         //addnewrouteheredontdeletemeplease
+
+            Route::get('adds/select', [App\Http\Controllers\Admin\AddController::class, 'select'])->name('adds.select');
+            Route::delete('adds/bulk', [App\Http\Controllers\Admin\AddController::class, 'deleteBulk'])->name('adds.deleteBulk')->middleware('adminPermission:adds.delete');
+            Route::get('adds/list', [App\Http\Controllers\Admin\AddController::class, 'list'])->name('adds.list')->middleware('adminPermission:adds.view');
+            Route::post('adds', [App\Http\Controllers\Admin\AddController::class, 'store'])->name('adds.store')->middleware('adminPermission:adds.create');
+            Route::delete('adds/{id}', [App\Http\Controllers\Admin\AddController::class, 'destroy'])->name('adds.destroy')->middleware('adminPermission:adds.delete');
+            Route::get('adds', [App\Http\Controllers\Admin\AddController::class, 'index'])->name('adds.index')->middleware('adminPermission:adds.view');
+            Route::get('adds/create', [App\Http\Controllers\Admin\AddController::class, 'create'])->name('adds.create')->middleware('adminPermission:adds.create');
+            Route::match(['PUT', 'PATCH'], 'adds/{id}', [App\Http\Controllers\Admin\AddController::class, 'update'])->name('adds.update')->middleware('adminPermission:adds.edit');
+            Route::get('adds/{id}/edit', [App\Http\Controllers\Admin\AddController::class, 'edit'])->name('adds.edit')->middleware('adminPermission:adds.edit');
+
+
+
+
+            Route::get('why_bookings/select', [App\Http\Controllers\Admin\WhyBookingController::class, 'select'])->name('why_bookings.select');
+            Route::delete('why_bookings/bulk', [App\Http\Controllers\Admin\WhyBookingController::class, 'deleteBulk'])->name('why_bookings.deleteBulk')->middleware('adminPermission:why_bookings.delete');
+            Route::get('why_bookings/list', [App\Http\Controllers\Admin\WhyBookingController::class, 'list'])->name('why_bookings.list')->middleware('adminPermission:why_bookings.view');
+            Route::post('why_bookings', [App\Http\Controllers\Admin\WhyBookingController::class, 'store'])->name('why_bookings.store')->middleware('adminPermission:why_bookings.create');
+            Route::delete('why_bookings/{id}', [App\Http\Controllers\Admin\WhyBookingController::class, 'destroy'])->name('why_bookings.destroy')->middleware('adminPermission:why_bookings.delete');
+            Route::get('why_bookings', [App\Http\Controllers\Admin\WhyBookingController::class, 'index'])->name('why_bookings.index')->middleware('adminPermission:why_bookings.view');
+            Route::get('why_bookings/create', [App\Http\Controllers\Admin\WhyBookingController::class, 'create'])->name('why_bookings.create')->middleware('adminPermission:why_bookings.create');
+            Route::match(['PUT', 'PATCH'], 'why_bookings/{id}', [App\Http\Controllers\Admin\WhyBookingController::class, 'update'])->name('why_bookings.update')->middleware('adminPermission:why_bookings.edit');
+            Route::get('why_bookings/{id}/edit', [App\Http\Controllers\Admin\WhyBookingController::class, 'edit'])->name('why_bookings.edit')->middleware('adminPermission:why_bookings.edit');
+
+
+
 
             Route::get('departments/select', [App\Http\Controllers\Admin\DepartmentController::class, 'select'])->name('departments.select');
             Route::delete('departments/bulk', [App\Http\Controllers\Admin\DepartmentController::class, 'deleteBulk'])->name('departments.deleteBulk')->middleware('adminPermission:departments.delete');

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\JobRequest;
-use App\Models\Job;
+use App\Http\Requests\AddRequest;
+use App\Models\Add;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class JobController extends Controller
+class AddController extends Controller
 {
-    private $viewIndex  = 'admin.pages.jobs.index';
-    private $viewEdit   = 'admin.pages.jobs.create_edit';
-    private $viewShow   = 'admin.pages.jobs.show';
-    private $route      = 'admin.jobs';
+    private $viewIndex  = 'admin.pages.adds.index';
+    private $viewEdit   = 'admin.pages.adds.create_edit';
+    private $viewShow   = 'admin.pages.adds.show';
+    private $route      = 'admin.adds';
 
     public function index(Request $request): View
     {
@@ -31,35 +31,36 @@ class JobController extends Controller
 
     public function edit($id): View
     {
-        $item = Job::findOrFail($id);
+        $item = Add::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Job::findOrFail($id);
+        $item = Add::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Job::findOrFail($id);
+        $item = Add::findOrFail($id);
         if ($item->delete()) {
-            flash(__('jobs.messages.deleted'))->success();
+            flash(__('adds.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(JobRequest $request): RedirectResponse
+    public function store(AddRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('jobs.messages.created'))->success();
+            flash(__('adds.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Job::distinct()
+       $data = Add::distinct()
+                ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -81,28 +82,40 @@ class JobController extends Controller
     }
 
 
-    public function update(JobRequest $request, $id): RedirectResponse
+    public function update(AddRequest $request, $id): RedirectResponse
     {
-        $item = Job::findOrFail($id);
+        $item = Add::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('jobs.messages.updated'))->success();
+            flash(__('adds.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Job|null
+    protected function processForm($request, $id = null): Add|null
     {
-        $item = $id == null ? new Job() : Job::find($id);
+        $item = $id == null ? new Add() : Add::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-            if($request->filled('active')){
-                $item->active = 1;
-            }else{
-                $item->active = 0;
-            }
+        if($request->filled('active')){
+            $item->active = 1;
+        }else{
+            $item->active = 0;
+        }
+        if ($id == null) {
+            $item->created_by = auth()->user()->id;
+        }else{
+            $item->updated_by = auth()->user()->id;
+        }
         if ($item->save()) {
 
+            if ($request->hasFile('image')) {
+                $image= $request->file('image');
+                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                $item->image->move(public_path('storage/adds'), $fileName);
+                $item->image = $fileName;
+                $item->save();
+            }
             return $item;
         }
         return null;
@@ -110,12 +123,11 @@ class JobController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Job::select('*');
+        $data = Add::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('department', function ($item) {
-            return  $item->department?->title;
-
+        ->addColumn('photo', function ($item) {
+            return '<img src="' . $item->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
@@ -127,7 +139,7 @@ class JobController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['department','active'])
+        ->rawColumns(['photo','active'])
         ->make(true);
     }
 }

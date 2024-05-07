@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\JobRequest;
-use App\Models\Job;
+use App\Http\Requests\WhyBookingRequest;
+use App\Models\WhyBooking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class JobController extends Controller
+class WhyBookingController extends Controller
 {
-    private $viewIndex  = 'admin.pages.jobs.index';
-    private $viewEdit   = 'admin.pages.jobs.create_edit';
-    private $viewShow   = 'admin.pages.jobs.show';
-    private $route      = 'admin.jobs';
+    private $viewIndex  = 'admin.pages.why_bookings.index';
+    private $viewEdit   = 'admin.pages.why_bookings.create_edit';
+    private $viewShow   = 'admin.pages.why_bookings.show';
+    private $route      = 'admin.why_bookings';
 
     public function index(Request $request): View
     {
@@ -31,35 +31,36 @@ class JobController extends Controller
 
     public function edit($id): View
     {
-        $item = Job::findOrFail($id);
+        $item = WhyBooking::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Job::findOrFail($id);
+        $item = WhyBooking::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Job::findOrFail($id);
+        $item = WhyBooking::findOrFail($id);
         if ($item->delete()) {
-            flash(__('jobs.messages.deleted'))->success();
+            flash(__('why_bookings.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(JobRequest $request): RedirectResponse
+    public function store(WhyBookingRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('jobs.messages.created'))->success();
+            flash(__('why_bookings.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Job::distinct()
+       $data = WhyBooking::distinct()
+                ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     if(App::isLocale('en')) {
@@ -81,28 +82,40 @@ class JobController extends Controller
     }
 
 
-    public function update(JobRequest $request, $id): RedirectResponse
+    public function update(WhyBookingRequest $request, $id): RedirectResponse
     {
-        $item = Job::findOrFail($id);
+        $item = WhyBooking::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('jobs.messages.updated'))->success();
+            flash(__('why_bookings.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Job|null
+    protected function processForm($request, $id = null): WhyBooking|null
     {
-        $item = $id == null ? new Job() : Job::find($id);
+        $item = $id == null ? new WhyBooking() : WhyBooking::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-            if($request->filled('active')){
-                $item->active = 1;
-            }else{
-                $item->active = 0;
-            }
+        if($request->filled('active')){
+            $item->active = 1;
+        }else{
+            $item->active = 0;
+        }
+        if ($id == null) {
+            $item->created_by = auth()->user()->id;
+        }else{
+            $item->updated_by = auth()->user()->id;
+        }
         if ($item->save()) {
 
+            if ($request->hasFile('image')) {
+                $image= $request->file('image');
+                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                $item->image->move(public_path('storage/why_bookings'), $fileName);
+                $item->image = $fileName;
+                $item->save();
+            }
             return $item;
         }
         return null;
@@ -110,15 +123,17 @@ class JobController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Job::select('*');
+        $data = WhyBooking::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('department', function ($item) {
-            return  $item->department?->title;
-
+        ->addColumn('photo', function ($item) {
+            return '<img src="' . $item->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+        })
+        ->editColumn('created_at', function ($item) {
+            return $item->created_at?->format('Y-m-d H:i');
         })
         ->filterColumn('title', function ($query, $keyword) {
                  if(App::isLocale('en')) {
@@ -127,7 +142,14 @@ class JobController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['department','active'])
+        ->filterColumn('description', function ($query, $keyword) {
+                 if(App::isLocale('en')) {
+                     return $query->where('description_en', 'like', '%'.$keyword.'%');
+                 } else {
+                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
+                 }
+             })
+        ->rawColumns(['photo','active'])
         ->make(true);
     }
 }
