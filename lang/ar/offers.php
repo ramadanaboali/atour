@@ -63,5 +63,14 @@ return [
     'image' => 'الصورة',
     'sort' => 'الترتيب',
     'active' => 'نشط',
-    'available'=>'المنتج متوفر'
+    'available'=>'المنتج متوفر',
+    'supplier'=>'مقدم الخدمة',
+    'discount'=>'الخصم',
+    'services'=>'الخدمات',
+    'supplier_name'=>'مقدم الخدمة',
+    'supplier_email'=>'الايميل',
+    'supplier_phone'=>'الهاتف',
+    'benfits_numbers'=>'عدد المستفيدين',
+    'start_date'=>'تاريخ البداية ',
+    'end_date'=>'تاريخ النهاية',
 ];

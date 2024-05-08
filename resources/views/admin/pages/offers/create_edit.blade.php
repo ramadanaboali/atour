@@ -49,8 +49,60 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                       
-                        <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
+                        <div class="mb-1 col-md-4  @error('discount') is-invalid @enderror">
+                            <label class="form-label" for="discount">{{ __('offers.discount') }}</label>
+                            <input type="number" name="discount" id="discount" class="form-control" placeholder=""
+                                   value="{{ $item->discount ?? old('discount') }}" required/>
+                            @error('discount')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                         <div class="mb-1 col-md-4  @error('start_date') is-invalid @enderror">
+                            <label class="form-label" for="start_date">{{ __('articles.start_date') }}</label>
+                            <input type="text" name="start_date" id="start_date" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->start_date ?? old('start_date') }}" required/>
+                            @error('start_date')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('end_date') is-invalid @enderror">
+                            <label class="form-label" for="end_date">{{ __('articles.end_date') }}</label>
+                            <input type="text" name="end_date" id="end_date" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->end_date ?? old('end_date') }}" required/>
+                            @error('end_date')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('user_id') is-invalid @enderror">
+                            <label  class="form-label" for="user_id">{{ __('offers.supplier') }}</label>
+                            <select name="user_id" id="user_id" class="form-control ajax_select2 extra_field"
+                                data-ajax--url="{{ route('admin.suppliers.select') }}"
+                                data-ajax--cache="true" >
+                                @isset($item->supplier)
+                                    <option value="{{ $item->user_id }}" selected>{{ $item->supplier?->name }}</option>
+                                @endisset
+                            </select>
+                            @error('user_id')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('services') is-invalid @enderror">
+                            <label  class="form-label" for="services">{{ __('offers.services') }}</label>
+                            <select name="services[]" id="services" class="form-control ajax_select2 extra_field"
+                                data-ajax--url="{{ route('admin.categories.select') }}"
+                                data-ajax--cache="true" multiple >
+                                @isset($item->categories)
+                                    @foreach ($item->categories as $category)
+                                    <option value="{{ $category->id }}" selected>{{ $category->title }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                            @error('services')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="mb-1 col-md-4  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="active"
@@ -62,21 +114,21 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-
-                        <div class="mb-1 col-md-6 @error('image') is-invalid @enderror">
-                            <label class="form-label" for="image">{{ __('offers.file') }}</label>
-                            <input type="file" class="form-control input" name="image" id="image">
-                            @error('image')
+                          <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
+                            <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
+                            <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
+                            @error('description_en')
                             <span class="error">{{ $message }}</span>
                             @enderror
-                            <div>
-                                <br>
-                                @if(isset($item) && !empty($item->image))
-                                    <img src="{{ $item->photo }}"
-                                         class="img-fluid img-thumbnail">
-                                @endif
-                            </div>
                         </div>
+                        <div class="mb-1 col-md-6  @error('description_ar') is-invalid @enderror">
+                            <label class="form-label" for="description_ar">{{ __('admin.description_ar') }}</label>
+                            <textarea type="text" name="description_ar" id="description_ar" class="form-control" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
+                            @error('description_ar')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                     </div>
                 </div>
             </div>

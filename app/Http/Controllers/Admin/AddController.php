@@ -132,6 +132,9 @@ class AddController extends Controller
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
+        ->editColumn('date', function ($item) {
+            return $item->start_date.' - '.$item->end_date;
+        })
         ->filterColumn('title', function ($query, $keyword) {
                  if(App::isLocale('en')) {
                      return $query->where('title_en', 'like', '%'.$keyword.'%');
@@ -139,7 +142,14 @@ class AddController extends Controller
                      return $query->where('title_ar', 'like', '%'.$keyword.'%');
                  }
              })
-        ->rawColumns(['photo','active'])
+        ->filterColumn('description', function ($query, $keyword) {
+                 if(App::isLocale('en')) {
+                     return $query->where('description_en', 'like', '%'.$keyword.'%');
+                 } else {
+                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
+                 }
+             })
+        ->rawColumns(['photo','active','date'])
         ->make(true);
     }
 }

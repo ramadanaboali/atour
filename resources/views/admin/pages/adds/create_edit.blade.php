@@ -49,7 +49,30 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                       
+                        <div class="mb-1 col-md-4  @error('location') is-invalid @enderror">
+                            <label class="form-label" for="location">{{ __('adds.location') }}</label>
+                            <input type="text" name="location" id="location" class="form-control" placeholder=""
+                                   value="{{ $item->location ?? old('location') }}" required/>
+                            @error('location')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                         <div class="mb-1 col-md-4  @error('start_date') is-invalid @enderror">
+                            <label class="form-label" for="start_date">{{ __('articles.start_date') }}</label>
+                            <input type="text" name="start_date" id="start_date" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->start_date ?? old('start_date') }}" required/>
+                            @error('start_date')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-4  @error('end_date') is-invalid @enderror">
+                            <label class="form-label" for="end_date">{{ __('articles.end_date') }}</label>
+                            <input type="text" name="end_date" id="end_date" class="form-control flatpickr-basic" placeholder=""
+                                   value="{{ $item->end_date ?? old('end_date') }}" required/>
+                            @error('end_date')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-2  @error('active') is-invalid @enderror">
                             <br>
                             <div class="form-check">
@@ -62,7 +85,20 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-
+                          <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
+                            <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
+                            <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
+                            @error('description_en')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-6  @error('description_ar') is-invalid @enderror">
+                            <label class="form-label" for="description_ar">{{ __('admin.description_ar') }}</label>
+                            <textarea type="text" name="description_ar" id="description_ar" class="form-control" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
+                            @error('description_ar')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-6 @error('image') is-invalid @enderror">
                             <label class="form-label" for="image">{{ __('adds.file') }}</label>
                             <input type="file" class="form-control input" name="image" id="image">

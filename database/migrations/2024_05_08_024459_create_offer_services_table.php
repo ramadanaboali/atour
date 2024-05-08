@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('isVerified')->default(false);
+        Schema::create('offer_services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
+            $table->foreignId('offer_id')->nullable()->references('id')->on('offers')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('isVerified');
-        });
+        Schema::dropIfExists('offer_services');
     }
 };

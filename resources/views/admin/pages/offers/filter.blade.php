@@ -21,17 +21,19 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="mb-1 col-md-12"  >
-
                             <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label" for="type">{{ __('supliers.type') }}</label>
+                                <label for="email" class="col-sm-2 col-form-label">{{ __('clients.email') }}</label>
                                 <div class="col-sm-10">
-                                    <select name="type" id="type" class="form-control extra_field" >
-                                        <option value="">{{ __('admin.select') }}</option>
-                                        <option value="company">{{ __('suppliers.company') }}</option>
-                                        <option value="indivedual">{{ __('suppliers.indivedual') }}</option>
-                                    </select>
+                                    <input type="text" type="email" id="email" class="form-control"  value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-1 col-md-12"  >
+                            <div class="form-group row">
+                                <label for="phone" class="col-sm-2 col-form-label">{{ __('clients.phone') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" type="number" id="phone" class="form-control"  value="">
                                 </div>
                             </div>
                         </div>
@@ -48,8 +50,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mb-1 col-md-12"  >
+                         <div class="mb-1 col-md-12"  >
                             <div class="form-group row">
                                 <label for=" active" class="col-sm-2 col-form-label">{{ __('clients.active') }}</label>
                                 <div class="col-sm-10">
@@ -61,6 +62,43 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="mb-1 col-md-12 ">
+                             <div class="form-group row">
+                                 <label   class="col-sm-2 col-form-label" for="services">{{ __('offers.services') }}</label>
+                                 <div class="col-sm-10">
+                                    <select name="services[]" id="services" class="form-control ajax_select2 extra_field"
+                                        data-ajax--url="{{ route('admin.categories.select') }}"
+                                        data-ajax--cache="true" multiple >
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-1 col-md-12"  >
+                            <div class="form-group row">
+                                <label for=" start_date" class="col-sm-2 col-form-label">{{ __('offers.start_date') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" type="text" id="start_date" class="form-control flatpickr-basic"  value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-1 col-md-12"  >
+                            <div class="form-group row">
+                                <label for=" end_date" class="col-sm-2 col-form-label">{{ __('offers.end_date') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" type="text" id="end_date" class="form-control flatpickr-basic"  value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-1 col-md-12"  >
+                            <div class="form-group row">
+                                <label for=" discount" class="col-sm-2 col-form-label">{{ __('offers.discount') }}</label>
+                                <div class="col-sm-10">
+                                    <input type="number" type="text" id="discount" class="form-control"  value="">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-12">
                             <button type="button" class="btn btn-primary btn_filter">{{ __('clients.search') }}</button>
                             <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
