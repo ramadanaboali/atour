@@ -94,10 +94,10 @@ Route::middleware('throttle:60,1')->group(function () {
 
             Route::get('settings/general', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index')->middleware('adminPermission:settings.general');
             Route::get('settings/site_Settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.site')->middleware('adminPermission:settings.general');
-            Route::get('settings/header_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.header')->middleware('adminPermission:settings.general');
-            Route::get('settings/footer_settings', [App\Http\Controllers\Admin\SettingController::class, 'footer_settings'])->name('settings.footer')->middleware('adminPermission:settings.general');
+            Route::get('settings/header_settings', [App\Http\Controllers\Admin\SettingController::class, 'header'])->name('settings.header')->middleware('adminPermission:settings.header');
+            Route::get('settings/footer_settings', [App\Http\Controllers\Admin\SettingController::class, 'footer_settings'])->name('settings.footer')->middleware('adminPermission:settings.footer');
             Route::get('settings/home_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.home')->middleware('adminPermission:settings.general');
-            Route::get('settings/slider_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.slider')->middleware('adminPermission:settings.general');
+            Route::get('settings/slider_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.slider')->middleware('adminPermission:settings.slider');
             Route::get('settings/about_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.about')->middleware('adminPermission:settings.general');
             Route::get('settings/terms_preivasy_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.terms_preivasy')->middleware('adminPermission:settings.general');
             Route::get('settings/experience_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.experience')->middleware('adminPermission:settings.general');
@@ -114,7 +114,21 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+
         //addnewrouteheredontdeletemeplease
+
+            Route::get('currencies/select', [App\Http\Controllers\Admin\CurrencyController::class, 'select'])->name('currencies.select');
+            Route::delete('currencies/bulk', [App\Http\Controllers\Admin\CurrencyController::class, 'deleteBulk'])->name('currencies.deleteBulk')->middleware('adminPermission:currencies.delete');
+            Route::get('currencies/list', [App\Http\Controllers\Admin\CurrencyController::class, 'list'])->name('currencies.list')->middleware('adminPermission:currencies.view');
+            Route::post('currencies', [App\Http\Controllers\Admin\CurrencyController::class, 'store'])->name('currencies.store')->middleware('adminPermission:currencies.create');
+            Route::delete('currencies/{id}', [App\Http\Controllers\Admin\CurrencyController::class, 'destroy'])->name('currencies.destroy')->middleware('adminPermission:currencies.delete');
+            Route::get('currencies', [App\Http\Controllers\Admin\CurrencyController::class, 'index'])->name('currencies.index')->middleware('adminPermission:currencies.view');
+            Route::get('currencies/create', [App\Http\Controllers\Admin\CurrencyController::class, 'create'])->name('currencies.create')->middleware('adminPermission:currencies.create');
+            Route::match(['PUT', 'PATCH'], 'currencies/{id}', [App\Http\Controllers\Admin\CurrencyController::class, 'update'])->name('currencies.update')->middleware('adminPermission:currencies.edit');
+            Route::get('currencies/{id}/edit', [App\Http\Controllers\Admin\CurrencyController::class, 'edit'])->name('currencies.edit')->middleware('adminPermission:currencies.edit');
+
+
+
 
             Route::get('adds/select', [App\Http\Controllers\Admin\AddController::class, 'select'])->name('adds.select');
             Route::delete('adds/bulk', [App\Http\Controllers\Admin\AddController::class, 'deleteBulk'])->name('adds.deleteBulk')->middleware('adminPermission:adds.delete');

@@ -33,24 +33,57 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row mt-2">
-                        <div class="mb-1 col-md-6 @error('general_company_address') is-invalid @enderror">
-                                <?php $generaAddress = $items->where('key', 'general_company_address')->first()->value ?? old('general_company_address'); ?>
-                            <label class="form-label" for="general_company_address">{{ __('settings.address') }}</label>
-                            <input type="text" name="general_company_address" id="general_company_address" class="form-control" placeholder=""
-                                   value="{{ $generaAddress ?? old('general_company_address') }}"/>
-                            @error('general_company_address')
+                        {{-- <div class="mb-1 col-md-6 @error('general_currency_name_en') is-invalid @enderror">
+                                <?php $general_currency_name_en = $items->where('key', 'general_currency_name_en')->first()->value ?? old('general_currency_name_en'); ?>
+                            <label class="form-label" for="general_currency_name_en">{{ __('settings.currency_name_en') }}</label>
+                            <input type="text" name="general_currency_name_en" id="general_currency_name_en" class="form-control" placeholder=""
+                                   value="{{ $general_currency_name_en ?? old('general_currency_name_en') }}"/>
+                            @error('general_currency_name_en')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-6 @error('general_email') is-invalid @enderror">
-                                <?php $generalEmail = $items->where('key', 'general_email')->first()->value ?? old('general_email'); ?>
-                            <label class="form-label" for="general_email">{{ __('settings.email') }}</label>
-                            <input type="text" name="general_email" id="general_email" class="form-control" placeholder=""
-                                   value="{{ $generalEmail ?? old('general_email') }}"/>
-                            @error('general_email')
+                        <div class="mb-1 col-md-6 @error('general_currency_name_ar') is-invalid @enderror">
+                                <?php $general_currency_name_ar = $items->where('key', 'general_currency_name_ar')->first()->value ?? old('general_currency_name_ar'); ?>
+                            <label class="form-label" for="general_currency_name_ar">{{ __('settings.currency_name_ar') }}</label>
+                            <input type="text" name="general_currency_name_ar" id="general_currency_name_ar" class="form-control" placeholder=""
+                                   value="{{ $general_currency_name_ar ?? old('general_currency_name_ar') }}"/>
+                            @error('general_currency_name_ar')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-1 col-md-6 @error('general_currency_code_en') is-invalid @enderror">
+                                <?php $general_currency_code_en = $items->where('key', 'general_currency_code_en')->first()->value ?? old('general_currency_code_en'); ?>
+                            <label class="form-label" for="general_currency_code_en">{{ __('settings.currency_code_en') }}</label>
+                            <input type="text" name="general_currency_code_en" id="general_currency_code_en" class="form-control" placeholder=""
+                                   value="{{ $general_currency_code_en ?? old('general_currency_code_en') }}"/>
+                            @error('general_currency_code_en')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-6 @error('general_currency_code_ar') is-invalid @enderror">
+                                <?php $general_currency_code_ar = $items->where('key', 'general_currency_code_ar')->first()->value ?? old('general_currency_code_ar'); ?>
+                            <label class="form-label" for="general_currency_code_ar">{{ __('settings.currency_code_ar') }}</label>
+                            <input type="text" name="general_currency_code_ar" id="general_currency_code_ar" class="form-control" placeholder=""
+                                   value="{{ $general_currency_code_ar ?? old('general_currency_code_ar') }}"/>
+                            @error('general_currency_code_ar')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div> --}}
+                        <div class="mb-1 col-md-12 @error('about_image') is-invalid @enderror">
+                            <label class="form-label" for="about_image">{{ __('settings.image') }}</label>
+                            <input type="file" class="form-control input" name="about_image" id="about_image">
+                            <?php $aboutImage = $items->where('key', 'about_image')->first()->value ?? old('settings.image'); ?>
+                            @error('about_image')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                            <div>
+                                <br>
+                                @if( !empty($aboutImage))
+                                    <img src="{{  asset('storage/settings/' .$aboutImage) }}" class="img-fluid img-thumbnail" width="120px">
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="mb-1 col-md-6 @error('general_phone') is-invalid @enderror">
                                 <?php $generalPhone = $items->where('key', 'general_phone')->first()->value ?? old('general_phone'); ?>
                             <label class="form-label" for="general_phone">{{ __('settings.phone') }}</label>
@@ -96,7 +129,7 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                      
+
                     </div>
                 </div>
             </div>

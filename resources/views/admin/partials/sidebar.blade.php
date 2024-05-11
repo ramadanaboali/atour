@@ -221,6 +221,14 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('currencies.view')
+                            <li>
+                                <a class='d-flex align-items-center' href='{{ route('admin.currencies.index') }} '>
+                                    <i data-feather='key'></i>
+                                    <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.currencies') }}</span>
+                                </a>
+                            </li>
+                        @endcan
                         <li class=" nav-item {{ request()->routeIs('admin.settings.about')?'active':''}}">
                             <a class="d-flex align-items-center" href="{{ route('admin.settings.about') }} ">
                                 <i data-feather="circle"></i>
@@ -270,25 +278,7 @@
         </li>
 
 
-
-
-
-
         {{--addnewrouteheredontdeletemeplease--}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         </ul>
     </div>
