@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\SliderResource;
 use App\Models\Add;
+use App\Models\Article;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\Job;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\User;
@@ -76,6 +79,22 @@ class PageController extends Controller
         })->where('active', 1)->get();
         $result=CategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
+    }
+    public function articles(Request $request)
+    {
+        $data = Article::with(['attachments'])
+            ->where(function ($query) use ($request) {
+                if ($request->filled('type')) {
+                    $query->where('type', $request->type);
+                }
+        })->where('active', 1)->get();
+        $result=ArticleResource::collection($data);
+        return apiResponse(true, $result, null, null, 200);
+    }
+    public function jobs(Request $request)
+    {
+        $data = Job::with(['department'])->where('active', 1)->get();
+        return apiResponse(true, $data, null, null, 200);
     }
     public function home()
     {

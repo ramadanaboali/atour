@@ -27,6 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('register', [App\Http\Controllers\Api\V1\AuthController::class, 'register']);
         Route::post('verify', [App\Http\Controllers\Api\V1\AuthController::class, 'verify']);
         Route::get('privacy', [App\Http\Controllers\Api\V1\SettingController::class, 'privacy']);
+        Route::get('about', [App\Http\Controllers\Api\V1\SettingController::class, 'about']);
         Route::get('terms', [App\Http\Controllers\Api\V1\SettingController::class, 'terms']);
         Route::get('contact', [App\Http\Controllers\Api\V1\SettingController::class, 'contact']);
         Route::get('header', [App\Http\Controllers\Api\V1\SettingController::class,'header']);
@@ -39,6 +40,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('countries', [App\Http\Controllers\Api\V1\PageController::class,'countries']);
         Route::get('categories', [App\Http\Controllers\Api\V1\PageController::class,'categories']);
         Route::get('sub_categories', [App\Http\Controllers\Api\V1\PageController::class,'sub_categories']);
+        Route::get('articles', [App\Http\Controllers\Api\V1\PageController::class,'articles']);
+        Route::get('footer', [App\Http\Controllers\Api\V1\SettingController::class,'footer']);
+        Route::get('jobs', [App\Http\Controllers\Api\V1\PageController::class,'jobs']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////

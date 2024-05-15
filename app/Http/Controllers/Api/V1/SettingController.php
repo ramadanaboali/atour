@@ -32,6 +32,20 @@ class SettingController extends Controller
 
         return apiResponse(true, $data, null, null, 200);
     }
+    public function footer()
+    {
+        $items = Setting::whereIn('key',['footer_facebook','footer_twitter','footer_instagram','footer_snapchat','footer_tiktok','footer_google_play','footer_app_store'])->get();
+        $data = [
+            'footer_facebook' => $items->where('key', 'footer_facebook')->first()->value ?? '',
+            'footer_twitter' => $items->where('key', 'footer_twitter')->first()->value ?? '',
+            'footer_instagram' => $items->where('key', 'footer_instagram')->first()->value ?? '',
+            'footer_snapchat' => $items->where('key', 'footer_snapchat')->first()->value ?? '',
+            'footer_tiktok' => $items->where('key', 'footer_tiktok')->first()->value ?? '',
+            'footer_google_play' => $items->where('key', 'footer_google_play')->first()->value ?? '',
+            'footer_app_store' => $items->where('key', 'footer_app_store')->first()->value ?? '',
+        ];
+        return apiResponse(true, $data, null, null, 200);
+    }
 
     public function about()
     {

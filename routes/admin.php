@@ -102,7 +102,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('settings/terms_preivasy_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.terms_preivasy')->middleware('adminPermission:settings.general');
             Route::get('settings/experience_settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.experience')->middleware('adminPermission:settings.general');
             Route::get('settings/about', [App\Http\Controllers\Admin\SettingController::class, 'about'])->name('settings.about')->middleware('adminPermission:settings.about');
-            Route::get('settings/term-privacy', [App\Http\Controllers\Admin\SettingController::class, 'privacy'])->name('settings.term_condition')->middleware('adminPermission:settings.privacy');
+            Route::get('settings/privacy', [App\Http\Controllers\Admin\SettingController::class, 'privacy'])->name('settings.term_condition')->middleware('adminPermission:settings.privacy');
             Route::get('settings/terms', [App\Http\Controllers\Admin\SettingController::class, 'terms'])->name('settings.terms')->middleware('adminPermission:settings.terms');
             Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update')->middleware('adminPermission:settings.edit');
 
