@@ -32,6 +32,13 @@ class SettingController extends Controller
             ->get();
         return view($this->viewGeneral, get_defined_vars());
     }
+    public function header(): View
+    {
+        $items = $this->setting
+            ->where('key', 'LIKE', 'header_%')
+            ->get();
+        return view('admin.pages.settings.header', get_defined_vars());
+    }
     public function footer_settings(): View
     {
         $items = $this->setting

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ArticleRequest;
-use App\Models\Article;
+use App\Http\Requests\BlogRequest;
 use App\Models\Attachment;
+use App\Models\Blog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,12 +13,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
-class ArticleController extends Controller
+class BlogController extends Controller
 {
-    private $viewIndex  = 'admin.pages.articles.index';
-    private $viewEdit   = 'admin.pages.articles.create_edit';
-    private $viewShow   = 'admin.pages.articles.show';
-    private $route      = 'admin.articles';
+    private $viewIndex  = 'admin.pages.blogs.index';
+    private $viewEdit   = 'admin.pages.blogs.create_edit';
+    private $viewShow   = 'admin.pages.blogs.show';
+    private $route      = 'admin.blogs';
 
     public function index(Request $request): View
     {
@@ -32,35 +32,35 @@ class ArticleController extends Controller
 
     public function edit($id): View
     {
-        $item = Article::findOrFail($id);
+        $item = Blog::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Article::findOrFail($id);
+        $item = Blog::findOrFail($id);
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Article::findOrFail($id);
+        $item = Blog::findOrFail($id);
         if ($item->delete()) {
-            flash(__('articles.messages.deleted'))->success();
+            flash(__('blogs.messages.deleted'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    public function store(ArticleRequest $request): RedirectResponse
+    public function store(BlogRequest $request): RedirectResponse
     {
         if ($this->processForm($request)) {
-            flash(__('articles.messages.created'))->success();
+            flash(__('blogs.messages.created'))->success();
         }
         return to_route($this->route . '.index');
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Article::distinct()
+       $data = Blog::distinct()
                 ->where('active',true)
                 ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
@@ -83,19 +83,18 @@ class ArticleController extends Controller
     }
 
 
-    public function update(ArticleRequest $request, $id): RedirectResponse
+    public function update(BlogRequest $request, $id): RedirectResponse
     {
-        $item = Article::findOrFail($id);
+        $item = Blog::findOrFail($id);
         if ($this->processForm($request, $id)) {
-            flash(__('articles.messages.updated'))->success();
+            flash(__('blogs.messages.updated'))->success();
         }
         return to_route($this->route . '.index');
     }
 
-    protected function processForm($request, $id = null): Article|null
+    protected function processForm($request, $id = null): Blog|null
     {
-        // dd($request->all());
-        $item = $id == null ? new Article() : Article::find($id);
+        $item = $id == null ? new Blog() : Blog::find($id);
         $data= $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
@@ -111,8 +110,24 @@ class ArticleController extends Controller
         }
         if ($item->save()) {
 
+            if ($request->hasFile('image')) {
+                $image= $request->file('image');
+                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                $request->image->move(public_path('storage/blogs'), $fileName);
+                $item->cover = $fileName;
+                $item->save();
+            }
+            if ($request->hasFile('publisher_image')) {
+                $publisher_image= $request->file('publisher_image');
+                $fileName = time() . rand(0, 999999999) . '.' . $publisher_image->getClientOriginalExtension();
+                $request->publisher_image->move(public_path('storage/blogs'), $fileName);
+                $item->cover = $fileName;
+                $item->save();
+            }
+
             if ($request->editimages) {
-                Attachment::whereNotIn('id', $request->editimages)->where('model_type','article')->where('model_id', $item->id)->delete();
+
+            Attachment::whereNotIn('id', $request->editimages)->where('model_type', 'blog')->where('model_id', $item->id)->delete();
             }
             if ($request->images) {
                 for ($i = 0; $i < count($request->images); $i++) {
@@ -124,7 +139,7 @@ class ArticleController extends Controller
                                     'model_id' => $item->id,
                                     'attachment' => $image,
                                     'title' => 'images',
-                                    'model_type' => 'article',
+                                    'model_type' => 'blog',
                                 ]
                             )
                         );
@@ -138,7 +153,7 @@ class ArticleController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Article::select('*');
+        $data = Blog::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {

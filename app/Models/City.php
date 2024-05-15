@@ -12,7 +12,7 @@ class City extends Model
 {
     use HasFactory,SoftDeletes;
      protected $table = 'cities';
-    protected $fillable = ['title_en','title_ar', 'country_id','created_by','updated_by','active'];
+    protected $fillable = ['title_en','title_ar','description_en','description_ar', 'country_id','created_by','updated_by','active'];
     protected $appends = ['title','text'];
 
     public function getTextAttribute()
@@ -30,6 +30,14 @@ class City extends Model
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getDescriptionAttribute()
+    {
+        if(App::isLocale('en')) {
+            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
+        } else {
+            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
         }
     }
     public function country(): ?BelongsTo

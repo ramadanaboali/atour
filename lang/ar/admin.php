@@ -194,6 +194,8 @@ return [
     ],
     'adds' => 'الاعلانات',
     'currencies' => 'العملات',
+    'blogs' => 'المدونات',
+    'publisher_name' => 'اسم الناشر',
 
 
 ];

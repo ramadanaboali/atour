@@ -115,7 +115,21 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+
         //addnewrouteheredontdeletemeplease
+
+            Route::get('blogs/select', [App\Http\Controllers\Admin\BlogController::class, 'select'])->name('blogs.select');
+            Route::delete('blogs/bulk', [App\Http\Controllers\Admin\BlogController::class, 'deleteBulk'])->name('blogs.deleteBulk')->middleware('adminPermission:blogs.delete');
+            Route::get('blogs/list', [App\Http\Controllers\Admin\BlogController::class, 'list'])->name('blogs.list')->middleware('adminPermission:blogs.view');
+            Route::post('blogs', [App\Http\Controllers\Admin\BlogController::class, 'store'])->name('blogs.store')->middleware('adminPermission:blogs.create');
+            Route::delete('blogs/{id}', [App\Http\Controllers\Admin\BlogController::class, 'destroy'])->name('blogs.destroy')->middleware('adminPermission:blogs.delete');
+            Route::get('blogs', [App\Http\Controllers\Admin\BlogController::class, 'index'])->name('blogs.index')->middleware('adminPermission:blogs.view');
+            Route::get('blogs/create', [App\Http\Controllers\Admin\BlogController::class, 'create'])->name('blogs.create')->middleware('adminPermission:blogs.create');
+            Route::match(['PUT', 'PATCH'], 'blogs/{id}', [App\Http\Controllers\Admin\BlogController::class, 'update'])->name('blogs.update')->middleware('adminPermission:blogs.edit');
+            Route::get('blogs/{id}/edit', [App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('blogs.edit')->middleware('adminPermission:blogs.edit');
+
+
+
 
             Route::get('currencies/select', [App\Http\Controllers\Admin\CurrencyController::class, 'select'])->name('currencies.select');
             Route::delete('currencies/bulk', [App\Http\Controllers\Admin\CurrencyController::class, 'deleteBulk'])->name('currencies.deleteBulk')->middleware('adminPermission:currencies.delete');

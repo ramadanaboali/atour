@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
@@ -38,6 +39,10 @@ class Category extends Model
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
         }
+    }
+     public function subCategory()
+    {
+        return $this->hasMany(SubCategory::class);
     }
 
 }

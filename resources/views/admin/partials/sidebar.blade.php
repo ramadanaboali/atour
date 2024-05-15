@@ -151,6 +151,14 @@
                 </a>
             </li>
             @endcan
+              @can('blogs.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.blogs.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.blogs') }}</span>
+                    </a>
+                </li>
+            @endcan
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.jobs.index') }}">
                     <i data-feather="image"></i>
@@ -278,7 +286,12 @@
         </li>
 
 
+
         {{--addnewrouteheredontdeletemeplease--}}
+
+
+
+
 
         </ul>
     </div>

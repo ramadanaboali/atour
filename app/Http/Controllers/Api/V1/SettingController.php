@@ -22,6 +22,16 @@ class SettingController extends Controller
 
         return apiResponse(true, $data, null, null, 200);
     }
+    public function header()
+    {
+        $items = Setting::where('key','like', 'header_%')->get();
+        $header_logo = $items->where('key', 'header_logo')->first()->value ?? '';
+        $data = [
+            'logo' => asset('storage/settings/' .$header_logo),
+        ];
+
+        return apiResponse(true, $data, null, null, 200);
+    }
 
     public function about()
     {

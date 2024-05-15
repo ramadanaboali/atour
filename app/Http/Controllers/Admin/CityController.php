@@ -104,13 +104,6 @@ class CityController extends Controller
             }
         if ($item->save()) {
 
-            if ($request->hasFile('image')) {
-                $image= $request->file('image');
-                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $item->image->move(public_path('storage/cities'), $fileName);
-                $item->image = $fileName;
-                $item->save();
-            }
             return $item;
         }
         return null;
@@ -128,12 +121,19 @@ class CityController extends Controller
             return $item->active==1 ? '<button class=" btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
         ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+            if(App::isLocale('en')) {
+                return $query->where('title_en', 'like', '%'.$keyword.'%');
+            } else {
+                return $query->where('title_ar', 'like', '%'.$keyword.'%');
+            }
+        })
+        ->filterColumn('description', function ($query, $keyword) {
+            if(App::isLocale('en')) {
+                return $query->where('description_en', 'like', '%'.$keyword.'%');
+            } else {
+                return $query->where('description_ar', 'like', '%'.$keyword.'%');
+            }
+        })
         ->rawColumns(['country','active'])
         ->make(true);
     }

@@ -29,10 +29,14 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('privacy', [App\Http\Controllers\Api\V1\SettingController::class, 'privacy']);
         Route::get('terms', [App\Http\Controllers\Api\V1\SettingController::class, 'terms']);
         Route::get('contact', [App\Http\Controllers\Api\V1\SettingController::class, 'contact']);
+        Route::get('header', [App\Http\Controllers\Api\V1\SettingController::class,'header']);
 
+        Route::get('blogs', [App\Http\Controllers\Api\V1\PageController::class,'blogs']);
+        Route::get('cities', [App\Http\Controllers\Api\V1\PageController::class,'cities']);
         Route::get('sliders', [App\Http\Controllers\Api\V1\PageController::class,'sliders']);
         Route::get('countries', [App\Http\Controllers\Api\V1\PageController::class,'countries']);
         Route::get('categories', [App\Http\Controllers\Api\V1\PageController::class,'categories']);
+        Route::get('sub_categories', [App\Http\Controllers\Api\V1\PageController::class,'sub_categories']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
