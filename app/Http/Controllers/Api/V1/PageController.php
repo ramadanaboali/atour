@@ -11,6 +11,7 @@ use App\Models\Blog;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\User;
@@ -38,6 +39,11 @@ class PageController extends Controller
         $data = City::with('country')->where('active', 1)->get();
         $result=CityResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
+    }
+    public function currencies()
+    {
+        $data = Currency::where('active', 1)->get();
+        return apiResponse(true, $data, null, null, 200);
     }
     public function countries()
     {

@@ -33,6 +33,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::get('blogs', [App\Http\Controllers\Api\V1\PageController::class,'blogs']);
         Route::get('cities', [App\Http\Controllers\Api\V1\PageController::class,'cities']);
+        Route::get('currencies', [App\Http\Controllers\Api\V1\PageController::class,'currencies']);
         Route::get('sliders', [App\Http\Controllers\Api\V1\PageController::class,'sliders']);
         Route::get('countries', [App\Http\Controllers\Api\V1\PageController::class,'countries']);
         Route::get('categories', [App\Http\Controllers\Api\V1\PageController::class,'categories']);
