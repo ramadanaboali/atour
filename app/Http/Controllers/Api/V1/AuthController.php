@@ -28,11 +28,11 @@ class AuthController extends Controller
             return apiResponse(false, null, __('api.not_authorized'), null, 401);
         }
         $user = Auth::user();
-        if(in_array($user->type, [User::TYPE_CLIENT])) {
+//        if(in_array($user->type, [User::TYPE_CLIENT])) {
             $user['token'] = $user->createToken('auth_token')->plainTextToken;
 
             return apiResponse(true, new UserResource($user), __('success'), null, 200);
-        }
+//        }
 
         return apiResponse(false, null, __('api.not_authorized'), null, 401);
 
