@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('terms', [App\Http\Controllers\Api\V1\SettingController::class, 'terms']);
         Route::get('contact', [App\Http\Controllers\Api\V1\SettingController::class, 'contact']);
         Route::get('header', [App\Http\Controllers\Api\V1\SettingController::class,'header']);
+        Route::get('ads', [App\Http\Controllers\Api\V1\PageController::class,'ads']);
 
         Route::get('blogs', [App\Http\Controllers\Api\V1\PageController::class,'blogs']);
         Route::get('cities', [App\Http\Controllers\Api\V1\PageController::class,'cities']);

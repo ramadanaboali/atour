@@ -7,6 +7,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\SliderResource;
+use App\Models\Add;
 use App\Models\Blog;
 use App\Models\Category;
 use App\Models\City;
@@ -32,6 +33,11 @@ class PageController extends Controller
     public function blogs()
     {
         $data = Blog::with('attachments')->where('active', 1)->get();
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function ads()
+    {
+        $data = Add::where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function cities()
