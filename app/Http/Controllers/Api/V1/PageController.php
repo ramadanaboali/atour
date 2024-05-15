@@ -85,7 +85,7 @@ class PageController extends Controller
     public function changePreferedSetting(Request $request)
     {
         $validate = array(
-            'lang' => 'required|in,ar,en',
+            'lang' => 'required|in:ar,en',
             'currency_id' => 'required|exists:currencies,id',
         );
         $validatedData = Validator::make($request->all(), $validate);
