@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('user_prefered_settings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->enum('lang',['ar','en']);
-            $table->unsignedBigInteger('currency_id')->nullable();
             $table->boolean('active')->default(true);
             $table->foreignId('user_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('currency_id')->nullable()->references('id')->on('currencies')->onDelete('cascade');
