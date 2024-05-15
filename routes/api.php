@@ -40,7 +40,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
-            Route::get('change_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'getPreferedSetting']);
+            Route::get('get_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'getPreferedSetting']);
             Route::post('change_prefered_setting', [App\Http\Controllers\Api\V1\AuthController::class, 'changePreferedSetting']);
             Route::get('change-language/{language}', [App\Http\Controllers\Api\V1\PageController::class, 'changeLang']);
             Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);
