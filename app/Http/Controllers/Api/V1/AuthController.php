@@ -15,7 +15,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validate = array(
-            'phone' => 'required|string',
+            'email' => 'required|email',
             'password' => 'required|string'
         );
         $validatedData = Validator::make($request->all(), $validate);
@@ -23,7 +23,7 @@ class AuthController extends Controller
             return apiResponse(false, null, __('api.not_found'), $validatedData->errors()->all(), 201);
         }
 
-        $credentials = request(['phone', 'password']);
+        $credentials = request(['email', 'password']);
         if (!Auth::attempt($credentials)) {
             return apiResponse(false, null, __('api.not_authorized'), null, 401);
         }
