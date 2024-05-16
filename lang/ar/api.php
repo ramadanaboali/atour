@@ -32,5 +32,8 @@ return [
     'order_deliverd' => 'تم تسليم الطلب رقم :code',
     'order_on_the_way' => ' الطلب رقم :code فى الطريق اليك',
     'new_order_request' => 'لديك طلب جديد',
-    'doublicate_rate'=>'لقد قمت بالتقيم مسبقا'
+    'doublicate_rate'=>'لقد قمت بالتقيم مسبقا',
+    'check_username_passowrd' => 'رجاء التأكد من اسم المستخدم و كلمة المرور',
+    'email_not_registerd' => 'رقم الجوال / البريد غير مسجل',
+
 ];

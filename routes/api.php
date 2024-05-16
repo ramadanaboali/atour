@@ -1,5 +1,6 @@
     <?php
 
+use App\Http\Controllers\Api\V1\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => ['languageMobile']], function () {
+
+
+Route::post('/reset', [AuthController::class, 'resetPassword']);
+Route::post('/check-code', [AuthController::class, 'checkCode']);
+Route::post('/confirm-reset', [AuthController::class, 'confirmReset']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
+
         Route::post('login', [App\Http\Controllers\Api\V1\AuthController::class, 'login']);
         Route::post('reset-password', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
         Route::post('confirm-reset', [App\Http\Controllers\Api\V1\AuthController::class, 'confirmReset']);
@@ -49,11 +59,16 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('get_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'getPreferedSetting']);
             Route::post('change_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'changePreferedSetting']);
             Route::get('change-language/{language}', [App\Http\Controllers\Api\V1\PageController::class, 'changeLang']);
-            Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);
-            Route::post('update-image', [App\Http\Controllers\Api\V1\AuthController::class, 'updateimage']);
-            Route::post('logout', [App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
-            Route::delete('delete-account', [App\Http\Controllers\Api\V1\AuthController::class, 'deleteAccount']);
-            Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
+
+            Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+            Route::post('/send-code', [AuthController::class, 'sendCode']);
+            Route::post('/change-password', [AuthController::class, 'changePassword']);
+            Route::post('/update-email', [AuthController::class, 'updateEmail']);
+            Route::post('/update-phone', [AuthController::class, 'updatePhone']);
+            Route::get('/profile', [AuthController::class, 'profile']);
+
+            Route::post('/logout', [AuthController::class, 'logout']);
+
         });
     });
 });

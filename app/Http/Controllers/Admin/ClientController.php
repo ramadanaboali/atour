@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
@@ -132,6 +133,11 @@ class ClientController extends Controller
         $item->type = User::TYPE_CLIENT;
 
         if ($item->save()) {
+
+            if ($request->filled('password')) {
+                $item->password = Hash::make($request->password);
+                $item->save();
+            }
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');

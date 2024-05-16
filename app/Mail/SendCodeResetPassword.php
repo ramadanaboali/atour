@@ -11,17 +11,26 @@ class SendCodeResetPassword extends Mailable
 {
     use Queueable;
     use SerializesModels;
-
-
+    public $email;
     public $code;
-
-    public function __construct($code)
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($email, $code)
     {
+        $this->email = $email;
         $this->code = $code;
     }
-
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->markdown('emails.send-code-reset-password');
+        return $this->subject('Verfication Code')
+        ->markdown('emails.resetpassword');
     }
 }

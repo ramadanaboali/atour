@@ -1,6 +1,5 @@
     <?php
 
-use App\Http\Controllers\Api\V1\Supplier\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,14 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => ['languageMobile']], function () {
-
-        Route::post('/setup1', [AuthController::class, 'setup1']);
-        Route::post('/setup2', [AuthController::class, 'setup2']);
-        Route::post('/setup3', [AuthController::class, 'setup3']);
-        Route::post('/setup4', [AuthController::class, 'setup4']);
-        Route::post('/setup5', [AuthController::class, 'setup5']);
-        Route::post('/login', [AuthController::class, 'login']);
-
         Route::post('login', [App\Http\Controllers\Api\V1\AuthController::class, 'login']);
         Route::post('reset-password', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
         Route::post('confirm-reset', [App\Http\Controllers\Api\V1\AuthController::class, 'confirmReset']);
@@ -55,6 +46,9 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
+            Route::get('get_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'getPreferedSetting']);
+            Route::post('change_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'changePreferedSetting']);
+            Route::get('change-language/{language}', [App\Http\Controllers\Api\V1\PageController::class, 'changeLang']);
             Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);
             Route::post('update-image', [App\Http\Controllers\Api\V1\AuthController::class, 'updateimage']);
             Route::post('logout', [App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
