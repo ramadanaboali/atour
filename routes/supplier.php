@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => ['languageMobile']], function () {
 
+        Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+        Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+
         Route::post('/setup1', [AuthController::class, 'setup1']);
         Route::post('/setup2', [AuthController::class, 'setup2']);
         Route::post('/setup3', [AuthController::class, 'setup3']);

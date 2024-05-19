@@ -13,10 +13,11 @@ use App\Http\Requests\ResetRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\EmailRequest;
 use App\Http\Requests\PhoneRequest;
+use App\Http\Requests\VerifyRequest;
+use App\Http\Requests\NewEmailRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
-use App\Models\Vendor;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Http\Request;
@@ -51,17 +52,15 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-
         $userInput = [
             'email' => $request->email,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'name' => $request->name,
             'phone' => $request->phone,
-            'type' => 'customer',
+            'type' => User::TYPE_CLIENT,
             'password' => Hash::make($request->password),
         ];
-        return User::create($userInput);
-
+        $user = User::where('email', $request->email)->first();
+        $user->update($userInput);
     }
 
     public function sendCode(SendCodeRequest $request)
@@ -78,6 +77,43 @@ class AuthController extends Controller
                 }
             }
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
+        } catch (Exception $e) {
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+    }
+    public function sendOtp(NewEmailRequest $request)
+    {
+        try {
+            $MsgID = rand(100000, 999999);
+            $data = [
+                'email' => $request->email,
+                'reset_code' => $MsgID,
+                'status' => 'pendding',
+                'active' => false,
+                'type' =>User::TYPE_CLIENT,
+            ];
+            $user = User::create($data);
+            Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
+            return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
+        } catch (Exception $e) {
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+    public function verifyOtp(VerifyRequest $request)
+    {
+
+        try {
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return apiResponse(false, null, __('api.not_found'), null, 404);
+            }
+            if($user->reset_code == $request->code) {
+                $user->reset_code = null;
+                $user->save();
+                return apiResponse(true, $user, __('api.code_success'), null, 200);
+            }
+            return apiResponse(false, null, __('api.code_error'), null, 201);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }

@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class Setup1Request extends FormRequest
+class VerifyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -20,19 +22,18 @@ class Setup1Request extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
-    public function rules(): array
+    public function rules()
     {
-
         return [
-            'name' => 'required|string|min:2',
             'email' => 'required|email|exists:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|min:6|confirmed'
-        ];
+            'code' => 'required',
 
+        ];
     }
+
+
     protected function failedValidation(Validator $validator)
     {
         $errors = (new ValidationException($validator))->errors();

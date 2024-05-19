@@ -34,6 +34,10 @@ use Illuminate\Support\Facades\Artisan;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+use App\Http\Requests\VerifyRequest;
+use App\Http\Requests\NewEmailRequest;
+
+
 class AuthController extends Controller
 {
     use ApiResponser;
@@ -58,31 +62,69 @@ class AuthController extends Controller
         return $this->successResponse($dataR, Response::HTTP_CREATED);
     }
 
+      public function sendOtp(NewEmailRequest $request)
+    {
+        try {
+            $MsgID = rand(100000, 999999);
+            $data = [
+                'email' => $request->email,
+                'reset_code' => $MsgID,
+                'status' => 'pendding',
+                'active' => false,
+                'type' =>User::TYPE_SUPPLIER,
+            ];
+            $user = User::create($data);
+            Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
+            return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
+        } catch (Exception $e) {
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+    public function verifyOtp(VerifyRequest $request)
+    {
+
+        try {
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return apiResponse(false, null, __('api.not_found'), null, 404);
+            }
+            if($user->reset_code == $request->code) {
+                $user->reset_code = null;
+                $user->save();
+                return apiResponse(true, $user, __('api.code_success'), null, 200);
+            }
+            return apiResponse(false, null, __('api.code_error'), null, 201);
+        } catch (Exception $e) {
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+    }
     public function setup1(Setup1Request $request)
     {
         try {
             DB::beginTransaction();
-                $userInput = [
-                    'email' => $request->email,
-                    'name' => $request->name,
-                    'phone' => $request->phone,
-                    'birthdate' => $request->birthdate,
-                    'joining_date_from' => date('Y-m-d'),
-                    'active' =>false,
-                    'status' =>'pendding',
-                    'type' => User::TYPE_SUPPLIER,
-                    'password' => Hash::make($request->password),
-                ];
-                $user = User::create($userInput);
-                $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
+            $userInput = [
+                'email' => $request->email,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'birthdate' => $request->birthdate,
+                'joining_date_from' => date('Y-m-d'),
+                'active' => false,
+                'status' => 'pendding',
+                'type' => User::TYPE_SUPPLIER,
+                'password' => Hash::make($request->password),
+            ];
+            $user = User::where('email',$request->email)->first();
+            $user->update($userInput);
+            $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
 
-                if ($user && $role) {
-                    $user->syncRoles($role->id);
-                    $role->syncPermissions(Permission::whereIn('model_type', ['supplier','general'])->get());
-                    Artisan::call('cache:clear');
-                }
-                DB::commit();
-                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+            if ($user && $role) {
+                $user->syncRoles($role->id);
+                $role->syncPermissions(Permission::whereIn('model_type', ['supplier','general'])->get());
+                Artisan::call('cache:clear');
+            }
+            DB::commit();
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -92,21 +134,21 @@ class AuthController extends Controller
     }
     public function setup2(Setup2Request $request)
     {
-            try {
-                $inputs = [
-                    'country_id'=>$request->country_id,
-                    'city_id'=>$request->city_id,
-                    'streat'=>$request->streat,
-                    'postal_code'=>$request->postal_code,
-                    'description'=>$request->description,
-                    'short_description'=>$request->short_description,
-                    'url'=>$request->url,
-                    'user_id'=> $request->user_id,
+        try {
+            $inputs = [
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
+                'streat' => $request->streat,
+                'postal_code' => $request->postal_code,
+                'description' => $request->description,
+                'short_description' => $request->short_description,
+                'url' => $request->url,
+                'user_id' => $request->user_id,
 
-                ];
-                Supplier::updateOrCreate(['user_id'=>$request->user_id],$inputs);
-                $user = User::with('supplier')->where('id',$request->user_id)->first();
-                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+            ];
+            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -116,20 +158,20 @@ class AuthController extends Controller
     }
     public function setup3(Setup3Request $request)
     {
-            try {
-                $inputs = [
-                    'profission_guide'=>$request->profission_guide,
-                    'job'=>$request->job,
-                    'type'=>$request->type,
-                    'experience_info'=>$request->experience_info,
-                    'languages'=>json_encode($request->languages),
-                    'user_id'=> $request->user_id,
-                    'banck_name'=> $request->banck_name,
-                    'banck_number'=> $request->banck_number,
-                ];
-                Supplier::updateOrCreate(['user_id'=>$request->user_id],$inputs);
-                $user = User::with('supplier')->where('id',$request->user_id)->first();
-                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+        try {
+            $inputs = [
+                'profission_guide' => $request->profission_guide,
+                'job' => $request->job,
+                'type' => $request->type,
+                'experience_info' => $request->experience_info,
+                'languages' => json_encode($request->languages),
+                'user_id' => $request->user_id,
+                'banck_name' => $request->banck_name,
+                'banck_number' => $request->banck_number,
+            ];
+            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -138,17 +180,17 @@ class AuthController extends Controller
     }
     public function setup4(Setup4Request $request)
     {
-            try {
-                $inputs = [
-                    'tax_number'=>$request->tax_number,
-                    'place_summary'=>$request->place_summary,
-                    'place_content'=>$request->place_content,
-                    'expectations'=>$request->expectations,
-                    'user_id'=> $request->user_id
-                ];
-                Supplier::updateOrCreate(['user_id'=>$request->user_id],$inputs);
-                $user = User::with('supplier')->where('id',$request->user_id)->first();
-                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+        try {
+            $inputs = [
+                'tax_number' => $request->tax_number,
+                'place_summary' => $request->place_summary,
+                'place_content' => $request->place_content,
+                'expectations' => $request->expectations,
+                'user_id' => $request->user_id
+            ];
+            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -158,26 +200,26 @@ class AuthController extends Controller
     public function setup5(Setup5Request $request)
     {
         // dd($request->attachments[0]);
-            try {
-               foreach($request->attachments as $file){
+        try {
+            foreach($request->attachments as $file) {
                 $fileName = time() . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('storage/files'), $fileName);
                 $input = [
-                    'model_id'=>$request->user_id,
-                    'attachment'=>$fileName,
-                    'title'=>'cirtified',
-                    'model_type'=>'user',
+                    'model_id' => $request->user_id,
+                    'attachment' => $fileName,
+                    'title' => 'cirtified',
+                    'model_type' => 'user',
                 ];
                 Attachment::create($input);
-               }
-               foreach($request->images as $image){
+            }
+            foreach($request->images as $image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('storage/files'), $fileName);
                 $input = [
-                    'model_id'=>$request->user_id,
-                    'attachment'=>$fileName,
-                    'title'=>'images',
-                    'model_type'=>'user',
+                    'model_id' => $request->user_id,
+                    'attachment' => $fileName,
+                    'title' => 'images',
+                    'model_type' => 'user',
                 ];
                 Attachment::create($input);
             }
@@ -188,7 +230,7 @@ class AuthController extends Controller
             $user->image = $fileNames;
             $user->save();
 
-                return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
             DB::rollBack();

@@ -27,24 +27,10 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'provider_name'    => 'required|min:3|max:20',
-            'commercial_no'    => 'required|min:3|max:20',
-            'description'      => 'nullable|min:3|max:20',
-            'website_url'      => 'nullable|min:3|max:20',
-            'twitter'          => 'nullable|min:3|max:20',
-            'instagram'        => 'nullable|min:3|max:20',
-            'snapchat'         => 'nullable|min:3|max:20',
-            'registered_tax'   => 'required|in:0,1',
-            'tax_number'       => 'required_if:registered_tax,1',
-            'category_id'    => 'required|array',
-            'category_id.*'  => 'required|exists:categories,id',
-            'email'            => 'required|email|unique:users,email',
-            'first_name'       => 'required|min:3|max:20',
-            'last_name'        => 'required|min:3|max:20',
+            'email'            => 'required|email|exists:users,email',
+            'name'       => 'required|min:3|max:20',
             'phone'            => 'required|numeric|unique:users',
             'password'         => 'required|min:8|confirmed',
-
-
         ];
     }
 
@@ -56,15 +42,10 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'first_name.required'   => 'يجب ادخال الاسم الاول بشكل صحيح !!',
-            'first_name.string'     => 'الاسم الاول يجب ان يكون حروف فقط !!',
-            'first_name.max'        => 'الاسم الاول لا يمكن ان يكون اكبر من 20 حرف !! ',
-            'first_name.min'        => 'الاسم الاول لا يمكن ان يكون اقل من 3 احرف !! ',
-
-            'last_name.required'   => 'يجب ادخال الاسم الاخير بشكل صحيح !!',
-            'last_name.string'     => 'الاسم الاخير يجب ان يكون حروف فقط !!',
-            'last_name.max'        => 'الاسم الاخير لا يمكن ان يكون اكبر من 20 حرف !! ',
-            'last_name.min'        => 'الاسم الاخير لا يمكن ان يكون اقل من 3 احرف !! ',
+            'name.required'   => 'يجب ادخال الاسم  بشكل صحيح !!',
+            'name.string'     => 'الاسم  يجب ان يكون حروف فقط !!',
+            'name.max'        => 'الاسم  لا يمكن ان يكون اكبر من 20 حرف !! ',
+            'name.min'        => 'الاسم  لا يمكن ان يكون اقل من 3 احرف !! ',
 
             'email.required'     => 'البريد الألكتروني مطلوب',
             'email.email'     => 'ادخل البريد الألكتروني بشكل صحيح',
