@@ -19,7 +19,6 @@
         "laravel/ui": "^3.4",
         "league/flysystem-aws-s3-v3": "^3.0",
         "mpdf/mpdf": "^8.0",
-        "rap2hpoutre/fast-excel": "^4.1",
         "spatie/laravel-permission": "^5.5",
         "staudenmeir/eloquent-json-relations": "^1.1",
         "yajra/laravel-datatables-oracle": "^9.19"
