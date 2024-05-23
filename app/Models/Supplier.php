@@ -34,6 +34,8 @@ class Supplier extends Model
         'place_summary',
         'place_content',
         'expectations',
+        'general_name',
+        'nationality',
         'created_by',
         'updated_by'];
 

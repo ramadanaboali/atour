@@ -36,7 +36,7 @@ use Spatie\Permission\Models\Role;
 
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
-
+use App\Models\SupplierService;
 
 class AuthController extends Controller
 {
@@ -106,6 +106,8 @@ class AuthController extends Controller
             $userInput = [
                 'email' => $request->email,
                 'name' => $request->name,
+                'general_name' => $request->general_name,
+                'nationality' => $request->nationality,
                 'phone' => $request->phone,
                 'birthdate' => $request->birthdate,
                 'joining_date_from' => date('Y-m-d'),
@@ -146,8 +148,22 @@ class AuthController extends Controller
                 'user_id' => $request->user_id,
 
             ];
-            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            DB::beginTransaction();
+            $supplier=Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+            foreach ($request->category_id as $category_id) {
+                SupplierService::create([
+                        'supplier_id'=>$supplier->id,
+                        'category_id'=>$category_id,
+                ]);
+            }
+            foreach ($request->sub_category_id as $sub_category_id) {
+                SupplierService::create([
+                        'supplier_id'=>$supplier->id,
+                        'sub_category_id'=>$sub_category_id,
+                ]);
+            }
+            DB::commit();
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
