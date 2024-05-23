@@ -13,6 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
+
+Schema::dropIfExists('supplier_services');
+
         Schema::create('supplier_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
