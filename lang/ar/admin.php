@@ -196,6 +196,8 @@ return [
     'currencies' => 'العملات',
     'blogs' => 'المدونات',
     'publisher_name' => 'اسم الناشر',
+    'trips' => 'الرحلات',
+    'customers' => 'العملاء',
 
 
 ];
