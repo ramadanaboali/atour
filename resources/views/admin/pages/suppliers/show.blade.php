@@ -256,6 +256,53 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <h4 class="card-header">{{ __('orders.trips') }}</h4>
+                        <div class="card-body">
+                            <div class="table-responsive">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="py-1">{{ __('orders.client_name') }}</th>
+                                            <th class="py-1">{{ __('orders.description') }}</th>
+                                            <th class="py-1">{{ __('orders.total') }}</th>
+                                            <th class="py-1">{{ __('orders.phone') }}</th>
+                                            <th class="py-1">{{ __('orders.start_point') }}</th>
+                                            <th class="py-1">{{ __('orders.end_point') }}</th>
+                                            <th class="py-1">{{ __('orders.cancelation_policy') }}</th>
+                                            <th class="py-1">{{ __('orders.free_cancelation') }}</th>
+                                            <th class="py-1">{{ __('orders.pay_later') }}</th>
+                                            <th class="py-1">{{ __('orders.vendor') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($item->trips as $trip)
+
+                                        <tr>
+
+                                            <td class="py-1">
+                                                <span class="fw-bold">{{ $trip->title }}</span>
+                                                <span class="fw-bold">{{ $trip->description }}</span>
+                                                <span class="fw-bold">{{ $trip->price }}</span>
+                                                <span class="fw-bold">{{ $trip->phone }}</span>
+                                                <span class="fw-bold">{{ $trip->start_point }}</span>
+                                                <span class="fw-bold">{{ $trip->end_point }}</span>
+                                                <span class="fw-bold">{{ $trip->cancelation_policy }}</span>
+                                                <span class="fw-bold">{{ $trip->free_cancelation }}</span>
+                                                <span class="fw-bold">{{ $trip->pay_later }}</span>
+                                                <span class="fw-bold">{{ $trip->vendor?->user?->name }}</span>
+                                            </td>
+
+                                        </tr>
+                                        @endforeach
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
                     <!-- /Rates table -->
                     <div class="card">
                         <h4 class="card-header">{{ __('suppliers.images') }}</h4>
@@ -295,7 +342,7 @@
                 }
             },
             ajax: {
-                url: "{{ route('admin.orders.list') }}",
+                url: "{{ route('admin.suppliers.orders') }}",
                 data: function (d) {
                     d.user_id  = {{ $item->id }};
                 }
@@ -305,7 +352,7 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'code', name: 'code'},
+                {data: 'code', name: 'code',orderable: false,searchable: false},
                 {data: 'vendor', name: 'vendor.name'},
                 {data: 'address', name: 'address'},
                 {data: 'order_date', name: 'order_date'},

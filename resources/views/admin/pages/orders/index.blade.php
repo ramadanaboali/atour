@@ -16,14 +16,7 @@
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('orders.create')
-                    <div class="dropdown">
-                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.orders.create') }}">
-                            <i data-feather="plus"></i>
-                            <span class="active-sorting text-primary">{{ __('orders.actions.create') }}</span>
-                        </a>
-                    </div>
-                @endcan
+
             </div>
         </div>
     </div>
@@ -33,9 +26,13 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('orders.default.name') }}</th>
-                        <th>{{ __('orders.active') }}</th>
-                        <th>{{ __('orders.image') }}</th>
+                        <th>{{ __('orders.client') }}</th>
+                        <th>{{ __('orders.vendor') }}</th>
+                        <th>{{ __('orders.order_date') }}</th>
+                        <th>{{ __('orders.address') }}</th>
+                        <th>{{ __('orders.total') }}</th>
+                        <th>{{ __('orders.members') }}</th>
+                        <th>{{ __('orders.booking_date') }}</th>
                         @canany('orders.edit','orders.delete')
                             <th width="15%" class="text-center">{{ __('orders.options') }}</th>
                         @endcanany
@@ -75,9 +72,13 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
-                {data: 'active', name: 'active'},
-                {data: 'photo', name: 'photo'},
+                {data: 'client', name: 'client',orderable: false},
+                {data: 'vendor', name: 'vendor',orderable: false},
+                {data: 'order_date', name: 'order_date'},
+                {data: 'address', name: 'address'},
+                {data: 'total', name: 'total'},
+                {data: 'members', name: 'members'},
+                {data: 'booking_date', name: 'booking_date'},
                 @canany('orders.edit','orders.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany
@@ -88,8 +89,8 @@
                 {
                     "targets": -1,
                     "render": function (data, type, row) {
-                        var editUrl = '{{ route("admin.orders.edit", ":id") }}';
-                        editUrl = editUrl.replace(':id', row.id);
+                        var showUrl = '{{ route("admin.orders.show", ":id") }}';
+                        showUrl = showUrl.replace(':id', row.id);
 
                         var deleteUrl = '{{ route("admin.orders.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
@@ -100,10 +101,10 @@
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        @can('orders.edit')
-                        <a class="dropdown-item" href="`+editUrl+`">
-                                        <i data-feather="edit-2" class="font-medium-2"></i>
-                                            <span>{{ __('orders.actions.edit') }}</span>
+                                        @can('orders.show')
+                        <a class="dropdown-item" href="`+showUrl+`">
+                                        <i data-feather="eye" class="font-medium-2"></i>
+                                            <span>{{ __('orders.actions.show') }}</span>
                                         </a>
                                         @endcan
                         @can('orders.delete')

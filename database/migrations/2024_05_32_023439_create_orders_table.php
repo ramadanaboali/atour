@@ -13,6 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
+
+        Schema::dropIfExists('orders');
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('code');
@@ -21,6 +23,8 @@ return new class extends Migration
             $table->tinyInteger('type')->nullable();
             $table->longText('details')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->decimal('total',10,2)->default(0);
+            $table->integer('members')->nullable();
             $table->foreignId('trip_id')->references('id')->on('trips')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
             $table->softDeletes();

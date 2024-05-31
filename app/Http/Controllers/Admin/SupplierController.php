@@ -151,4 +151,31 @@ class SupplierController extends Controller
         ->rawColumns(['photo','active'])
         ->make(true);
     }
+
+    public function orders(Request $request): JsonResponse
+    {
+        $data = Order::with(['trip.vendor.user','client'])->whereHas('trip',function($query) use ($request){
+            $query->where('vendor_id', $request->user_id);
+        })->select('*');
+        return DataTables::of($data)
+        ->addIndexColumn()
+        ->editColumn('code', function ($item) {
+            return '<a href="'.route('admin.orders.show',['id'=>$item->id]).'">'.$item->code.'</a>';
+        })
+        ->addColumn('client', function ($item) {
+            return $item->client?->name;
+        })
+        ->addColumn('vendor', function ($item) {
+            return $item->trip?->vendor?->user?->name;
+        })
+
+        ->addColumn('booking_date', function ($item) {
+            return '';
+        })
+        ->addColumn('meeting_place', function ($item) {
+            return '';
+        })
+        ->rawColumns(['active','members','meeting_place','code'])
+        ->make(true);
+    }
 }

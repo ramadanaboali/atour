@@ -20,6 +20,7 @@ return new class () extends Migration {
             $table->longText('description_en')->nullable();
             $table->longText('description_ar')->nullable();
             $table->decimal('price', 8, 2)->nullable();
+            $table->string('phone')->nullable();
             $table->string('start_point')->nullable();
             $table->string('end_point')->nullable();
             $table->string('cover')->nullable();

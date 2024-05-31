@@ -17,4 +17,7 @@ class Order extends Model
     public function trip(){
         return $this->belongsTo(Trip::class,'trip_id');
     }
+    public function client(){
+        return $this->belongsTo(Client::class,'user_id');
+    }
 }

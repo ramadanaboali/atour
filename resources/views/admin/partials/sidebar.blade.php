@@ -102,7 +102,7 @@
                         </a>
                     </li>
                     <li class=" nav-item  {{ request()->routeIs('admin.currents_orders.index')?'active':''}}">
-                        <a class="d-flex align-items-center" title="{{ __('admin.orders_requests') }}" href="{{ route('admin.current_orders.index') }} ">
+                        <a class="d-flex align-items-center" title="{{ __('admin.orders_requests') }}" href="{{ route('admin.canceled_orders.index') }} ">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.canceled_orders') }}</span>
                         </a>

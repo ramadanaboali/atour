@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
-use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
@@ -20,6 +20,18 @@ class OrderController extends Controller
     private $route      = 'admin.orders';
 
     public function index(Request $request): View
+    {
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function newOrders(Request $request): View
+    {
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function currentOrders(Request $request): View
+    {
+        return view($this->viewIndex, get_defined_vars());
+    }
+    public function canceledOrders(Request $request): View
     {
         return view($this->viewIndex, get_defined_vars());
     }
@@ -117,29 +129,33 @@ class OrderController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Order::where(function ($query) use ($request) {
+        $data = Order::with(['trip.vendor.user','client'])->where(function ($query) use ($request) {
             if ($request->filled('user_id')) {
                 $query->where('user_id', $request->user_id);
             }
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
         })->select('*');
-        return FacadesDataTables::of($data)
+        return DataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('photo', function ($item) {
-            return '<img src="' . $item->photo . '" height="100px" width="100px">';
+        ->addColumn('client', function ($item) {
+            return $item->client?->name;
+        })
+          ->editColumn('code', function ($item) {
+            return '<a href="'.route('admin.orders.show',['id'=>$item->id]).'">'.$item->code.'</a>';
         })
         ->addColumn('vendor', function ($item) {
-            return '';
+            return $item->trip?->vendor?->user?->name;
         })
-        ->addColumn('members', function ($item) {
-            return '';
-        })
+
         ->addColumn('booking_date', function ($item) {
             return '';
         })
         ->addColumn('meeting_place', function ($item) {
             return '';
         })
-        ->rawColumns(['active','members','booking_date','meeting_place'])
+        ->rawColumns(['active','members','meeting_place','code'])
         ->make(true);
     }
 }
