@@ -12,6 +12,7 @@ $(window).on('load', function () {
   'use strict';
 
   var lineChartEx = $('.line-chart-ex'),chartWrapper = $('.chartjs')
+  var lineChartClient = $('.line-chart-client'),chartWrapper = $('.chartjs')
   var primaryColorShade = '#836AF9',
     yellowColor = '#ffe800',
     successColorShade = '#28dac6',
@@ -212,7 +213,7 @@ $(window).on('load', function () {
                 display: true
               },
               ticks: {
-                stepSize: {{ $max_order_chart/10 }},
+                stepSize: {{ $max_order_chart/12 }},
                 min: 0,
                 max: {{ $max_order_chart }},
                 fontColor: labelColor
@@ -236,7 +237,7 @@ $(window).on('load', function () {
         }
       },
       data: {
-            labels: [ 'jan', 'feb', 'mar','Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: [ "{{ __('admin.months.jan') }}","{{ __('admin.months.feb') }}","{{ __('admin.months.mar') }}","{{ __('admin.months.Apr') }}","{{ __('admin.months.May') }}","{{ __('admin.months.Jun') }}","{{ __('admin.months.Jul') }}","{{ __('admin.months.Aug') }}","{{ __('admin.months.Sep') }}","{{ __('admin.months.Oct') }}","{{ __('admin.months.Nov') }}","{{ __('admin.months.Dec') }}"],
         datasets: [
           {
             data: @json($current_orders_chart),
@@ -290,6 +291,135 @@ $(window).on('load', function () {
             pointBorderColor: 'transparent',
             pointHoverBorderColor: window.colors.solid.white,
             pointHoverBackgroundColor: lineChartGreen,
+            pointShadowOffsetX: 1,
+            pointShadowOffsetY: 1,
+            pointShadowBlur: 5,
+            pointShadowColor: tooltipShadow
+          }
+        ]
+      }
+    });
+  }
+  if (lineChartClient.length) {
+    var lineExample = new Chart(lineChartClient, {
+      type: 'line',
+      plugins: [
+        // to add spacing between legends and chart
+        {
+          beforeInit: function (chart) {
+            chart.legend.afterFit = function () {
+              this.height += 0;
+            };
+          }
+        }
+      ],
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: false,
+        hover: {
+          mode: 'label'
+        },
+        tooltips: {
+          // Updated default tooltip UI
+          shadowOffsetX: 1,
+          shadowOffsetY: 1,
+          shadowBlur: 8,
+          shadowColor: tooltipShadow,
+          backgroundColor: window.colors.solid.white,
+          titleFontColor: window.colors.solid.black,
+          bodyFontColor: window.colors.solid.black
+        },
+        layout: {
+          padding: {
+            top: -15,
+            bottom: -25,
+            left: -15
+          }
+        },
+        scales: {
+          xAxes: [
+            {
+              display: true,
+              scaleLabel: {
+                display: true
+              },
+              gridLines: {
+                display: true,
+                color: grid_line_color,
+                zeroLineColor: grid_line_color
+              },
+              ticks: {
+                fontColor: labelColor
+              }
+            }
+          ],
+          yAxes: [
+            {
+              display: true,
+              scaleLabel: {
+                display: true
+              },
+              ticks: {
+                stepSize: {{ $max_clients_vendors_chart/12 }},
+                min: 0,
+                max: {{ $max_clients_vendors_chart }},
+                fontColor: labelColor
+              },
+              gridLines: {
+                display: true,
+                color: grid_line_color,
+                zeroLineColor: grid_line_color
+              }
+            }
+          ]
+        },
+        legend: {
+          position: 'top',
+          align: 'start',
+          labels: {
+            usePointStyle: true,
+            padding: 25,
+            boxWidth: 9
+          }
+        }
+      },
+      data: {
+            labels: [ "{{ __('admin.months.jan') }}","{{ __('admin.months.feb') }}","{{ __('admin.months.mar') }}","{{ __('admin.months.Apr') }}","{{ __('admin.months.May') }}","{{ __('admin.months.Jun') }}","{{ __('admin.months.Jul') }}","{{ __('admin.months.Aug') }}","{{ __('admin.months.Sep') }}","{{ __('admin.months.Oct') }}","{{ __('admin.months.Nov') }}","{{ __('admin.months.Dec') }}"],
+        datasets: [
+          {
+            data: @json($clients_chart),
+            label: "{{ __('admin.clients') }}",
+            borderColor: lineChartPrimary,
+            lineTension: 0.5,
+            pointStyle: 'circle',
+            backgroundColor: lineChartPrimary,
+            fill: false,
+            pointRadius: 1,
+            pointHoverRadius: 5,
+            pointHoverBorderWidth: 5,
+            pointBorderColor: 'transparent',
+            pointHoverBorderColor: window.colors.solid.white,
+            pointHoverBackgroundColor: lineChartPrimary,
+            pointShadowOffsetX: 1,
+            pointShadowOffsetY: 1,
+            pointShadowBlur: 5,
+            pointShadowColor: tooltipShadow
+          },
+          {
+            data: @json($vendors_chart),
+            label: "{{ __('admin.suppliers') }}",
+            borderColor: lineChartDanger,
+            lineTension: 0.5,
+            pointStyle: 'circle',
+            backgroundColor: lineChartDanger,
+            fill: false,
+            pointRadius: 1,
+            pointHoverRadius: 5,
+            pointHoverBorderWidth: 5,
+            pointBorderColor: 'transparent',
+            pointHoverBorderColor: window.colors.solid.white,
+            pointHoverBackgroundColor: lineChartDanger,
             pointShadowOffsetX: 1,
             pointShadowOffsetY: 1,
             pointShadowBlur: 5,

@@ -63,5 +63,17 @@ return [
     'image' => 'الصورة',
     'sort' => 'الترتيب',
     'active' => 'نشط',
-    'available'=>'المنتج متوفر'
+    'code' => 'رقم الطلب',
+    'address' => 'العنوان',
+    'order_date' => 'تاريخ الطلب',
+    'order_status' => 'حالة الطلب',
+    'order_type' => 'نوع الطلب',
+    'order_details' => 'تفاصيل الطلب',
+    'members' => 'عدد الافراد',
+    'booking_date' => 'تاريخ الحجز',
+    'meeting_place' => 'مكان اللقاء',
+    'rate' => 'التقيم',
+    'vendor' => 'مقدم الخدمة',
+    'comment' => 'التعليق',
+    'trip' => 'الرحلة',
 ];

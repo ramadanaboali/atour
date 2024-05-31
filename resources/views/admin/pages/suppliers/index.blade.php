@@ -100,6 +100,9 @@
                         var editUrl = '{{ route("admin.suppliers.edit", ":id") }}';
                         editUrl = editUrl.replace(':id', row.id);
 
+                         var showUrl = '{{ route("admin.suppliers.show", ":id") }}';
+                        showUrl = showUrl.replace(':id', row.id);
+
                         var deleteUrl = '{{ route("admin.suppliers.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
 
@@ -112,7 +115,12 @@
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
-
+                                        @can('suppliers.show')
+                                                    <a class="dropdown-item" href="`+showUrl+`">
+                                        <i data-feather="eye" class="font-medium-2"></i>
+                                            <span>{{ __('suppliers.actions.show') }}</span>
+                                        </a>
+                                        @endcan
                         @can('suppliers.delete')
                         <a class="dropdown-item delete_item" data-url="`+deleteUrl+`" href="#">
                                             <i data-feather="trash" class="font-medium-2"></i>

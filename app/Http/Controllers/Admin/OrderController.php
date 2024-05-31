@@ -117,23 +117,29 @@ class OrderController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Order::select('*');
+        $data = Order::where(function ($query) use ($request) {
+            if ($request->filled('user_id')) {
+                $query->where('user_id', $request->user_id);
+            }
+        })->select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('photo', function ($item) {
             return '<img src="' . $item->photo . '" height="100px" width="100px">';
         })
-        ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+        ->addColumn('vendor', function ($item) {
+            return '';
         })
-        ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-        ->rawColumns(['photo','active'])
+        ->addColumn('members', function ($item) {
+            return '';
+        })
+        ->addColumn('booking_date', function ($item) {
+            return '';
+        })
+        ->addColumn('meeting_place', function ($item) {
+            return '';
+        })
+        ->rawColumns(['active','members','booking_date','meeting_place'])
         ->make(true);
     }
 }

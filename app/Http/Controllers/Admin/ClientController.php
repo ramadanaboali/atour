@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -68,6 +69,8 @@ class ClientController extends Controller
     public function show($id): View
     {
         $item = Client::findOrFail($id);
+        $compleated_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_COMPLEALED)->get();
+        $pendding_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_PENDING)->get();
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -191,7 +194,6 @@ class ClientController extends Controller
                 return 0;
             })
             ->editColumn('active', function ($item) {
-            $route = route('admin.clients.status', ['id' => $item->id]);
             return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect " ><i data-feather="x" ></i></button>';
         })
 

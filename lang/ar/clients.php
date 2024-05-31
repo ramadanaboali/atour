@@ -80,5 +80,20 @@ return [
     'phone' => 'الهاتف',
     'orders_count' => 'عدد الطلبات',
     'password_confirmation' => 'تأكيد كلمة المرور',
+    'statuses' => [
+        'pendding'=>'معلق',
+        'accepted'=>'نشط',
+        'rejected'=>'مغلق',
+    ],
+    'status'=>'الحالة',
+    'details'=>'التفاصيل',
+    'login_activity'=>'تسجيل الدخول',
+    'last_login'=>'أخر تسجيل دخول',
+    'login_with_social_media'=>'تم الدخول عن طريق مواقع التواصل الاجتماعي ؟',
+    'false'=>'لا',
+    'true'=>'نعم',
+    'orders_details'=>'تفاصيل الطلبات',
+    'rates_details'=>'تفاصيل التقيمات',
+    'favourit_details'=>'تفاصيل المفضلة',
 
 ];

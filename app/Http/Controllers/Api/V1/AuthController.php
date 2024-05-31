@@ -19,6 +19,7 @@ use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
 use App\Traits\ApiResponser;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,6 +45,8 @@ class AuthController extends Controller
         } else {
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        $user->last_login = Carbon::now();
+        $user->save();
         $dataR['user'] = auth()->user();
         $dataR['user_permissions'] = auth()->user()->getAllPermissions();
         $dataR['access_token'] = auth()->user()->createToken('auth_token')->plainTextToken;

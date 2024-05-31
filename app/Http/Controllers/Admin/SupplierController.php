@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -59,6 +60,8 @@ class SupplierController extends Controller
     public function show($id): View
     {
         $item = Supplier::findOrFail($id);
+
+
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -132,9 +135,6 @@ class SupplierController extends Controller
             if ($request->filled('created_at')) {
 
                 $query->where('users.created_at','>=', $request->created_at.' 00:00:00');
-            }else{
-                $query->where('users.created_at','<', $request->created_at.' 00:00:00');
-
             }
 
         })->where('users.type', User::TYPE_SUPPLIER)->select(['users.*']);
