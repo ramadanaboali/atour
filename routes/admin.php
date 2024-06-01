@@ -234,6 +234,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('offers/create', [App\Http\Controllers\Admin\OfferController::class, 'create'])->name('offers.create')->middleware('adminPermission:offers.create');
             Route::match(['PUT', 'PATCH'], 'offers/{id}', [App\Http\Controllers\Admin\OfferController::class, 'update'])->name('offers.update')->middleware('adminPermission:offers.edit');
             Route::get('offers/{id}/edit', [App\Http\Controllers\Admin\OfferController::class, 'edit'])->name('offers.edit')->middleware('adminPermission:offers.edit');
+            Route::get('offers/show/{id}', [App\Http\Controllers\Admin\OfferController::class, 'show'])->name('offers.show')->middleware('adminPermission:offers.view');
 
 
 

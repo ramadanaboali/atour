@@ -73,4 +73,5 @@ return [
     'benfits_numbers'=>'عدد المستفيدين',
     'start_date'=>'تاريخ البداية ',
     'end_date'=>'تاريخ النهاية',
+    'service_name'=>'اسم الخدمة',
 ];

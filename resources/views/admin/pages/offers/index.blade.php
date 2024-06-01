@@ -107,6 +107,8 @@
                     "render": function (data, type, row) {
                         var editUrl = '{{ route("admin.offers.edit", ":id") }}';
                         editUrl = editUrl.replace(':id', row.id);
+                        var showUrl = '{{ route("admin.offers.show", ":id") }}';
+                        showUrl = showUrl.replace(':id', row.id);
 
                         var deleteUrl = '{{ route("admin.offers.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
@@ -117,6 +119,12 @@
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
+                                        @can('offers.edit')
+                                            <a class="dropdown-item" href="`+showUrl+`">
+                                        <i data-feather="eye" class="font-medium-2"></i>
+                                            <span>{{ __('offers.actions.show') }}</span>
+                                        </a>
+                                        @endcan
                                         @can('offers.edit')
                         <a class="dropdown-item" href="`+editUrl+`">
                                         <i data-feather="edit-2" class="font-medium-2"></i>
