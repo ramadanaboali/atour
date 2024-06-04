@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
-use App\Http\Requests\Vendor\BookingRequest;
-use App\Models\Booking;
+use App\Http\Requests\Vendor\TripRequest;
+use App\Models\Trip;
 use App\Services\General\StorageService;
-use App\Services\Vendor\BookingService;
+use App\Services\Vendor\TripService;
 use Illuminate\Support\Facades\Schema;
 use function response;
 
-class BookingController extends Controller
+class TripController extends Controller
 {
-    protected BookingService $service;
+    protected TripService $service;
     protected StorageService $storageService;
 
-    public function __construct(BookingService $service,StorageService $storageService)
+    public function __construct(TripService $service,StorageService $storageService)
     {
         $this->storageService = $storageService;
         $this->service = $service;
@@ -24,7 +24,7 @@ class BookingController extends Controller
     public function index(PaginateRequest $request)
     {
         $input = $this->service->inputs($request->all());
-        $model = new Booking();
+        $model = new Trip();
         $columns = Schema::getColumnListing($model->getTable());
 
         if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
@@ -33,45 +33,48 @@ class BookingController extends Controller
             $wheres = $this->service->whereOptions($input, $columns);
         }
         $data = $this->service->Paginate($input, $wheres);
+
         return response()->apiSuccess($data);
+
     }
 
     public function show($id){
         return response()->apiSuccess($this->service->get($id));
     }
 
-    public function store(BookingRequest $request)
+    public function store(TripRequest $request)
     {
 
-        $data = $request->except(['image']);
-        $folder_path = "images/Booking";
+        $data = $request->except(['cover']);
+        $folder_path = "images/Trip";
         $storedPath = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        if ($request->hasFile('cover')) {
+            $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
-        $data['image'] = $storedPath;
-        $data['vendor_id'] = auth()->user()->model_id;
+        $data['cover'] = $storedPath;
+        $data['vendor_id'] = auth()->user()->id;
 
         return response()->apiSuccess($this->service->store($data));
     }
 
-    public function update(BookingRequest $request, Booking $bokking)
+    public function update(TripRequest $request, Trip $trip)
     {
 
-        $data = $request->except(['image','_method']);
-        if ($request->hasFile('image')) {
-            $folder_path = "images/Booking";
+        $data = $request->except(['cover','_method']);
+        if ($request->hasFile('cover')) {
+            $folder_path = "images/Trip";
             $storedPath = null;
-            $file = $request->file('image');
+            $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
-            $data['image'] = $storedPath;
+            $data['cover'] = $storedPath;
         }
-        return response()->apiSuccess($this->service->update($data,$bokking));
+        return response()->apiSuccess($this->service->update($data,$trip));
     }
-    public function delete(Booking $bokking)
+    public function delete(Trip $trip)
     {
-        return response()->apiSuccess($this->service->delete($bokking));
+
+        return response()->apiSuccess($this->service->delete($trip));
     }
 
 }

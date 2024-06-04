@@ -24,12 +24,12 @@ return new class () extends Migration {
             $table->string('start_point')->nullable();
             $table->string('end_point')->nullable();
             $table->string('cover')->nullable();
+            $table->boolean('free_cancelation')->default(false);
             $table->longText('cancelation_policy')->nullable();
             $table->longText('start_point_descriprion_en')->nullable();
             $table->longText('end_point_descriprion_en')->nullable();
             $table->longText('start_point_descriprion_ar')->nullable();
             $table->longText('end_point_descriprion_ar')->nullable();
-            $table->boolean('free_cancelation')->default(false);
             $table->boolean('active')->default(true);
             $table->boolean('pay_later')->default(false);
             $table->foreignId('vendor_id')->nullable()->references('id')->on('users')->onDelete('cascade');

@@ -1,6 +1,8 @@
     <?php
 
-use App\Http\Controllers\Api\V1\Supplier\AuthController;
+use App\Http\Controllers\Api\V1\Vendor\AuthController;
+use App\Http\Controllers\Api\V1\Vendor\TripProgramController;
+use App\Http\Controllers\Api\V1\Vendor\TripController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +34,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/setup5', [AuthController::class, 'setup5']);
         Route::post('/login', [AuthController::class, 'login']);
 
-        Route::post('login', [App\Http\Controllers\Api\V1\AuthController::class, 'login']);
         Route::post('reset-password', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
         Route::post('confirm-reset', [App\Http\Controllers\Api\V1\AuthController::class, 'confirmReset']);
         Route::post('check-code', [App\Http\Controllers\Api\V1\AuthController::class, 'checkCode']);
@@ -63,6 +64,25 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('logout', [App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
             Route::delete('delete-account', [App\Http\Controllers\Api\V1\AuthController::class, 'deleteAccount']);
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
+
+            Route::get('trips', [TripController::class, 'index']);
+            Route::post('trips', [TripController::class, 'store']);
+            Route::get('trips/{id}', [TripController::class, 'show']);
+            Route::put('trips/{trip}', [TripController::class, 'update']);
+            Route::delete('trips/{trip}', [TripController::class, 'delete']);
+
+
+        //addnewrouteheredontdeletemeplease
+
+            Route::get('trip_programs', [TripProgramController::class, 'index']);
+            Route::post('trip_programs', [TripProgramController::class, 'store']);
+            Route::get('trip_programs/{id}', [TripProgramController::class, 'show']);
+            Route::put('trip_programs/{trip_program}', [TripProgramController::class, 'update']);
+            Route::delete('trip_programs/{trip_program}', [TripProgramController::class, 'delete']);
+
+
+
+
         });
     });
 });

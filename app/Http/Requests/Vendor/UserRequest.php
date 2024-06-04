@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class OfferRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,25 +34,27 @@ class OfferRequest extends FormRequest
             case 'POST':
             {
                 return [
-                    'name_ar'=>'required|string|min:2',
-                    'name_en'=>'required|string|min:2',
-                    'description_en'=>'required|string|min:2',
-                    'description_ar'=>'required|string|min:2',
-                    'section_id'=>'required|exists:sections,id',
-                    'category_id'=>'required|exists:service_categories,id',
-                    'sub_category_id'=>'required|exists:service_categories,id',
-                    'service_price'=>'required|numeric',
-                    'price_type'=>'required|in:service,free,special,discount',
-                    'discount_percentage'=>'required_if:price_type,discount|numeric',
-                    'offer_price'=>'required_if:price_type,special|numeric',
-                    'service_id'=>'required|array',
-                    'service_id.*'=>'required|exists:services,id'
+                    'first_name' => 'required|string|min:2',
+                    'last_name' => 'required|string|min:2',
+                    'birthdate' => 'required|date',
+                    'email' => 'required|email|unique:users,email',
+                    'phone' => 'required|numeric|unique:users,phone',
+                    'country_id' => 'required|exists:countries,id',
+                    'region_id' => 'required|exists:regions,id',
+                    'city_id' => 'required|exists:cities,id',
+                    'image' => 'nullable|image|mimes:png,jpg,jpeg',
+                    'branch_id' => 'required|array',
+                    'branch_id.*' => 'required|exists:branches,id',
+                    'role_id' => 'required|exists:roles,id',
+                    'password' => 'required|confirmed',
                 ];
             }
             case 'PATCH':
             case 'PUT':
             {
                 $rules= [
+                    'phone'=>'unique:users,phone,'.request()->user->id,
+                    'email'=>'unique:users,email,'.request()->user->id,
                 ];
                 return $rules;
             }

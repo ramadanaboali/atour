@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class SectionRequest extends FormRequest
+class SubscriptionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,23 +34,17 @@ class SectionRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'name_en' => 'required|string|min:2',
-                        'name_ar' => 'required|string|min:2',
-                        'image' => 'required|image|mimes:png,jpg,jpeg',
-                        'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
+                        'package_id' => 'required|exists:packages,id',
+                        'user_id' => 'required|exists:packages,id',
+                        'auto_renew' => 'required|in:0,1'
                     ];
                 }
             case 'PATCH':
             case 'PUT':
-                {
-                    $rules = [
-
-                    ];
-                    return $rules;
-                }
             default:
-                return [];
+                return [
+                    'auto_renew' => 'required|in:0,1'
+                ];
         }
 
     }

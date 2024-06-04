@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class Setup3Request extends FormRequest
+class Setup5Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,14 +26,12 @@ class Setup3Request extends FormRequest
     {
 
         return [
-            'type' => 'required|in:company,indivedual',
-            'profission_guide' => 'required|in:0,1',
-            'job' => 'required|string|min:2',
-            'experience_info' => 'required|string|min:2',
-            'languages' => 'required|array',
+            'attachments' => 'required|array',
+            'attachments.*' => 'required|file',
+            'images' => 'required|array',
+            'images.*' => 'required|image',
+            'profile' => 'required|image',
             'user_id' => 'required|exists:users,id',
-            'banck_name' => 'required|string|min:2',
-            'banck_number' => 'required|string|min:2',
         ];
 
     }

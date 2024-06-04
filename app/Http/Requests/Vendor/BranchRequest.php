@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class ServiceRequest extends FormRequest
+class BranchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,29 +34,29 @@ class ServiceRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'name_en' => 'required|string|min:2',
-                        'name_ar' => 'required|string|min:2',
-                        'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
-                        'section_id' => 'required|exists:sections,id',
-                        'category_id' => 'required|exists:service_categories,id',
-                        'sub_category_id' => 'required|exists:service_categories,id',
-                        'price' => 'required|numeric',
-                        'service_time' => 'required|numeric',
-                        'extra_time' => 'nullable|numeric',
-                        'featured' => 'required|in:0,1',
-                        'branch_id' => 'required|array',
-                        'branch_id.*' => 'required|exists:branches,id',
-                        // 'employee_id' => 'required|array',
-                        // 'employee_id.*' => 'required|exists:employees,id',
+                        'name' => 'required|string|min:2',
+                        'manager_id' => 'required|exists:users,id',
+                        'country_id' => 'required|exists:countries,id',
+                        'region_id' => 'required|exists:regions,id',
+                        'city_id' => 'required|exists:cities,id',
+                        'address' => 'required|string|min:2',
+                        'lat' => 'required|string|min:2',
+                        'long' => 'required|string|min:2',
+                        'image' => 'required|image|mimes:png,jpg,jpeg',
+                        'images' => 'nullable|array',
+                        'images.*' =>'image|mimes:png,jpg,jpeg',
+                        'officialHours' => 'required|array',
+                        'officialHours.*.day' =>'required|in:sat,sun,mon,tue,wed,thu,fri',
+                        'officialHours.*.start_time' =>'required|date_format:H:i',
+                        'officialHours.*.end_time' =>'required|date_format:H:i',
+                        'show_rates' =>'required|in:0,1',
                     ];
                 }
             case 'PATCH':
             case 'PUT':
                 {
                     $rules = [
-                        'discount_type' =>'nullable|in:0,1',
-                        'discount' =>'nullable|numeric'
+
                     ];
                     return $rules;
                 }

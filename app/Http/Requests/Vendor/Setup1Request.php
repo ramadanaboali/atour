@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class Setup5Request extends FormRequest
+class Setup1Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,12 +26,10 @@ class Setup5Request extends FormRequest
     {
 
         return [
-            'attachments' => 'required|array',
-            'attachments.*' => 'required|file',
-            'images' => 'required|array',
-            'images.*' => 'required|image',
-            'profile' => 'required|image',
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|min:2',
+            'email' => 'required|email|exists:users,email',
+            'phone' => 'required|unique:users,phone',
+            'password' => 'required|min:6|confirmed'
         ];
 
     }

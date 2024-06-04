@@ -24,7 +24,7 @@ return new class extends Migration
                 $table->string('end_time')->nullable();
                 $table->string('image')->nullable();
                 $table->boolean('active')->default(true);
-                $table->foreignId('service_id')->nullable()->references('id')->on('services')->onDelete('cascade');
+                $table->foreignId('trip_id')->nullable()->references('id')->on('trips')->onDelete('cascade');
                 $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
                 $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
                 $table->softDeletes();

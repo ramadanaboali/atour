@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Supplier;
+namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckCodeRequest;
@@ -12,11 +12,11 @@ use App\Http\Requests\ResetRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\EmailRequest;
 use App\Http\Requests\PhoneRequest;
-use App\Http\Requests\Supplier\Setup1Request;
-use App\Http\Requests\Supplier\Setup2Request;
-use App\Http\Requests\Supplier\Setup3Request;
-use App\Http\Requests\Supplier\Setup4Request;
-use App\Http\Requests\Supplier\Setup5Request;
+use App\Http\Requests\Vendor\Setup1Request;
+use App\Http\Requests\Vendor\Setup2Request;
+use App\Http\Requests\Vendor\Setup3Request;
+use App\Http\Requests\Vendor\Setup4Request;
+use App\Http\Requests\Vendor\Setup5Request;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\Attachment;
@@ -37,6 +37,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
 use App\Models\SupplierService;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -44,7 +45,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->username)->where('type', 'supplier')->orWhere('phone', $request->username)->where('active', 1)->first();
+        $user = User::where('email', $request->username)->where('type', User::TYPE_SUPPLIER)->orWhere('phone', $request->username)->where('active', 1)->first();
 
         if($user) {
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
@@ -55,11 +56,14 @@ class AuthController extends Controller
         } else {
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $access_token = auth()->user()->createToken('authToken')->accessToken;
+
+        $user->last_login = Carbon::now();
+        $user->save();
         $dataR['user'] = auth()->user();
         $dataR['user_permissions'] = auth()->user()->getAllPermissions();
-        $dataR['access_token'] = $access_token;
+        $dataR['access_token'] = auth()->user()->createToken('auth_token')->plainTextToken;
         return $this->successResponse($dataR, Response::HTTP_CREATED);
+
     }
 
       public function sendOtp(NewEmailRequest $request)

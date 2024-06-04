@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Supplier;
+namespace App\Http\Requests\Vendor;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class PayRequest extends FormRequest
+class Setup3Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,23 +25,16 @@ class PayRequest extends FormRequest
     public function rules(): array
     {
 
-        switch ($this->method()) {
-            case 'GET':
-            case 'DELETE':
-                {
-                    return [];
-                }
-            case 'POST':
-                {
-                    return [
-                        'subscription_id' => 'required|exists:subscriptions,id'
-                    ];
-                }
-            case 'PATCH':
-            case 'PUT':
-            default:
-                return [];
-        }
+        return [
+            'type' => 'required|in:company,indivedual',
+            'profission_guide' => 'required|in:0,1',
+            'job' => 'required|string|min:2',
+            'experience_info' => 'required|string|min:2',
+            'languages' => 'required|array',
+            'user_id' => 'required|exists:users,id',
+            'banck_name' => 'required|string|min:2',
+            'banck_number' => 'required|string|min:2',
+        ];
 
     }
     protected function failedValidation(Validator $validator)

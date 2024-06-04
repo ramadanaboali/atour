@@ -5,6 +5,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use DataTables;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class RoleService
 {
@@ -69,7 +70,7 @@ class RoleService
     {
         $data = $this->role->select('*');
 
-        return Datatables::of($data)
+        return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->make(true);
     }
