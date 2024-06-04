@@ -43,6 +43,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('jobs', [PageController::class,'jobs']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
+            Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);
+            Route::post('save_rate', [PageController::class, 'saveRates']);
             Route::get('get_prefered_setting', [PageController::class, 'getPreferedSetting']);
             Route::post('change_prefered_setting', [PageController::class, 'changePreferedSetting']);
             Route::get('change-language/{language}', [PageController::class, 'changeLang']);

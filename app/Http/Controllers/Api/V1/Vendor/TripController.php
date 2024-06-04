@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Vendor\TripRequest;
+use App\Http\Resources\TripResource;
 use App\Models\Trip;
 use App\Services\General\StorageService;
 use App\Services\Vendor\TripService;
@@ -39,7 +40,8 @@ class TripController extends Controller
     }
 
     public function show($id){
-        return response()->apiSuccess($this->service->get($id));
+        $data = new TripResource($this->service->get($id));
+        return response()->apiSuccess($data);
     }
 
     public function store(TripRequest $request)

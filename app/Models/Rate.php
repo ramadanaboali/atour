@@ -14,7 +14,5 @@ class Rate extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
-    public function vendor(){
-        return $this->belongsTo(User::class,'model_id')->where('model_type','vendor');
-    }
+
 }

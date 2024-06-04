@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RateRequest;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\CityResource;
@@ -16,6 +17,7 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Job;
+use App\Models\Rate;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\User;
@@ -136,6 +138,23 @@ class PageController extends Controller
             'currency_id'    => $request->get('currency_id')
         ]);
         return apiResponse(true, $userPreferedSetting, __('api.update_success'), null, 200);
+    }
+    public function getRates($id,$type)
+    {
+        $data=Rate::where('model_id',$id)->where('model_type',$type)->get();
+        return apiResponse(true, $data, __('api.update_success'), null, 200);
+    }
+    public function saveRates(RateRequest $request)
+    {
+        $data = [
+            'rate'=>$request->rate,
+            'model_id'=>$request->model_id,
+            'model_type'=>$request->model_type,
+            'comment'=>$request->comment,
+            'user_id'=>auth()->user()->id
+        ];
+        $data=Rate::create($data);
+        return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
 
 }
