@@ -6,3 +6,4 @@ It's your verfication code send by our system
 <br>
 Thanks,<br>
 @endcomponent
+

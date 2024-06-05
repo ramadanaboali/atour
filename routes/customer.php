@@ -1,5 +1,6 @@
     <?php
 
+use App\Http\Controllers\Api\V1\Customer\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,8 +45,15 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('footer', [App\Http\Controllers\Api\V1\SettingController::class,'footer']);
         Route::get('jobs', [App\Http\Controllers\Api\V1\PageController::class,'jobs']);
 
+
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
+            Route::get('orders', [OrderController::class, 'index']);
+            Route::post('orders', [OrderController::class, 'store']);
+            Route::get('orders/{orders}', [OrderController::class, 'show']);
+            Route::put('orders/{orders}', [OrderController::class, 'update']);
+
+
             Route::get('get_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'getPreferedSetting']);
             Route::post('change_prefered_setting', [App\Http\Controllers\Api\V1\PageController::class, 'changePreferedSetting']);
             Route::get('change-language/{language}', [App\Http\Controllers\Api\V1\PageController::class, 'changeLang']);

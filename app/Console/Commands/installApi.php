@@ -27,7 +27,7 @@ class installApi extends Command
      */
     public function handle()
     {
-        $this->recurseCopy("trip_programs", 'TripProgram');
+        // $this->recurseCopy("orders", 'Order');
 
         return 0;
     }

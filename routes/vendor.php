@@ -72,6 +72,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::delete('trips/{trip}', [TripController::class, 'delete']);
 
 
+
         //addnewrouteheredontdeletemeplease
 
             Route::get('trip_programs', [TripProgramController::class, 'index']);
