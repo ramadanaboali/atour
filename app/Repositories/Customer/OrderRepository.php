@@ -11,4 +11,8 @@ class OrderRepository extends AbstractRepository
         parent::__construct(Order::class);
     }
 
+    public function getOrderCode(){
+        $last_code=Order::orderBy('id','desc')->first();
+        return $last_code ? (int)$last_code->code+1 :1;
+    }
 }

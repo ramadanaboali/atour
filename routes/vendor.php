@@ -1,8 +1,10 @@
     <?php
 
+use App\Http\Controllers\Api\V1\Vendor\OrderController;
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\TripProgramController;
 use App\Http\Controllers\Api\V1\Vendor\TripController;
+use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -73,8 +75,19 @@ Route::group(['prefix' => 'v1'], function () {
 
 
 
+
         //addnewrouteheredontdeletemeplease
 
+            Route::get('services', [ServiceController::class, 'index']);
+            Route::post('services', [ServiceController::class, 'store']);
+            Route::get('services/{services}', [ServiceController::class, 'show']);
+            Route::put('services/{services}', [ServiceController::class, 'update']);
+
+
+
+            Route::post('orders/status', [OrderController::class, 'updateStatus']);
+            Route::get('orders', [OrderController::class, 'index']);
+            Route::get('orders/{id}', [OrderController::class, 'index']);
             Route::get('trip_programs', [TripProgramController::class, 'index']);
             Route::post('trip_programs', [TripProgramController::class, 'store']);
             Route::get('trip_programs/{id}', [TripProgramController::class, 'show']);

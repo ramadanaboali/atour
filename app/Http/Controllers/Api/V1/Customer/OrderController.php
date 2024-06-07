@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Services\General\StorageService;
 use App\Services\Customer\OrderService;
 use Illuminate\Support\Facades\Schema;
+
 use function response;
 
 class OrderController extends Controller
@@ -17,7 +18,7 @@ class OrderController extends Controller
     protected OrderService $service;
     protected StorageService $storageService;
 
-    public function __construct(OrderService $service,StorageService $storageService)
+    public function __construct(OrderService $service, StorageService $storageService)
     {
         $this->storageService = $storageService;
         $this->service = $service;
@@ -34,12 +35,13 @@ class OrderController extends Controller
             $wheres = $this->service->whereOptions($input, $columns);
         }
         $data = $this->service->Paginate($input, $wheres);
-
+        $data=OrderResource::collection($data);
         return response()->apiSuccess($data);
 
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $data = new OrderResource($this->service->get($id));
         return response()->apiSuccess($data);
     }
@@ -50,8 +52,9 @@ class OrderController extends Controller
         $data = $request->except(['cover']);
 
         $data['user_id'] = auth()->user()->id;
-
-        return response()->apiSuccess($this->service->createItem($data));
+        $order = $this->service->createItem($data);
+        $order = new OrderResource($order);
+        return response()->apiSuccess($order);
     }
 
     public function update(OrderRequest $request, Order $trip)
@@ -65,7 +68,7 @@ class OrderController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
             $data['cover'] = $storedPath;
         }
-        return response()->apiSuccess($this->service->update($data,$trip));
+        return response()->apiSuccess($this->service->update($data, $trip));
     }
     public function delete(Order $trip)
     {

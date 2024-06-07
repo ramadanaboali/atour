@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\Customer\OrderController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SettingController;
 use Illuminate\Http\Request;
@@ -42,7 +43,17 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('footer', [SettingController::class,'footer']);
         Route::get('jobs', [PageController::class,'jobs']);
 
+        Route::get('search_by_city/{city_id}', [PageController::class,'searchByCity']);
+        Route::get('top_cities', [PageController::class,'topCities']);
+
         Route::group(['middleware' => 'auth:sanctum'], function () {
+
+
+            Route::get('orders', [OrderController::class, 'index']);
+            Route::get('orders/{id}', [OrderController::class, 'show']);
+            Route::post('orders', [OrderController::class, 'store']);
+
+
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);
             Route::post('save_rate', [PageController::class, 'saveRates']);
             Route::get('get_prefered_setting', [PageController::class, 'getPreferedSetting']);

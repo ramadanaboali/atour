@@ -18,12 +18,15 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Job;
 use App\Models\Rate;
+use App\Models\Service;
 use App\Models\Slider;
 use App\Models\SubCategory;
+use App\Models\Supplier;
 use App\Models\User;
 use App\Models\UserPreferedSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
@@ -43,6 +46,20 @@ class PageController extends Controller
     public function ads()
     {
         $data = Add::where('active', 1)->get();
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function searchByCity($city_id)
+    {
+        $data = DB::select(
+            "select services.* from services left join users on users.id= services.vendor_id left join suppliers on suppliers.user_id=users.id where suppliers.city_id=$city_id"
+        );
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function topCities()
+    {
+        $data = DB::select(
+            "select count(services.id) as total_services, cities.* from services left join users on users.id= services.vendor_id left join suppliers on suppliers.user_id=users.id left join cities on cities.id=suppliers.city_id group by cities.id order by total_services desc "
+        );
         return apiResponse(true, $data, null, null, 200);
     }
     public function cities()

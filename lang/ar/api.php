@@ -36,5 +36,6 @@ return [
     'check_username_passowrd' => 'رجاء التأكد من اسم المستخدم و كلمة المرور',
     'email_not_registerd' => 'رقم الجوال / البريد غير مسجل',
     'verification_code' => 'تم ارسال رمز التحقق',
+    'order_not_exist' => 'هذا الحجز غير موجود',
 
 ];

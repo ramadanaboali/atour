@@ -34,31 +34,31 @@ class ServiceRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'name_en' => 'required|string|min:2',
-                        'name_ar' => 'required|string|min:2',
+                        'title_en' => 'required|string|min:2',
+                        'title_ar' => 'required|string|min:2',
                         'description_en' => 'required|string|min:2',
                         'description_ar' => 'required|string|min:2',
-                        'section_id' => 'required|exists:sections,id',
-                        'category_id' => 'required|exists:service_categories,id',
-                        'sub_category_id' => 'required|exists:service_categories,id',
                         'price' => 'required|numeric',
-                        'service_time' => 'required|numeric',
-                        'extra_time' => 'nullable|numeric',
-                        'featured' => 'required|in:0,1',
-                        'branch_id' => 'required|array',
-                        'branch_id.*' => 'required|exists:branches,id',
-                        // 'employee_id' => 'required|array',
-                        // 'employee_id.*' => 'required|exists:employees,id',
+                        'start_date' => 'nullable|date',
+                        'end_date' => 'nullable|date',
+                        'cover' => 'required|image',
                     ];
                 }
             case 'PATCH':
             case 'PUT':
                 {
-                    $rules = [
-                        'discount_type' =>'nullable|in:0,1',
-                        'discount' =>'nullable|numeric'
-                    ];
-                    return $rules;
+
+                return [
+                       'title_en' => 'required|string|min:2',
+                       'title_ar' => 'required|string|min:2',
+                       'description_en' => 'required|string|min:2',
+                       'description_ar' => 'required|string|min:2',
+                       'price' => 'required|numeric',
+                       'start_date' => 'nullable|date',
+                       'end_date' => 'nullable|date',
+                       'cover' => 'required|image',
+                   ];
+
                 }
             default:
                 return [];

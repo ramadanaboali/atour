@@ -17,7 +17,7 @@ class OrderRequest extends FormRequest
         return true;
     }
 
-   
+
     public function rules(): array
     {
 
@@ -39,8 +39,8 @@ class OrderRequest extends FormRequest
                     'total'=>'required|numeric',
                     'childrens'=>'required|numeric',
                     'adults'=>'required|numeric',
-                    'program_id'=>'required|string|min:2',
-                    'trip_id'=>'required|string|min:2',
+                    'program_id'=>'required|exists:trip_programs,id',
+                    'trip_id'=>'required|exists:trips,id',
                     ];
                 }
             case 'PATCH':
@@ -57,9 +57,8 @@ class OrderRequest extends FormRequest
                         'total'=>'required|numeric',
                         'childrens'=>'required|numeric',
                         'adults'=>'required|numeric',
-                        'program_id'=>'required|string|min:2',
-                        'trip_id'=>'required|string|min:2',
-
+                        'program_id'=>'required|exists:trip_programs,id',
+                        'trip_id'=>'required|exists:trips,id',
                     ];
 
                 }
