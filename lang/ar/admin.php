@@ -216,6 +216,7 @@ return [
     ],
     'true'=>'نعم',
     'fale'=>'لا',
+    'total_amount_reservasion'=>'Total Amount Of Reservations',
 
 
 ];

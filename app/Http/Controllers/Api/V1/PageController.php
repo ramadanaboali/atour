@@ -31,11 +31,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
 {
-
     public function sliders()
     {
         $data = Slider::where('active', 1)->get();
-        $result=SliderResource::collection($data);
+        $result = SliderResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function blogs()
@@ -65,7 +64,7 @@ class PageController extends Controller
     public function cities()
     {
         $data = City::with('country')->where('active', 1)->get();
-        $result=CityResource::collection($data);
+        $result = CityResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function currencies()
@@ -76,13 +75,13 @@ class PageController extends Controller
     public function countries()
     {
         $data = Country::where('active', 1)->get();
-        $result=CountryResource::collection($data);
+        $result = CountryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function categories()
     {
         $data = Category::with('subCategory')->where('active', 1)->get();
-        $result=CategoryResource::collection($data);
+        $result = CategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function sub_categories(Request $request)
@@ -95,8 +94,8 @@ class PageController extends Controller
                 if ($request->filled('parent_id')) {
                     $query->where('parent_id', $request->parent_id);
                 }
-        })->where('active', 1)->get();
-        $result=CategoryResource::collection($data);
+            })->where('active', 1)->get();
+        $result = CategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function articles(Request $request)
@@ -106,8 +105,8 @@ class PageController extends Controller
                 if ($request->filled('type')) {
                     $query->where('type', $request->type);
                 }
-        })->where('active', 1)->get();
-        $result=ArticleResource::collection($data);
+            })->where('active', 1)->get();
+        $result = ArticleResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
     public function jobs(Request $request)
@@ -118,10 +117,10 @@ class PageController extends Controller
     public function home()
     {
         $sliders = Slider::where('active', 1)->get();
-        $data['sliders']=SliderResource::collection($sliders);
+        $data['sliders'] = SliderResource::collection($sliders);
 
-        $categories = Category::where('active', 1)->limit(20)->orderBy('id','desc')->get();
-        $data['categories']=CategoryResource::collection($categories);
+        $categories = Category::where('active', 1)->limit(20)->orderBy('id', 'desc')->get();
+        $data['categories'] = CategoryResource::collection($categories);
 
 
         return apiResponse(true, $data, null, null, 200);
@@ -150,27 +149,32 @@ class PageController extends Controller
 
         $userPreferedSetting = UserPreferedSetting::updateOrCreate([
             'user_id'   => $user->id,
-        ],[
+        ], [
             'lang'   => $request->get('lang'),
             'currency_id'    => $request->get('currency_id')
         ]);
         return apiResponse(true, $userPreferedSetting, __('api.update_success'), null, 200);
     }
-    public function getRates($id,$type)
+    public function getRates($id, $type)
     {
-        $data=Rate::where('model_id',$id)->where('model_type',$type)->get();
+        $data = Rate::where('model_id', $id)->where('model_type', $type)->where('user_id',auth()->user()->id)->get();
+        return apiResponse(true, $data, __('api.update_success'), null, 200);
+    }
+    public function getAllRates()
+    {
+        $data = Rate::where('user_id',auth()->user()->id)->get();
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
     public function saveRates(RateRequest $request)
     {
         $data = [
-            'rate'=>$request->rate,
-            'model_id'=>$request->model_id,
-            'model_type'=>$request->model_type,
-            'comment'=>$request->comment,
-            'user_id'=>auth()->user()->id
+            'rate' => $request->rate,
+            'model_id' => $request->model_id,
+            'model_type' => $request->model_type,
+            'comment' => $request->comment,
+            'user_id' => auth()->user()->id
         ];
-        $data=Rate::create($data);
+        $data = Rate::create($data);
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
 

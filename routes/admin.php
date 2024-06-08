@@ -238,6 +238,7 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+            Route::get('accountants', [App\Http\Controllers\Admin\OrderController::class, 'accountants'])->name('accountants.list')->middleware('adminPermission:accountants.view');
 
             Route::get('orders/select', [App\Http\Controllers\Admin\OrderController::class, 'select'])->name('orders.select');
             Route::delete('orders/bulk', [App\Http\Controllers\Admin\OrderController::class, 'deleteBulk'])->name('orders.deleteBulk')->middleware('adminPermission:orders.delete');

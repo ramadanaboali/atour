@@ -131,7 +131,7 @@
             @endcan
 
             <li>
-                <a class="d-flex align-items-center" href="">
+                <a class="d-flex align-items-center" href="{{ route('admin.accountants.list') }}">
                     <i data-feather="image"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.accountants') }}</span>
                 </a>

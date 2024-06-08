@@ -158,4 +158,9 @@ class OrderController extends Controller
         ->rawColumns(['active','members','meeting_place','code'])
         ->make(true);
     }
+    public function accountants(Request $request)
+    {
+        $total = Order::where('status', Order::STATUS_COMPLEALED)->sum('total');
+        return view('admin.pages.orders.accountants',['total'=>$total]);
+    }
 }
