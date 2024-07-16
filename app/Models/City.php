@@ -12,8 +12,14 @@ class City extends Model
 {
     use HasFactory,SoftDeletes;
      protected $table = 'cities';
-    protected $fillable = ['title_en','title_ar','description_en','description_ar', 'country_id','created_by','updated_by','active'];
-    protected $appends = ['title','text'];
+    protected $fillable = ['title_en','title_ar','description_en','description_ar', 'country_id','created_by','updated_by','active','image'];
+    protected $appends = ['title','text','photo'];
+
+    public function getPhotoAttribute()
+    {
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/cities/' . $this->attributes['image']) : null) : null;
+
+    }
 
     public function getTextAttribute()
     {

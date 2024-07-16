@@ -76,22 +76,34 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                           <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
+                           <div class="mb-1 col-md-12  @error('description_en') is-invalid @enderror">
                             <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
-                            <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
+                            <textarea type="text" name="description_en" id="description_en" class="form-control editor" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
                             @error('description_en')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-6  @error('description_ar') is-invalid @enderror">
+                        <div class="mb-1 col-md-12  @error('description_ar') is-invalid @enderror">
                             <label class="form-label" for="description_ar">{{ __('admin.description_ar') }}</label>
-                            <textarea type="text" name="description_ar" id="description_ar" class="form-control" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
+                            <textarea type="text" name="description_ar" id="description_ar" class="form-control editor" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
                             @error('description_ar')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
 
-
+                        <div class="mb-1 col-md-4 @error('image') is-invalid @enderror">
+                            <label class="form-label" for="image">{{ __('sliders.file') }}</label>
+                            <input type="file" class="form-control input" name="image" id="image">
+                            @error('image')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                            <div>
+                                <br>
+                                @if(isset($item) && !empty($item->photo))
+                                    <img src="{{ $item->photo }}" class="img-fluid img-thumbnail">
+                                @endif
+                            </div>
+                        </div>
 
 
                     </div>

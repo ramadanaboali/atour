@@ -10,8 +10,8 @@ class Slider extends Model
 {
     use HasFactory;
     protected $table = 'sliders';
-    protected $fillable = ['image','url','title_en','title_ar'];
-    protected $appends = ['photo','title'];
+    protected $fillable = ['image','url','title_en','title_ar','description_en','description_ar'];
+    protected $appends = ['photo','title','description'];
     public function getPhotoAttribute()
     {
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/sliders/' . $this->attributes['image']) : null) : null;
@@ -23,6 +23,14 @@ class Slider extends Model
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getDescriptionAttribute()
+    {
+        if(App::isLocale('en')) {
+            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
+        } else {
+            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
         }
     }
 }

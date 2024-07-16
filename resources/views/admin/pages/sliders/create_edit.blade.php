@@ -57,6 +57,20 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                           <div class="mb-1 col-md-12  @error('description_en') is-invalid @enderror">
+                            <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
+                            <textarea type="text" name="description_en" id="description_en" class="form-control editor" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
+                            @error('description_en')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-12  @error('description_ar') is-invalid @enderror">
+                            <label class="form-label" for="description_ar">{{ __('admin.description_ar') }}</label>
+                            <textarea type="text" name="description_ar" id="description_ar" class="form-control editor" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
+                            @error('description_ar')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <div class="mb-1 col-md-4 @error('image') is-invalid @enderror">
                             <label class="form-label" for="image">{{ __('sliders.file') }}</label>
