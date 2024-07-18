@@ -70,6 +70,12 @@ class OrderController extends Controller
         }
         return response()->apiSuccess($this->service->update($data, $trip));
     }
+    public function cancel($id)
+    {
+        $order = $this->service->get($id);
+        $data = ['status'=>Order::STATUS_CANCELED];
+        return response()->apiSuccess($this->service->update($data, $order));
+    }
     public function delete(Order $trip)
     {
 

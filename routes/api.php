@@ -32,7 +32,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('ads', [PageController::class,'ads']);
 
         Route::get('blogs', [PageController::class,'blogs']);
+        Route::get('last_services', [PageController::class,'lastServices']);
+        Route::get('services', [PageController::class,'servicecs']);
+        Route::get('services/{id}', [PageController::class,'getServicecs']);
         Route::get('cities', [PageController::class,'cities']);
+        Route::get('cities/{id}', [PageController::class,'getCity']);
         Route::get('currencies', [PageController::class,'currencies']);
         Route::get('sliders', [PageController::class,'sliders']);
         Route::get('countries', [PageController::class,'countries']);
@@ -51,6 +55,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('orders', [OrderController::class, 'index']);
             Route::get('orders/{id}', [OrderController::class, 'show']);
             Route::post('orders', [OrderController::class, 'store']);
+            Route::get('cancel-order/{id}', [OrderController::class, 'cancel']);
 
 
             Route::get('rates', [PageController::class, 'getAllRates']);

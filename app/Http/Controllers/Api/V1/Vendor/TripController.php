@@ -55,6 +55,7 @@ class TripController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
         $data['cover'] = $storedPath;
+        $data['custom_fields'] = json_encode($request->custom_fields);
         $data['vendor_id'] = auth()->user()->id;
 
         return response()->apiSuccess($this->service->store($data));

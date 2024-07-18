@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
@@ -49,6 +50,10 @@ class City extends Model
     public function country(): ?BelongsTo
     {
         return $this->belongsTo(Country::class,'country_id');
+    }
+    public function services(): ?HasMany
+    {
+        return $this->hasMany(Service::class,'city_id');
     }
     public function createdBy(): ?BelongsTo
     {

@@ -28,6 +28,7 @@ class Trip extends Model
     'end_point_descriprion_en',
     'start_point_descriprion_ar',
     'end_point_descriprion_ar',
+    'custom_fields',
     'active',
     'pay_later',
     'vendor_id',

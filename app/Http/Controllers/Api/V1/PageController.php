@@ -57,22 +57,38 @@ class PageController extends Controller
     public function topCities(Request $request)
     {
         $data =
-        Service::leftJoin('users','users.id','services.vendor_id')->leftJoin('suppliers','suppliers.user_id','users.id')->leftJoin('cities','cities.id','suppliers.city_id')->where(function($query) use ($request){
-            if($request->filled('from')){
+        Service::leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+            if($request->filled('from')) {
                 $query->where('created_at', '>=', $request->from . ' 00:00:00');
             }
-            if($request->filled('to')){
+            if($request->filled('to')) {
                 $query->where('created_at', '<=', $request->to . ' 00:00:00');
             }
-        })->groupBy('cities.id')->select([DB::raw('count(services.id) as total_services'),'cities.*'])->orderBy('total_services','desc')->get();
+        })->groupBy('cities.id')->select([DB::raw('count(services.id) as total_services'),'cities.*'])->orderBy('total_services', 'desc')->get();
 
         return apiResponse(true, $data, null, null, 200);
     }
     public function cities()
     {
-        $data = City::with('country')->where('active', 1)->get();
+        $data = City::with(['country','services'])->where('active', 1)->get();
         $result = CityResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
+    }
+    public function getCity(Request $request)
+    {
+        $data = City::with(['country','services'])->where('active', 1)->get();
+        $result = CityResource::collection($data);
+        return apiResponse(true, $result, null, null, 200);
+    }
+    public function servicecs(Request $request)
+    {
+        $data = Service::orderBy('id','desc')->get();
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function getServicecs($id)
+    {
+        $data = Service::find($id);
+        return apiResponse(true, $data, null, null, 200);
     }
     public function currencies()
     {
@@ -164,12 +180,12 @@ class PageController extends Controller
     }
     public function getRates($id, $type)
     {
-        $data = Rate::where('model_id', $id)->where('model_type', $type)->where('user_id',auth()->user()->id)->get();
+        $data = Rate::where('model_id', $id)->where('model_type', $type)->where('user_id', auth()->user()->id)->get();
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
     public function getAllRates()
     {
-        $data = Rate::where('user_id',auth()->user()->id)->get();
+        $data = Rate::where('user_id', auth()->user()->id)->get();
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
     public function saveRates(RateRequest $request)

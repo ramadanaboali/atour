@@ -34,9 +34,13 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->username)->where('type', 'customer')->orWhere('phone', $request->username)->where('active', 1)->first();
+        $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_CLIENT)->first();
 
         if($user) {
+            if($user->active==0){
+                return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            }
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
                 if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
                     return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -64,6 +68,9 @@ class AuthController extends Controller
         ];
         $user = User::where('email', $request->email)->first();
         $user->update($userInput);
+
+        return $this->successResponse($user, Response::HTTP_CREATED);
+
     }
 
     public function sendCode(SendCodeRequest $request)
@@ -126,7 +133,7 @@ class AuthController extends Controller
     {
         try {
 
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_CLIENT)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -143,7 +150,7 @@ class AuthController extends Controller
     public function checkCode(CheckCodeRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_CLIENT)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -161,7 +168,7 @@ class AuthController extends Controller
     public function confirmReset(ConfirmResetRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'customer')->first();
+            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_CLIENT)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
