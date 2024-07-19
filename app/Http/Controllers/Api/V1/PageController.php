@@ -49,24 +49,34 @@ class PageController extends Controller
     }
     public function searchByCity(Request $request, $city_id)
     {
-        $data = DB::select(
-            "select services.* from services left join users on users.id= services.vendor_id left join suppliers on suppliers.user_id=users.id where suppliers.city_id=$city_id"
-        );
-        $data =
-        Service::leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+
+        $data = Service::with(['city.trips','offers'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
-                $query->where('created_at', '>=', $request->from . ' 00:00:00');
+                $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
             if($request->filled('to')) {
-                $query->where('created_at', '<=', $request->to . ' 00:00:00');
+                $query->where('services.created_at', '<=', $request->to . ' 00:00:00');
             }
-        })->where('suppliers.city_id',$city_id)->groupBy('cities.id')->select([DB::raw('count(services.id) as total_services'),'cities.*'])->orderBy('total_services', 'desc')->get();
+        })->where('city_id',$city_id)->orderBy('id', 'desc')->get();
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function getOffers(Request $request)
+    {
+
+        $data = Service::with(['city.trips','offers'])->where(function ($query) use ($request) {
+            if($request->filled('from')) {
+                $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
+            }
+            if($request->filled('to')) {
+                $query->where('services.created_at', '<=', $request->to . ' 00:00:00');
+            }
+        })->orderBy('id', 'desc')->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function topCities(Request $request)
     {
         $data =
-        Service::leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+        Service::with(['city.trips','offers'])->leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('created_at', '>=', $request->from . ' 00:00:00');
             }
@@ -77,17 +87,33 @@ class PageController extends Controller
 
         return apiResponse(true, $data, null, null, 200);
     }
+    public function cityTrips(Request $request,$id)
+    {
+        $data = City::with(['country','services','trips'])->leftJoin('trips','trips.city_id','cities.id')->where(function($query)use ($request){
+
+            if($request->filled('price_from')) {
+                $query->where('trips.price', '>=', $request->from );
+            }
+            if($request->filled('price_to')) {
+                $query->where('trips.price', '<=', $request->to );
+            }
+            if($request->filled('price_to')) {
+                $query->where('trips.price', '<=', $request->to );
+            }
+
+        })->where('cities.id',$id)->select(['cities.*'])->first();
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function cities()
     {
-        $data = City::with(['country','services'])->where('active', 1)->get();
-        $result = CityResource::collection($data);
-        return apiResponse(true, $result, null, null, 200);
+        $data = City::with(['country','services','trips'])->where('active', 1)->get();
+        // $result = CityResource::collection($data);
+        return apiResponse(true, $data, null, null, 200);
     }
     public function getCity(Request $request)
     {
         $data = City::with(['country','services'])->where('active', 1)->get();
-        $result = CityResource::collection($data);
-        return apiResponse(true, $result, null, null, 200);
+        return apiResponse(true, $data, null, null, 200);
     }
     public function servicecs(Request $request)
     {

@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('offer_services', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('service_id')->nullable()->references('id')->on('services')->onDelete('cascade');
-            $table->foreignId('offer_id')->nullable()->references('id')->on('offers')->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('trips', function (Blueprint $table) {
+            $table->foreignId('city_id')->nullable()->references('id')->on('cities')->onDelete('cascade');
+
         });
     }
 
@@ -28,6 +26,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offer_services');
+        Schema::table('trips', function (Blueprint $table) {
+
+            $table->dropForeign(['city_id']);
+
+        });
     }
 };

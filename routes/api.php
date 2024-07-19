@@ -46,7 +46,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('footer', [SettingController::class,'footer']);
         Route::get('jobs', [PageController::class,'jobs']);
 
-        Route::get('search_by_city/{city_id}', [PageController::class,'searchByCity']);
+        Route::get('search_by_city/{id}', [PageController::class,'searchByCity']);
+        Route::get('city-trips/{id}', [PageController::class,'cityTrips']);
+        Route::get('offers', [PageController::class,'getOffers']);
         Route::get('top_cities', [PageController::class,'topCities']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {

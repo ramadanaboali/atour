@@ -55,6 +55,10 @@ class City extends Model
     {
         return $this->hasMany(Service::class,'city_id');
     }
+    public function trips(): ?HasMany
+    {
+        return $this->hasMany(Trip::class,'city_id');
+    }
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'created_by');

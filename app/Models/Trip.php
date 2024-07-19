@@ -32,6 +32,7 @@ class Trip extends Model
     'active',
     'pay_later',
     'vendor_id',
+    'city_id',
     'created_by',
     'updated_by',
     ];
@@ -77,6 +78,10 @@ class Trip extends Model
 
 
 
+    public function city(): ?BelongsTo
+    {
+        return $this->belongsTo(City::class,'city_id');
+    }
     public function vendor(): ?BelongsTo
     {
         return $this->belongsTo(User::class,'vendor_id');
@@ -87,7 +92,6 @@ class Trip extends Model
         return $this->hasMany(TripProgram::class, 'trip_id');
 
     }
-
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

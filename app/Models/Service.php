@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Service extends Model
@@ -24,4 +26,13 @@ class Service extends Model
         'created_by',
         'updated_by'
     ];
+
+    public function city(): ?BelongsTo
+    {
+        return $this->belongsTo(City::class,'city_id');
+    }
+    public function offers(): ?HasManyThrough
+    {
+        return $this->hasManyThrough(Offer::class, OfferService::class,'service_id','id');
+    }
 }
