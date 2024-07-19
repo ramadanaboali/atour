@@ -50,7 +50,7 @@ class PageController extends Controller
     public function searchByCity(Request $request, $city_id)
     {
 
-        $data = Service::with(['city.trips','offers','vendor','rates'])->where(function ($query) use ($request) {
+        $data = Service::with(['city.trips.programs','offers','vendor','rates'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
@@ -63,7 +63,7 @@ class PageController extends Controller
     public function getOffers(Request $request)
     {
 
-        $data = Service::with(['city.trips','offers'])->where(function ($query) use ($request) {
+        $data = Service::with(['city.trips.programs','offers'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
@@ -76,7 +76,7 @@ class PageController extends Controller
     public function topCities(Request $request)
     {
         $data =
-        Service::with(['city.trips','offers'])->leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+        Service::with(['city.trips.programs','offers'])->leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('created_at', '>=', $request->from . ' 00:00:00');
             }
@@ -89,7 +89,7 @@ class PageController extends Controller
     }
     public function cityTrips(Request $request,$id)
     {
-        $data = City::with(['country','services','trips'])->leftJoin('trips','trips.city_id','cities.id')->where(function($query)use ($request){
+        $data = City::with(['country','services','trips.programs'])->leftJoin('trips','trips.city_id','cities.id')->where(function($query)use ($request){
 
             if($request->filled('price_from')) {
                 $query->where('trips.price', '>=', $request->from );
@@ -106,23 +106,23 @@ class PageController extends Controller
     }
     public function cities()
     {
-        $data = City::with(['country','services','trips'])->where('active', 1)->get();
+        $data = City::with(['country','services.vendor','services.offers','services.rates','trips.programs'])->where('active', 1)->get();
         // $result = CityResource::collection($data);
         return apiResponse(true, $data, null, null, 200);
     }
     public function getCity(Request $request)
     {
-        $data = City::with(['country','services'])->where('active', 1)->get();
+        $data = City::with(['country','trips','services.vendor','services.offers','services.rates'])->where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function servicecs(Request $request)
     {
-        $data = Service::orderBy('id', 'desc')->get();
+        $data = Service::with(['city.trips','offers','vendor','rates'])->orderBy('id', 'desc')->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function getServicecs($id)
     {
-        $data = Service::find($id);
+        $data = Service::with(['city.trips','offers','vendor','rates'])->find($id);
         return apiResponse(true, $data, null, null, 200);
     }
     public function currencies()
