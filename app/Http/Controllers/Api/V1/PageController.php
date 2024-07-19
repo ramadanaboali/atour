@@ -50,7 +50,7 @@ class PageController extends Controller
     public function searchByCity(Request $request, $city_id)
     {
 
-        $data = Service::with(['city.trips','offers'])->where(function ($query) use ($request) {
+        $data = Service::with(['city.trips','offers','vendor','rates'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
