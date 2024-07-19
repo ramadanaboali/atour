@@ -30,7 +30,7 @@ class Service extends Model
     protected $appends = ['photo','title','description'];
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/services/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/services/' . $this->attributes['cover']) : null) : null;
 
     }
 
