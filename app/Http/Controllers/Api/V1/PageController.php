@@ -47,11 +47,20 @@ class PageController extends Controller
         $data = Add::where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
-    public function searchByCity($city_id)
+    public function searchByCity(Request $request, $city_id)
     {
         $data = DB::select(
             "select services.* from services left join users on users.id= services.vendor_id left join suppliers on suppliers.user_id=users.id where suppliers.city_id=$city_id"
         );
+        $data =
+        Service::leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+            if($request->filled('from')) {
+                $query->where('created_at', '>=', $request->from . ' 00:00:00');
+            }
+            if($request->filled('to')) {
+                $query->where('created_at', '<=', $request->to . ' 00:00:00');
+            }
+        })->where('suppliers.city_id',$city_id)->groupBy('cities.id')->select([DB::raw('count(services.id) as total_services'),'cities.*'])->orderBy('total_services', 'desc')->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function topCities(Request $request)
@@ -82,7 +91,7 @@ class PageController extends Controller
     }
     public function servicecs(Request $request)
     {
-        $data = Service::orderBy('id','desc')->get();
+        $data = Service::orderBy('id', 'desc')->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function getServicecs($id)
