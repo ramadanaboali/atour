@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
 class Trip extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
     'title_en',
     'title_ar',
@@ -32,11 +34,13 @@ class Trip extends Model
     'active',
     'pay_later',
     'vendor_id',
+    'category_id',
+    'sub_category_id',
     'city_id',
     'created_by',
     'updated_by',
     ];
-   protected $appends = ['title','photo','description','start_point_descriprion','end_point_descriprion'];
+    protected $appends = ['title','photo','description','start_point_descriprion','end_point_descriprion'];
 
     public function getPhotoAttribute()
     {
@@ -77,14 +81,26 @@ class Trip extends Model
     }
 
 
+    public function rates(): ?HasMany
+    {
+        return $this->hasMany(Rate::class, 'trip_id');
+    }
 
+    public function category(): ?BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function subcategory(): ?BelongsTo
+    {
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
     public function city(): ?BelongsTo
     {
-        return $this->belongsTo(City::class,'city_id');
+        return $this->belongsTo(City::class, 'city_id');
     }
     public function vendor(): ?BelongsTo
     {
-        return $this->belongsTo(User::class,'vendor_id');
+        return $this->belongsTo(User::class, 'vendor_id');
     }
 
     public function programs(): ?HasMany
@@ -99,5 +115,13 @@ class Trip extends Model
     public function updatedBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'trip');
+    }
+    public function offers(): ?HasManyThrough
+    {
+        return $this->hasManyThrough(Offer::class, OfferTrip::class, 'trip_id', 'id');
     }
 }

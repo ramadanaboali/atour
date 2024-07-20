@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,11 +12,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('offer_services', function (Blueprint $table) {
-            $table->id();
+        Schema::table('trips', function (Blueprint $table) {
+
             $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
-            $table->foreignId('offer_id')->nullable()->references('id')->on('offers')->onDelete('cascade');
-            $table->timestamps();
+
+            $table->foreignId('sub_category_id')->nullable()->references('id')->on('sub_categories')->onDelete('cascade');
+
         });
     }
 
@@ -28,6 +28,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offer_services');
+        Schema::table('trips', function (Blueprint $table) {
+            $table->dropForeign(['category_id','sub_category_id']);
+        });
     }
 };

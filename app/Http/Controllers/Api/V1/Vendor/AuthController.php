@@ -45,7 +45,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_SUPPLIER)->where('active', 1)->first();
+        $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_SUPPLIER)->first();
 
         if($user) {
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
@@ -55,6 +55,10 @@ class AuthController extends Controller
             }
         } else {
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if($user->active == 0) {
+            return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $user->last_login = Carbon::now();

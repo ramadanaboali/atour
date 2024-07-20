@@ -51,6 +51,8 @@ class TripRequest extends FormRequest
                     'end_point_descriprion_ar' => 'required|string|min:2',
                     'active' => 'required|in:0,1',
                     'pay_later' => 'required|in:0,1',
+                    'city_id' => 'required|exists:cities,id',
+                    'category_id' => 'required|exists:categories,id',
                     ];
                 }
             case 'PATCH':

@@ -32,9 +32,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('ads', [PageController::class,'ads']);
 
         Route::get('blogs', [PageController::class,'blogs']);
-        Route::get('last_services', [PageController::class,'lastServices']);
-        Route::get('services', [PageController::class,'servicecs']);
-        Route::get('services/{id}', [PageController::class,'getServicecs']);
+        Route::get('last-trips', [PageController::class,'lastTrips']);
+        Route::get('trips', [PageController::class,'trips']);
+        Route::get('trips/{id}', [PageController::class,'getTrips']);
         Route::get('cities', [PageController::class,'cities']);
         Route::get('cities/{id}', [PageController::class,'getCity']);
         Route::get('currencies', [PageController::class,'currencies']);

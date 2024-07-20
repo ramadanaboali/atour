@@ -22,6 +22,7 @@ use App\Models\Service;
 use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\Supplier;
+use App\Models\Trip;
 use App\Models\User;
 use App\Models\UserPreferedSetting;
 use Illuminate\Http\Request;
@@ -50,20 +51,21 @@ class PageController extends Controller
     public function searchByCity(Request $request, $city_id)
     {
 
-        $data = Service::with(['city.trips.programs','offers','vendor','rates'])->where(function ($query) use ($request) {
+        $data = City::with(['category','subcategory','city','vendor','programs','attachments','offers'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
             if($request->filled('to')) {
                 $query->where('services.created_at', '<=', $request->to . ' 00:00:00');
             }
-        })->where('city_id',$city_id)->orderBy('id', 'desc')->get();
+        })->find('id', $city_id);
+
         return apiResponse(true, $data, null, null, 200);
     }
     public function getOffers(Request $request)
     {
 
-        $data = Service::with(['city.trips.programs','offers'])->where(function ($query) use ($request) {
+        $data = Trip::with(['category','subcategory','city','vendor','programs','attachments','offers'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
@@ -76,72 +78,84 @@ class PageController extends Controller
     public function topCities(Request $request)
     {
         $data =
-        Service::with(['city.trips.programs','offers'])->leftJoin('users', 'users.id', 'services.vendor_id')->leftJoin('suppliers', 'suppliers.user_id', 'users.id')->leftJoin('cities', 'cities.id', 'suppliers.city_id')->where(function ($query) use ($request) {
+        Trip::with(['programs','offers','city','category','subcategory'])->where(function ($query) use ($request) {
             if($request->filled('from')) {
                 $query->where('created_at', '>=', $request->from . ' 00:00:00');
             }
             if($request->filled('to')) {
                 $query->where('created_at', '<=', $request->to . ' 00:00:00');
             }
-        })->groupBy('cities.id')->select([DB::raw('count(services.id) as total_services'),'cities.*'])->orderBy('total_services', 'desc')->get();
+        })->orderBy('id', 'desc')->get();
 
         return apiResponse(true, $data, null, null, 200);
     }
-    public function cityTrips(Request $request,$id)
+    public function cityTrips(Request $request, $id)
     {
-        $data = City::with(['country','services','trips.programs'])->leftJoin('trips','trips.city_id','cities.id')->where(function($query)use ($request){
+        $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory'])->leftJoin('trips', 'trips.city_id', 'cities.id')->where(function ($query) use ($request) {
 
             if($request->filled('price_from')) {
-                $query->where('trips.price', '>=', $request->from );
+                $query->where('trips.price', '>=', $request->from);
             }
             if($request->filled('price_to')) {
-                $query->where('trips.price', '<=', $request->to );
+                $query->where('trips.price', '<=', $request->to);
             }
             if($request->filled('price_to')) {
-                $query->where('trips.price', '<=', $request->to );
+                $query->where('trips.price', '<=', $request->to);
             }
 
-        })->where('cities.id',$id)->select(['cities.*'])->first();
+        })->where('cities.id', $id)->select(['cities.*'])->first();
         return apiResponse(true, $data, null, null, 200);
     }
     public function cities()
     {
-        $data = City::with(['country','services.vendor','services.offers','services.rates','trips.programs'])->where('active', 1)->get();
+        $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory','trips.attachments'])->where('active', 1)->get();
         // $result = CityResource::collection($data);
         return apiResponse(true, $data, null, null, 200);
     }
-    public function getCity(Request $request)
+    public function getCity(Request $request,$id)
     {
-        $data = City::with(['country','trips','services.vendor','services.offers','services.rates'])->where('active', 1)->get();
+        $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory','trips.attachments'])->find($id);
         return apiResponse(true, $data, null, null, 200);
     }
-    public function servicecs(Request $request)
+
+    public function lastTrips(Request $request)
     {
-        $data = Service::with(['city.trips','offers','vendor','rates'])->orderBy('id', 'desc')->get();
+        $data = Trip::with(['city.country','vendor','offers','rates','programs','category','subcategory','attachments'])->orderBy('id', 'desc')->limit(10)->get();
         return apiResponse(true, $data, null, null, 200);
     }
-    public function getServicecs($id)
+
+    public function trips(Request $request)
     {
-        $data = Service::with(['city.trips','offers','vendor','rates'])->find($id);
+        $data = Trip::with(['city.country','vendor','offers','rates','programs','category','subcategory','attachments'])->orderBy('id', 'desc')->get();
         return apiResponse(true, $data, null, null, 200);
     }
+
+    public function getTrips($id)
+    {
+        $data = Trip::with(['city.country','vendor','offers','rates','programs','category','subcategory','attachments'])->find($id);
+        return apiResponse(true, $data, null, null, 200);
+    }
+
     public function currencies()
     {
         $data = Currency::where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
+
     public function countries()
     {
         $data = Country::where('active', 1)->get();
         $result = CountryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
+
     public function categories()
     {
         $data = Category::with('subCategory')->where('active', 1)->get();
         $result = CategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
+
     public function sub_categories(Request $request)
     {
         $data = SubCategory::with(['category', 'subCategory'])
@@ -156,6 +170,7 @@ class PageController extends Controller
         $result = CategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
+
     public function articles(Request $request)
     {
         $data = Article::with(['attachments'])
@@ -167,20 +182,19 @@ class PageController extends Controller
         $result = ArticleResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
+
     public function jobs(Request $request)
     {
         $data = Job::with(['department'])->where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
+
     public function home()
     {
         $sliders = Slider::where('active', 1)->get();
         $data['sliders'] = SliderResource::collection($sliders);
-
         $categories = Category::where('active', 1)->limit(20)->orderBy('id', 'desc')->get();
         $data['categories'] = CategoryResource::collection($categories);
-
-
         return apiResponse(true, $data, null, null, 200);
     }
 
@@ -189,6 +203,7 @@ class PageController extends Controller
         $data = UserPreferedSetting::where('user_id', Auth::id())->first();
         return apiResponse(true, $data, null, null, 200);
     }
+
     public function changePreferedSetting(Request $request)
     {
         $validate = array(

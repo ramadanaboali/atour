@@ -23,6 +23,7 @@ class AbstractService
 
         $user=auth()->user();
         $data['created_by']= $user?->id;
+
         return $this->repo->create($data);
     }
 

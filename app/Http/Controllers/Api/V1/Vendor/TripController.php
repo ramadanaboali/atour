@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Vendor\TripRequest;
 use App\Http\Resources\TripResource;
+use App\Models\Attachment;
 use App\Models\Trip;
 use App\Services\General\StorageService;
 use App\Services\Vendor\TripService;
@@ -57,6 +58,23 @@ class TripController extends Controller
         $data['cover'] = $storedPath;
         $data['custom_fields'] = json_encode($request->custom_fields);
         $data['vendor_id'] = auth()->user()->id;
+        $item = $this->service->store($data);
+        if ($request->images) {
+            for ($i = 0; $i < count($request->images); $i++) {
+                $image = storeFile($request->images[$i], 'files');
+                $item->attachments()->
+                    save(
+                        new Attachment(
+                            [
+                                'model_id' => $item->id,
+                                'attachment' => $image,
+                                'title' => 'images',
+                                'model_type' => 'trip',
+                            ]
+                        )
+                    );
+            }
+        }
 
         return response()->apiSuccess($this->service->store($data));
     }
