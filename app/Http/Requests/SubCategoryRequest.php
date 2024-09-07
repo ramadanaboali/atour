@@ -17,7 +17,7 @@ class SubCategoryRequest extends FormRequest
         return [
             'title_ar' => 'required',
             'title_en' => 'required',
-            'category_id'=>'required'
+            'category'=>'required|in:gift,trip,effectiveness'
         ];
     }
 }

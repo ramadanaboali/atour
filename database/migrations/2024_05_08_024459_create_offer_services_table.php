@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('offer_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
             $table->foreignId('offer_id')->nullable()->references('id')->on('offers')->onDelete('cascade');
             $table->timestamps();
         });

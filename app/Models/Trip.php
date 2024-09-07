@@ -15,32 +15,25 @@ class Trip extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-    'title_en',
-    'title_ar',
-    'description_en',
-    'description_ar',
-    'price',
-    'phone',
-    'start_point',
-    'end_point',
-    'cover',
-    'free_cancelation',
-    'cancelation_policy',
-    'start_point_descriprion_en',
-    'end_point_descriprion_en',
-    'start_point_descriprion_ar',
-    'end_point_descriprion_ar',
-    'custom_fields',
-    'active',
-    'pay_later',
-    'vendor_id',
-    'category_id',
-    'sub_category_id',
-    'city_id',
-    'created_by',
-    'updated_by',
+        'title_ar',
+        'title_en',
+        'description_en',
+        'description_ar',
+        'price',
+        'start_point',
+        'program_time',
+        'people',
+        'free_cancelation',
+        'available_days',
+        'pay_later',
+        'active',
+        'cover',
+        'city_id',
+        'vendor_id',
+        'created_by',
+        'updated_by',
     ];
-    protected $appends = ['title','photo','description','start_point_descriprion','end_point_descriprion'];
+    protected $appends = ['title','photo','description'];
 
     public function getPhotoAttribute()
     {
@@ -63,36 +56,15 @@ class Trip extends Model
             return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
         }
     }
-    public function getStartPointDescriprionAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['start_point_descriprion_en'] ?? $this->attributes['start_point_descriprion_ar'];
-        } else {
-            return $this->attributes['start_point_descriprion_ar'] ?? $this->attributes['start_point_descriprion_en'];
-        }
-    }
-    public function getEndPointDescriprionAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['end_point_descriprion_en'] ?? $this->attributes['end_point_descriprion_ar'];
-        } else {
-            return $this->attributes['end_point_descriprion_ar'] ?? $this->attributes['end_point_descriprion_en'];
-        }
-    }
-
 
     public function rates(): ?HasMany
     {
         return $this->hasMany(Rate::class, 'trip_id');
     }
 
-    public function category(): ?BelongsTo
+    public function subcategory(): ?HasManyThrough
     {
-        return $this->belongsTo(Category::class, 'category_id');
-    }
-    public function subcategory(): ?BelongsTo
-    {
-        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+        return $this->hasManyThrough(SubCategory::class, TripSubCategory::class, 'trip_id', 'id');
     }
     public function city(): ?BelongsTo
     {
@@ -103,7 +75,7 @@ class Trip extends Model
         return $this->belongsTo(User::class, 'vendor_id');
     }
 
-    public function programs(): ?HasMany
+    public function features(): ?HasMany
     {
         return $this->hasMany(TripProgram::class, 'trip_id');
 
@@ -120,8 +92,5 @@ class Trip extends Model
     {
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'trip');
     }
-    public function offers(): ?HasManyThrough
-    {
-        return $this->hasManyThrough(Offer::class, OfferTrip::class, 'trip_id', 'id');
-    }
+
 }

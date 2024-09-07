@@ -51,16 +51,6 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::match(['PUT', 'PATCH'], 'companies/{id}', [App\Http\Controllers\Admin\CompanyController::class, 'update'])->name('companies.update')->middleware('adminPermission:companies.edit');
             Route::get('companies/{id}/edit', [App\Http\Controllers\Admin\CompanyController::class, 'edit'])->name('companies.edit')->middleware('adminPermission:companies.edit');
 
-            Route::get('categories/select', [App\Http\Controllers\Admin\CategoryController::class, 'select'])->name('categories.select');
-            Route::delete('categories/bulk', [App\Http\Controllers\Admin\CategoryController::class, 'deleteBulk'])->name('categories.deleteBulk')->middleware('adminPermission:categories.delete');
-            Route::get('categories/list', [App\Http\Controllers\Admin\CategoryController::class, 'list'])->name('categories.list')->middleware('adminPermission:categories.view');
-            Route::post('categories', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('categories.store')->middleware('adminPermission:categories.create');
-            Route::delete('categories/{id}', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('adminPermission:categories.delete');
-            Route::get('categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index')->middleware('adminPermission:categories.view');
-            Route::get('categories/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('categories.create')->middleware('adminPermission:categories.create');
-            Route::match(['PUT', 'PATCH'], 'categories/{id}', [App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('categories.update')->middleware('adminPermission:categories.edit');
-            Route::get('categories/{id}/edit', [App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('categories.edit')->middleware('adminPermission:categories.edit');
-
             Route::get('countries/select', [App\Http\Controllers\Admin\CountryController::class, 'select'])->name('countries.select');
             Route::delete('countries/bulk', [App\Http\Controllers\Admin\CountryController::class, 'deleteBulk'])->name('countries.deleteBulk')->middleware('adminPermission:countries.delete');
             Route::get('countries/list', [App\Http\Controllers\Admin\CountryController::class, 'list'])->name('countries.list')->middleware('adminPermission:countries.view');

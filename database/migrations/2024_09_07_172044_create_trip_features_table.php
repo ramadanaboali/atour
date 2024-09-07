@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-
-
-        Schema::create('supplier_services', function (Blueprint $table) {
+        Schema::create('trip_features', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sub_category_id')->nullable()->references('id')->on('sub_categories')->onDelete('cascade');
-            $table->foreignId('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->string('title_ar');
+            $table->string('title_en')->nullable();
+            $table->longText('description_en')->nullable();
+            $table->longText('description_ar')->nullable();
+            $table->foreignId('trip_id')->references('id')->on('trips')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_services');
+        Schema::dropIfExists('trip_features');
     }
 };

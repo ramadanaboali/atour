@@ -39,7 +39,6 @@ class OfferRequest extends FormRequest
                     'description_en'=>'required|string|min:2',
                     'description_ar'=>'required|string|min:2',
                     'section_id'=>'required|exists:sections,id',
-                    'category_id'=>'required|exists:service_categories,id',
                     'sub_category_id'=>'required|exists:service_categories,id',
                     'service_price'=>'required|numeric',
                     'price_type'=>'required|in:service,free,special,discount',

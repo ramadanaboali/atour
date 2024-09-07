@@ -83,18 +83,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('services/{services}', [ServiceController::class, 'show']);
             Route::put('services/{services}', [ServiceController::class, 'update']);
 
-
-
             Route::post('orders/status', [OrderController::class, 'updateStatus']);
             Route::get('orders', [OrderController::class, 'index']);
             Route::get('orders/{id}', [OrderController::class, 'index']);
-            Route::get('trip_programs', [TripProgramController::class, 'index']);
-            Route::post('trip_programs', [TripProgramController::class, 'store']);
-            Route::get('trip_programs/{id}', [TripProgramController::class, 'show']);
-            Route::put('trip_programs/{trip_program}', [TripProgramController::class, 'update']);
-            Route::delete('trip_programs/{trip_program}', [TripProgramController::class, 'delete']);
-
-
 
 
         });

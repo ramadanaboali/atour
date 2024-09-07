@@ -50,31 +50,19 @@
                             @enderror
                         </div>
 
-                       <div class="mb-1 col-md-6  @error('category_id') is-invalid @enderror">
-                            <label class="form-label" for="category_id">{{ __('sub_categories.category') }}</label>
-                            <select name="category_id" id="category_id" class="form-control ajax_select2 extra_field"
-                                    data-ajax--url="{{ route('admin.categories.select') }}"
-                                    data-ajax--cache="true">
-                                @isset($item->category)
-                                    <option value="{{ $item->category->id }}" selected>{{ $item->category->title }}</option>
-                                @endisset
+                       <div class="mb-1 col-md-6  @error('category') is-invalid @enderror">
+                            <label class="form-label" for="category">{{ __('sub_categories.category') }}</label>
+                            <select name="category" id="category" class="form-control" required>
+                                <option value="">{{ __('admin.select') }}</option>
+                                <option value="gift" @isset($item) {{ $item->category=="gift"?'selected':'' }}  @endisset>{{  __('sub_categories.categories.gift') }}</option>
+                                <option value="trip" @isset($item) {{ $item->category=="trip"?'selected':'' }}  @endisset>{{  __('sub_categories.categories.trip') }}</option>
+                                <option value="effectiveness" @isset($item) {{ $item->category=="effectiveness"?'selected':'' }}  @endisset>{{  __('sub_categories.categories.effectiveness') }}</option>
                             </select>
-                            @error('category_id')
+                            @error('category')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <input type="hidden" id="item_id" value="{{ $item->id??null }}">
-                       <div class="mb-1 col-md-6  @error('parent_id') is-invalid @enderror">
-                            <label class="form-label" for="parent_id">{{ __('sub_categories.plural') }}</label>
-                            <select name="parent_id" id="parent_id" class="form-control ajax_select2 extra_field">
-                                @isset($item->parent_id)
-                                    <option value="{{ $item->parent->id }}" selected>{{ $item->parent->title }}</option>
-                                @endisset
-                            </select>
-                            @error('parent_id')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
+
 
                         <div class="mb-1 col-md-6  @error('active') is-invalid @enderror">
                             <br>
@@ -88,44 +76,8 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-
-                      
                 </div>
             </div>
         </div>
     </form>
 @stop
-
-@push('scripts')
-
-<script>
-$(window).on('load', function() {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $(document).on('change', '#category_id', function(){
-            var category_id = $(this).val();
-            var item_id = $("#item_id").val();
-            $("#parent_id").empty();
-            $("#parent_id").select2({
-            ajax: {
-                dataType: 'json',
-                delay: 250,
-                processResults: function (data) {
-                    return {results: data};
-                },
-                cache: true,
-                url: function () {
-                return "{{ route('admin.sub_categories.select') }}?category_id="+category_id+"&item_id="+item_id;
-                }
-            }
-        });
-
-    });
-});
-    </script>
-
-@endpush

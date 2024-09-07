@@ -17,8 +17,7 @@ return new class () extends Migration {
             $table->string('title_en');
             $table->string('title_ar');
             $table->boolean('active')->default(true);
-            $table->foreignId('category_id')->nullable()->references('id')->on('categories')->onDelete('cascade');
-            $table->foreignId('parent_id')->nullable()->references('id')->on('sub_categories')->onDelete('cascade');
+            $table->enum('category', ['gift','trip','effectiveness'])->nullable();
             $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->softDeletes();

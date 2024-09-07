@@ -30,10 +30,7 @@ class Offer extends Model
     public function supplier(){
         return $this->belongsTo(User::class,'user_id');
     }
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'offer_services','offer_id','category_id');
-    }
+  
     public function benfits_numbers()
     {
         return 0;

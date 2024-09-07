@@ -65,6 +65,7 @@ return [
     'active' => 'active',
     'available' => 'Available',
     'category'=>'category',
+    
 
 
 ];

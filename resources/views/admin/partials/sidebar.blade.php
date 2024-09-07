@@ -287,14 +287,7 @@
                                 </a>
                             </li>
                         @endcan
-                         @can('categories.view')
-                            <li>
-                                <a class='d-flex align-items-center' href='{{ route('admin.categories.index') }} '>
-                                    <i data-feather='key'></i>
-                                    <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.categories') }}</span>
-                                </a>
-                            </li>
-                        @endcan
+                         
                          @can('sub_categories.view')
                             <li>
                                 <a class='d-flex align-items-center' href='{{ route('admin.sub_categories.index') }} '>

@@ -157,9 +157,7 @@ class OfferController extends Controller
             if($request->filled('city_id')){
                 $query->where('suppliers.city_id',$request->city_id);
             }
-            if($request->filled('services')){
-                $query->whereIn('offer_services.category_id',$request->services);
-            }
+     
         })->groupBy('offers.id')->select('offers.*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()

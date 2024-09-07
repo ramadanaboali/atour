@@ -34,7 +34,6 @@ return new class () extends Migration {
             $table->integer('members')->nullable();
             $table->integer('childrens')->nullable();
             $table->integer('adults')->nullable();
-            $table->foreignId('program_id')->references('id')->on('trip_programs')->constrained()->onDelete('cascade');
             $table->foreignId('trip_id')->references('id')->on('trips')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
             $table->softDeletes();

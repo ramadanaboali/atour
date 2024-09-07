@@ -15,23 +15,20 @@ return new class () extends Migration {
 
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
-            $table->string('title_en');
             $table->string('title_ar');
+            $table->string('title_en')->nullable();
             $table->longText('description_en')->nullable();
             $table->longText('description_ar')->nullable();
             $table->decimal('price', 8, 2)->nullable();
-            $table->string('phone')->nullable();
-            $table->string('start_point')->nullable();
-            $table->string('end_point')->nullable();
+            $table->longText('start_point')->nullable();
+            $table->string('program_time')->nullable();
             $table->string('cover')->nullable();
+            $table->integer('people')->nullable();
             $table->boolean('free_cancelation')->default(false);
-            $table->longText('cancelation_policy')->nullable();
-            $table->longText('start_point_descriprion_en')->nullable();
-            $table->longText('end_point_descriprion_en')->nullable();
-            $table->longText('start_point_descriprion_ar')->nullable();
-            $table->longText('end_point_descriprion_ar')->nullable();
-            $table->boolean('active')->default(true);
+            $table->json('available_days')->nullable();
             $table->boolean('pay_later')->default(false);
+            $table->boolean('active')->default(true);
+            $table->foreignId('city_id')->nullable()->references('id')->on('cities')->onDelete('cascade');
             $table->foreignId('vendor_id')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('created_by')->nullable()->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('updated_by')->nullable()->references('id')->on('users')->onDelete('cascade');

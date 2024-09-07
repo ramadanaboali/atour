@@ -63,6 +63,12 @@ return [
     'image' => 'الصورة',
     'sort' => 'الترتيب',
     'active' => 'نشط',
-    'category' => 'القسم',
-    'available'=>'المنتج متوفر'
+    'category' => 'الفئة',
+    'available'=>'المنتج متوفر',
+    'categories'=>[
+        ''  => '',
+        'gift'=> 'هدايا',
+        'trip'=> 'رحلات',
+        'effectiveness'=> 'فعاليات',
+    ],
 ];

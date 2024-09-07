@@ -72,8 +72,8 @@ class SubCategoryController extends Controller
                 if ($request->filled('item_id') && !empty ($request->item_id)) {
                     $query->where('id', '!=', $request->item_id);
                 }
-                if ($request->filled('category_id') && !empty ($request->category_id)) {
-                    $query->where('category_id', $request->category_id);
+                if ($request->filled('category') && !empty ($request->category)) {
+                    $query->where('category', $request->category);
                 }
                 })->select('id', 'title_en', 'title_ar')->get();
 
@@ -126,12 +126,10 @@ class SubCategoryController extends Controller
         $data = SubCategory::select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('category', function ($item) {
-            return $item->category?->title;
+        ->addColumn('categoryText', function ($item) {
+            return __('sub_categories.categories.'.$item->category);
         })
-        ->addColumn('subCategory', function ($item) {
-            return $item->subCategory?->title;
-        })
+
         ->editColumn('active', function ($item) {
             return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })

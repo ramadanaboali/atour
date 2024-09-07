@@ -160,8 +160,8 @@ class PageController extends Controller
     {
         $data = SubCategory::with(['category', 'subCategory'])
             ->where(function ($query) use ($request) {
-                if ($request->filled('category_id')) {
-                    $query->where('category_id', $request->category_id);
+                if ($request->filled('category')) {
+                    $query->where('category', $request->category);
                 }
                 if ($request->filled('parent_id')) {
                     $query->where('parent_id', $request->parent_id);

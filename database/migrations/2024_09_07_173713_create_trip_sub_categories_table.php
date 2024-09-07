@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-
-
-        Schema::create('supplier_services', function (Blueprint $table) {
+        Schema::create('trip_sub_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sub_category_id')->nullable()->references('id')->on('sub_categories')->onDelete('cascade');
-            $table->foreignId('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->unsignedBigInteger('trip_id');
+            $table->unsignedBigInteger('sub_category_id');
+            $table->foreign('trip_id')->references('id')->on('trips')->onDelete('cascade');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('supplier_services');
+        Schema::dropIfExists('trip_sub_categories');
     }
 };
