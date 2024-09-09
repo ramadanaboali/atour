@@ -12,11 +12,11 @@ class CityResource extends JsonResource
         return [
             'id'    => $this->id,
             'title'  => $this->title,
-            'country_id'  => $this->country_id,
             'description'  => $this->description,
             'image'  => $this->photo,
             'services'  => $this->services,
             'country_name'  => $this->country?->title,
+            'country_id'  => $this->country_id,
         ];
     }
 

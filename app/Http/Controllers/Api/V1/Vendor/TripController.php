@@ -28,18 +28,8 @@ class TripController extends Controller
     }
     public function index(PaginateRequest $request)
     {
-        $input = $this->service->inputs($request->all());
-        $model = new Trip();
-        $columns = Schema::getColumnListing($model->getTable());
-
-        if (count($input["columns"]) < 1 || (count($input["columns"]) != count($input["column_values"])) || (count($input["columns"]) != count($input["operand"]))) {
-            $wheres = [];
-        } else {
-            $wheres = $this->service->whereOptions($input, $columns);
-        }
-        $data = $this->service->Paginate($input, $wheres);
-
-        return response()->apiSuccess($data);
+        $data = Trip::where('vendor_id', auth()->user()->id)->paginate($request->per_page ?? 30);
+        return response()->apiSuccess(TripResource::collection($data));
 
     }
 
@@ -71,12 +61,13 @@ class TripController extends Controller
             'people' => $request->people,
             'free_cancelation' => $request->free_cancelation,
             'available_days' => $request->available_days,
+            'available_times' => $request->available_times,
             'pay_later' => $request->pay_later,
             'city_id' => $request->city_id,
             'created_by' => auth()->user()->id,
         ];
         $item = $this->service->store($data);
-        if ($item ) {
+        if ($item) {
             foreach ($request->sub_category_ids as $sub_category_id) {
                 $feature = [
                     'trip_id' => $item->id,
@@ -106,21 +97,78 @@ class TripController extends Controller
                 Attachment::create($attachment);
             }
         }
-        return response()->apiSuccess($item);
+        return response()->apiSuccess(new TripResource($item));
     }
 
     public function update(TripRequest $request, Trip $trip)
     {
 
-        $data = $request->except(['cover','_method']);
+
+        $folder_path = "images/trips";
+        $storedPath = null;
         if ($request->hasFile('cover')) {
-            $folder_path = "images/Trip";
-            $storedPath = null;
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
-            $data['cover'] = $storedPath;
         }
-        return response()->apiSuccess($this->service->update($data, $trip));
+        $data = [
+            'cover' => $storedPath ?? $trip->cover,
+            'title_ar' => $request->title_ar ?? $trip->title_ar,
+            'title_en' => $request->title_en ?? $trip->title_en,
+            'description_en' => $request->description_en ?? $trip->description_en,
+            'description_ar' => $request->description_ar ?? $trip->description_ar,
+            'price' => $request->price ?? $trip->price,
+            'start_point' => $request->start_point ?? $trip->start_point,
+            'program_time' => $request->program_time ?? $trip->program_time,
+            'people' => $request->people ?? $trip->people,
+            'free_cancelation' => $request->free_cancelation ?? $trip->free_cancelation,
+            'available_days' => $request->available_days ?? $trip->available_days,
+            'available_times' => $request->available_times ?? $trip->available_times,
+            'pay_later' => $request->pay_later ?? $trip->pay_later,
+            'city_id' => $request->city_id ?? $trip->city_id,
+            'updated_by' => auth()->user()->id,
+        ];
+        $item = $this->service->update($data, $trip);
+        if ($item) {
+            if ($request->filled('sub_category_ids')) {
+                TripSubCategory::where('trip_id', $trip->id)->delete();
+            }
+            foreach ($request->sub_category_ids as $sub_category_id) {
+                $feature = [
+                    'trip_id' => $trip->id,
+                    'sub_category_id' => $sub_category_id,
+                ];
+                TripSubCategory::create($feature);
+            }
+            if ($request->filled('featurs')) {
+                TripFeature::where('trip_id', $trip->id)->delete();
+            }
+            foreach ($request->featurs as $feature_data) {
+                $feature = [
+                    'trip_id' => $trip->id,
+                    'title_ar' => $feature_data['title_ar'] ?? null,
+                    'title_en' => $feature_data['title_en'] ?? null,
+                    'description_en' => $feature_data['description_en'] ?? null,
+                    'description_ar' => $feature_data['description_ar'] ?? null,
+                ];
+                TripFeature::create($feature);
+            }
+            $images = $request->file('images');
+            if ($request->filled('images')) {
+                Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
+            }
+            foreach ($images as $image) {
+                $storedPath = $this->storageService->storeFile($image, $folder_path);
+                $attachment = [
+                    'model_id' => $trip->id,
+                    'model_type' => 'trip',
+                    'attachment' => $storedPath,
+                    'title' => "trip",
+                ];
+                Attachment::create($attachment);
+            }
+        }
+
+        return response()->apiSuccess($item);
     }
     public function delete(Trip $trip)
     {

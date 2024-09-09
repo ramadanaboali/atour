@@ -1,7 +1,9 @@
     <?php
 
+use App\Http\Controllers\Api\V1\Vendor\EffectivenesController;
 use App\Http\Controllers\Api\V1\Vendor\OrderController;
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
+use App\Http\Controllers\Api\V1\Vendor\GiftController;
 use App\Http\Controllers\Api\V1\Vendor\TripProgramController;
 use App\Http\Controllers\Api\V1\Vendor\TripController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
@@ -73,10 +75,19 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('trips/{trip}', [TripController::class, 'update']);
             Route::delete('trips/{trip}', [TripController::class, 'delete']);
 
+            Route::get('effectivenes', [EffectivenesController::class, 'index']);
+            Route::post('effectivenes', [EffectivenesController::class, 'store']);
+            Route::get('effectivenes/{id}', [EffectivenesController::class, 'show']);
+            Route::put('effectivenes/{effectivenes}', [EffectivenesController::class, 'update']);
+            Route::delete('effectivenes/{effectivenes}', [EffectivenesController::class, 'delete']);
 
+            Route::get('gifts', [GiftController::class, 'index']);
+            Route::post('gifts', [GiftController::class, 'store']);
+            Route::get('gifts/{id}', [GiftController::class, 'show']);
+            Route::put('gifts/{gift}', [GiftController::class, 'update']);
+            Route::delete('gifts/{gift}', [GiftController::class, 'delete']);
 
-
-        //addnewrouteheredontdeletemeplease
+            //addnewrouteheredontdeletemeplease
 
             Route::get('services', [ServiceController::class, 'index']);
             Route::post('services', [ServiceController::class, 'store']);

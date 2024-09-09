@@ -47,36 +47,50 @@ class TripRequest extends FormRequest
                     'city_id' => 'required|exists:cities,id',
                     'images' => 'required|array',
                     'images.*' => 'required|image',
+                    'available_days' => 'required|array',
+                    'available_days.*' => 'required|in:saturday,sunday,monday,tuesday,wednesday,thursday,friday',
                     'featurs' => 'required|array',
                     'featurs.*.title_en' => 'required|string',
+                    'available_times' => 'required|array',
+                    'available_times.*.from_time' => 'required',
+                    'available_times.*.to_time' => 'required',
                     'featurs.*.title_ar' => 'required|string',
                     'featurs.*.description_en' => 'required|string',
                     'featurs.*.description_ar' => 'required|string',
                     'sub_category_ids' => 'required|array',
                     'sub_category_ids.*' => 'required|exists:sub_categories,id',
-                    ];
-                }
+                ];
+            }
             case 'PATCH':
             case 'PUT':
                 {
 
                 return [
-                    'title_en' => 'nullable|string|min:2',
-                    'title_ar' => 'nullable|string|min:2',
-                    'description_en' => 'nullable|string|min:2',
-                    'description_ar' => 'nullable|string|min:2',
-                    'price' => 'nullable|numeric',
-                    'phone' => 'nullable|numeric',
-                    'start_point' => 'nullable',
-                    'end_point' => 'nullable',
-                    'cover' => 'nullable|image',
-                    'free_cancelation' => 'nullable|in:0,1',
-                    'start_point_descriprion_en' => 'nullable|string|min:2',
-                    'end_point_descriprion_en' => 'nullable|string|min:2',
-                    'start_point_descriprion_ar' => 'nullable|string|min:2',
-                    'end_point_descriprion_ar' => 'nullable|string|min:2',
-                    'active' => 'nullable|in:0,1',
-                    'pay_later' => 'nullable|in:0,1',
+                    'title_en' => 'required|string|min:2',
+                    'title_ar' => 'required|string|min:2',
+                    'description_en' => 'required|string|min:2',
+                    'description_ar' => 'required|string|min:2',
+                    'price' => 'required|numeric',
+                    'start_point' => 'required',
+                    'cover' => 'required|image',
+                    'free_cancelation' => 'required|in:0,1',
+                    'active' => 'required|in:0,1',
+                    'pay_later' => 'required|in:0,1',
+                    'city_id' => 'required|exists:cities,id',
+                    'images' => 'required|array',
+                    'images.*' => 'required|image',
+                    'available_days' => 'required|array',
+                    'available_days.*' => 'required|in:saturday,sunday,monday,tuesday,wednesday,thursday,friday',
+                    'featurs' => 'required|array',
+                    'featurs.*.title_en' => 'required|string',
+                    'available_times' => 'required|array',
+                    'available_times.*.from_time' => 'required',
+                    'available_times.*.to_time' => 'required',
+                    'featurs.*.title_ar' => 'required|string',
+                    'featurs.*.description_en' => 'required|string',
+                    'featurs.*.description_ar' => 'required|string',
+                    'sub_category_ids' => 'required|array',
+                    'sub_category_ids.*' => 'required|exists:sub_categories,id',
                     ];
 
                 }
