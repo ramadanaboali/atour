@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\Customer\OrderController;
+use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SettingController;
 use Illuminate\Http\Request;
@@ -24,6 +25,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('reset-password', [AuthController::class, 'resetPassword']);
         Route::post('verify', [AuthController::class, 'verify']);
 
+        //Start Customer Api
+        Route::get('home', [HomeController::class,'home']);
+        Route::get('trips', [HomeController::class,'trips']);
+        Route::get('gifts', [HomeController::class,'gifts']);
+        Route::get('effectivenes', [HomeController::class,'effectivenes']);
+        //End Customer Api
+
         Route::get('privacy', [SettingController::class, 'privacy']);
         Route::get('about', [SettingController::class, 'about']);
         Route::get('terms', [SettingController::class, 'terms']);
@@ -32,9 +40,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('ads', [PageController::class,'ads']);
 
         Route::get('blogs', [PageController::class,'blogs']);
-        Route::get('last-trips', [PageController::class,'lastTrips']);
-        Route::get('trips', [PageController::class,'trips']);
-        Route::get('trips/{id}', [PageController::class,'getTrips']);
+        // Route::get('last-trips', [PageController::class,'lastTrips']);
+        // Route::get('trips', [PageController::class,'trips']);
+        // Route::get('trips/{id}', [PageController::class,'getTrips']);
         Route::get('cities', [PageController::class,'cities']);
         Route::get('cities/{id}', [PageController::class,'getCity']);
         Route::get('currencies', [PageController::class,'currencies']);
@@ -46,12 +54,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('footer', [SettingController::class,'footer']);
         Route::get('jobs', [PageController::class,'jobs']);
 
-        Route::get('search_by_city/{id}', [PageController::class,'searchByCity']);
+        Route::get('search_by_city/{id}', [HomeController::class,'searchByCity']);
         Route::get('city-trips/{id}', [PageController::class,'cityTrips']);
         Route::get('offers', [PageController::class,'getOffers']);
         Route::get('top_cities', [PageController::class,'topCities']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
+            Route::get('favourite', [HomeController::class, 'favourite']);
 
 
             Route::get('orders', [OrderController::class, 'index']);

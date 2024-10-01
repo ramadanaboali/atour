@@ -48,20 +48,7 @@ class PageController extends Controller
         $data = Add::where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
-    public function searchByCity(Request $request, $city_id)
-    {
-
-        $data = City::with(['category','subcategory','city','vendor','programs','attachments','offers'])->where(function ($query) use ($request) {
-            if($request->filled('from')) {
-                $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
-            }
-            if($request->filled('to')) {
-                $query->where('services.created_at', '<=', $request->to . ' 00:00:00');
-            }
-        })->find('id', $city_id);
-
-        return apiResponse(true, $data, null, null, 200);
-    }
+    
     public function getOffers(Request $request)
     {
 

@@ -51,13 +51,19 @@ class City extends Model
     {
         return $this->belongsTo(Country::class,'country_id');
     }
-    public function services(): ?HasMany
-    {
-        return $this->hasMany(Service::class,'city_id');
-    }
+
     public function trips(): ?HasMany
     {
         return $this->hasMany(Trip::class,'city_id');
+    }
+
+    public function gifts(): ?HasMany
+    {
+        return $this->hasMany(Gift::class,'city_id');
+    }
+    public function effectivenes(): ?HasMany
+    {
+        return $this->hasMany(Effectivenes::class,'city_id');
     }
     public function createdBy(): ?BelongsTo
     {
