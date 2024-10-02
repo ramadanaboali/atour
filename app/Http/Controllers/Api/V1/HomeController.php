@@ -33,16 +33,34 @@ class HomeController extends Controller
         $data = TripResource::collection($trips);
         return apiResponse(true, $data, null, null, 200);
     }
+    public function trip($id)
+    {
+        $trip = Trip::findOrFail($id);
+        $data = new TripResource($trip);
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function gifts()
     {
         $gifts = Gift::where('active', true)->get();
         $data = GiftResource::collection($gifts);
         return apiResponse(true, $data, null, null, 200);
     }
+    public function gift($id)
+    {
+        $gift = Gift::findOrFail($id);
+        $data = new GiftResource($gift);
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function effectivenes()
     {
         $effectivenes = Effectivenes::where('active', true)->get();
         $data = EffectivenesResource::collection($effectivenes);
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function effectivene($id)
+    {
+        $effectivene = Effectivenes::findOrFail($id);
+        $data = new EffectivenesResource($effectivene);
         return apiResponse(true, $data, null, null, 200);
     }
     public function favourite()
