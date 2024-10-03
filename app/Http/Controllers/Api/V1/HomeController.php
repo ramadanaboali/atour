@@ -27,6 +27,13 @@ class HomeController extends Controller
 
         return apiResponse(true, $data, null, null, 200);
     }
+    public function cities()
+    {
+        $most_visited = City::where('active', true)->get();
+        $data = CityResource::collection($most_visited);
+     
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function trips()
     {
         $trips = Trip::where('active', true)->get();

@@ -27,12 +27,15 @@ Route::group(['prefix' => 'v1'], function () {
 
         //Start Customer Api
         Route::get('home', [HomeController::class,'home']);
+        Route::get('cities', [HomeController::class,'cities']);
         Route::get('trips', [HomeController::class,'trips']);
         Route::get('gifts', [HomeController::class,'gifts']);
         Route::get('effectivenes', [HomeController::class,'effectivene']);
         Route::get('trips/{id}', [HomeController::class,'trip']);
         Route::get('gifts/{id}', [HomeController::class,'gift']);
         Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
+
+        Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
         //End Customer Api
 
         Route::get('privacy', [SettingController::class, 'privacy']);
