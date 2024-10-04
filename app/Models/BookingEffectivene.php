@@ -7,23 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BookingTrip extends Model
+class BookingEffectivene extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'booking_date',
-        'booking_time',
-        'people_number',
-        'children_number',
         'status',
         'payment_way',
         'payment_id',
         'payment_status',
         'total',
-        'trip_id',
-        'user_id'
+        'effectivene_id',
+        'user_id',
+        'vendor_id'
     ];
-    const STATUS_PENDING = 0;
+        const STATUS_PENDING = 0;
     const STATUS_ACCEPTED = 1;
     const STATUS_COMPLEATED = 2;
     const STATUS_REJECTED = 3;

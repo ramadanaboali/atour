@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 
 class TapService
 {
+    public $callback_url = '';
     public function pay($total)
     {
         try {
@@ -20,7 +21,7 @@ class TapService
             $data["customer"]["phone"]["number"] = auth()->user()->phone;
             $data["merchant"]["id"] = config('tab.merchant_id');
             $data["source"]["id"] = "src_card";
-            $data["redirect"]["url"] = route('callBackTap') ;
+            $data["redirect"]["url"] = $this->callback_url ;
             $curl = curl_init();
             curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.tap.company/v2/charges",
@@ -46,30 +47,40 @@ class TapService
         }
     }
 
-    public function callback($tap_id)
+    public function callback($tap_id, $type)
     {
 
+        if ($type == "trip") {
+            $order = BookingTrip::where('payment_id', $tap_id)->first();
+        } elseif ($type == 'gift') {
+            $order = BookingTrip::where('payment_id', $tap_id)->first();
+        } else {
+            $order = BookingTrip::where('payment_id', $tap_id)->first();
+        }
+        if (!$order) {
+            return ['success' => false,'data' => null,'message' => __('api.order_not_exist')];
+        }
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.tap.company/v2/charges/" . $tap_id,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HTTPHEADER => array(
-            "authorization: Bearer ".config('tab.secret_key'),
-            "content-type: application/json"
-        ),
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $tap_id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer ".config('tab.secret_key'),
+                "content-type: application/json"
+            ),
         ));
         $response = curl_exec($curl);
         $err = curl_error($curl);
         curl_close($curl);
         $result = json_decode($response);
-        $order = BookingTrip::where('payment_id', $tap_id)->first();
+
         $order->payment_status = $result->status;
         if ($result->status == 'CAPTURED') {
             $user = $order->user;
             Mail::to($user->email)->send(new SendOrder($user->email, $order->id));
         }
         $order->save();
-        return json_decode($response, true);
+        return ['success' => true,'data' => json_decode($response, true)];
     }
 
 

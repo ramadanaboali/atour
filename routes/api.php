@@ -66,14 +66,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('top_cities', [PageController::class,'topCities']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
+
             Route::get('favourite', [HomeController::class, 'favourite']);
-
-
-            Route::get('orders', [OrderController::class, 'index']);
-            Route::get('orders/{id}', [OrderController::class, 'show']);
+            Route::get('trip-pay/{id}', [OrderController::class, 'tripPay']);
             Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
-            Route::get('cancel-order/{id}', [OrderController::class, 'cancel']);
-
+            Route::post('/booking-effectivene', [OrderController::class, 'bookingEffectivenes']);
 
             Route::get('rates', [PageController::class, 'getAllRates']);
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);

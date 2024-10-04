@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/tap/callback', [OrderController::class,'callBack'])->name('callBackTap');
+Route::get('/tap/callback/trip', [OrderController::class,'callBackTrip'])->name('callBackTrip');
+Route::get('/tap/callback/gift', [OrderController::class,'callBackGift'])->name('callBackGift');
+Route::get('/tap/callback/effectivenes', [OrderController::class,'callBackEffectivenes'])->name('callBackEffectivenes');
 
 Route::get('/privacy', [HomeController::class, 'privacy']);
 Route::get('/language', [HomeController::class, 'language'])->name('language');
