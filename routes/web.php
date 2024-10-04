@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Customer\OrderController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
+
+Route::get('/tap/callback', [OrderController::class,'callBack'])->name('callBackTap');
+
 Route::get('/privacy', [HomeController::class, 'privacy']);
 Route::get('/language', [HomeController::class, 'language'])->name('language');
 Route::get('/storage-link', function () {

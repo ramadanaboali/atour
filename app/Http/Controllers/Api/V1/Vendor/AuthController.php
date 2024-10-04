@@ -159,18 +159,18 @@ class AuthController extends Controller
             DB::beginTransaction();
             $supplier=Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
-            foreach ($request->category as $category) {
-                SupplierService::create([
-                        'supplier_id'=>$supplier->id,
-                        'category'=>$category,
-                ]);
-            }
-            foreach ($request->sub_category_id as $sub_category_id) {
-                SupplierService::create([
-                        'supplier_id'=>$supplier->id,
-                        'sub_category_id'=>$sub_category_id,
-                ]);
-            }
+            // foreach ($request->category as $category) {
+            //     SupplierService::create([
+            //             'supplier_id'=>$supplier->id,
+            //             'category'=>$category,
+            //     ]);
+            // }
+            // foreach ($request->sub_category_id as $sub_category_id) {
+            //     SupplierService::create([
+            //             'supplier_id'=>$supplier->id,
+            //             'sub_category_id'=>$sub_category_id,
+            //     ]);
+            // }
             DB::commit();
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 

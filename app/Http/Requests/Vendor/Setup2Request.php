@@ -34,10 +34,10 @@ class Setup2Request extends FormRequest
             'description' => 'required|string|min:2',
             'short_description' => 'required|string|min:2',
             'url' => 'nullable|string|min:2',
-            'category'=>'required|array',
-            'category.*'=>'required|in:gift,trip,effectiveness',
-            'sub_category_id'=>'required|array',
-            'sub_category_id.*'=>'required|exists:sub_categories,id',
+            // 'category'=>'required|array',
+            // 'category.*'=>'required|in:gift,trip,effectiveness',
+            // 'sub_category_id'=>'required|array',
+            // 'sub_category_id.*'=>'required|exists:sub_categories,id',
 
         ];
 

@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Api\V1\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
-use App\Http\Requests\Customer\OrderRequest;
+use App\Http\Requests\Customer\BookingTripRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\BookingTrip;
 use App\Models\Order;
+use App\Models\Trip;
 use App\Services\General\StorageService;
 use App\Services\Customer\OrderService;
+use App\Services\TapService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
 use function response;
@@ -35,7 +39,7 @@ class OrderController extends Controller
             $wheres = $this->service->whereOptions($input, $columns);
         }
         $data = $this->service->Paginate($input, $wheres);
-        $data=OrderResource::collection($data);
+        $data = OrderResource::collection($data);
         return response()->apiSuccess($data);
 
     }
@@ -46,34 +50,41 @@ class OrderController extends Controller
         return response()->apiSuccess($data);
     }
 
-    public function store(OrderRequest $request)
+    public function bookingTrip(BookingTripRequest $request)
     {
-
-        $data = $request->except(['cover']);
-
+        $trip = Trip::findOrFail($request->trip_id);
+        $data = $request->all();
         $data['user_id'] = auth()->user()->id;
-        $order = $this->service->createItem($data);
+        $data['payment_status'] = 'pendding';
+        $data['status'] = 0;
+        $data['total'] = $trip->price;
+        $data['vendor_id'] = $trip->vendor_id;
+        $order = BookingTrip::create($data);
+        if ($request->payment_way == 'online') {
+            $payment = new TapService();
+            $tap = $payment->pay($trip->price);
+            if ($tap['success']) {
+                $order->payment_id = $tap['data']['id'];
+                $order->save();
+            }
+            return response()->apiSuccess($tap);
+        }
         $order = new OrderResource($order);
         return response()->apiSuccess($order);
     }
 
-    public function update(OrderRequest $request, Order $trip)
+    public function callBack(Request $request)
     {
 
-        $data = $request->except(['cover','_method']);
-        if ($request->hasFile('cover')) {
-            $folder_path = "images/Order";
-            $storedPath = null;
-            $file = $request->file('cover');
-            $storedPath = $this->storageService->storeFile($file, $folder_path);
-            $data['cover'] = $storedPath;
-        }
-        return response()->apiSuccess($this->service->update($data, $trip));
+        $payment = new TapService();
+        $result = $payment->callBack($request->tap_id);
+        return response()->apiSuccess($result);
+
     }
     public function cancel($id)
     {
         $order = $this->service->get($id);
-        $data = ['status'=>Order::STATUS_CANCELED];
+        $data = ['status' => Order::STATUS_CANCELED];
         return response()->apiSuccess($this->service->update($data, $order));
     }
     public function delete(Order $trip)

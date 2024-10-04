@@ -71,7 +71,7 @@ Route::group(['prefix' => 'v1'], function () {
 
             Route::get('orders', [OrderController::class, 'index']);
             Route::get('orders/{id}', [OrderController::class, 'show']);
-            Route::post('orders', [OrderController::class, 'store']);
+            Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
             Route::get('cancel-order/{id}', [OrderController::class, 'cancel']);
 
 
