@@ -67,10 +67,14 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
 
+            Route::get('bookings', [OrderController::class, 'bookings']);
             Route::get('favourite', [HomeController::class, 'favourite']);
-            Route::get('trip-pay/{id}', [OrderController::class, 'tripPay']);
             Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
-            Route::post('/booking-effectivene', [OrderController::class, 'bookingEffectivenes']);
+            Route::get('trip-pay/{id}', [OrderController::class, 'tripPay']);
+            Route::post('booking-effectivene', [OrderController::class, 'bookingEffectivenes']);
+            Route::get('effectivene-pay/{id}', [OrderController::class, 'effectivenePay']);
+            Route::post('booking-gift', [OrderController::class, 'bookingGifts']);
+            Route::get('gift-pay/{id}', [OrderController::class, 'giftPay']);
 
             Route::get('rates', [PageController::class, 'getAllRates']);
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);

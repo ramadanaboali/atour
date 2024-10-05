@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Mail\SendOrder;
+use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
 use App\Models\BookingTrip;
 use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
@@ -49,17 +51,17 @@ class TapService
 
     public function callback($tap_id, $type)
     {
-
         if ($type == "trip") {
             $order = BookingTrip::where('payment_id', $tap_id)->first();
         } elseif ($type == 'gift') {
-            $order = BookingTrip::where('payment_id', $tap_id)->first();
+            $order = BookingGift::where('payment_id', $tap_id)->first();
         } else {
-            $order = BookingTrip::where('payment_id', $tap_id)->first();
+            $order = BookingEffectivene::where('payment_id', $tap_id)->first();
         }
         if (!$order) {
             return ['success' => false,'data' => null,'message' => __('api.order_not_exist')];
         }
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.tap.company/v2/charges/" . $tap_id,

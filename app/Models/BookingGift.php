@@ -7,34 +7,38 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BookingEffectivene extends Model
+class BookingGift extends Model
 {
     use HasFactory,SoftDeletes;
-    protected $fillable = [
+     protected $fillable = [
         'status',
         'payment_way',
         'payment_id',
         'payment_status',
         'total',
-        'effectivene_id',
+        'gift_id',
+        'delivery_way',
+        'delivery_address',
+        'quntity',
         'user_id',
         'vendor_id'
     ];
         const STATUS_PENDING = 0;
-    const STATUS_ACCEPTED = 1;
-    const STATUS_COMPLEATED = 2;
-    const STATUS_REJECTED = 3;
-    const STATUS_CANCELED = 4;
+        const STATUS_ACCEPTED = 1;
+        const STATUS_COMPLEATED = 2;
+        const STATUS_REJECTED = 3;
+        const STATUS_CANCELED = 4;
      public function user() :?BelongsTo
      {
         return $this->belongsTo(User::class);
      }
-     public function effectivene() :?BelongsTo
+     public function gift() :?BelongsTo
      {
-        return $this->belongsTo(Effectivenes::class,'effectivene_id');
+        return $this->belongsTo(Gift::class);
      }
      public function vendor() :?BelongsTo
      {
         return $this->belongsTo(User::class,'vendor_id');
      }
+
 }
