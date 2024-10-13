@@ -68,6 +68,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => 'auth:sanctum'], function () {
 
             Route::get('bookings', [OrderController::class, 'bookings']);
+            Route::get('save-favourite/{type}/{id}', [HomeController::class, 'saveFavourite']);
+            Route::get('remove-favourite/{type}/{id}', [HomeController::class, 'deleteFavourite']);
             Route::get('favourite', [HomeController::class, 'favourite']);
             Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
             Route::get('trip-pay/{id}', [OrderController::class, 'tripPay']);

@@ -10,19 +10,25 @@ class Favorite extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'active',
         'user_id',
-        'trip_id',
-        'created_by',
-        'updated_by'
+        'model_id',
+        'model_type',
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function gift()
+    {
+        return $this->belongsTo(Gift::class,'model_id');
+    }
     public function trip()
     {
-        return $this->belongsTo(Trip::class);
+        return $this->belongsTo(Trip::class,'model_id');
+    }
+    public function effectivene()
+    {
+        return $this->belongsTo(Effectivenes::class,'model_id');
     }
 
 }
