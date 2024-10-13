@@ -3,55 +3,61 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\PaginateRequest;
-use App\Http\Requests\Vendor\OrderStatusRequest;
-use App\Http\Resources\OrderResource;
-use App\Models\Order;
-use App\Services\General\StorageService;
-use App\Services\Customer\OrderService;
+use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
+use App\Models\BookingTrip;
+use Carbon\Carbon;
 
 use function response;
 
 class OrderController extends Controller
 {
-    protected OrderService $service;
-    protected StorageService $storageService;
-
-    public function __construct(OrderService $service, StorageService $storageService)
+    public function walletPage()
     {
-        $this->storageService = $storageService;
-        $this->service = $service;
-    }
-    public function index(PaginateRequest $request)
-    {
-        $orders = $this->service->getOrders();
-        $data = OrderResource::collection($orders);
-        return response()->apiSuccess($data);
 
-    }
-
-    public function show($id)
-    {
-        $data = new OrderResource($this->service->getOrder($id));
+        $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->where('status', BookingGift::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->where('status', BookingEffectivene::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->where('status', BookingTrip::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['profit'] = 0;
+        $data['debit'] = 0;
+        $data['day_invoice']['gifts'] = BookingGift::with(['gift', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
+        $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
+        $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
         return response()->apiSuccess($data);
     }
-
-    public function updateStatus(OrderStatusRequest $request)
+    public function invoices()
     {
-        $data['status'] = $request->status;
-        $item = $this->service->getOrder($request->order_id);
-        if (empty($item)) {
-            return response()->apiFail(__('api.order_not_exist'));
+
+        $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->where('vendor_id', auth()->user()->id)->get();
+        return response()->apiSuccess($data);
+    }
+    public function acceptOrder($type,$id)
+    {
+        if($type == 'gift'){
+            $order = BookingGift::findOrFail( $id );
+        } elseif ($type == 'effectivene') {
+            $order = BookingEffectivene::findOrFail( $id );
+        }else{
+            $order = BookingTrip::findOrFail( $id );
         }
-        $order = $this->service->update($data,$item);
+        $order->status = BookingTrip::STATUS_ACCEPTED;
+        $order->save();
         return response()->apiSuccess($order);
     }
-
-
-    public function delete(Order $trip)
+    public function cancelOrder($type,$id)
     {
-
-        return response()->apiSuccess($this->service->delete($trip));
+        if($type == 'gift'){
+            $order = BookingGift::findOrFail( $id );
+        } elseif ($type == 'effectivene') {
+            $order = BookingEffectivene::findOrFail( $id );
+        }else{
+            $order = BookingTrip::findOrFail( $id );
+        }
+        $order->status = BookingTrip::STATUS_CANCELED;
+        $order->save();
+        return response()->apiSuccess($order);
     }
 
 }
