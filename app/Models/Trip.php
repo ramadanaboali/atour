@@ -71,7 +71,7 @@ class Trip extends Model
 
     public function subcategory(): ?BelongsToMany
     {
-        return $this->belongsToMany(Subcategory::class, TripSubCategory::class, 'trip_id', 'sub_category_id');
+        return $this->belongsToMany(SubCategory::class, TripSubCategory::class, 'trip_id', 'sub_category_id');
     }
     public function city(): ?BelongsTo
     {
