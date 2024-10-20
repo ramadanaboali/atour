@@ -14,7 +14,7 @@ class Slider extends Model
     protected $appends = ['photo','title','description'];
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/sliders/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/' . $this->attributes['image']) : null) : null;
 
     }
     public function getTitleAttribute()

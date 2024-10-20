@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SliderRequest;
 use App\Models\Slider;
+use App\Services\General\StorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,14 @@ class SliderController extends Controller
     private $viewEdit   = 'admin.pages.sliders.create_edit';
     private $viewShow   = 'admin.pages.sliders.show';
     private $route      = 'admin.sliders';
+    protected StorageService $storageService;
 
+    public function __construct(StorageService $storageService)
+    {
+
+        $this->storageService = $storageService;
+
+    }
     public function index(Request $request): View
     {
         return view($this->viewIndex, get_defined_vars());
@@ -74,15 +82,14 @@ class SliderController extends Controller
 
         $item = $item->fill($data);
         if ($item->save()) {
+        $folder_path = "sliders";
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $item->image  = $this->storageService->storeFile($file, $folder_path);
+            $item->save();
+        }
 
 
-            if ($request->hasFile('image')) {
-                $image= $request->file('image');
-                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $request->image->move(public_path('storage/sliders'), $fileName);
-                $item->image = $fileName;
-                $item->save();
-            }
             return $item;
         }
         return null;

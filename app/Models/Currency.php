@@ -26,7 +26,7 @@ class Currency extends Model
     protected $appends = ['text','photo','title','codex'];
     public function getPhotoAttribute()
     {
-        return array_key_exists('flag', $this->attributes) ? ($this->attributes['flag'] != null ? asset('storage/currencies/' . $this->attributes['flag']) : null) : null;
+        return array_key_exists('flag', $this->attributes) ? ($this->attributes['flag'] != null ? asset('storage/' . $this->attributes['flag']) : null) : null;
 
     }
     public function getTextAttribute()
