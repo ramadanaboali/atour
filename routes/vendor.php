@@ -4,7 +4,6 @@ use App\Http\Controllers\Api\V1\Vendor\EffectivenesController;
 use App\Http\Controllers\Api\V1\Vendor\OrderController;
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\GiftController;
-use App\Http\Controllers\Api\V1\Vendor\TripProgramController;
 use App\Http\Controllers\Api\V1\Vendor\TripController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use Illuminate\Http\Request;
@@ -94,10 +93,12 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('services/{services}', [ServiceController::class, 'show']);
             Route::put('services/{services}', [ServiceController::class, 'update']);
 
-            Route::post('orders/status', [OrderController::class, 'updateStatus']);
-            Route::get('orders', [OrderController::class, 'index']);
-            Route::get('orders/{id}', [OrderController::class, 'index']);
 
+            Route::get('wallet-page', [OrderController::class, 'walletPage']);
+            Route::get('invoices', [OrderController::class, 'invoices']);
+            // Route::get('invoices', [OrderController::class, 'invoices']);
+            Route::get('accept/{type}/{id}', [OrderController::class, 'acceptOrder']);
+            Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
 
         });
     });

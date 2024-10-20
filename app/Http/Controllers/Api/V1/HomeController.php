@@ -31,7 +31,7 @@ class HomeController extends Controller
     {
         $most_visited = City::where('active', true)->get();
         $data = CityResource::collection($most_visited);
-     
+
         return apiResponse(true, $data, null, null, 200);
     }
     public function trips()
@@ -69,6 +69,24 @@ class HomeController extends Controller
         $effectivene = Effectivenes::findOrFail($id);
         $data = new EffectivenesResource($effectivene);
         return apiResponse(true, $data, null, null, 200);
+    }
+    public function saveFavourite($type, $id)
+    {
+        $data = [
+            'model_type' => $type,
+            'model_id' => $id,
+            'user_id' => auth()->user()->id
+        ];
+        $favourit = Favorite::create($data);
+        return response()->apiSuccess($favourit);
+
+    }
+    public function deleteFavourite($type, $id)
+    {
+        
+        $favourit = Favorite::where('model_type',$type)->where('model_id',$id)->where('user_id', auth()->user()->id)->delete();
+        return response()->apiSuccess($favourit);
+
     }
     public function favourite()
     {

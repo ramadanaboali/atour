@@ -16,14 +16,10 @@ class OrderService extends AbstractService
 
 
     public function getOrders(){
-        return Order::whereHas('trip', function ($q) {
-            $q->where('vendor_id', auth()->user()->id);
-        })->get();
+        return Order::where('vendor_id', auth()->user()->id)->get();
     }
     public function getOrder($id){
-        return Order::whereHas('trip', function ($q) {
-            $q->where('vendor_id', auth()->user()->id);
-        })->find($id);
+        return Order::where('vendor_id', auth()->user()->id)->find($id);
     }
 
     public function createItem(array $inputs){
