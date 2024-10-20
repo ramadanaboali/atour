@@ -61,7 +61,7 @@ class Gift extends Model
 
     public function subcategory(): ?BelongsToMany
     {
-        return $this->belongsToMany(Subcategory::class, GiftSubCategory::class, 'gift_id', 'sub_category_id');
+        return $this->belongsToMany(SubCategory::class, GiftSubCategory::class, 'gift_id', 'sub_category_id');
     }
     public function city(): ?BelongsTo
     {
