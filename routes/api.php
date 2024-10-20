@@ -46,7 +46,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('ads', [PageController::class,'ads']);
 
         Route::get('blogs', [PageController::class,'blogs']);
-        // Route::get('last-trips', [PageController::class,'lastTrips']);
+//         Route::get('last-trips', [PageController::class,'lastTrips']);
         // Route::get('trips', [PageController::class,'trips']);
         // Route::get('trips/{id}', [PageController::class,'getTrips']);
         Route::get('cities', [PageController::class,'cities']);
