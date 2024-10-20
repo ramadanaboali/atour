@@ -110,7 +110,7 @@ class JobController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Job::select('*');
+        $data = Job::with('department')->select('*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
         ->addColumn('department', function ($item) {

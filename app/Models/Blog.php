@@ -27,12 +27,12 @@ class Blog extends Model
 
     public function getPhotoAttribute()
     {
-        return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/blogs/' . $this->attributes['cover']) : null) : null;
+        return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/' . $this->attributes['cover']) : null) : null;
 
     }
     public function getPublisherphotoAttribute()
     {
-        return array_key_exists('publisher_image', $this->attributes) ? ($this->attributes['publisher_image'] != null ? asset('storage/blogs/' . $this->attributes['publisher_image']) : null) : null;
+        return array_key_exists('publisher_image', $this->attributes) ? ($this->attributes['publisher_image'] != null ? asset('storage/' . $this->attributes['publisher_image']) : null) : null;
 
     }
 

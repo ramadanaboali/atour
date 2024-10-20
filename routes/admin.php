@@ -215,6 +215,20 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+
+            Route::get('faqs/select', [App\Http\Controllers\Admin\FAQController::class, 'select'])->name('faqs.select');
+            Route::delete('faqs/bulk', [App\Http\Controllers\Admin\FAQController::class, 'deleteBulk'])->name('faqs.deleteBulk')->middleware('adminPermission:faqs.delete');
+            Route::get('faqs/list', [App\Http\Controllers\Admin\FAQController::class, 'list'])->name('faqs.list')->middleware('adminPermission:faqs.view');
+            Route::post('faqs', [App\Http\Controllers\Admin\FAQController::class, 'store'])->name('faqs.store')->middleware('adminPermission:faqs.create');
+            Route::delete('faqs/{id}', [App\Http\Controllers\Admin\FAQController::class, 'destroy'])->name('faqs.destroy')->middleware('adminPermission:faqs.delete');
+            Route::get('faqs', [App\Http\Controllers\Admin\FAQController::class, 'index'])->name('faqs.index')->middleware('adminPermission:faqs.view');
+            Route::get('faqs/create', [App\Http\Controllers\Admin\FAQController::class, 'create'])->name('faqs.create')->middleware('adminPermission:faqs.create');
+            Route::match(['PUT', 'PATCH'], 'faqs/{id}', [App\Http\Controllers\Admin\FAQController::class, 'update'])->name('faqs.update')->middleware('adminPermission:faqs.edit');
+            Route::get('faqs/{id}/edit', [App\Http\Controllers\Admin\FAQController::class, 'edit'])->name('faqs.edit')->middleware('adminPermission:faqs.edit');
+
+
+
+
             Route::get('offers/select', [App\Http\Controllers\Admin\OfferController::class, 'select'])->name('offers.select');
             Route::delete('offers/bulk', [App\Http\Controllers\Admin\OfferController::class, 'deleteBulk'])->name('offers.deleteBulk')->middleware('adminPermission:offers.delete');
             Route::get('offers/list', [App\Http\Controllers\Admin\OfferController::class, 'list'])->name('offers.list')->middleware('adminPermission:offers.view');

@@ -14,6 +14,7 @@ return [
     'articles_news' => 'المقالات والاخبار',
     'users_roles' => 'المستخدمين والصلاحيات',
     'jobs' => 'الوظائف',
+    'faqs' => 'FAQ',
     'messages' => [
         'message_sent_successfully' => 'تم ارسال الرسالة بنجاح',
         'created' => 'تمت الاضافة بنجاح.',

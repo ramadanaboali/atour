@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    <title>{{ config('app.name') }} | {{ __('jobs.plural') }}</title>
+    <title>{{ config('app.name') }} | {{ __('faqs.plural') }}</title>
 @endsection
 @section('content')
     <div class="content-header row">
@@ -9,18 +9,18 @@
                 <div class="col-12">
                     <h1 class="bold mb-0 mt-1 text-dark">
                         <i data-feather="box" class="font-medium-2"></i>
-                        <span>{{ __('jobs.plural') }}</span>
+                        <span>{{ __('faqs.plural') }}</span>
                     </h1>
                 </div>
             </div>
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                @can('jobs.create')
+                @can('faqs.create')
                     <div class="dropdown">
-                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.jobs.create') }}">
+                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.faqs.create') }}">
                             <i data-feather="plus"></i>
-                            <span class="active-sorting text-primary">{{ __('jobs.actions.create') }}</span>
+                            <span class="active-sorting text-primary">{{ __('faqs.actions.create') }}</span>
                         </a>
                     </div>
                 @endcan
@@ -33,14 +33,11 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('jobs.title') }}</th>
-                        <th>{{ __('jobs.active') }}</th>
-                        <th>{{ __('jobs.location') }}</th>
-                        <th>{{ __('articles.start_date') }}</th>
-                        <th>{{ __('articles.end_date') }}</th>
-                        <th>{{ __('jobs.department') }}</th>
-                        @canany('jobs.edit','jobs.delete')
-                            <th width="15%" class="text-center">{{ __('jobs.options') }}</th>
+                        <th>{{ __('faqs.default.name') }}</th>
+                        <th>{{ __('faqs.url') }}</th>
+                        <th>{{ __('faqs.photo') }}</th>
+                        @canany('faqs.edit','faqs.delete')
+                            <th width="15%" class="text-center">{{ __('faqs.options') }}</th>
                         @endcanany
                     </tr>
                     </thead>
@@ -68,7 +65,7 @@
                 }
             },
             ajax: {
-                url: "{{ route('admin.jobs.list') }}",
+                url: "{{ route('admin.faqs.list') }}",
                 data: function (d) {
                     d.name   = $('#filterForm #name').val();
                 }
@@ -79,25 +76,22 @@
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
                 {data: 'title', name: 'title',orderable: false},
-                {data: 'active', name: 'active'},
-                {data: 'location', name: 'location'},
-                {data: 'start_date', name: 'start_date'},
-                {data: 'end_date', name: 'end_date'},
-                {data: 'department', name: 'department.title_en'},
-                @canany('jobs.edit','jobs.delete')
+                {data: 'url', name: 'url'},
+                {data: 'photo', name: 'photo'},
+                @canany('faqs.edit','faqs.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany
             ],
             columnDefs: [
 
-                @canany('jobs.edit','jobs.delete')
+                @canany('faqs.edit','faqs.delete')
                 {
                     "targets": -1,
                     "render": function (data, type, row) {
-                        var editUrl = '{{ route("admin.jobs.edit", ":id") }}';
+                        var editUrl = '{{ route("admin.faqs.edit", ":id") }}';
                         editUrl = editUrl.replace(':id', row.id);
 
-                        var deleteUrl = '{{ route("admin.jobs.destroy", ":id") }}';
+                        var deleteUrl = '{{ route("admin.faqs.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
 
                         return `
@@ -106,16 +100,16 @@
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        @can('jobs.edit')
+                                        @can('faqs.edit')
                         <a class="dropdown-item" href="`+editUrl+`">
                                         <i data-feather="edit-2" class="font-medium-2"></i>
-                                            <span>{{ __('jobs.actions.edit') }}</span>
+                                            <span>{{ __('faqs.actions.edit') }}</span>
                                         </a>
                                         @endcan
-                        @can('jobs.delete')
+                        @can('faqs.delete')
                         <a class="dropdown-item delete_item" data-url="`+deleteUrl+`" href="#">
                                             <i data-feather="trash" class="font-medium-2"></i>
-                                             <span>{{ __('jobs.actions.delete') }}</span>
+                                             <span>{{ __('faqs.actions.delete') }}</span>
                                         </a>
                                         @endcan
                         </div>

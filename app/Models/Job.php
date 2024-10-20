@@ -12,6 +12,7 @@ class Job extends Model
     use HasFactory,SoftDeletes;
     protected $fillable = ['title_en','title_ar', 'image','active','location','start_date','end_date','department_id','created_by','updated_by'];
 
+    protected $appends = ['title'];
     public function department(){
         return $this->belongsTo(Department::class);
     }

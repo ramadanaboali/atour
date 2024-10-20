@@ -165,6 +165,12 @@
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.jobs') }}</span>
                 </a>
             </li>
+            <li>
+                <a class="d-flex align-items-center" href="{{ route('admin.faqs.index') }}">
+                    <i data-feather="image"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.faqs') }}</span>
+                </a>
+            </li>
               <li class=" nav-item {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'open active' : '' }} ">
                 <a class="d-flex align-items-center {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'active' : '' }}" href="#">
                     <i data-feather="user"></i>
@@ -287,7 +293,7 @@
                                 </a>
                             </li>
                         @endcan
-                         
+
                          @can('sub_categories.view')
                             <li>
                                 <a class='d-flex align-items-center' href='{{ route('admin.sub_categories.index') }} '>

@@ -133,7 +133,7 @@ input[type="file"] {
                             @enderror
                             <div>
                                 <br>
-                                @if(isset($item) && !empty($item->image))
+                                @if(isset($item) && !empty($item->cover))
                                     <img src="{{ $item->photo }}"
                                          class="img-fluid img-thumbnail">
                                 @endif

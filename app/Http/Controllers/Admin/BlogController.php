@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogRequest;
 use App\Models\Attachment;
 use App\Models\Blog;
+use App\Services\General\StorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,14 @@ class BlogController extends Controller
     private $viewEdit   = 'admin.pages.blogs.create_edit';
     private $viewShow   = 'admin.pages.blogs.show';
     private $route      = 'admin.blogs';
+    protected StorageService $storageService;
+
+    public function __construct(StorageService $storageService)
+    {
+
+        $this->storageService = $storageService;
+
+    }
 
     public function index(Request $request): View
     {
@@ -60,17 +69,17 @@ class BlogController extends Controller
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Blog::distinct()
-                ->where('active',true)
-                ->where(function ($query) use ($request) {
-                if ($request->filled('q')) {
-                    if(App::isLocale('en')) {
-                        return $query->where('title_en', 'like', '%'.$request->q.'%');
-                    } else {
-                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                    }
-                }
-                })->select('id', 'title_en', 'title_ar')->get();
+        $data = Blog::distinct()
+                 ->where('active', true)
+                 ->where(function ($query) use ($request) {
+                     if ($request->filled('q')) {
+                         if (App::isLocale('en')) {
+                             return $query->where('title_en', 'like', '%'.$request->q.'%');
+                         } else {
+                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                         }
+                     }
+                 })->select('id', 'title_en', 'title_ar')->get();
 
         if ($request->filled('pure_select')) {
             $html = '<option value="">'. __('category.select') .'</option>';
@@ -95,39 +104,38 @@ class BlogController extends Controller
     protected function processForm($request, $id = null): Blog|null
     {
         $item = $id == null ? new Blog() : Blog::find($id);
-        $data= $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-        if($request->filled('active')){
+        if ($request->filled('active')) {
             $item->active = 1;
-        }else{
+        } else {
             $item->active = 0;
         }
         if ($id == null) {
             $item->created_by = auth()->user()->id;
-        }else{
+        } else {
             $item->updated_by = auth()->user()->id;
         }
         if ($item->save()) {
 
+
+            $folder_path = "blogs";
             if ($request->hasFile('image')) {
-                $image= $request->file('image');
-                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $request->image->move(public_path('storage/blogs'), $fileName);
-                $item->cover = $fileName;
+                $file = $request->file('image');
+                $item->cover  = $this->storageService->storeFile($file, $folder_path);
                 $item->save();
             }
             if ($request->hasFile('publisher_image')) {
-                $publisher_image= $request->file('publisher_image');
-                $fileName = time() . rand(0, 999999999) . '.' . $publisher_image->getClientOriginalExtension();
-                $request->publisher_image->move(public_path('storage/blogs'), $fileName);
-                $item->cover = $fileName;
+                $file = $request->file('publisher_image');
+                $item->publisher_image  = $this->storageService->storeFile($file, $folder_path);
                 $item->save();
             }
 
+
             if ($request->editimages) {
 
-            Attachment::whereNotIn('id', $request->editimages)->where('model_type', 'blog')->where('model_id', $item->id)->delete();
+                Attachment::whereNotIn('id', $request->editimages)->where('model_type', 'blog')->where('model_id', $item->id)->delete();
             }
             if ($request->images) {
                 for ($i = 0; $i < count($request->images); $i++) {
@@ -160,15 +168,15 @@ class BlogController extends Controller
             return '<img src="' . $item->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
         ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+            if (App::isLocale('en')) {
+                return $query->where('title_en', 'like', '%'.$keyword.'%');
+            } else {
+                return $query->where('title_ar', 'like', '%'.$keyword.'%');
+            }
+        })
         ->rawColumns(['photo','active'])
         ->make(true);
     }
