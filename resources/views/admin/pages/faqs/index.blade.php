@@ -33,9 +33,7 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('faqs.default.name') }}</th>
-                        <th>{{ __('faqs.url') }}</th>
-                        <th>{{ __('faqs.photo') }}</th>
+                        <th>{{ __('admin.question') }}</th>
                         @canany('faqs.edit','faqs.delete')
                             <th width="15%" class="text-center">{{ __('faqs.options') }}</th>
                         @endcanany
@@ -75,9 +73,7 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
-                {data: 'url', name: 'url'},
-                {data: 'photo', name: 'photo'},
+                {data: 'question', name: 'question'},
                 @canany('faqs.edit','faqs.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany

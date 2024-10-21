@@ -26,6 +26,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('verify', [AuthController::class, 'verify']);
 
         //Start Customer Api
+        Route::get('faqs', [HomeController::class,'faqs']);
         Route::get('home', [HomeController::class,'home']);
         Route::get('cities', [HomeController::class,'cities']);
         Route::get('trips', [HomeController::class,'trips']);

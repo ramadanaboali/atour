@@ -1,5 +1,6 @@
     <?php
 
+use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\Vendor\EffectivenesController;
 use App\Http\Controllers\Api\V1\Vendor\OrderController;
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
@@ -59,6 +60,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('articles', [App\Http\Controllers\Api\V1\PageController::class,'articles']);
         Route::get('footer', [App\Http\Controllers\Api\V1\SettingController::class,'footer']);
         Route::get('jobs', [App\Http\Controllers\Api\V1\PageController::class,'jobs']);
+
+        Route::get('faqs', [HomeController::class,'faqs']);
+
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////

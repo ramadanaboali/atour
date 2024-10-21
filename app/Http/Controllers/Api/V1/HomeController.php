@@ -9,6 +9,7 @@ use App\Http\Resources\GiftResource;
 use App\Http\Resources\TripResource;
 use App\Models\City;
 use App\Models\Effectivenes;
+use App\Models\FAQ;
 use App\Models\Favorite;
 use App\Models\Gift;
 use App\Models\Trip;
@@ -83,7 +84,7 @@ class HomeController extends Controller
     }
     public function deleteFavourite($type, $id)
     {
-        
+
         $favourit = Favorite::where('model_type',$type)->where('model_id',$id)->where('user_id', auth()->user()->id)->delete();
         return response()->apiSuccess($favourit);
 
@@ -97,6 +98,13 @@ class HomeController extends Controller
     {
 
         $data = City::with(['trips', 'gifts', 'effectivenes'])->find($city_id);
+
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function faqs(Request $request)
+    {
+
+        $data = FAQ::get();
 
         return apiResponse(true, $data, null, null, 200);
     }
