@@ -100,9 +100,11 @@ Route::group(['prefix' => 'v1'], function () {
 
             Route::get('wallet-page', [OrderController::class, 'walletPage']);
             Route::get('invoices', [OrderController::class, 'invoices']);
+            Route::get('pendding-orders', [OrderController::class, 'penddingRequests']);
             // Route::get('invoices', [OrderController::class, 'invoices']);
             Route::get('accept/{type}/{id}', [OrderController::class, 'acceptOrder']);
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
+            Route::get('orders/{type}/{id}', [OrderController::class, 'showOrder']);
 
         });
     });

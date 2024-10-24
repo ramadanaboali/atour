@@ -48,15 +48,15 @@ class PageController extends Controller
         $data = Add::where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
-    
+
     public function getOffers(Request $request)
     {
 
         $data = Trip::with(['category','subcategory','city','vendor','programs','attachments','offers'])->where(function ($query) use ($request) {
-            if($request->filled('from')) {
+            if ($request->filled('from')) {
                 $query->where('services.created_at', '>=', $request->from . ' 00:00:00');
             }
-            if($request->filled('to')) {
+            if ($request->filled('to')) {
                 $query->where('services.created_at', '<=', $request->to . ' 00:00:00');
             }
         })->orderBy('id', 'desc')->get();
@@ -66,10 +66,10 @@ class PageController extends Controller
     {
         $data =
         Trip::with(['programs','offers','city','category','subcategory'])->where(function ($query) use ($request) {
-            if($request->filled('from')) {
+            if ($request->filled('from')) {
                 $query->where('created_at', '>=', $request->from . ' 00:00:00');
             }
-            if($request->filled('to')) {
+            if ($request->filled('to')) {
                 $query->where('created_at', '<=', $request->to . ' 00:00:00');
             }
         })->orderBy('id', 'desc')->get();
@@ -80,13 +80,13 @@ class PageController extends Controller
     {
         $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory'])->leftJoin('trips', 'trips.city_id', 'cities.id')->where(function ($query) use ($request) {
 
-            if($request->filled('price_from')) {
+            if ($request->filled('price_from')) {
                 $query->where('trips.price', '>=', $request->from);
             }
-            if($request->filled('price_to')) {
+            if ($request->filled('price_to')) {
                 $query->where('trips.price', '<=', $request->to);
             }
-            if($request->filled('price_to')) {
+            if ($request->filled('price_to')) {
                 $query->where('trips.price', '<=', $request->to);
             }
 
@@ -99,7 +99,7 @@ class PageController extends Controller
         // $result = CityResource::collection($data);
         return apiResponse(true, $data, null, null, 200);
     }
-    public function getCity(Request $request,$id)
+    public function getCity(Request $request, $id)
     {
         $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory','trips.attachments'])->find($id);
         return apiResponse(true, $data, null, null, 200);
@@ -232,6 +232,7 @@ class PageController extends Controller
             'model_id' => $request->model_id,
             'model_type' => $request->model_type,
             'comment' => $request->comment,
+            'trip_id' => $request->model_type == "trip" ? $request->model_id : null,
             'user_id' => auth()->user()->id
         ];
         $data = Rate::create($data);
