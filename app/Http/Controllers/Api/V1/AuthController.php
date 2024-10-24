@@ -271,14 +271,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $accessToken = Auth::user()->token();
-        DB::table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id)
-            ->update([
-                'revoked' => true
-            ]);
-
-        $accessToken->revoke();
+        Auth::user()->currentAccessToken()->delete();
+//        $accessToken = Auth::user()->token();
+//        DB::table('oauth_refresh_tokens')
+//            ->where('access_token_id', $accessToken->id)
+//            ->update([
+//                'revoked' => true
+//            ]);
+//
+//        $accessToken->revoke();
         $data['message'] = 'Logout successfully';
         return $this->successResponse($data, Response::HTTP_CREATED);
     }
