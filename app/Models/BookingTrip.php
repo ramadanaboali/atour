@@ -21,6 +21,7 @@ class BookingTrip extends Model
         'payment_status',
         'total',
         'trip_id',
+        'vendor_id',
         'user_id'
     ];
     const STATUS_PENDING = 0;

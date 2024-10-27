@@ -10,57 +10,26 @@ use Illuminate\Support\Facades\App;
 class Offer extends Model
 {
     use HasFactory;
-    use SoftDeletes;
     protected $fillable = [
-        'description_en',
-        'description_ar',
-        'discount',
-        'start_date',
-        'end_date',
-        'title_en',
-        'title_ar',
+        'title',
+        'description',
+        'image',
         'active',
-        'user_id',
-        'created_by',
-        'updated_by'
+        'vendor_id',
+        'trip_id',
     ];
     protected $table = 'offers';
-    protected $appends = ['title','text','description'];
+    protected $appends = ['photo'];
 
-    public function supplier(){
-        return $this->belongsTo(User::class,'user_id');
-    }
-  
-    public function benfits_numbers()
+    public function getPhotoAttribute()
     {
-        return 0;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/' . $this->attributes['image']) : null) : null;
     }
-
-    public function getTextAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+    public function vendor(){
+        return $this->belongsTo(User::class,'vendor_id');
     }
-
-
-    public function getTitleAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
-    public function getDescriptionAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
-        } else {
-            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
-        }
+    public function trip(){
+        return $this->belongsTo(Trip::class,'trip_id');
     }
 
 }

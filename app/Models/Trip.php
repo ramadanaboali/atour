@@ -64,6 +64,10 @@ class Trip extends Model
         }
     }
 
+    public function offers(): ?HasMany
+    {
+        return $this->hasMany(Offer::class, 'trip_id');
+    }
     public function rates(): ?HasMany
     {
         return $this->hasMany(Rate::class, 'trip_id');

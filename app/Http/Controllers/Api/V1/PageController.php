@@ -3,35 +3,39 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ContactRequest;
 use App\Http\Requests\RateRequest;
 use App\Http\Resources\ArticleResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\CityResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\SliderResource;
+use App\Http\Resources\SubCategoryResource;
 use App\Models\Add;
 use App\Models\Article;
+use App\Models\Attachment;
 use App\Models\Blog;
-use App\Models\Category;
 use App\Models\City;
+use App\Models\ContactUs;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Job;
 use App\Models\Rate;
-use App\Models\Service;
 use App\Models\Slider;
 use App\Models\SubCategory;
-use App\Models\Supplier;
 use App\Models\Trip;
-use App\Models\User;
 use App\Models\UserPreferedSetting;
+use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
 {
+    protected StorageService $storageService;
+
+    public function __construct(StorageService $storageService)
+    {
+        $this->storageService = $storageService;
+    }
     public function sliders()
     {
         $data = Slider::where('active', 1)->get();
@@ -138,9 +142,7 @@ class PageController extends Controller
 
     public function categories()
     {
-        $data = Category::with('subCategory')->where('active', 1)->get();
-        $result = CategoryResource::collection($data);
-        return apiResponse(true, $result, null, null, 200);
+
     }
 
     public function sub_categories(Request $request)
@@ -154,7 +156,7 @@ class PageController extends Controller
                     $query->where('parent_id', $request->parent_id);
                 }
             })->where('active', 1)->get();
-        $result = CategoryResource::collection($data);
+        $result = SubCategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
 
@@ -180,8 +182,7 @@ class PageController extends Controller
     {
         $sliders = Slider::where('active', 1)->get();
         $data['sliders'] = SliderResource::collection($sliders);
-        $categories = Category::where('active', 1)->limit(20)->orderBy('id', 'desc')->get();
-        $data['categories'] = CategoryResource::collection($categories);
+
         return apiResponse(true, $data, null, null, 200);
     }
 
@@ -236,6 +237,30 @@ class PageController extends Controller
             'user_id' => auth()->user()->id
         ];
         $data = Rate::create($data);
+        if ($request->filled('images')) {
+            foreach ($request->images as $file) {
+                $folder_path = "images/rate";
+                $image = $this->storageService->storeFile($file, $folder_path);
+
+                $attachment = [
+                       'model_id' => $data->id,
+                       'model_type' => 'trip',
+                       'attachment' => $image,
+                       'title' => "trip",
+                   ];
+                Attachment::create($attachment);
+            }
+        }
+        return apiResponse(true, $data, __('api.update_success'), null, 200);
+    }
+    public function contactUs(ContactRequest $request)
+    {
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => auth()->user()->id
+        ];
+        $data = ContactUs::create($data);
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
 

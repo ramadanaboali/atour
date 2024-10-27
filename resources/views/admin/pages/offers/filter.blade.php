@@ -62,18 +62,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-1 col-md-12 ">
-                             <div class="form-group row">
-                                 <label   class="col-sm-2 col-form-label" for="services">{{ __('offers.services') }}</label>
-                                 <div class="col-sm-10">
-                                    <select name="services[]" id="services" class="form-control ajax_select2 extra_field"
-                                        data-ajax--url="{{ route('admin.categories.select') }}"
-                                        data-ajax--cache="true" multiple >
-
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                  
                         <div class="mb-1 col-md-12"  >
                             <div class="form-group row">
                                 <label for=" start_date" class="col-sm-2 col-form-label">{{ __('offers.start_date') }}</label>

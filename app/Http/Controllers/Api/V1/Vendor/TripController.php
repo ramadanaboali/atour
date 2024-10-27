@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginateRequest;
+use App\Http\Requests\Vendor\TripOfferRequest;
 use App\Http\Requests\Vendor\TripRequest;
 use App\Http\Resources\TripResource;
 use App\Models\Attachment;
+use App\Models\Offer;
 use App\Models\Trip;
 use App\Models\TripFeature;
 use App\Models\TripSubCategory;
@@ -39,6 +41,26 @@ class TripController extends Controller
         return response()->apiSuccess($data);
     }
 
+    public function storeOffer(TripOfferRequest $request)
+    {
+
+        $folder_path = "images/offers";
+        $image = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $image = $this->storageService->storeFile($file, $folder_path);
+        }
+        $offer_data = [
+            'vendor_id' => auth()->user()->id,
+            'title' => $request->title,
+            'trip_id' => $request->trip_id,
+            'description' => $request->description,
+            'image' => $image,
+        ];
+        $offer = Offer::create($offer_data);
+        return response()->apiSuccess($offer);
+
+    }
     public function store(TripRequest $request)
     {
 

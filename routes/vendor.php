@@ -1,6 +1,7 @@
     <?php
 
 use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\Vendor\EffectivenesController;
 use App\Http\Controllers\Api\V1\Vendor\OrderController;
 use App\Http\Controllers\Api\V1\Vendor\AuthController;
@@ -72,8 +73,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::delete('delete-account', [App\Http\Controllers\Api\V1\AuthController::class, 'deleteAccount']);
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
 
+            Route::post('contact-us', [PageController::class, 'contactUs']);
             Route::get('trips', [TripController::class, 'index']);
             Route::post('trips', [TripController::class, 'store']);
+            Route::post('add-offers', [TripController::class, 'storeOffer']);
             Route::get('trips/{id}', [TripController::class, 'show']);
             Route::put('trips/{trip}', [TripController::class, 'update']);
             Route::delete('trips/{trip}', [TripController::class, 'delete']);

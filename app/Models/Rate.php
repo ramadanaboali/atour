@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rate extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $guarded = [];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
+    }
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'rate');
     }
 
 }

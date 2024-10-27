@@ -121,14 +121,14 @@
                 </li>
             @endcan
 
-           @can('offers.view')
+           {{-- @can('offers.view')
                 <li>
                     <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
                         <i data-feather='key'></i>
                         <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.offers') }}</span>
                     </a>
                 </li>
-            @endcan
+            @endcan --}}
 
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.accountants.list') }}">
