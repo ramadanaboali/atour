@@ -26,7 +26,9 @@ class EffectivenesResource extends JsonResource
             'active' => $this->active,
             'created_by' => $this->createdBy?->name,
             'city' => new CityResource($this->city),
-            'vendor' => new UserResource($this->vendor)
+            'vendor' => new UserResource($this->vendor),
+            'attachments' => AttachmentResource::collection($this->attachments),
+
         ];
     }
 
