@@ -28,6 +28,8 @@ class BookingGift extends Model
         const STATUS_COMPLEATED = 2;
         const STATUS_REJECTED = 3;
         const STATUS_CANCELED = 4;
+    const STATUS_WITHDRWAL = 5;
+
      public function user() :?BelongsTo
      {
         return $this->belongsTo(User::class);

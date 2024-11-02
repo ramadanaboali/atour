@@ -101,6 +101,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('services/{services}', [ServiceController::class, 'update']);
 
 
+            Route::get('withdrwal', [OrderController::class, 'withdrwal']);
+            Route::get('home-page', [OrderController::class, 'homePage']);
             Route::get('wallet-page', [OrderController::class, 'walletPage']);
             Route::get('invoices', [OrderController::class, 'invoices']);
             Route::get('pendding-orders', [OrderController::class, 'penddingRequests']);
