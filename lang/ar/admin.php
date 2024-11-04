@@ -220,6 +220,8 @@ return [
     'total_amount_reservasion'=>'Total Amount Of Reservations',
     'question'=>"السؤال",
     'answer'=>"الاجابة",
+    'cancel_terms'=>"سياسة الالغاء",
+    'helpping_questions'=>"تحتاج للمساعدة",
 
 
 ];

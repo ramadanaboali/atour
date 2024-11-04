@@ -27,16 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         //Start Customer Api
         Route::get('faqs', [HomeController::class,'faqs']);
-        Route::get('home', [HomeController::class,'home']);
         Route::get('cities', [HomeController::class,'cities']);
-        Route::get('trips', [HomeController::class,'trips']);
-        Route::get('gifts', [HomeController::class,'gifts']);
-        Route::get('effectivenes', [HomeController::class,'effectivene']);
-        Route::get('trips/{id}', [HomeController::class,'trip']);
-        Route::get('gifts/{id}', [HomeController::class,'gift']);
-        Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
-
-        Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
         //End Customer Api
 
         Route::get('privacy', [SettingController::class, 'privacy']);
@@ -47,7 +38,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('ads', [PageController::class,'ads']);
 
         Route::get('blogs', [PageController::class,'blogs']);
-//         Route::get('last-trips', [PageController::class,'lastTrips']);
+        //         Route::get('last-trips', [PageController::class,'lastTrips']);
         // Route::get('trips', [PageController::class,'trips']);
         // Route::get('trips/{id}', [PageController::class,'getTrips']);
         Route::get('cities', [PageController::class,'cities']);
@@ -68,6 +59,16 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
 
+            Route::get('home', [HomeController::class,'home']);
+            Route::get('trips', [HomeController::class,'trips']);
+            Route::get('gifts', [HomeController::class,'gifts']);
+            Route::get('effectivenes', [HomeController::class,'effectivenes']);
+            Route::get('similar_trips/{id}', [HomeController::class,'similler_trips']);
+            Route::get('trips/{id}', [HomeController::class,'trip']);
+            Route::get('gifts/{id}', [HomeController::class,'gift']);
+            Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
+
+            Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
             Route::get('bookings', [OrderController::class, 'bookings']);
             Route::get('save-favourite/{type}/{id}', [HomeController::class, 'saveFavourite']);
             Route::get('remove-favourite/{type}/{id}', [HomeController::class, 'deleteFavourite']);

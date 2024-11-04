@@ -12,6 +12,7 @@ use App\Models\Effectivenes;
 use App\Models\FAQ;
 use App\Models\Favorite;
 use App\Models\Gift;
+use App\Models\Offer;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class HomeController extends Controller
 {
     public function home()
     {
+        $data['offer'] = Offer::orderByDesc('id')->first();
         $most_visited = City::where('active', true)->get();
         $data['most_visited'] = CityResource::collection($most_visited);
         $old_experiences = Trip::where('active', true)->get();
@@ -38,6 +40,13 @@ class HomeController extends Controller
     public function trips()
     {
         $trips = Trip::where('active', true)->get();
+        $data = TripResource::collection($trips);
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function similler_trips($id)
+    {
+        $trip = Trip::findOrFail($id);
+        $trips=Trip::where('vendor_id',$trip->vendor_id)->where('active', true)->get();
         $data = TripResource::collection($trips);
         return apiResponse(true, $data, null, null, 200);
     }

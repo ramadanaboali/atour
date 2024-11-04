@@ -13,6 +13,7 @@ class SettingController extends Controller
 {
     private $viewGeneral = 'admin.pages.settings.general';
     private $viewPrivacy = 'admin.pages.settings.privacy';
+    private $viewCancelPrivacy = 'admin.pages.settings.cancel_terms';
     private $viewTerms = 'admin.pages.settings.terms';
     private $viewAbout = 'admin.pages.settings.about';
 
@@ -53,6 +54,14 @@ class SettingController extends Controller
             ->where('key', 'LIKE', 'privacy_%')
             ->get();
         return view($this->viewPrivacy, get_defined_vars());
+    }
+    public function cancel_terms(): View
+    {
+        $items = $this->setting
+        ->where('key', 'LIKE', 'cancel_term%')
+        ->orWhere('key', 'LIKE', 'helpping%')
+        ->get();
+        return view($this->viewCancelPrivacy, get_defined_vars());
     }
 
     public function terms(): View

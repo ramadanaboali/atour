@@ -11,20 +11,22 @@ class SettingController extends Controller
 {
     public function contact()
     {
-        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','general_company_address'])->get();
+        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','general_company_address','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale()])->get();
 
         $data = [
             'email' => $items->where('key', 'general_email')->first()->value ?? '',
             'phone' => $items->where('key', 'general_phone')->first()->value ?? '',
             'whatsapp' => $items->where('key', 'general_whatsapp')->first()->value ?? '',
             'address' => $items->where('key', 'general_company_address')->first()->value ?? '',
+            'cancel_terms' => $items->where('key', 'cancel_terms_content_'.app()->getLocale())->first()->value ?? '',
+            'helpping_content' => $items->where('key', 'helpping_content_'.app()->getLocale())->first()->value ?? '',
         ];
 
         return apiResponse(true, $data, null, null, 200);
     }
     public function header()
     {
-        $items = Setting::where('key','like', 'header_%')->get();
+        $items = Setting::where('key', 'like', 'header_%')->get();
         $header_logo = $items->where('key', 'header_logo')->first()->value ?? '';
         $data = [
             'logo' => asset('storage/settings/' .$header_logo),
@@ -34,7 +36,7 @@ class SettingController extends Controller
     }
     public function footer()
     {
-        $items = Setting::whereIn('key',['footer_facebook','footer_twitter','footer_instagram','footer_snapchat','footer_tiktok','footer_google_play','footer_app_store'])->get();
+        $items = Setting::whereIn('key', ['footer_facebook','footer_twitter','footer_instagram','footer_snapchat','footer_tiktok','footer_google_play','footer_app_store'])->get();
         $data = [
             'footer_facebook' => $items->where('key', 'footer_facebook')->first()->value ?? '',
             'footer_twitter' => $items->where('key', 'footer_twitter')->first()->value ?? '',
@@ -49,16 +51,16 @@ class SettingController extends Controller
 
     public function about()
     {
-        $lang=request()->header('language')??'ar';
+        $lang = request()->header('language') ?? 'ar';
         $data = [
             'content' => Setting::where('key', 'LIKE', 'about_content_'.$lang)->value('value')
         ];
         return apiResponse(true, $data, null, null, 200);
-   }
+    }
 
-       public function terms()
+    public function terms()
     {
-        if(App::isLocale('en')) {
+        if (App::isLocale('en')) {
             $data = Setting::where('key', 'LIKE', 'terms_content_en')->value('value');
         } else {
             $data = Setting::where('key', 'LIKE', 'terms_content_ar')->value('value');
@@ -69,7 +71,7 @@ class SettingController extends Controller
     public function privacy()
     {
 
-        if(App::isLocale('en')) {
+        if (App::isLocale('en')) {
             $data = Setting::where('key', 'LIKE', 'privacy_content_en')->value('value');
         } else {
             $data = Setting::where('key', 'LIKE', 'privacy_content_ar')->value('value');

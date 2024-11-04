@@ -255,6 +255,12 @@
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.term_condition') }}</span>
                             </a>
                         </li>
+                        <li class=" nav-item {{ request()->routeIs('admin.settings.cancel_terms')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.settings.cancel_terms') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.cancel_terms') }}</span>
+                            </a>
+                        </li>
                         <li class=" nav-item {{ request()->routeIs('admin.settings.terms')?'active':''}}">
                             <a class="d-flex align-items-center" href="{{ route('admin.settings.terms') }} ">
                                 <i data-feather="circle"></i>

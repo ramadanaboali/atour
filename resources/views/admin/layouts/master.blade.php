@@ -51,7 +51,11 @@
 
     <link rel="stylesheet" type="text/css" href="{{ $assetsPath }}/css/custom.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/admin/css/responsive.css">
-
+<style>
+    .cke_notification {
+        display: none;
+        }
+</style>
     @stack('styles')
 </head>
 
