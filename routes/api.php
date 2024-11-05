@@ -51,6 +51,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('articles', [PageController::class,'articles']);
         Route::get('footer', [SettingController::class,'footer']);
         Route::get('jobs', [PageController::class,'jobs']);
+        Route::get('why_bookings', [PageController::class,'whyBookings']);
 
         Route::get('search_by_city/{id}', [HomeController::class,'searchByCity']);
         Route::get('city-trips/{id}', [PageController::class,'cityTrips']);

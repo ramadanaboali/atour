@@ -23,6 +23,7 @@ use App\Models\Slider;
 use App\Models\SubCategory;
 use App\Models\Trip;
 use App\Models\UserPreferedSetting;
+use App\Models\WhyBooking;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -99,13 +100,18 @@ class PageController extends Controller
     }
     public function cities()
     {
-        $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory','trips.attachments'])->where('active', 1)->get();
+        $data = City::where('active', 1)->get();
         // $result = CityResource::collection($data);
         return apiResponse(true, $data, null, null, 200);
     }
     public function getCity(Request $request, $id)
     {
-        $data = City::with(['country','trips.vendor','trips.offers','trips.rates','trips.programs','trips.category','trips.subcategory','trips.attachments'])->find($id);
+        $data = City::find($id);
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function whyBookings(Request $request)
+    {
+        $data = WhyBooking::get();
         return apiResponse(true, $data, null, null, 200);
     }
 

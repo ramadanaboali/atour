@@ -21,8 +21,7 @@ class HomeController extends Controller
     public function home()
     {
         $data['offer'] = Offer::orderByDesc('id')->first();
-        $most_visited = City::where('active', true)->get();
-        $data['most_visited'] = CityResource::collection($most_visited);
+        $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::where('active', true)->get();
         $data['old_experiences'] = TripResource::collection($old_experiences);
         $effectivenes = Effectivenes::where('active', true)->where('date', '>', date('Y-m-d'))->get();
