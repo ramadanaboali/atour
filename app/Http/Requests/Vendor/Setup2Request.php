@@ -27,17 +27,10 @@ class Setup2Request extends FormRequest
 
         return [
             'user_id' => 'required|exists:users,id',
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
-            'streat' => 'required|string|min:2',
-            'postal_code' => 'required|string|min:2',
+            'general_name' => 'required|string|min:2',
             'description' => 'required|string|min:2',
-            'short_description' => 'required|string|min:2',
             'url' => 'nullable|string|min:2',
-            // 'category'=>'required|array',
-            // 'category.*'=>'required|in:gift,trip,effectiveness',
-            // 'sub_category_id'=>'required|array',
-            // 'sub_category_id.*'=>'required|exists:sub_categories,id',
+            'profile' => 'nullable|image',
 
         ];
 

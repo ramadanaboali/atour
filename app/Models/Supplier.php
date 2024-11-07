@@ -16,6 +16,8 @@ class Supplier extends Model
     protected $fillable = [
         'tour_guid',
         'rerequest_reason',
+        'licence_image',
+        'profile',
         'type',
         'country_id',
         'city_id',

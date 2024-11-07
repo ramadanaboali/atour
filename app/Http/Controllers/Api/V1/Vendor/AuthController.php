@@ -17,9 +17,10 @@ use App\Http\Requests\Vendor\Setup2Request;
 use App\Http\Requests\Vendor\Setup3Request;
 use App\Http\Requests\Vendor\Setup4Request;
 use App\Http\Requests\Vendor\Setup5Request;
+use App\Http\Requests\Vendor\Setup6Request;
+use App\Http\Requests\Vendor\Setup7Request;
 use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
-use App\Models\Attachment;
 use App\Models\User;
 use App\Models\Supplier;
 use App\Traits\ApiResponser;
@@ -33,7 +34,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
 use App\Models\SupplierService;
@@ -47,7 +47,7 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_SUPPLIER)->first();
 
-        if($user) {
+        if ($user) {
             if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
                 if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
                     return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -57,7 +57,7 @@ class AuthController extends Controller
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if($user->active == 0) {
+        if ($user->active == 0) {
             return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -70,7 +70,7 @@ class AuthController extends Controller
 
     }
 
-      public function sendOtp(NewEmailRequest $request)
+    public function sendOtp(NewEmailRequest $request)
     {
         try {
             $MsgID = rand(100000, 999999);
@@ -79,7 +79,7 @@ class AuthController extends Controller
                 'reset_code' => $MsgID,
                 'status' => 'pendding',
                 'active' => false,
-                'type' =>User::TYPE_SUPPLIER,
+                'type' => User::TYPE_SUPPLIER,
             ];
             $user = User::create($data);
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
@@ -96,8 +96,9 @@ class AuthController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            if($user->reset_code == $request->code) {
+            if ($user->reset_code == $request->code) {
                 $user->reset_code = null;
+                $user->password = Hash::make($request->code);
                 $user->save();
                 return apiResponse(true, $user, __('api.code_success'), null, 200);
             }
@@ -112,20 +113,25 @@ class AuthController extends Controller
         try {
             DB::beginTransaction();
             $userInput = [
-                'email' => $request->email,
                 'name' => $request->name,
-                'general_name' => $request->general_name,
-                'nationality' => $request->nationality,
                 'phone' => $request->phone,
-                'birthdate' => $request->birthdate,
-                'joining_date_from' => date('Y-m-d'),
+                'address' => $request->address,
+                'postal_code' => $request->postal_code,
+                'national_id' => $request->national_id,
                 'active' => false,
                 'status' => 'pendding',
                 'type' => User::TYPE_SUPPLIER,
-                'password' => Hash::make($request->password),
             ];
-            $user = User::where('email',$request->email)->first();
+            $user = User::where('email', $request->email)->first();
+            if ($request->has('cover')) {
+                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('cover')->getClientOriginalExtension();
+                $request->file('cover')->move(public_path('storage/users'), $fileNames);
+                $userInput['image'] = $fileNames;
+            }
             $user->update($userInput);
+
+            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality]);
+
             $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
 
             if ($user && $role) {
@@ -146,70 +152,54 @@ class AuthController extends Controller
     {
         try {
             $inputs = [
-                'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
-                'streat' => $request->streat,
-                'postal_code' => $request->postal_code,
-                'description' => $request->description,
-                'short_description' => $request->short_description,
-                'url' => $request->url,
                 'user_id' => $request->user_id,
-
+                'general_name' => $request->general_name,
+                'description' => $request->description,
+                'url' => $request->url
             ];
             DB::beginTransaction();
-            $supplier=Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            if ($request->has('profile')) {
+                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('profile')->getClientOriginalExtension();
+                $request->file('profile')->move(public_path('storage/users'), $fileNames);
+                $inputs['profile'] = $fileNames;
+            }
+            $supplier = Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
-            // foreach ($request->category as $category) {
-            //     SupplierService::create([
-            //             'supplier_id'=>$supplier->id,
-            //             'category'=>$category,
-            //     ]);
-            // }
-            // foreach ($request->sub_category_id as $sub_category_id) {
-            //     SupplierService::create([
-            //             'supplier_id'=>$supplier->id,
-            //             'sub_category_id'=>$sub_category_id,
-            //     ]);
-            // }
             DB::commit();
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-
         } catch (Exception $e) {
             DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
     }
+
     public function setup3(Setup3Request $request)
     {
         try {
             $inputs = [
-                'profission_guide' => $request->profission_guide,
-                'job' => $request->job,
-                'type' => $request->type,
-                'experience_info' => $request->experience_info,
-                'languages' => json_encode($request->languages),
-                'user_id' => $request->user_id,
-                'banck_name' => $request->banck_name,
-                'banck_number' => $request->banck_number,
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
+                'streat' => $request->streat,
             ];
+            if ($request->has('licence_image')) {
+                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('licence_image')->getClientOriginalExtension();
+                $request->file('licence_image')->move(public_path('storage/users'), $fileNames);
+                $inputs['licence_image'] = $fileNames;
+            }
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-
         } catch (Exception $e) {
             DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+
     public function setup4(Setup4Request $request)
     {
         try {
             $inputs = [
-                'tax_number' => $request->tax_number,
-                'place_summary' => $request->place_summary,
-                'place_content' => $request->place_content,
-                'expectations' => $request->expectations,
+                'type' => $request->type,
                 'user_id' => $request->user_id
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
@@ -223,39 +213,47 @@ class AuthController extends Controller
     }
     public function setup5(Setup5Request $request)
     {
-        // dd($request->attachments[0]);
         try {
-            foreach($request->attachments as $file) {
-                $fileName = time() . rand(0, 999999999) . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('storage/files'), $fileName);
-                $input = [
-                    'model_id' => $request->user_id,
-                    'attachment' => $fileName,
-                    'title' => 'cirtified',
-                    'model_type' => 'user',
-                ];
-                Attachment::create($input);
+            $supplier=Supplier::where('user_id', $request->user_id)->first();
+            if($supplier){
+                foreach ($request->sub_category_id as $sub_category_id) {
+                    SupplierService::create([
+                        'supplier_id' => $supplier->id,
+                        'sub_category_id' => $sub_category_id
+                    ]);
+                }
             }
-            foreach($request->images as $image) {
-                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('storage/files'), $fileName);
-                $input = [
-                    'model_id' => $request->user_id,
-                    'attachment' => $fileName,
-                    'title' => 'images',
-                    'model_type' => 'user',
-                ];
-                Attachment::create($input);
-            }
-            $user = User::with(['supplier','attachments'])->findOrFail($request->user_id);
-
-            $fileNames = time() . rand(0, 999999999) . '.' . $request->file('profile')->getClientOriginalExtension();
-            $request->file('profile')->move(public_path('storage/users'), $fileNames);
-            $user->image = $fileNames;
-            $user->save();
-
+            return apiResponse(true, $supplier, __('api.register_success'), null, Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+    public function setup6(Setup6Request $request)
+    {
+        try {
+            $inputs = [
+                'profission_guide' => $request->profission_guide,
+                'job' => $request->job,
+                'experience_info' => $request->experience_info,
+            ];
+            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-
+        } catch (Exception $e) {
+            DB::rollBack();
+            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+    public function setup7(Setup7Request $request)
+    {
+        try {
+            $inputs = [
+                'languages' => json_encode($request->languages),
+            ];
+            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -268,8 +266,8 @@ class AuthController extends Controller
             $user = User::findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
-            if($request->filled('username')) {
-                if(filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+            if ($request->has('username')) {
+                if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
                     Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
                 } else {
                     Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
@@ -306,7 +304,7 @@ class AuthController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            if($user->reset_code == $request->code) {
+            if ($user->reset_code == $request->code) {
                 $user->reset_code = null;
                 $user->save();
                 return apiResponse(true, null, __('api.code_success'), null, 200);
@@ -334,7 +332,7 @@ class AuthController extends Controller
     {
         try {
             $user = auth()->user();
-            if(!Hash::check($request->current_password, $user->password)) {
+            if (!Hash::check($request->current_password, $user->password)) {
                 return apiResponse(false, null, __('api.current_password_invalid'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $user->update(['password' => Hash::make($request->password)]);
@@ -361,7 +359,7 @@ class AuthController extends Controller
                 'name' => $request->name,
             ];
             $image = $request->file('image');
-            if($image) {
+            if ($image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
@@ -380,7 +378,7 @@ class AuthController extends Controller
     public function updateEmail(EmailRequest $request)
     {
         try {
-            if(auth()->user()->reset_code != $request->code) {
+            if (auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
             $currentUser = User::findOrFail(auth()->user()->id);
@@ -401,7 +399,7 @@ class AuthController extends Controller
     public function updatePhone(PhoneRequest $request)
     {
         try {
-            if(auth()->user()->reset_code != $request->code) {
+            if (auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
             $currentUser = User::findOrFail(auth()->user()->id);

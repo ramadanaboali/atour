@@ -27,9 +27,11 @@ class Setup1Request extends FormRequest
 
         return [
             'name' => 'required|string|min:2',
+            'phone' => 'required|string|min:2',
+            'nationality' => 'required|string|min:2',
+            'address' => 'required|string|min:2',
+            'national_id' => 'required|string|min:2',
             'email' => 'required|email|exists:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|min:6|confirmed'
         ];
 
     }

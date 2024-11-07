@@ -9,28 +9,19 @@ use Illuminate\Validation\ValidationException;
 
 class Setup5Request extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
 
         return [
-            'attachments' => 'required|array',
-            'attachments.*' => 'required|file',
-            'images' => 'required|array',
-            'images.*' => 'required|image',
-            'profile' => 'required|image',
+            'sub_category_id' => 'required|array',
+            'sub_category_id.*' => 'required|exists:sub_categories,id',
             'user_id' => 'required|exists:users,id',
         ];
 

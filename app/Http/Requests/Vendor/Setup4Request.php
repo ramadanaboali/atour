@@ -17,19 +17,12 @@ class Setup4Request extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
 
         return [
-            'tax_number' => 'required|string|min:2',
-            'place_summary' => 'required|string|min:2',
-            'place_content' => 'required|string|min:2',
-            'expectations' => 'required|string|min:2',
+            'type' => 'required|in:company,indivedual',
             'user_id' => 'required|exists:users,id',
         ];
 

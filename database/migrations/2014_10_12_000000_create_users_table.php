@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->date('joining_date_from')->nullable();
             $table->date('joining_date_to')->nullable();
             $table->string('address')->nullable();
-            $table->string('nationality')->nullable();
             $table->tinyInteger('type');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

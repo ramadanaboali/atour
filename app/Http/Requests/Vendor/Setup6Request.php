@@ -7,21 +7,23 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class Setup3Request extends FormRequest
+class Setup6Request extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
 
+
     public function rules(): array
     {
 
         return [
-            'country_id' => 'required|exists:countries,id',
-            'city_id' => 'required|exists:cities,id',
+            'profission_guide' => 'required|in:0,1',
+            'job' => 'required|string',
+            'experience_info' => 'required|string',
             'user_id' => 'required|exists:users,id',
-            'streat' => 'required|string|min:2',
+
         ];
 
     }
