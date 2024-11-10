@@ -153,15 +153,7 @@ class PageController extends Controller
 
     public function sub_categories(Request $request)
     {
-        $data = SubCategory::with(['category', 'subCategory'])
-            ->where(function ($query) use ($request) {
-                if ($request->filled('category')) {
-                    $query->where('category', $request->category);
-                }
-                if ($request->filled('parent_id')) {
-                    $query->where('parent_id', $request->parent_id);
-                }
-            })->where('active', 1)->get();
+        $data = SubCategory::get();
         $result = SubCategoryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
