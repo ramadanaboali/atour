@@ -153,8 +153,12 @@ class PageController extends Controller
 
     public function sub_categories(Request $request)
     {
-        $data = SubCategory::get();
-        $result = SubCategoryResource::collection($data);
+        $data1 = SubCategory::where('category','gift')->get();
+        $data2 = SubCategory::where('category','trip')->get();
+        $data3 = SubCategory::where('category','effectiveness')->get();
+        $result['gifts'] = SubCategoryResource::collection($data1);
+        $result['trips'] = SubCategoryResource::collection($data2);
+        $result['effectiveness'] = SubCategoryResource::collection($data3);
         return apiResponse(true, $result, null, null, 200);
     }
 
