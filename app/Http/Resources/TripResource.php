@@ -10,7 +10,8 @@ class TripResource extends JsonResource
 {
     public function toArray($request)
     {
-        $favourit = Favorite::where('model_type', 'trip')->where('model_id', $this->id)->where('user_id', auth()->user()->id)->first();
+        
+        $favourit = Favorite::where('model_type', 'trip')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
         return [
             'id' => $this->id,
             'title' => $this->title,
