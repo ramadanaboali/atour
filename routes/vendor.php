@@ -112,6 +112,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('accept/{type}/{id}', [OrderController::class, 'acceptOrder']);
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
             Route::get('orders/{type}/{id}', [OrderController::class, 'showOrder']);
+            Route::get('show-all/{type}', [OrderController::class, 'getAll']);
 
         });
     });
