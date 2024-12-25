@@ -214,8 +214,8 @@ class AuthController extends Controller
     public function setup5(Setup5Request $request)
     {
         try {
-            $supplier=Supplier::where('user_id', $request->user_id)->first();
-            if($supplier){
+            $supplier = Supplier::where('user_id', $request->user_id)->first();
+            if ($supplier) {
                 foreach ($request->sub_category_id as $sub_category_id) {
                     SupplierService::create([
                         'supplier_id' => $supplier->id,
@@ -232,13 +232,38 @@ class AuthController extends Controller
     public function setup6(Setup6Request $request)
     {
         try {
+
             $inputs = [
-                'profission_guide' => $request->profission_guide,
-                'job' => $request->job,
-                'experience_info' => $request->experience_info,
-            ];
+                         'nationality' => $request->nationality,
+                         'general_name' => $request->general_name,
+                         'description' => $request->description,
+                         'url' => $request->url,
+                         'country_id' => $request->country_id,
+                         'city_id' => $request->city_id,
+                         'streat' => $request->streat,
+                         'job' => $request->job,
+                         'experience_info' => $request->experience_info,
+                     ];
+
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+            if ($user) {
+                $userinputs = [
+                             'name' => $request->name ?? $user->name,
+                             'nationality' => $request->nationality ?? $user->nationality,
+                             'address' => $request->address ?? $user->address,
+                             'city_id' => $request->city_id ?? $user->city_id,
+                         ];
+
+                $image = $request->file('image');
+                if ($image) {
+                    $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                    $request->image->move(public_path('storage/users'), $fileName);
+                    $userinputs['image'] = $fileName;
+                }
+
+                $user->update($userinputs);
+            }
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
@@ -346,8 +371,8 @@ class AuthController extends Controller
     {
 
         $user = auth()->user();
-        $data = new UserResource($user);
-        return apiResponse(true, $data, null, null, 200);
+        // $data = new UserResource($user);
+        return apiResponse(true, $user, null, null, 200);
 
     }
 

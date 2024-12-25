@@ -36,8 +36,8 @@ class AuthController extends Controller
     {
         $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', User::TYPE_CLIENT)->first();
 
-        if($user) {
-            if($user->active==0){
+        if ($user) {
+            if ($user->active == 0) {
                 return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
@@ -79,8 +79,8 @@ class AuthController extends Controller
             $user = User::findOrFail(auth()->user()->id);
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
-            if($request->filled('username')) {
-                if(filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+            if ($request->filled('username')) {
+                if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
                     Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
                 } else {
                     Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
@@ -101,7 +101,7 @@ class AuthController extends Controller
                 'reset_code' => $MsgID,
                 'status' => 'pendding',
                 'active' => false,
-                'type' =>User::TYPE_CLIENT,
+                'type' => User::TYPE_CLIENT,
             ];
             $user = User::create($data);
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
@@ -118,7 +118,7 @@ class AuthController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            if($user->reset_code == $request->code) {
+            if ($user->reset_code == $request->code) {
                 $user->reset_code = null;
                 $user->save();
                 return apiResponse(true, $user, __('api.code_success'), null, 200);
@@ -154,7 +154,7 @@ class AuthController extends Controller
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            if($user->reset_code == $request->code) {
+            if ($user->reset_code == $request->code) {
                 $user->reset_code = null;
                 $user->save();
                 return apiResponse(true, null, __('api.code_success'), null, 200);
@@ -182,7 +182,7 @@ class AuthController extends Controller
     {
         try {
             $user = auth()->user();
-            if(!Hash::check($request->current_password, $user->password)) {
+            if (!Hash::check($request->current_password, $user->password)) {
                 return apiResponse(false, null, __('api.current_password_invalid'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $user->update(['password' => Hash::make($request->password)]);
@@ -206,11 +206,11 @@ class AuthController extends Controller
         try {
             $currentUser = User::findOrFail(auth()->user()->id);
             $inputs = [
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'name' => $request->name ?? $currentUser->name,
+            
             ];
             $image = $request->file('image');
-            if($image) {
+            if ($image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
@@ -229,7 +229,7 @@ class AuthController extends Controller
     public function updateEmail(EmailRequest $request)
     {
         try {
-            if(auth()->user()->reset_code != $request->code) {
+            if (auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
             $currentUser = User::findOrFail(auth()->user()->id);
@@ -250,7 +250,7 @@ class AuthController extends Controller
     public function updatePhone(PhoneRequest $request)
     {
         try {
-            if(auth()->user()->reset_code != $request->code) {
+            if (auth()->user()->reset_code != $request->code) {
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
             $currentUser = User::findOrFail(auth()->user()->id);

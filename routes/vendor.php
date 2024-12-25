@@ -69,6 +69,7 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
+            Route::get('/profile', [App\Http\Controllers\Api\V1\AuthController::class, 'profile']);
             Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);
             Route::post('update-image', [App\Http\Controllers\Api\V1\AuthController::class, 'updateimage']);
             Route::post('logout', [App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
