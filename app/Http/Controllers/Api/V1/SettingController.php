@@ -11,13 +11,13 @@ class SettingController extends Controller
 {
     public function contact()
     {
-        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','general_company_address','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale(),'general_facebook_url','general_twitter','general_instagram','general_google_url'])->get();
+        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale(),'general_facebook_url','general_twitter','general_instagram','general_google_url'])->get();
 
         $data = [
             'email' => $items->where('key', 'general_email')->first()->value ?? '',
             'phone' => $items->where('key', 'general_phone')->first()->value ?? '',
             'whatsapp' => $items->where('key', 'general_whatsapp')->first()->value ?? '',
-            'address' => $items->where('key', 'general_company_address')->first()->value ?? '',
+
             'cancel_terms' => $items->where('key', 'cancel_terms_content_'.app()->getLocale())->first()->value ?? '',
             'facebook_url' => $items->where('key', 'general_facebook_url')->first()->value ?? '',
             'twitter' => $items->where('key', 'general_twitter')->first()->value ?? '',
