@@ -84,6 +84,24 @@
                             </div>
                         </div>
 
+                        <div class="mb-1 col-md-6 @error('general_email') is-invalid @enderror">
+                                <?php $generalPhone = $items->where('key', 'general_email')->first()->value ?? old('general_email'); ?>
+                            <label class="form-label" for="general_email">{{ __('settings.email') }}</label>
+                            <input type="email" name="general_email" id="general_email" class="form-control" placeholder=""
+                                   value="{{ $generalPhone ?? old('general_email') }}"/>
+                            @error('general_email')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-6 @error('general_whatsapp') is-invalid @enderror">
+                                <?php $generalPhone = $items->where('key', 'general_whatsapp')->first()->value ?? old('general_whatsapp'); ?>
+                            <label class="form-label" for="general_whatsapp">{{ __('settings.whatsapp') }}</label>
+                            <input type="text" name="general_whatsapp" id="general_whatsapp" class="form-control" placeholder=""
+                                   value="{{ $generalPhone ?? old('general_whatsapp') }}"/>
+                            @error('general_whatsapp')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-6 @error('general_phone') is-invalid @enderror">
                                 <?php $generalPhone = $items->where('key', 'general_phone')->first()->value ?? old('general_phone'); ?>
                             <label class="form-label" for="general_phone">{{ __('settings.phone') }}</label>

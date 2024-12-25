@@ -19,6 +19,10 @@ class SettingController extends Controller
             'whatsapp' => $items->where('key', 'general_whatsapp')->first()->value ?? '',
             'address' => $items->where('key', 'general_company_address')->first()->value ?? '',
             'cancel_terms' => $items->where('key', 'cancel_terms_content_'.app()->getLocale())->first()->value ?? '',
+            'facebook_url' => $items->where('key', 'general_facebook_url')->first()->value ?? '',
+            'twitter' => $items->where('key', 'general_twitter')->first()->value ?? '',
+            'instagram' => $items->where('key', 'general_instagram')->first()->value ?? '',
+            'google_url' => $items->where('key', 'general_google_url')->first()->value ?? '',
             'helpping_content' => $items->where('key', 'helpping_content_'.app()->getLocale())->first()->value ?? '',
         ];
 
