@@ -11,7 +11,7 @@ class SettingController extends Controller
 {
     public function contact()
     {
-        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','general_company_address','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale()])->get();
+        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','general_company_address','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale(),'general_facebook_url','general_twitter','general_instagram','general_google_url'])->get();
 
         $data = [
             'email' => $items->where('key', 'general_email')->first()->value ?? '',
