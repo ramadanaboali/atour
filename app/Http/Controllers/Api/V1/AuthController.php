@@ -196,8 +196,8 @@ class AuthController extends Controller
     {
 
         $user = auth()->user();
-        $data = new UserResource($user);
-        return apiResponse(true, $data, null, null, 200);
+        // $data = new UserResource($user);
+        return apiResponse(true, $user, null, null, 200);
 
     }
 
