@@ -7,13 +7,12 @@
                 <!-- Login v1 -->
                 <div class="card mb-0">
                     <div class="card-body" >
-            @include('flash::message')
+                     @include('flash::message')
 
                         <h2 class="col-md-12 text-center">Atour</h2>
                         <form class="auth-login-form mt-2" action="{{ route('admin.postLogin') }}" method="POST">
                             @csrf
                             <div class="mb-1 @error('email') is-invalid @enderror">
-
                                 <label for="login-email" class="form-label">{{ __('admin.email') }}</label>
                                 <input type="email" class="form-control" id="login-email" name="email" placeholder="" aria-describedby="login-email" tabindex="1" autofocus value="{{ old('email') }}" />
                                 @error('email')
