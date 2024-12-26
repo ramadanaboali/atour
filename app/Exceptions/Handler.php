@@ -69,10 +69,10 @@ class Handler extends ExceptionHandler
 
         }
 
-        // if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
-        //     return apiResponse(false, null, __('api.unauthorized'), null, 401);
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return apiResponse(false, null, __('api.unauthorized'), null, 401);
 
-        // }
+        }
 
         return parent::render($request, $exception);
     }
