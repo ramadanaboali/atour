@@ -53,9 +53,9 @@ class Handler extends ExceptionHandler
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
 
-            if ($exception instanceof UnauthorizedHttpException || $exception instanceof UnauthorizedException) {
-                return apiResponse(false, null, __('api.unauthorized'), null, 401);
-            }
+            // if ($exception instanceof UnauthorizedHttpException || $exception instanceof UnauthorizedException) {
+            //     return apiResponse(false, null, __('api.unauthorized'), null, 401);
+            // }
             if ($exception instanceof MethodNotAllowedHttpException) {
                 return apiResponse(false, null, 'Method Not Allowed', null, 403);
             }
