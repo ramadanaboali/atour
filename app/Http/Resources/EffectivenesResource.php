@@ -23,6 +23,10 @@ class EffectivenesResource extends JsonResource
             'created_by' => $this->createdBy?->name,
             'vendor' => new UserResource($this->vendor),
             'attachments' => AttachmentResource::collection($this->attachments),
+            'booking_count' => 0,
+            'total_amounts' => 0,
+            'use_coupon' => 0,
+            'use_offers' => 0,
 
         ];
     }

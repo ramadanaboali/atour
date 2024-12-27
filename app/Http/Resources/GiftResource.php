@@ -24,7 +24,11 @@ class GiftResource extends JsonResource
             'attachments' => AttachmentResource::collection($this->attachments),
             'sub_categories' => SubCategoryResource::collection($this->subcategory),
             'city' => new CityResource($this->city),
-            'vendor' => new UserResource($this->vendor)
+            'vendor' => new UserResource($this->vendor),
+            'booking_count' => 0,
+            'total_amounts' => 0,
+            'use_coupon' => 0,
+            'use_offers' => 0,
         ];
     }
 
