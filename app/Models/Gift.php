@@ -20,6 +20,7 @@ class Gift extends Model
         'description_en',
         'description_ar',
         'price',
+        'location',
         'free_cancelation',
         'pay_later',
         'active',

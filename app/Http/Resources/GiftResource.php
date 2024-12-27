@@ -13,6 +13,7 @@ class GiftResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'location' => $this->location,
             'price' => $this->price,
             'free_cancelation' => $this->free_cancelation,
             'pay_later' => $this->pay_later,
