@@ -48,20 +48,13 @@ class EffectivenesController extends Controller
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
-            'title_ar' => $request->title_ar,
-            'title_en' => $request->title_en,
             'date' => $request->date,
             'time' => $request->time,
             'location' => $request->location,
             'lat' => $request->lat,
             'long' => $request->long,
-            'description_en' => $request->description_en,
-            'description_ar' => $request->description_ar,
+            'description' => $request->description,
             'price' => $request->price,
-            'people' => $request->people,
-            'free_cancelation' => $request->free_cancelation,
-            'pay_later' => $request->pay_later,
-            'city_id' => $request->city_id,
             'created_by' => auth()->user()->id,
         ];
         $item = $this->service->store($data);
@@ -92,20 +85,13 @@ class EffectivenesController extends Controller
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
-            'title_ar' => $request->title_ar,
-            'title_en' => $request->title_en,
             'date' => $request->date,
             'time' => $request->time,
             'location' => $request->location,
             'lat' => $request->lat,
             'long' => $request->long,
-            'description_en' => $request->description_en,
-            'description_ar' => $request->description_ar,
+            'description' => $request->description,
             'price' => $request->price,
-            'people' => $request->people,
-            'free_cancelation' => $request->free_cancelation,
-            'pay_later' => $request->pay_later,
-            'city_id' => $request->city_id,
             'created_by' => auth()->user()->id,
         ];
         $item = $this->service->update($data, $effectivenes);
