@@ -99,7 +99,9 @@ class HomeController extends Controller
     }
     public function favourite()
     {
-        $data = Favorite::with('trip')->where('user_id', auth()->user()->id)->get();
+        $data['trips'] = Favorite::with('trip')->where('model_type','like','trip%')->where('user_id', auth()->user()->id)->get();
+        $data['effectivenes'] = Favorite::with('effectivene')->where('model_type','like','effectivene%')->where('user_id', auth()->user()->id)->get();
+        $data['gifts'] = Favorite::with('gift')->where('model_type','like','gift%')->where('user_id', auth()->user()->id)->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function searchByCity(Request $request, $city_id)
