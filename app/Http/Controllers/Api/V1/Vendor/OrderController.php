@@ -19,9 +19,20 @@ class OrderController extends Controller
         $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->where('status', BookingGift::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
         $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->where('status', BookingEffectivene::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
         $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->where('status', BookingTrip::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['profit'] = 0;
+        
+        $profit_gifts = BookingGift::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
+        $profit_effectivenes = BookingEffectivene::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
+        $profit_trips = BookingTrip::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
+        $total_effectivenes = BookingEffectivene::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
+        $total_gifts = BookingGift::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
+        $total_trips = BookingTrip::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
+
+
         $data['debit'] = 0;
-        $data['balance'] = 0;
+        $data['profit'] = $profit_gifts + $profit_effectivenes + $profit_trips;
+        $data['balance'] = $total_gifts + $total_effectivenes + $total_trips;
+
+
         $data['day_invoice']['gifts'] = BookingGift::with(['gift', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
         $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
         $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
