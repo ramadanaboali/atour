@@ -20,15 +20,15 @@ class Favorite extends Model
     }
     public function gift()
     {
-        return $this->belongsTo(Gift::class,'model_id');
+        return $this->belongsTo(Gift::class,'model_id')->where('model_type','gitft');
     }
     public function trip()
     {
-        return $this->belongsTo(Trip::class,'model_id');
+        return $this->belongsTo(Trip::class,'model_id')->where('model_type','trip');
     }
     public function effectivene()
     {
-        return $this->belongsTo(Effectivenes::class,'model_id');
+        return $this->belongsTo(Effectivenes::class,'model_id')->where('model_type','effectiveness');
     }
 
 }
