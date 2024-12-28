@@ -50,6 +50,10 @@ class EffectivenesController extends Controller
             'vendor_id' => auth()->user()->id,
             'date' => $request->date,
             'time' => $request->time,
+            'title' => $request->title,
+            'city_id' => $request->city_id,
+            'free_cancelation' => $request->free_cancelation,
+            'pay_later' => $request->pay_later,
             'location' => $request->location,
             'lat' => $request->lat,
             'long' => $request->long,
@@ -83,16 +87,19 @@ class EffectivenesController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
         $data = [
-            'cover' => $storedPath,
-            'vendor_id' => auth()->user()->id,
-            'date' => $request->date,
-            'time' => $request->time,
-            'location' => $request->location,
-            'lat' => $request->lat,
-            'long' => $request->long,
-            'description' => $request->description,
-            'price' => $request->price,
-            'created_by' => auth()->user()->id,
+            'title' => $request->title??$effectivenes->title,
+            'city_id' => $request->city_id??$effectivenes->city_id,
+            'free_cancelation' => $request->free_cancelation??$effectivenes->free_cancelation,
+            'pay_later' => $request->pay_later??$effectivenes->pay_later,
+            'cover' => $storedPath??$effectivenes->cover,
+            'date' => $request->date??$effectivenes->date,
+            'time' => $request->time??$effectivenes->time,
+            'location' => $request->location??$effectivenes->location,
+            'lat' => $request->lat??$effectivenes->lat,
+            'long' => $request->long??$effectivenes->long,
+            'description' => $request->description??$effectivenes->description,
+            'price' => $request->price??$effectivenes->price,
+            'updated_by' => auth()->user()->id,
         ];
         $item = $this->service->update($data, $effectivenes);
         if ($item) {
