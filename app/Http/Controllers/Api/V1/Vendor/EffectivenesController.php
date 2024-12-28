@@ -52,8 +52,6 @@ class EffectivenesController extends Controller
             'time' => $request->time,
             'title' => $request->title,
             'city_id' => $request->city_id,
-            'free_cancelation' => $request->free_cancelation,
-            'pay_later' => $request->pay_later,
             'location' => $request->location,
             'lat' => $request->lat,
             'long' => $request->long,
@@ -61,6 +59,12 @@ class EffectivenesController extends Controller
             'price' => $request->price,
             'created_by' => auth()->user()->id,
         ];
+        if ($request->filled('free_cancelation')) {
+            $data['free_cancelation'] = $request->free_cancelation;
+        }
+        if ($request->filled('pay_later')) {
+            $data['pay_later'] = $request->pay_later;
+        }
         $item = $this->service->store($data);
 
         $images = $request->file('images');
@@ -87,20 +91,27 @@ class EffectivenesController extends Controller
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
         $data = [
-            'title' => $request->title??$effectivenes->title,
-            'city_id' => $request->city_id??$effectivenes->city_id,
-            'free_cancelation' => $request->free_cancelation??$effectivenes->free_cancelation,
-            'pay_later' => $request->pay_later??$effectivenes->pay_later,
-            'cover' => $storedPath??$effectivenes->cover,
-            'date' => $request->date??$effectivenes->date,
-            'time' => $request->time??$effectivenes->time,
-            'location' => $request->location??$effectivenes->location,
-            'lat' => $request->lat??$effectivenes->lat,
-            'long' => $request->long??$effectivenes->long,
-            'description' => $request->description??$effectivenes->description,
-            'price' => $request->price??$effectivenes->price,
+            'title' => $request->title ?? $effectivenes->title,
+            'city_id' => $request->city_id ?? $effectivenes->city_id,
+            'cover' => $storedPath ?? $effectivenes->cover,
+            'date' => $request->date ?? $effectivenes->date,
+            'time' => $request->time ?? $effectivenes->time,
+            'location' => $request->location ?? $effectivenes->location,
+            'lat' => $request->lat ?? $effectivenes->lat,
+            'long' => $request->long ?? $effectivenes->long,
+            'description' => $request->description ?? $effectivenes->description,
+            'price' => $request->price ?? $effectivenes->price,
             'updated_by' => auth()->user()->id,
         ];
+
+        if ($request->filled('free_cancelation')) {
+            $data['free_cancelation'] = $request->free_cancelation;
+        }
+        if ($request->filled('pay_later')) {
+            $data['pay_later'] = $request->pay_later;
+        }
+
+
         $item = $this->service->update($data, $effectivenes);
         if ($item) {
             $images = $request->file('images');
