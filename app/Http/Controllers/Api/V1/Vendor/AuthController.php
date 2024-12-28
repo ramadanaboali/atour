@@ -82,9 +82,6 @@ class AuthController extends Controller
                 'type' => User::TYPE_SUPPLIER,
             ];
             $user = User::create($data);
-
-            mail($user->email, "Verify Code", $MsgID);
-
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
@@ -296,12 +293,8 @@ class AuthController extends Controller
             $user->update(['reset_code' => $MsgID]);
             if ($request->has('username')) {
                 if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
-                    mail($request->username, "Verify Code", $MsgID);
                     Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
                 } else {
-
-                    mail($user->email, "Verify Code", $MsgID);
-
                     Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
                 }
             }
@@ -322,9 +315,6 @@ class AuthController extends Controller
 
             $MsgID = rand(100000, 999999);
             $user->update(['reset_code' => $MsgID]);
-
-            mail($user->email, "Verify Code", $MsgID);
-
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
         } catch (Exception $e) {
