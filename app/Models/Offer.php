@@ -11,15 +11,34 @@ class Offer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'title',
-        'description',
+        'title_en',
+        'title_ar',
+        'description_en',
+        'description_ar',
         'image',
         'active',
         'vendor_id',
         'trip_id',
     ];
     protected $table = 'offers';
-    protected $appends = ['photo'];
+    protected $appends = ['title','photo','description'];
+
+    public function getTitleAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
+        } else {
+            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getDescriptionAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
+        } else {
+            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
+        }
+    }
 
     public function getPhotoAttribute()
     {

@@ -52,9 +52,11 @@ class TripController extends Controller
         }
         $offer_data = [
             'vendor_id' => auth()->user()->id,
-            'title' => $request->title,
+            'title_en' => $request->title_en,
+            'title_ar' => $request->title_ar,
             'trip_id' => $request->trip_id,
-            'description' => $request->description,
+            'description_en' => $request->description_en,
+            'description_ar' => $request->description_ar,
             'image' => $image,
         ];
         $offer = Offer::create($offer_data);

@@ -20,8 +20,10 @@ class TripOfferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|min:2',
-            'description' => 'required|string|min:2',
+            'title_en' => 'required|string|min:2',
+            'title_ar' => 'required|string|min:2',
+            'description_en' => 'required|string|min:2',
+            'description_ar' => 'required|string|min:2',
             'image' => 'required|image',
             'trip_id' => 'required|exists:trips,id',
         ];
