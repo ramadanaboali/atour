@@ -43,6 +43,14 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
         ],
+        'stream' => [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ],
+        ],
+
 
         'ses' => [
             'transport' => 'ses',
@@ -113,12 +121,13 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
-    'stream' => [
+'stream' => [
     'ssl' => [
-        'verify_peer' => true,
-        'verify_peer_name' => true,
-        'allow_self_signed' => false,
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+        'allow_self_signed' => true,
     ],
 ],
+
 
 ];
