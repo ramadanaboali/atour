@@ -30,7 +30,10 @@ class EffectivenesRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'description' => 'required|string|min:2',
+                        'description_en' => 'required|string|min:2',
+                        'description_ar' => 'required|string|min:2',
+                        'title_en' => 'required|string|min:2',
+                        'title_ar' => 'required|string|min:2',
                         'price' => 'required|numeric',
                         'date'=>'required',
                         'time'=>'required',
@@ -43,7 +46,8 @@ class EffectivenesRequest extends FormRequest
                 {
 
                     return [
-                        'description' => 'nullable|string|min:2',
+                        'description_en' => 'nullable|string|min:2',
+                        'description_ar' => 'nullable|string|min:2',
                         'price' => 'nullable|numeric',
                         'date'=>'required',
                         'time'=>'required',

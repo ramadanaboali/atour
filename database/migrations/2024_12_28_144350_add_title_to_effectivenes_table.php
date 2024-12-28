@@ -14,7 +14,7 @@ return new class () extends Migration {
     {
         Schema::table('effectivenes', function (Blueprint $table) {
 
-            $table->string('title_ar');
+            $table->string('title_ar')->nullable();
             $table->string('title_en')->nullable();
             $table->longText('description_en')->nullable();
             $table->longText('description_ar')->nullable();
