@@ -10,8 +10,12 @@ class TripResource extends JsonResource
 {
     public function toArray($request)
     {
-        
+
         $favourit = Favorite::where('model_type', 'trip')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+        $total_rates = 0;
+        if(count($this->rates)){
+            $total_rates=$this->rates->sum('rate')/count($this->rates);
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -25,6 +29,7 @@ class TripResource extends JsonResource
             'available_times' => $this->available_times,
             'pay_later' => $this->pay_later,
             'rates' => RateResource::collection($this->rates),
+            'total_rates' => $total_rates,
             'cover' => $this->photo,
             'active' => $this->active,
             'created_by' => $this->createdBy?->name,
