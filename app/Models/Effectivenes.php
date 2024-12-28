@@ -14,8 +14,10 @@ class Effectivenes extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'title',
-        'description',
+        'title_en',
+        'title_ar',
+        'description_ar',
+        'description_en',
         'price',
         'date',
         'time',
@@ -33,13 +35,30 @@ class Effectivenes extends Model
         'created_by',
         'updated_by',
     ];
-    protected $appends = ['photo'];
+    protected $appends = ['title','photo','description'];
+
 
     public function getPhotoAttribute()
     {
         return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/' . $this->attributes['cover']) : null) : null;
     }
 
+    public function getTitleAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
+        } else {
+            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getDescriptionAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
+        } else {
+            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
+        }
+    }
 
     public function rates(): ?HasMany
     {

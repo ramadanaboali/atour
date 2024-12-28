@@ -10,6 +10,10 @@ class EffectivenesResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title_en' => $this->title_en,
+            'title_ar' => $this->title_ar,
+            'description_en' => $this->description_en,
+            'description_ar' => $this->description_ar,
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
