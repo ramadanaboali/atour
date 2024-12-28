@@ -24,6 +24,7 @@ class Trip extends Model
         'start_point',
         'program_time',
         'people',
+        'trip_requirements',
         'free_cancelation',
         'available_days',
         'pay_later',
