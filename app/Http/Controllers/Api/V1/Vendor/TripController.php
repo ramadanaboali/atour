@@ -205,7 +205,7 @@ class TripController extends Controller
     public function delete(Trip $trip)
     {
 
-        return response()->apiSuccess($this->service->delete($trip));
+        return response()->apiSuccess($trip->delete());
     }
 
 }
