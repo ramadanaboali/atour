@@ -24,6 +24,10 @@ class Gift extends Model
         'free_cancelation',
         'pay_later',
         'active',
+        'long',
+        'lat',
+        'location_ar',
+        'location_en',
         'cover',
         'city_id',
         'vendor_id',
@@ -31,7 +35,7 @@ class Gift extends Model
         'created_by',
         'updated_by',
     ];
-    protected $appends = ['title','photo','description'];
+    protected $appends = ['title','photo','description','location'];
 
     public function getPhotoAttribute()
     {
@@ -44,6 +48,14 @@ class Gift extends Model
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getLocationAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['location_en'] ?? $this->attributes['location_ar'];
+        } else {
+            return $this->attributes['location_ar'] ?? $this->attributes['location_en'];
         }
     }
     public function getDescriptionAttribute()

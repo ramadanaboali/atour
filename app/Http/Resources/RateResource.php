@@ -16,8 +16,9 @@ class RateResource extends JsonResource
             'model_type'    => $this->model_type,
             'trip_id'    => $this->trip_id,
             'user_id'    => $this->user_id,
-            'created_by'    => $this->created_by,
-            'updated_by'    => $this->updated_by,
+            'created_by'    => $this->user?->name,
+            'created_by_image'    => $this->user?->photo,
+            'updated_by'    => $this->user?->name,
             'images'  => $this->attachments,
         ];
     }

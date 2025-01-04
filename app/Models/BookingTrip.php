@@ -13,8 +13,6 @@ class BookingTrip extends Model
     protected $fillable = [
         'booking_date',
         'booking_time',
-        'lat',
-        'long',
         'people_number',
         'children_number',
         'status',

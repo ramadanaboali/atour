@@ -21,13 +21,16 @@ class Trip extends Model
         'description_en',
         'description_ar',
         'price',
-        'start_point',
+        'start_point_ar',
+        'start_point_en',
         'program_time',
         'people',
         'trip_requirements',
         'free_cancelation',
         'available_days',
         'pay_later',
+        'long',
+        'lat',
         'active',
         'cover',
         'available_times',
@@ -41,7 +44,7 @@ class Trip extends Model
         'available_times' => 'array',
         'available_days' => 'array',
     ];
-    protected $appends = ['title','photo','description'];
+    protected $appends = ['title','photo','description','start_point'];
 
     public function getPhotoAttribute()
     {
@@ -54,6 +57,14 @@ class Trip extends Model
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getStartPointAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['start_point_en'] ?? $this->attributes['start_point_ar'];
+        } else {
+            return $this->attributes['start_point_ar'] ?? $this->attributes['start_point_en'];
         }
     }
     public function getDescriptionAttribute()

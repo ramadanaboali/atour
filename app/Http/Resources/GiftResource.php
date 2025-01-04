@@ -20,6 +20,8 @@ class GiftResource extends JsonResource
             'rate' => $this->rate,
             'cover' => $this->photo,
             'active' => $this->active,
+            'long' => $this->long,
+            'lat' => $this->lat,
             'created_by' => $this->createdBy?->name,
             'attachments' => AttachmentResource::collection($this->attachments),
             'sub_categories' => SubCategoryResource::collection($this->subcategory),
