@@ -153,9 +153,9 @@ class PageController extends Controller
 
     public function sub_categories(Request $request)
     {
-        $data1 = SubCategory::where('category','gift')->get();
-        $data2 = SubCategory::where('category','trip')->get();
-        $data3 = SubCategory::where('category','effectiveness')->get();
+        $data1 = SubCategory::where('category', 'gift')->get();
+        $data2 = SubCategory::where('category', 'trip')->get();
+        $data3 = SubCategory::where('category', 'effectiveness')->get();
         $result['gifts'] = SubCategoryResource::collection($data1);
         $result['trips'] = SubCategoryResource::collection($data2);
         $result['effectiveness'] = SubCategoryResource::collection($data3);
@@ -230,12 +230,26 @@ class PageController extends Controller
     }
     public function saveRates(RateRequest $request)
     {
+        $trip_id = null;
+        $effectivenes_id = null;
+        $gift_id = null;
+        if ($request->model_type == "trip") {
+            $trip_id = $request->model_id;
+        }
+        if ($request->model_type == "effectivenes") {
+            $effectivenes_id = $request->model_id;
+        }
+        if ($request->model_type == "gift") {
+            $gift_id = $request->model_id;
+        }
         $data = [
             'rate' => $request->rate,
             'model_id' => $request->model_id,
             'model_type' => $request->model_type,
             'comment' => $request->comment,
-            'trip_id' => $request->model_type == "trip" ? $request->model_id : null,
+            'trip_id' => $trip_id,
+            'effectivenes_id' => $effectivenes_id,
+            'gift_id' => $gift_id,
             'user_id' => auth()->user()->id
         ];
         $data = Rate::create($data);

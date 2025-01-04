@@ -28,6 +28,8 @@ class OrderResource extends JsonResource
             'childrens'=>$this->childrens,
             'adults'=>$this->adults,
             'program_id'=>$this->program_id,
+            'lat'=>$this->lat,
+            'long'=>$this->long,
             'trip_id'=>$this->trip_id,
             'user_id'=>$this->user_id,
             'program_name'=>$this->program?->title,

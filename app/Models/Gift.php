@@ -57,7 +57,7 @@ class Gift extends Model
 
     public function rates(): ?HasMany
     {
-        return $this->hasMany(Rate::class, 'trip_id');
+        return $this->hasMany(Rate::class, 'gift_id');
     }
 
     public function subcategory(): ?BelongsToMany

@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\Trip;
 use App\Services\TapService;
 use Illuminate\Http\Request;
+
 use function response;
 
 class OrderController extends Controller
@@ -44,6 +45,10 @@ class OrderController extends Controller
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
         $data['total'] = $item->price;
+
+        $data['lat'] = $request->lat;
+        $data['long'] = $request->long;
+
         $data['vendor_id'] = $item->vendor_id;
         $order = BookingTrip::create($data);
         if ($request->payment_way == 'online') {
@@ -126,6 +131,8 @@ class OrderController extends Controller
         $data['total'] = $item->price;
         $data['vendor_id'] = $item->vendor_id;
         $data['gift_id'] = $request->gift_id;
+        $data['lat'] = $request->lat;
+        $data['long'] = $request->long;
         $data['delivery_address'] = $request->delivery_address;
         $data['delivery_way'] = $request->delivery_way;
         $data['quantity'] = $request->quantity;
