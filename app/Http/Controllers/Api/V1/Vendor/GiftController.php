@@ -148,9 +148,9 @@ class GiftController extends Controller
 
         return response()->apiSuccess($item);
     }
-    public function delete(Gift $gift)
+    public function delete($id)
     {
-
+        $gift=$this->service->get($id);
         return response()->apiSuccess($this->service->delete($gift));
     }
 

@@ -132,9 +132,9 @@ class EffectivenesController extends Controller
 
         return response()->apiSuccess($item);
     }
-    public function delete(Effectivenes $effectivenes)
+     public function delete($id)
     {
-
+        $effectivenes=$this->service->get($id);
         return response()->apiSuccess($this->service->delete($effectivenes));
     }
 

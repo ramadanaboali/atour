@@ -82,19 +82,19 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('add-offers', [TripController::class, 'storeOffer']);
             Route::get('trips/{id}', [TripController::class, 'show']);
             Route::put('trips/{trip}', [TripController::class, 'update']);
-            Route::delete('trips/{trip}', [TripController::class, 'delete']);
+            Route::delete('trips/{id}', [TripController::class, 'delete']);
 
             Route::get('effectivenes', [EffectivenesController::class, 'index']);
             Route::post('effectivenes', [EffectivenesController::class, 'store']);
             Route::get('effectivenes/{id}', [EffectivenesController::class, 'show']);
             Route::put('effectivenes/{effectivenes}', [EffectivenesController::class, 'update']);
-            Route::delete('effectivenes/{effectivenes}', [EffectivenesController::class, 'delete']);
+            Route::delete('effectivenes/{id}', [EffectivenesController::class, 'delete']);
 
             Route::get('gifts', [GiftController::class, 'index']);
             Route::post('gifts', [GiftController::class, 'store']);
             Route::get('gifts/{id}', [GiftController::class, 'show']);
             Route::put('gifts/{gift}', [GiftController::class, 'update']);
-            Route::delete('gifts/{gift}', [GiftController::class, 'delete']);
+            Route::delete('gifts/{id}', [GiftController::class, 'delete']);
 
             //addnewrouteheredontdeletemeplease
 

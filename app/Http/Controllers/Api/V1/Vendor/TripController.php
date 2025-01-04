@@ -202,10 +202,10 @@ class TripController extends Controller
 
         return response()->apiSuccess($item);
     }
-    public function delete(Trip $trip)
+    public function delete($id)
     {
-
-        return response()->apiSuccess($trip->delete());
+        $trip=$this->service->get($id);
+        return response()->apiSuccess($this->service->delete($trip));
     }
 
 }
