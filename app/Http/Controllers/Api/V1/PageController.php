@@ -48,6 +48,11 @@ class PageController extends Controller
         $data = Blog::with('attachments')->where('active', 1)->get();
         return apiResponse(true, $data, null, null, 200);
     }
+    public function blog($id)
+    {
+        $data = Blog::with('attachments')->where('id',$id)->first();
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function ads()
     {
         $data = Add::where('active', 1)->get();
