@@ -170,12 +170,12 @@ class OrderController extends Controller
     }
     public function bookings(Request $request)
     {
-        $data['curren']['gifts'] = BookingGift::with(['gift','vendor'])->where('status', BookingGift::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
-        $data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene','vendor'])->where('status', BookingEffectivene::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
-        $data['curren']['trips'] = BookingTrip::with(['trip','vendor'])->where('status', BookingTrip::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
-        $data['ended']['gifts'] = BookingGift::with(['gift','vendor'])->where('status', [BookingGift::STATUS_REJECTED,BookingGift::STATUS_CANCELED,BookingGift::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
-        $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene','vendor'])->where('status', [BookingEffectivene::STATUS_REJECTED,BookingEffectivene::STATUS_CANCELED,BookingEffectivene::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
-        $data['ended']['trips'] = BookingTrip::with(['trip','vendor'])->where('status', [BookingTrip::STATUS_REJECTED,BookingTrip::STATUS_CANCELED,BookingTrip::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
+        $data['curren']['gifts'] = BookingGift::with(['gift.city','vendor'])->where('status', BookingGift::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
+        $data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene.city','vendor'])->where('status', BookingEffectivene::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
+        $data['curren']['trips'] = BookingTrip::with(['trip.city','vendor'])->where('status', BookingTrip::STATUS_PENDING)->where('user_id', auth()->user()->id)->get();
+        $data['ended']['gifts'] = BookingGift::with(['gift.city','vendor'])->where('status', [BookingGift::STATUS_REJECTED,BookingGift::STATUS_CANCELED,BookingGift::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
+        $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene.city','vendor'])->where('status', [BookingEffectivene::STATUS_REJECTED,BookingEffectivene::STATUS_CANCELED,BookingEffectivene::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
+        $data['ended']['trips'] = BookingTrip::with(['trip.city','vendor'])->where('status', [BookingTrip::STATUS_REJECTED,BookingTrip::STATUS_CANCELED,BookingTrip::STATUS_COMPLEATED])->where('user_id', auth()->user()->id)->get();
         return response()->apiSuccess($data);
 
     }
