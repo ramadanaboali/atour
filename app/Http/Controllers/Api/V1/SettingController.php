@@ -40,7 +40,7 @@ class SettingController extends Controller
     }
     public function footer()
     {
-        $items = Setting::whereIn('key', ['footer_facebook','footer_twitter','footer_instagram','footer_snapchat','footer_tiktok','footer_google_play','footer_app_store'])->get();
+        $items = Setting::whereIn('key', ['footer_facebook','footer_twitter','footer_instagram','footer_snapchat','footer_tiktok','footer_google_play','footer_app_store','general_email','general_phone','general_whatsapp','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale(),'general_facebook_url','general_twitter','general_instagram','general_google_url'])->get();
         $data = [
             'footer_facebook' => $items->where('key', 'footer_facebook')->first()->value ?? '',
             'footer_twitter' => $items->where('key', 'footer_twitter')->first()->value ?? '',
@@ -49,6 +49,15 @@ class SettingController extends Controller
             'footer_tiktok' => $items->where('key', 'footer_tiktok')->first()->value ?? '',
             'footer_google_play' => $items->where('key', 'footer_google_play')->first()->value ?? '',
             'footer_app_store' => $items->where('key', 'footer_app_store')->first()->value ?? '',
+            'email' => $items->where('key', 'general_email')->first()->value ?? '',
+            'phone' => $items->where('key', 'general_phone')->first()->value ?? '',
+            'whatsapp' => $items->where('key', 'general_whatsapp')->first()->value ?? '',
+            'cancel_terms' => $items->where('key', 'cancel_terms_content_'.app()->getLocale())->first()->value ?? '',
+            'facebook_url' => $items->where('key', 'general_facebook_url')->first()->value ?? '',
+            'twitter' => $items->where('key', 'general_twitter')->first()->value ?? '',
+            'instagram' => $items->where('key', 'general_instagram')->first()->value ?? '',
+            'google_url' => $items->where('key', 'general_google_url')->first()->value ?? '',
+            'helpping_content' => $items->where('key', 'helpping_content_'.app()->getLocale())->first()->value ?? '',
         ];
         return apiResponse(true, $data, null, null, 200);
     }
