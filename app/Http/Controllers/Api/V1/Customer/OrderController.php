@@ -205,4 +205,17 @@ class OrderController extends Controller
         return response()->apiSuccess($order->delete());
     }
 
+    public function cancelOrder($type, $id)
+    {
+        if ($type == 'gift') {
+            $order = BookingGift::findOrFail($id);
+        } elseif ($type == 'effectivene') {
+            $order = BookingEffectivene::findOrFail($id);
+        } else {
+            $order = BookingTrip::findOrFail($id);
+        }
+        $order->status = BookingTrip::STATUS_CANCELED;
+        $order->save();
+        return response()->apiSuccess($order);
+    }
 }

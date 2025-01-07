@@ -82,6 +82,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('effectivene-pay/{id}', [OrderController::class, 'effectivenePay']);
             Route::post('booking-gift', [OrderController::class, 'bookingGifts']);
             Route::get('gift-pay/{id}', [OrderController::class, 'giftPay']);
+            Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
 
             Route::get('rates', [PageController::class, 'getAllRates']);
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);
