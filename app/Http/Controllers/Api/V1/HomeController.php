@@ -99,14 +99,17 @@ class HomeController extends Controller
     }
     public function favourite()
     {
-        //    $data['trips'] = Favorite::with('trip')->where('model_type','like','trip%')->where('user_id', auth()->user()->id)->get();
-        // $data['effectivenes'] = Favorite::with('effectivene')->where('model_type','like','effectivene%')->where('user_id', auth()->user()->id)->get();
-        // $data['gifts'] = Favorite::with('gift')->where('model_type','like','gift%')->where('user_id', auth()->user()->id)->get();
-        // return apiResponse(true, $data, null, null, 200);
-        $data = Favorite::with('trip')->where(function ($query) {
-            $query->where('model_type', 'like', 'trip%')->orWhere('model_type', 'like', 'gift%')->orWhere('model_type', 'like', 'effectivene%');
-        })->where('user_id', auth()->user()->id)->get();
+        $trips = Favorite::with('trip')->where('model_type','like','trip%')->where('user_id', auth()->user()->id)->get()->pluck('trip');
+        $data['trips'] = TripResource::collection($trips);
+
+        $effectivenes = Favorite::with('effectivene')->where('model_type','like','effectivene%')->where('user_id', auth()->user()->id)->get()->pluck('effectivene');
+        $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
+
+        $gifts = Favorite::with('gift')->where('model_type','like','gift%')->where('user_id', auth()->user()->id)->get()->pluck('gift');
+        $data['gifts'] = GiftResource::collection($gifts);
+
         return apiResponse(true, $data, null, null, 200);
+
     }
     public function searchByCity(Request $request, $city_id)
     {
