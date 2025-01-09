@@ -18,6 +18,7 @@ class OrderResource extends JsonResource
             'promocode_value'=>$this->promocode_value,
             'payment_type'=>$this->payment_type,
             'payment_status'=>$this->payment_status,
+            'booking_day'=>$this->booking_day,
             'order_date'=>$this->order_date,
             'order_time'=>$this->order_time,
             'address'=>$this->address,

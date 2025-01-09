@@ -86,7 +86,13 @@ class HomeController extends Controller
             'model_id' => $id,
             'user_id' => auth()->user()->id
         ];
-        $favourit = Favorite::create($data);
+        $favourit = Favorite::where('model_id',$id)->where('model_type',$type)->where('user_id',auth()->user()->id)->first();
+        if ($favourit) {
+            $favourit->delete();
+        }else{
+
+            $favourit = Favorite::create($data);
+        }
         return response()->apiSuccess($favourit);
 
     }

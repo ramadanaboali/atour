@@ -12,6 +12,7 @@ class BookingTrip extends Model
     use HasFactory,SoftDeletes;
     protected $fillable = [
         'booking_date',
+        'booking_day',
         'booking_time',
         'people_number',
         'children_number',

@@ -21,7 +21,7 @@ class BookingTripRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'booking_date'=>'required|date|after_or_equal:'.date('Y-m-d'),
+            // 'booking_date'=>'required|date|after_or_equal:'.date('Y-m-d'),
             'people_number'=>'required|integer',
             'children_number'=>'required|integer',
             'payment_way'=>'required|in:online,cash',
