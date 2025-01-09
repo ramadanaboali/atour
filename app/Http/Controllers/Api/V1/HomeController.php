@@ -99,14 +99,16 @@ class HomeController extends Controller
     }
     public function favourite()
     {
-        $trips = Favorite::with('trip')->where('model_type','like','trip%')->where('user_id', auth()->user()->id)->get()->pluck('trip');
+        $trips = Trip::leftJoin('favorites', 'favorites.model_id', 'trips.id')->where('favorites.model_type', 'like', 'trip%')->where('favorites.user_id', auth()->user()->id)->select('trips.*')->get();
         $data['trips'] = TripResource::collection($trips);
 
-        $effectivenes = Favorite::with('effectivene')->where('model_type','like','effectivene%')->where('user_id', auth()->user()->id)->get()->pluck('effectivene');
+        $effectivenes = Effectivenes::leftJoin('favorites', 'favorites.model_id', 'effectivenes.id')->where('favorites.model_type', 'like', 'effectivene%')->where('favorites.user_id', auth()->user()->id)->select('effectivenes.*')->get();
         $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
-        $gifts = Favorite::with('gift')->where('model_type','like','gift%')->where('user_id', auth()->user()->id)->get()->pluck('gift');
+        $gifts = Gift::leftJoin('favorites', 'favorites.model_id', 'gifts.id')->where('favorites.model_type', 'like', 'gift%')->where('favorites.user_id', auth()->user()->id)->select('gifts.*')->get();
         $data['gifts'] = GiftResource::collection($gifts);
+
+
 
         return apiResponse(true, $data, null, null, 200);
 
