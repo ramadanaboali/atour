@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => ['languageMobile']], function () {
-
         Route::post('/send-otp', [AuthController::class, 'sendOtp']);
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
         Route::post('/reset', [AuthController::class, 'resetPassword']);
@@ -24,24 +22,16 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('reset-password', [AuthController::class, 'resetPassword']);
         Route::post('verify', [AuthController::class, 'verify']);
-
-        //Start Customer Api
         Route::get('faqs', [HomeController::class,'faqs']);
         Route::get('cities', [HomeController::class,'cities']);
-        //End Customer Api
-
         Route::get('privacy', [SettingController::class, 'privacy']);
         Route::get('about', [SettingController::class, 'about']);
         Route::get('terms', [SettingController::class, 'terms']);
         Route::get('contact', [SettingController::class, 'contact']);
         Route::get('header', [SettingController::class,'header']);
         Route::get('ads', [PageController::class,'ads']);
-
         Route::get('blogs', [PageController::class,'blogs']);
         Route::get('blogs/{id}', [PageController::class,'blog']);
-        //         Route::get('last-trips', [PageController::class,'lastTrips']);
-        // Route::get('trips', [PageController::class,'trips']);
-        // Route::get('trips/{id}', [PageController::class,'getTrips']);
         Route::get('cities', [PageController::class,'cities']);
         Route::get('cities/{id}', [PageController::class,'getCity']);
         Route::get('currencies', [PageController::class,'currencies']);
@@ -53,16 +43,12 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('footer', [SettingController::class,'footer']);
         Route::get('jobs', [PageController::class,'jobs']);
         Route::get('why_bookings', [PageController::class,'whyBookings']);
-
         Route::get('search_by_city/{id}', [HomeController::class,'searchByCity']);
         Route::get('city-trips/{id}', [PageController::class,'cityTrips']);
         Route::get('offers', [PageController::class,'getOffers']);
         Route::get('top_cities', [PageController::class,'topCities']);
-
         Route::get('home', [HomeController::class,'home']);
-
         Route::group(['middleware' => 'auth:sanctum'], function () {
-
             Route::get('trips', [HomeController::class,'trips']);
             Route::get('gifts', [HomeController::class,'gifts']);
             Route::get('effectivenes', [HomeController::class,'effectivenes']);
@@ -70,7 +56,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('trips/{id}', [HomeController::class,'trip']);
             Route::get('gifts/{id}', [HomeController::class,'gift']);
             Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
-
             Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
             Route::get('bookings', [OrderController::class, 'bookings']);
             Route::get('save-favourite/{type}/{id}', [HomeController::class, 'saveFavourite']);
@@ -83,7 +68,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('booking-gift', [OrderController::class, 'bookingGifts']);
             Route::get('gift-pay/{id}', [OrderController::class, 'giftPay']);
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
-
             Route::get('rates', [PageController::class, 'getAllRates']);
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);
             Route::post('save_rate', [PageController::class, 'saveRates']);

@@ -45,7 +45,7 @@ class HomeController extends Controller
     public function similler_trips($id)
     {
         $trip = Trip::findOrFail($id);
-        $trips=Trip::where('vendor_id',$trip->vendor_id)->where('active', true)->get();
+        $trips = Trip::where('vendor_id', $trip->vendor_id)->where('active', true)->get();
         $data = TripResource::collection($trips);
         return apiResponse(true, $data, null, null, 200);
     }
@@ -93,7 +93,7 @@ class HomeController extends Controller
     public function deleteFavourite($type, $id)
     {
 
-        $favourit = Favorite::where('model_type',$type)->where('model_id',$id)->where('user_id', auth()->user()->id)->delete();
+        $favourit = Favorite::where('model_type', $type)->where('model_id', $id)->where('user_id', auth()->user()->id)->delete();
         return response()->apiSuccess($favourit);
 
     }
@@ -103,7 +103,9 @@ class HomeController extends Controller
         // $data['effectivenes'] = Favorite::with('effectivene')->where('model_type','like','effectivene%')->where('user_id', auth()->user()->id)->get();
         // $data['gifts'] = Favorite::with('gift')->where('model_type','like','gift%')->where('user_id', auth()->user()->id)->get();
         // return apiResponse(true, $data, null, null, 200);
-        $data = Favorite::with('trip')->where('model_type','like','trip%')->where('user_id', auth()->user()->id)->get();
+        $data = Favorite::with('trip')->where(function ($query) {
+            $query->where('model_type', 'like', 'trip%')->orWhere('model_type', 'like', 'gift%')->orWhere('model_type', 'like', 'effectivene%');
+        })->where('user_id', auth()->user()->id)->get();
         return apiResponse(true, $data, null, null, 200);
     }
     public function searchByCity(Request $request, $city_id)
