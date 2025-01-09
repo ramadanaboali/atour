@@ -89,6 +89,7 @@ class HomeController extends Controller
         $favourit = Favorite::where('model_id',$id)->where('model_type',$type)->where('user_id',auth()->user()->id)->first();
         if ($favourit) {
             $favourit->delete();
+            $favourit->forceDelete();
         }else{
 
             $favourit = Favorite::create($data);
