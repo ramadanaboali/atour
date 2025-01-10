@@ -2,12 +2,15 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Favorite;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EffectivenesResource extends JsonResource
 {
     public function toArray($request)
     {
+        $favourit = Favorite::where('model_type','like', 'effectivene%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+
         return [
             'id' => $this->id,
             'title_en' => $this->title_en,
@@ -33,6 +36,7 @@ class EffectivenesResource extends JsonResource
             'vendor' => new UserResource($this->vendor),
             'city' => new CityResource($this->city),
             'attachments' => AttachmentResource::collection($this->attachments),
+            'is_favourit' => $favourit ? 1 : 0,
             'booking_count' => 0,
             'total_amounts' => 0,
             'use_coupon' => 0,
