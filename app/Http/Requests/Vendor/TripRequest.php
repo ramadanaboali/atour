@@ -39,7 +39,6 @@ class TripRequest extends FormRequest
                     'description_en' => 'required|string|min:2',
                     'description_ar' => 'required|string|min:2',
                     'price' => 'required|numeric',
-                    'start_point' => 'required',
                     'cover' => 'required|image',
                     'free_cancelation' => 'required|in:0,1',
                     'active' => 'required|in:0,1',
