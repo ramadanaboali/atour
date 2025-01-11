@@ -185,11 +185,11 @@ class OrderController extends Controller
         $payment = new TapService();
         $result = $payment->callBack($request->tap_id, $type);
         if ($result['success']) {
-            return "success";
-            // return response()->apiSuccess($result['data']);
+            // return "success";
+            return response()->apiSuccess($result['data']);
         }
-        return "error";
-        // return response()->apiFail($result['message']);
+        // return "error";
+        return response()->apiFail($result['message']);
 
     }
     public function cancel($id)
