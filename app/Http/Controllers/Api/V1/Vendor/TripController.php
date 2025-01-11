@@ -206,6 +206,7 @@ class TripController extends Controller
     public function delete($id)
     {
         $trip=$this->service->get($id);
+        Offer::where('trip_id', $id)->delete();
         return response()->apiSuccess($this->service->delete($trip));
     }
 

@@ -14,12 +14,25 @@ use App\Models\Favorite;
 use App\Models\Gift;
 use App\Models\Offer;
 use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
+
+        $token = $request->header('Authorization');
+        if ($token) {
+            $token = str_replace('Bearer ', '', $token);
+            $request = request()->merge(['Authorization' => 'Bearer ' . $token]);
+            $user = Auth::guard('api')->user();
+            if ($user) {
+                Auth::setUser($user);
+            }
+        }
+
         $data['offer'] = Offer::orderByDesc('id')->first();
         $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::where('active', true)->get();

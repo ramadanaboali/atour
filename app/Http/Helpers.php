@@ -2,12 +2,69 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Media;
-use App\Models\Saved;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
+if (!function_exists('bookingCount')) {
+    function bookingCount($id,$type)
+    {
+        if($type == 'trip'){
+            return DB::table('booking_trips')->where('trip_id',$id)->count();
+        }
+        if($type == 'gift'){
+            return DB::table('booking_gifts')->where('gift_id',$id)->count();
+        }
+        if($type == 'effectivenes'){
+            return DB::table('booking_effectivenes')->where('effectivene_id',$id)->count();
+        }
+        return 0;
+    }
+}
+if (!function_exists('totalAmount')) {
+    function totalAmount($id,$type)
+    {
+        if($type == 'trip'){
+            return DB::table('booking_trips')->where('trip_id',$id)->sum('total');
+        }
+        if($type == 'gift'){
+            return DB::table('booking_gifts')->where('gift_id',$id)->sum('total');
+        }
+        if($type == 'effectivenes'){
+            return DB::table('booking_effectivenes')->where('effectivene_id',$id)->sum('total');
+        }
+        return 0;
+    }
+}
+if (!function_exists('useCoupon')) {
+    function useCoupon($id,$type)
+    {
+        // if($type == 'trip'){
+        //     return DB::table('booking_trips')->where('trip_id',$id)->count();
+        // }
+        // if($type == 'gift'){
+        //     return DB::table('booking_gifts')->where('gift_id',$id)->count();
+        // }
+        // if($type == 'effectivenes'){
+        //     return DB::table('booking_effectivenes')->where('effectivene_id',$id)->count();
+        // }
+        return 0;
+    }
+}
+if (!function_exists('useOffers')) {
+    function useOffers($id,$type)
+    {
+        // if($type == 'trip'){
+        //     return DB::table('booking_trips')->where('trip_id',$id)->count();
+        // }
+        // if($type == 'gift'){
+        //     return DB::table('booking_gifts')->where('gift_id',$id)->count();
+        // }
+        // if($type == 'effectivenes'){
+        //     return DB::table('booking_effectivenes')->where('effectivene_id',$id)->count();
+        // }
+        return 0;
+    }
+}
 if (!function_exists('app_timezone')) {
     function app_timezone()
     {

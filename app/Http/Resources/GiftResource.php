@@ -32,10 +32,11 @@ class GiftResource extends JsonResource
             'vendor' => new UserResource($this->vendor),
             'is_favourit' => $favourit ? 1 : 0,
 
-            'booking_count' => 0,
-            'total_amounts' => 0,
-            'use_coupon' => 0,
-            'use_offers' => 0,
+            'booking_count' => bookingCount($this->id,'gift'),
+            'total_amounts' => totalAmount($this->id,'gift'),
+            'use_coupon' => useCoupon($this->id,'gift'),
+            'use_offers' => useOffers($this->id,'gift'),
+
         ];
     }
 

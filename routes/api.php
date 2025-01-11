@@ -48,6 +48,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('offers', [PageController::class,'getOffers']);
         Route::get('top_cities', [PageController::class,'topCities']);
         Route::get('home', [HomeController::class,'home']);
+        
         Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('trips', [HomeController::class,'trips']);
             Route::get('gifts', [HomeController::class,'gifts']);

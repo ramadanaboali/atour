@@ -43,10 +43,10 @@ class TripResource extends JsonResource
             'vendor' => new UserResource($this->vendor),
             'offers' => $this->offers,
             'is_favourit' => $favourit ? 1 : 0,
-            'booking_count' => 0,
-            'total_amounts' => 0,
-            'use_coupon' => 0,
-            'use_offers' => 0,
+            'booking_count' => bookingCount($this->id,'trip'),
+            'total_amounts' => totalAmount($this->id,'trip'),
+            'use_coupon' => useCoupon($this->id,'trip'),
+            'use_offers' => useOffers($this->id,'trip'),
         ];
     }
 
