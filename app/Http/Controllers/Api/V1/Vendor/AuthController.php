@@ -385,18 +385,22 @@ class AuthController extends Controller
             if ($request->birthdate) {
                 $inputs['birthdate'] = $request->birthdate;
             }
+
             if ($request->name) {
                 $inputs['name'] = $request->name;
             }
+
             if ($request->password) {
                 $inputs['password'] = Hash::make($request->password);
             }
+
             $image = $request->file('image');
             if ($image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
             }
+            
             if (count($inputs) > 0) {
                  $currentUser->update($inputs);
             }
