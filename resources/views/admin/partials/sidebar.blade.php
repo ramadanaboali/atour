@@ -197,8 +197,8 @@
             </ul>
         </li>
 
-              <li class=" nav-item {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ||request()->routeIs('admin.features*') ? 'open active' : '' }} ">
-                <a class="d-flex align-items-center {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ||request()->routeIs('admin.features*') ? 'active' : '' }}" href="#">
+              <li class=" nav-item {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ||request()->routeIs('admin.features*')||request()->routeIs('admin.requirements*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ||request()->routeIs('admin.features*')||request()->routeIs('admin.requirements*') ? 'active' : '' }}" href="#">
                     <i data-feather="settings"></i>
                     <span class="menu-title text-truncate" data-i18n="">{{ __('admin.site_Settings') }}</span>
                 </a>
@@ -234,6 +234,14 @@
                             <a class="d-flex align-items-center" href="{{ route('admin.features.index') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.features') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('requirements.view')
+                        <li class=" nav-item {{ request()->routeIs('admin.requirements*')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.requirements.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.requirements') }}</span>
                             </a>
                         </li>
                         @endcan

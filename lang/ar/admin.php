@@ -11,6 +11,7 @@ return [
     'sliders' => 'العروض والاعلانات',
     'onboardings' => 'الشاشة الافتتاحية',
     'features' => 'المميزات',
+    'requirements' => 'المتطلبات',
     'accountants' => 'الحسابات',
     'suppports_contact_us' => 'الدعم الفنى وتواصل معنا',
     'articles_news' => 'المقالات والاخبار',

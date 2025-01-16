@@ -41,6 +41,16 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::match(['PUT', 'PATCH'], 'features/{id}', [App\Http\Controllers\Admin\FeatureController::class, 'update'])->name('features.update')->middleware('adminPermission:features.edit');
             Route::get('features/{id}/edit', [App\Http\Controllers\Admin\FeatureController::class, 'edit'])->name('features.edit')->middleware('adminPermission:features.edit');
 
+            Route::get('requirements/select', [App\Http\Controllers\Admin\RequirementController::class, 'select'])->name('requirements.select');
+            Route::delete('requirements/bulk', [App\Http\Controllers\Admin\RequirementController::class, 'deleteBulk'])->name('requirements.deleteBulk')->middleware('adminPermission:requirements.delete');
+            Route::get('requirements/list', [App\Http\Controllers\Admin\RequirementController::class, 'list'])->name('requirements.list')->middleware('adminPermission:requirements.view');
+            Route::post('requirements', [App\Http\Controllers\Admin\RequirementController::class, 'store'])->name('requirements.store')->middleware('adminPermission:requirements.create');
+            Route::delete('requirements/{id}', [App\Http\Controllers\Admin\RequirementController::class, 'destroy'])->name('requirements.destroy')->middleware('adminPermission:requirements.delete');
+            Route::get('requirements', [App\Http\Controllers\Admin\RequirementController::class, 'index'])->name('requirements.index')->middleware('adminPermission:requirements.view');
+            Route::get('requirements/create', [App\Http\Controllers\Admin\RequirementController::class, 'create'])->name('requirements.create')->middleware('adminPermission:requirements.create');
+            Route::match(['PUT', 'PATCH'], 'requirements/{id}', [App\Http\Controllers\Admin\RequirementController::class, 'update'])->name('requirements.update')->middleware('adminPermission:requirements.edit');
+            Route::get('requirements/{id}/edit', [App\Http\Controllers\Admin\RequirementController::class, 'edit'])->name('requirements.edit')->middleware('adminPermission:requirements.edit');
+
             Route::get('sliders/select', [App\Http\Controllers\Admin\SliderController::class, 'select'])->name('sliders.select');
             Route::delete('sliders/bulk', [App\Http\Controllers\Admin\SliderController::class, 'deleteBulk'])->name('sliders.deleteBulk')->middleware('adminPermission:sliders.delete');
             Route::get('sliders/list', [App\Http\Controllers\Admin\SliderController::class, 'list'])->name('sliders.list')->middleware('adminPermission:sliders.view');

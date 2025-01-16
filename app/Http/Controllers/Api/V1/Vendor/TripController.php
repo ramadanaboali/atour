@@ -79,7 +79,6 @@ class TripController extends Controller
             'title_en' => $request->title_en,
             'description_en' => $request->description_en,
             'description_ar' => $request->description_ar,
-            'trip_requirements' => $request->trip_requirements,
             'price' => $request->price,
             'start_point_en' => $request->start_point_en,
             'start_point_ar' => $request->start_point_ar,
@@ -105,6 +104,9 @@ class TripController extends Controller
             }
             if($request->featur_ids){
                 $item->features()->sync($request->featur_ids);
+            }
+            if($request->requirement_ids){
+                $item->requirements()->sync($request->requirement_ids);
             }
 
             $images = $request->file('images');

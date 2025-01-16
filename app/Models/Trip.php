@@ -25,7 +25,6 @@ class Trip extends Model
         'start_point_en',
         'program_time',
         'people',
-        'trip_requirements',
         'free_cancelation',
         'available_days',
         'pay_later',
@@ -125,6 +124,11 @@ class Trip extends Model
     public function features():?BelongsToMany
     {
         return $this->belongsToMany(Feature::class, 'trip_features');
+
+    }
+    public function requirements():?BelongsToMany
+    {
+        return $this->belongsToMany(Requirement::class, 'trip_requirements');
 
     }
     public function createdBy(): ?BelongsTo
