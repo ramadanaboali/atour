@@ -10,6 +10,7 @@ use App\Http\Resources\CountryResource;
 use App\Http\Resources\LocationResource;
 use App\Http\Resources\SliderResource;
 use App\Http\Resources\OnboardingResource;
+use App\Http\Resources\FeatureResource;
 use App\Http\Resources\SubCategoryResource;
 use App\Models\Add;
 use App\Models\Article;
@@ -28,6 +29,7 @@ use App\Models\SubCategory;
 use App\Models\Trip;
 use App\Models\UserPreferedSetting;
 use App\Models\WhyBooking;
+use App\Models\Feature;
 use App\Models\Onboarding;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
@@ -293,6 +295,11 @@ class PageController extends Controller
     {
         $data = Onboarding::get();
         return apiResponse(true, OnboardingResource::collection($data), null, null, 200);
+    }
+    public function features()
+    {
+        $data = Feature::get();
+        return apiResponse(true, FeatureResource::collection($data), null, null, 200);
     }
     public function allLocations()
     {

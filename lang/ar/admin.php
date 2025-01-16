@@ -10,6 +10,7 @@ return [
     'notice' => 'التنبيهات',
     'sliders' => 'العروض والاعلانات',
     'onboardings' => 'الشاشة الافتتاحية',
+    'features' => 'المميزات',
     'accountants' => 'الحسابات',
     'suppports_contact_us' => 'الدعم الفنى وتواصل معنا',
     'articles_news' => 'المقالات والاخبار',

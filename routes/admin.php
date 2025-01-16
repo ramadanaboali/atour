@@ -31,6 +31,16 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::match(['PUT', 'PATCH'], 'onboardings/{id}', [App\Http\Controllers\Admin\OnboardingController::class, 'update'])->name('onboardings.update')->middleware('adminPermission:onboardings.edit');
             Route::get('onboardings/{id}/edit', [App\Http\Controllers\Admin\OnboardingController::class, 'edit'])->name('onboardings.edit')->middleware('adminPermission:onboardings.edit');
 
+            Route::get('features/select', [App\Http\Controllers\Admin\FeatureController::class, 'select'])->name('features.select');
+            Route::delete('features/bulk', [App\Http\Controllers\Admin\FeatureController::class, 'deleteBulk'])->name('features.deleteBulk')->middleware('adminPermission:features.delete');
+            Route::get('features/list', [App\Http\Controllers\Admin\FeatureController::class, 'list'])->name('features.list')->middleware('adminPermission:features.view');
+            Route::post('features', [App\Http\Controllers\Admin\FeatureController::class, 'store'])->name('features.store')->middleware('adminPermission:features.create');
+            Route::delete('features/{id}', [App\Http\Controllers\Admin\FeatureController::class, 'destroy'])->name('features.destroy')->middleware('adminPermission:features.delete');
+            Route::get('features', [App\Http\Controllers\Admin\FeatureController::class, 'index'])->name('features.index')->middleware('adminPermission:features.view');
+            Route::get('features/create', [App\Http\Controllers\Admin\FeatureController::class, 'create'])->name('features.create')->middleware('adminPermission:features.create');
+            Route::match(['PUT', 'PATCH'], 'features/{id}', [App\Http\Controllers\Admin\FeatureController::class, 'update'])->name('features.update')->middleware('adminPermission:features.edit');
+            Route::get('features/{id}/edit', [App\Http\Controllers\Admin\FeatureController::class, 'edit'])->name('features.edit')->middleware('adminPermission:features.edit');
+
             Route::get('sliders/select', [App\Http\Controllers\Admin\SliderController::class, 'select'])->name('sliders.select');
             Route::delete('sliders/bulk', [App\Http\Controllers\Admin\SliderController::class, 'deleteBulk'])->name('sliders.deleteBulk')->middleware('adminPermission:sliders.delete');
             Route::get('sliders/list', [App\Http\Controllers\Admin\SliderController::class, 'list'])->name('sliders.list')->middleware('adminPermission:sliders.view');
