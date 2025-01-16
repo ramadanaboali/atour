@@ -311,8 +311,8 @@ class PageController extends Controller
     public function allLocations()
     {
         $trips = Trip::select('id', 'start_lat as lat', 'start_long as long')
-                    ->whereNotNull('lat')
-                    ->whereNotNull('long')
+                    ->whereNotNull('start_lat')
+                    ->whereNotNull('start_long')
                     ->get()
                     ->map(function ($item) {
                         $item->type = 'trip';
