@@ -101,7 +101,7 @@
                     "render": function (data, type, row) {
                         var editUrl = '{{ route("admin.offers.edit", ":id") }}';
                         editUrl = editUrl.replace(':id', row.id);
-                     
+
                         var deleteUrl = '{{ route("admin.offers.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
 
@@ -135,5 +135,14 @@
         $('.btn_filter').click(function (){
             dt_ajax.DataTable().ajax.reload();
         });
+    $(window).on('load', function() {
+        $('body').on('click', '.active_offer', function (){
+
+           var url= $(this).attr('data-url');
+              $('#StatusForm').attr('action', url)
+            $('#ClientStatus').modal('show')
+            return false;
+        });
+    });
     </script>
 @endpush

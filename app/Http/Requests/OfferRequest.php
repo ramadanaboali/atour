@@ -19,11 +19,6 @@ class OfferRequest extends FormRequest
             'title_en' => 'required',
             'description_ar' => 'required',
             'description_en' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'discount' => 'required',
-            'user_id' => 'required',
-            'services' => 'required|array',
         ];
     }
 }

@@ -250,6 +250,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::match(['PUT', 'PATCH'], 'offers/{id}', [App\Http\Controllers\Admin\OfferController::class, 'update'])->name('offers.update')->middleware('adminPermission:offers.edit');
             Route::get('offers/{id}/edit', [App\Http\Controllers\Admin\OfferController::class, 'edit'])->name('offers.edit')->middleware('adminPermission:offers.edit');
             Route::get('offers/show/{id}', [App\Http\Controllers\Admin\OfferController::class, 'show'])->name('offers.show')->middleware('adminPermission:offers.view');
+            Route::get('offers/changeStatus/{id}', [App\Http\Controllers\Admin\OfferController::class, 'changeStatus'])->name('offers.changeStatus')->middleware('adminPermission:offers.edit');
 
 
 
@@ -321,6 +322,8 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('gifts/select', [App\Http\Controllers\Admin\AdminController::class, 'selectGift'])->name('gifts.select');
 
             Route::get('effectivenes/select', [App\Http\Controllers\Admin\AdminController::class, 'selectEffectivenes'])->name('effectivenes.select');
+
+            Route::post('getOffers', [App\Http\Controllers\Admin\AdminController::class, 'getOffers'])->name('getOffers');
 
 
         });

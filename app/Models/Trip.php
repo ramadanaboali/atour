@@ -53,6 +53,9 @@ class Trip extends Model
 
     public function getTitleAttribute()
     {
+        if(!array_key_exists('title_en', $this->attributes)||!array_key_exists('title_ar', $this->attributes)){
+            return "";
+        }
         if (App::isLocale('en')) {
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
@@ -61,6 +64,11 @@ class Trip extends Model
     }
     public function getTextAttribute()
     {
+
+        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
+            return "";
+        }
+
         if (App::isLocale('en')) {
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
@@ -69,6 +77,9 @@ class Trip extends Model
     }
     public function getStartPointAttribute()
     {
+        if(!array_key_exists('start_point_en', $this->attributes)||!array_key_exists('start_point_ar', $this->attributes)){
+            return "";
+        }
         if (App::isLocale('en')) {
             return $this->attributes['start_point_en'] ?? $this->attributes['start_point_ar'];
         } else {
@@ -77,6 +88,11 @@ class Trip extends Model
     }
     public function getDescriptionAttribute()
     {
+
+        if (!array_key_exists('description_en', $this->attributes) || !array_key_exists('description_ar', $this->attributes)) {
+            return "";
+        }
+
         if (App::isLocale('en')) {
             return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
         } else {

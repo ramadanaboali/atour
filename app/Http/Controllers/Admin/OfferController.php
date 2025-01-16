@@ -91,6 +91,16 @@ class OfferController extends Controller
         return to_route($this->route . '.index');
     }
 
+    public function changeStatus($id): RedirectResponse
+    {
+        $item = Offer::findOrFail($id);
+        Offer::where('id', '!=', $id)->update(['active' => 0]);
+        $item->active = 1;
+        $item->save();
+        flash(__('offers.messages.updated'))->success();
+        return to_route($this->route . '.index');
+    }
+
     protected function processForm($request, $id = null): Offer|null
     {
         $item = $id == null ? new Offer() : Offer::find($id);
@@ -102,6 +112,22 @@ class OfferController extends Controller
         } else {
             $item->active = 0;
         }
+        if ($request->type=="trip") {
+            $item->trip_id = $request->trip_id;
+            $item->gift_id = null;
+            $item->effectivenes_id = null;
+        }
+        if ($request->type=="gift") {
+            $item->gift_id = $request->gift_id;
+            $item->trip_id = null;
+            $item->effectivenes_id = null;
+        }
+        if ($request->type=="effectivenes") {
+            $item->effectivenes_id = $request->effectivenes_id;
+            $item->trip_id = null;
+            $item->gift_id = null;
+        }
+
         if ($item->save()) {
 
             if ($request->hasFile('image')) {
@@ -163,7 +189,7 @@ class OfferController extends Controller
 
 
         ->editColumn('active', function ($item) {
-            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->active == 1 ? '<button type="button" class="btn btn-sm btn-outline-success me-1 waves-effect active_offer" data-url="'.route('admin.offers.changeStatus',['id'=>$item->id]).'"><i data-feather="check" ></i></button>' : '<button type="button" class="btn btn-sm btn-outline-danger me-1 waves-effect active_offer" data-url="'.route('admin.offers.changeStatus',['id'=>$item->id]).'"><i data-feather="x" ></i></button>';
         })
         ->filterColumn('title', function ($query, $keyword) {
             if (App::isLocale('en')) {

@@ -55,8 +55,8 @@
                             <select name="vendor_id" id="vendor_id" class="form-control ajax_select2 extra_field"
                                 data-ajax--url="{{ route('admin.suppliers.select') }}" onchange="updateAjaxUrl()"
                                 data-ajax--cache="false" >
-                                @isset($item->supplier)
-                                    <option value="{{ $item->vendor_id }}" selected>{{ $item->supplier?->name }}</option>
+                                @isset($item->vendor)
+                                    <option value="{{ $item->vendor_id }}" selected>{{ $item->vendor?->name }}</option>
                                 @endisset
                             </select>
                             @error('vendor_id')
@@ -64,8 +64,8 @@
                             @enderror
                         </div>
                         <div class="mb-1 col-md-4  @error('type') is-invalid @enderror">
-                            <label  class="form-label" for="type">{{ __('offers.supplier') }}</label>
-                            <select name="type" id="type" class="form-control " >
+                            <label  class="form-label" for="type">{{ __('offers.type') }}</label>
+                            <select name="type" id="type" class="form-control "  onchange="updateAjaxUrl()">
                                 <option value="trip" @isset($item->type) {{ $item->type=="trip"?'selected':'' }} @endisset>{{ __('offers.types.trip') }}</option>
                                 <option value="gift" @isset($item->type) {{ $item->type=="gift"?'selected':'' }} @endisset>{{ __('offers.types.gift') }}</option>
                                 <option value="effectivenes" @isset($item->type) {{ $item->type=="effectivenes"?'selected':'' }} @endisset>{{ __('offers.types.effectivenes') }}</option>
@@ -74,40 +74,25 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                         <div class="mb-1 col-md-4  @error('trip_id') is-invalid @enderror">
+                         <div class="mb-1 col-md-4  @error('trip_id') is-invalid @enderror" id="trip_section" style="display: none">
                             <label  class="form-label" for="trip_id">{{ __('offers.types.trip') }}</label>
-                            <select name="trip_id" id="trip_id" class="form-control ajax_select2 extra_field"
-                                data-ajax--url="{{ route('admin.trips.select') }}"
-                                data-ajax--cache="false"   >
-                                @isset($item->trip)
-                                    <option value="{{ $item->trip_id }}" selected>{{ $item->trip?->title }}</option>
-                                @endisset
+                            <select name="trip_id" id="trip_id" class="form-control ">
                             </select>
                             @error('trip_id')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                         <div class="mb-1 col-md-4  @error('gift_id') is-invalid @enderror">
+                         <div class="mb-1 col-md-4  @error('gift_id') is-invalid @enderror" id="gift_section" style="display:none">
                             <label  class="form-label" for="gift_id">{{ __('offers.types.gift') }}</label>
-                            <select name="gift_id" id="gift_id" class="form-control ajax_select2 extra_field"
-                                data-ajax--url="{{ route('admin.gifts.select') }}"
-                                data-ajax--cache="false" >
-                                @isset($item->gift)
-                                    <option value="{{ $item->gift_id }}" selected>{{ $item->gift?->title }}</option>
-                                @endisset
+                            <select name="gift_id" id="gift_id" class="form-control ">
                             </select>
                             @error('gift_id')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                         <div class="mb-1 col-md-4  @error('effectivenes_id') is-invalid @enderror">
+                         <div class="mb-1 col-md-4  @error('effectivenes_id') is-invalid @enderror" id="effectivenes_section" style="display: none">
                             <label  class="form-label" for="effectivenes_id">{{ __('offers.types.effectivenes') }}</label>
-                            <select name="effectivenes_id" id="effectivenes_id" class="form-control ajax_select2 extra_field"
-                                data-ajax--url="{{ route('admin.effectivenes.select') }}"
-                                data-ajax--cache="false" >
-                                @isset($item->effectivenes)
-                                    <option value="{{ $item->effectivenes_id }}" selected>{{ $item->effectivenes?->title }}</option>
-                                @endisset
+                            <select name="effectivenes_id" id="effectivenes_id" class="form-control ">
                             </select>
                             @error('effectivenes_id')
                             <span class="error">{{ $message }}</span>
@@ -127,19 +112,6 @@
                             </div>
                         </div>
 
-
-                        <div class="mb-1 col-md-4  @error('active') is-invalid @enderror">
-                            <br>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="active"
-                                        value="1" id="active"
-                                    @checked($item->active ?? false )/>
-                                <label class="form-check-label" for="active">{{ __('offers.active') }}</label>
-                            </div>
-                            @error('active')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
                           <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
                             <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
                             <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
@@ -163,32 +135,44 @@
 @stop
 @push('scripts')
  <script>
+    $(window).on('load', function() {
+        updateAjaxUrl();
+    });
         function updateAjaxUrl() {
-            $('.ajax_select2').select2('destroy'); // Destroy the current instance
-            $('.ajax_select2').select2({
-                placeholder: "{{ __('admin.select') }}",
-                ajax: {
-                    dataType: 'json',
-                    delay: 250,
-                    processResults: function (data) {
-                        return {results: data};
-                    },
-                    cache: false
-                }
+
+            var vendorSelect = $("#vendor_id").val();
+            var type = $("#type").val();
+            var trip_id = {{ $item->trip_id ?? 0 }};
+            var effectivenes_id = {{ $item->effectivenes_id ?? 0 }};
+            var gift_id = {{ $item->gift_id ?? 0 }};
+
+
+            $.ajax({
+                    type:'POST',
+                    url:"{{ route('admin.getOffers') }}",
+                    data:{vendor_id:vendorSelect,type:type,effectivenes_id:effectivenes_id,trip_id:trip_id,gift_id:gift_id },
+                    success:function(data){
+                        if(type==="trip"){
+
+                            $("#trip_id").html(data);
+                            $("#trip_section").show();
+                            $("#effectivenes_section").hide();
+                            $("#gift_section").hide();
+                        }
+                        if(type==="effectivenes"){
+                            $("#effectivenes_id").html(data);
+                            $("#trip_section").hide();
+                            $("#effectivenes_section").show();
+                            $("#gift_section").hide();
+                        }
+                        if(type==="gift"){
+                            $("#gift_id").html(data);
+                            $("#trip_section").hide();
+                            $("#effectivenes_section").hide();
+                            $("#gift_section").show();
+                        }
+                    }
             });
-            const vendorSelect = document.getElementById("vendor_id");
-            const dataAjaxUrlTrip = document.getElementById("trip_id");
-            const dataAjaxUrlGift = document.getElementById("gift_id");
-            const dataAjaxUrleffectivenes = document.getElementById("effectivenes_id");
-
-            const baseUrleffectivenes = "{{ route('admin.effectivenes.select') }}";
-            const baseUrlgift = "{{ route('admin.gifts.select') }}";
-            const baseUrlTrip = "{{ route('admin.trips.select') }}";
-            const vendorId = vendorSelect.value;
-
-            dataAjaxUrlTrip.setAttribute("data-ajax--url", `${baseUrlTrip}?vendor_id=${vendorId}`);
-            dataAjaxUrlGift.setAttribute("data-ajax--url", `${baseUrlgift}?vendor_id=${vendorId}`);
-            dataAjaxUrleffectivenes.setAttribute("data-ajax--url", `${baseUrleffectivenes}?vendor_id=${vendorId}`);
         }
     </script>
 @endpush

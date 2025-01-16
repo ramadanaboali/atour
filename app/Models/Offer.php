@@ -46,7 +46,7 @@ class Offer extends Model
 
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/offers/' . $this->attributes['image']) : null) : null;
     }
     public function vendor(){
         return $this->belongsTo(User::class,'vendor_id');

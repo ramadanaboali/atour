@@ -33,7 +33,7 @@ class HomeController extends Controller
             }
         }
 
-        $data['offer'] = Offer::orderByDesc('id')->first();
+        $data['offer'] = Offer::where('active',1)->first();
         $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::where('active', true)->get();
         $data['old_experiences'] = TripResource::collection($old_experiences);

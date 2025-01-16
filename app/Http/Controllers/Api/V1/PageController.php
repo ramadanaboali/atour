@@ -7,6 +7,7 @@ use App\Http\Requests\ContactRequest;
 use App\Http\Requests\RateRequest;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CountryResource;
+use App\Http\Resources\LocationResource;
 use App\Http\Resources\SliderResource;
 use App\Http\Resources\OnboardingResource;
 use App\Http\Resources\SubCategoryResource;
@@ -18,6 +19,8 @@ use App\Models\City;
 use App\Models\ContactUs;
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\Effectivenes;
+use App\Models\Gift;
 use App\Models\Job;
 use App\Models\Rate;
 use App\Models\Slider;
@@ -52,7 +55,7 @@ class PageController extends Controller
     }
     public function blog($id)
     {
-        $data = Blog::with('attachments')->where('id',$id)->first();
+        $data = Blog::with('attachments')->where('id', $id)->first();
         return apiResponse(true, $data, null, null, 200);
     }
     public function ads()
@@ -289,7 +292,40 @@ class PageController extends Controller
     public function onboardings()
     {
         $data = Onboarding::get();
-        return apiResponse(true, OnboardingResource::collection($data),null, null, 200);
+        return apiResponse(true, OnboardingResource::collection($data), null, null, 200);
+    }
+    public function allLocations()
+    {
+        $trips = Trip::select('id', 'lat', 'long')
+                    ->whereNotNull('lat')
+                    ->whereNotNull('long')
+                    ->get()
+                    ->map(function ($item) {
+                        $item->type = 'trip';
+                        return $item;
+                    });
+
+        $effectivenes = Effectivenes::select('id', 'lat', 'long')
+                    ->whereNotNull('lat')
+                    ->whereNotNull('long')
+                    ->get()
+                    ->map(function ($item) {
+                        $item->type = 'effectivenes';
+                        return $item;
+                    });
+
+        $gifts = Gift::select('id', 'lat', 'long')
+                    ->whereNotNull('lat')
+                    ->whereNotNull('long')
+                    ->get()
+                    ->map(function ($item) {
+                        $item->type = 'gift';
+                        return $item;
+                    });
+
+        $data = $trips->merge($effectivenes)->merge($gifts);
+        return apiResponse(true, LocationResource::collection($data), null, null, 200);
+
     }
 
 }

@@ -45,6 +45,9 @@ class Effectivenes extends Model
 
     public function getTitleAttribute()
     {
+        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
+            return "";
+        }
         if (App::isLocale('en')) {
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
@@ -53,6 +56,11 @@ class Effectivenes extends Model
     }
     public function getDescriptionAttribute()
     {
+
+        if (!array_key_exists('description_en', $this->attributes) || !array_key_exists('description_ar', $this->attributes)) {
+            return "";
+        }
+
         if (App::isLocale('en')) {
             return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
         } else {
@@ -64,7 +72,7 @@ class Effectivenes extends Model
     {
         return $this->hasMany(Rate::class, 'effectivenes_id');
     }
-        public function city(): ?BelongsTo
+    public function city(): ?BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
     }
