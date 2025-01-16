@@ -31,7 +31,6 @@ class GiftResource extends JsonResource
             'city' => new CityResource($this->city),
             'vendor' => new UserResource($this->vendor),
             'is_favourit' => $favourit ? 1 : 0,
-
             'booking_count' => bookingCount($this->id,'gift'),
             'total_amounts' => totalAmount($this->id,'gift'),
             'use_coupon' => useCoupon($this->id,'gift'),

@@ -21,6 +21,16 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('/send-notification', [App\Http\Controllers\Admin\AdminController::class,'notification'])->name('notification');
 
 
+            Route::get('onboardings/select', [App\Http\Controllers\Admin\OnboardingController::class, 'select'])->name('onboardings.select');
+            Route::delete('onboardings/bulk', [App\Http\Controllers\Admin\OnboardingController::class, 'deleteBulk'])->name('onboardings.deleteBulk')->middleware('adminPermission:onboardings.delete');
+            Route::get('onboardings/list', [App\Http\Controllers\Admin\OnboardingController::class, 'list'])->name('onboardings.list')->middleware('adminPermission:onboardings.view');
+            Route::post('onboardings', [App\Http\Controllers\Admin\OnboardingController::class, 'store'])->name('onboardings.store')->middleware('adminPermission:onboardings.create');
+            Route::delete('onboardings/{id}', [App\Http\Controllers\Admin\OnboardingController::class, 'destroy'])->name('onboardings.destroy')->middleware('adminPermission:onboardings.delete');
+            Route::get('onboardings', [App\Http\Controllers\Admin\OnboardingController::class, 'index'])->name('onboardings.index')->middleware('adminPermission:onboardings.view');
+            Route::get('onboardings/create', [App\Http\Controllers\Admin\OnboardingController::class, 'create'])->name('onboardings.create')->middleware('adminPermission:onboardings.create');
+            Route::match(['PUT', 'PATCH'], 'onboardings/{id}', [App\Http\Controllers\Admin\OnboardingController::class, 'update'])->name('onboardings.update')->middleware('adminPermission:onboardings.edit');
+            Route::get('onboardings/{id}/edit', [App\Http\Controllers\Admin\OnboardingController::class, 'edit'])->name('onboardings.edit')->middleware('adminPermission:onboardings.edit');
+
             Route::get('sliders/select', [App\Http\Controllers\Admin\SliderController::class, 'select'])->name('sliders.select');
             Route::delete('sliders/bulk', [App\Http\Controllers\Admin\SliderController::class, 'deleteBulk'])->name('sliders.deleteBulk')->middleware('adminPermission:sliders.delete');
             Route::get('sliders/list', [App\Http\Controllers\Admin\SliderController::class, 'list'])->name('sliders.list')->middleware('adminPermission:sliders.view');
@@ -306,6 +316,11 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+            Route::get('trips/select', [App\Http\Controllers\Admin\AdminController::class, 'selectTrip'])->name('trips.select');
+
+            Route::get('gifts/select', [App\Http\Controllers\Admin\AdminController::class, 'selectGift'])->name('gifts.select');
+
+            Route::get('effectivenes/select', [App\Http\Controllers\Admin\AdminController::class, 'selectEffectivenes'])->name('effectivenes.select');
 
 
         });

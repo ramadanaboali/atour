@@ -74,4 +74,11 @@ return [
     'start_date'=>'تاريخ البداية ',
     'end_date'=>'تاريخ النهاية',
     'service_name'=>'اسم الخدمة',
+    'type'=>'النوع',
+    'model'=>'الاسم',
+    'types'=>[
+        'trip'=>'رحلة',
+        'gift'=>'هدية',
+        'effectivenes'=>'فعالية',
+    ]
 ];

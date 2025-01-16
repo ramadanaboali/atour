@@ -121,14 +121,14 @@
                 </li>
             @endcan
 
-           {{-- @can('offers.view')
+           @can('offers.view')
                 <li>
                     <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
                         <i data-feather='key'></i>
                         <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.offers') }}</span>
                     </a>
                 </li>
-            @endcan --}}
+            @endcan
 
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.accountants.list') }}">
@@ -197,8 +197,8 @@
             </ul>
         </li>
 
-              <li class=" nav-item {{ request()->routeIs('admin.settings*') ? 'open active' : '' }} ">
-                <a class="d-flex align-items-center {{ request()->routeIs('admin.settings*') ? 'active' : '' }}" href="#">
+              <li class=" nav-item {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.settings*')||request()->routeIs('admin.onboardings*') ? 'active' : '' }}" href="#">
                     <i data-feather="settings"></i>
                     <span class="menu-title text-truncate" data-i18n="">{{ __('admin.site_Settings') }}</span>
                 </a>
@@ -221,12 +221,23 @@
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.home_settings') }}</span>
                             </a>
                         </li>
-                        <li class=" nav-item {{ request()->routeIs('admin.settings.slider')?'active':''}}">
+                        @can('onboardings.view')
+                        <li class=" nav-item {{ request()->routeIs('admin.onboardings*')?'active':''}}">
+                            <a class="d-flex align-items-center" href="{{ route('admin.onboardings.index') }} ">
+                                <i data-feather="circle"></i>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.onboardings') }}</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('sliders.view')
+
+                        <li class=" nav-item {{ request()->routeIs('admin.sliders*')?'active':''}}">
                             <a class="d-flex align-items-center" href="{{ route('admin.sliders.index') }} ">
                                 <i data-feather="circle"></i>
                                 <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.slider_settings') }}</span>
                             </a>
                         </li>
+                        @endcan
                         @can('why_bookings.view')
                             <li>
                                 <a class='d-flex align-items-center' href='{{ route('admin.why_bookings.index') }} '>

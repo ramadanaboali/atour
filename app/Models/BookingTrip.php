@@ -31,16 +31,16 @@ class BookingTrip extends Model
     const STATUS_REJECTED = 3;
     const STATUS_CANCELED = 4;
     const STATUS_WITHDRWAL = 5;
-     public function user() :?BelongsTo
-     {
-        return $this->belongsTo(User::class);
-     }
-     public function trip() :?BelongsTo
-     {
-        return $this->belongsTo(Trip::class);
-     }
-     public function vendor() :?BelongsTo
-     {
-        return $this->belongsTo(User::class,'vendor_id');
-     }
+    public function user() :?BelongsTo
+    {
+    return $this->belongsTo(User::class);
+    }
+    public function trip() :?BelongsTo
+    {
+    return $this->belongsTo(Trip::class);
+    }
+    public function vendor() :?BelongsTo
+    {
+    return $this->belongsTo(User::class,'vendor_id');
+    }
 }

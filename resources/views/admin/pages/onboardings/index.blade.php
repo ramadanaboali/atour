@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    <title>{{ config('app.name') }} | {{ __('offers.plural') }}</title>
+    <title>{{ config('app.name') }} | {{ __('onboardings.plural') }}</title>
 @endsection
 @section('content')
     <div class="content-header row">
@@ -9,22 +9,21 @@
                 <div class="col-12">
                     <h1 class="bold mb-0 mt-1 text-dark">
                         <i data-feather="box" class="font-medium-2"></i>
-                        <span>{{ __('offers.plural') }}</span>
+                        <span>{{ __('onboardings.plural') }}</span>
                     </h1>
                 </div>
             </div>
         </div>
         <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
             <div class="mb-1 breadcrumb-right">
-                <div class="dropdown">
-                        @can('offers.create')
-                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.offers.create') }}">
+                @can('onboardings.create')
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.onboardings.create') }}">
                             <i data-feather="plus"></i>
-                            <span class="active-sorting text-primary">{{ __('offers.actions.create') }}</span>
+                            <span class="active-sorting text-primary">{{ __('onboardings.actions.create') }}</span>
                         </a>
-                        @endcan
-                        @include('admin.pages.offers.filter')
                     </div>
+                @endcan
             </div>
         </div>
     </div>
@@ -34,14 +33,10 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('offers.supplier_name') }}</th>
-                        <th>{{ __('offers.supplier_email') }}</th>
-                        <th>{{ __('offers.supplier_phone') }}</th>
-                        <th>{{ __('offers.type') }}</th>
-                        <th>{{ __('offers.model') }}</th>
-                        <th>{{ __('offers.active') }}</th>
-                        @canany('offers.edit','offers.delete')
-                            <th width="15%" class="text-center">{{ __('offers.options') }}</th>
+                        <th>{{ __('onboardings.default.name') }}</th>
+                        <th>{{ __('onboardings.photo') }}</th>
+                        @canany('onboardings.edit','onboardings.delete')
+                            <th width="15%" class="text-center">{{ __('onboardings.options') }}</th>
                         @endcanany
                     </tr>
                     </thead>
@@ -69,13 +64,9 @@
                 }
             },
             ajax: {
-                url: "{{ route('admin.offers.list') }}",
+                url: "{{ route('admin.onboardings.list') }}",
                 data: function (d) {
                     d.name   = $('#filterForm #name').val();
-                    d.email= $('#filterForm #email').val();
-                    d.phone= $('#filterForm #phone').val();
-                    d.city_id= $('#filterForm #city_id').val();
-                    d.active= $('#filterForm #active').val();
                 }
             },
             drawCallback: function (settings) {
@@ -83,26 +74,22 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'supplier_name', name: 'supplier_name'},
-                {data: 'supplier_email', name: 'supplier_email'},
-                {data: 'supplier_phone', name: 'supplier_phone'},
-                {data: 'typeText', name: 'type'},
-                {data: 'model', name: 'model'},
-                {data: 'active', name: 'active'},
-                @canany('offers.edit','offers.delete')
+                {data: 'title', name: 'title',orderable: false},
+                {data: 'photo', name: 'photo'},
+                @canany('onboardings.edit','onboardings.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},
                 @endcanany
             ],
             columnDefs: [
 
-                @canany('offers.edit','offers.delete')
+                @canany('onboardings.edit','onboardings.delete')
                 {
                     "targets": -1,
                     "render": function (data, type, row) {
-                        var editUrl = '{{ route("admin.offers.edit", ":id") }}';
+                        var editUrl = '{{ route("admin.onboardings.edit", ":id") }}';
                         editUrl = editUrl.replace(':id', row.id);
-                     
-                        var deleteUrl = '{{ route("admin.offers.destroy", ":id") }}';
+
+                        var deleteUrl = '{{ route("admin.onboardings.destroy", ":id") }}';
                         deleteUrl = deleteUrl.replace(':id', row.id);
 
                         return `
@@ -111,17 +98,16 @@
                                             <i data-feather="more-vertical" class="font-medium-2"></i>
                                     </button>
                                     <div class="dropdown-menu">
-
-                                        @can('offers.edit')
+                                        @can('onboardings.edit')
                         <a class="dropdown-item" href="`+editUrl+`">
                                         <i data-feather="edit-2" class="font-medium-2"></i>
-                                            <span>{{ __('offers.actions.edit') }}</span>
+                                            <span>{{ __('onboardings.actions.edit') }}</span>
                                         </a>
                                         @endcan
-                        @can('offers.delete')
+                        @can('onboardings.delete')
                         <a class="dropdown-item delete_item" data-url="`+deleteUrl+`" href="#">
                                             <i data-feather="trash" class="font-medium-2"></i>
-                                             <span>{{ __('offers.actions.delete') }}</span>
+                                             <span>{{ __('onboardings.actions.delete') }}</span>
                                         </a>
                                         @endcan
                         </div>

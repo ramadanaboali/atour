@@ -63,6 +63,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('articles', [App\Http\Controllers\Api\V1\PageController::class,'articles']);
         Route::get('footer', [App\Http\Controllers\Api\V1\SettingController::class,'footer']);
         Route::get('jobs', [App\Http\Controllers\Api\V1\PageController::class,'jobs']);
+        Route::get('onboardings', [App\Http\Controllers\Api\V1\PageController::class,'jobs']);
 
         Route::get('faqs', [HomeController::class,'faqs']);
 

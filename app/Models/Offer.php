@@ -17,8 +17,12 @@ class Offer extends Model
         'description_ar',
         'image',
         'active',
+        'type',
         'vendor_id',
         'trip_id',
+        'effectivenes_id',
+        'gift_id',
+        'active',
     ];
     protected $table = 'offers';
     protected $appends = ['title','photo','description'];
@@ -49,6 +53,12 @@ class Offer extends Model
     }
     public function trip(){
         return $this->belongsTo(Trip::class,'trip_id');
+    }
+    public function gift(){
+        return $this->belongsTo(Gift::class,'gift_id');
+    }
+    public function effectivenes(){
+        return $this->belongsTo(Effectivenes::class,'effectivenes_id');
     }
 
 }

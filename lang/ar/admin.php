@@ -9,6 +9,7 @@ return [
     'roles' => 'الصلاحيات',
     'notice' => 'التنبيهات',
     'sliders' => 'العروض والاعلانات',
+    'onboardings' => 'الشاشة الافتتاحية',
     'accountants' => 'الحسابات',
     'suppports_contact_us' => 'الدعم الفنى وتواصل معنا',
     'articles_news' => 'المقالات والاخبار',

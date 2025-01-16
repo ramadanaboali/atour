@@ -8,6 +8,7 @@ use App\Http\Requests\RateRequest;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\CountryResource;
 use App\Http\Resources\SliderResource;
+use App\Http\Resources\OnboardingResource;
 use App\Http\Resources\SubCategoryResource;
 use App\Models\Add;
 use App\Models\Article;
@@ -24,6 +25,7 @@ use App\Models\SubCategory;
 use App\Models\Trip;
 use App\Models\UserPreferedSetting;
 use App\Models\WhyBooking;
+use App\Models\Onboarding;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -283,6 +285,11 @@ class PageController extends Controller
         ];
         $data = ContactUs::create($data);
         return apiResponse(true, $data, __('api.update_success'), null, 200);
+    }
+    public function onboardings()
+    {
+        $data = Onboarding::get();
+        return apiResponse(true, OnboardingResource::collection($data),null, null, 200);
     }
 
 }

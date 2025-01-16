@@ -44,7 +44,7 @@ class Trip extends Model
         'available_times' => 'array',
         'available_days' => 'array',
     ];
-    protected $appends = ['title','photo','description','start_point'];
+    protected $appends = ['title','photo','description','start_point','text'];
 
     public function getPhotoAttribute()
     {
@@ -52,6 +52,14 @@ class Trip extends Model
     }
 
     public function getTitleAttribute()
+    {
+        if (App::isLocale('en')) {
+            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
+        } else {
+            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getTextAttribute()
     {
         if (App::isLocale('en')) {
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];

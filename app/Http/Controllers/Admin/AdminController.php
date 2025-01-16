@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Effectivenes;
 use App\Models\Favorite;
+use App\Models\Gift;
 use App\Models\Order;
 use App\Models\Rate;
 use App\Models\Supplier;
@@ -11,6 +13,7 @@ use App\Models\Trip;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
@@ -91,5 +94,84 @@ class AdminController extends Controller
 
     public function notification(Request $request)
     {
+    }
+    public function selectTrip(Request $request)
+    {
+         $data = Trip::distinct()
+                ->where('active',true)
+                ->where(function ($query) use ($request) {
+                if ($request->filled('q')) {
+                    if(App::isLocale('en')) {
+                        return $query->where('title_en', 'like', '%'.$request->q.'%');
+                    } else {
+                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                    }
+                }
+                if ($request->filled('vendor_id')) {
+                    return $query->where('vendor_id',$request->vendor_id);
+                }
+                })->select('id', 'title_en', 'title_ar', 'description_ar', 'description_en','start_point_en','start_point_ar')->get();
+
+        if ($request->filled('pure_select')) {
+            $html = '<option value="">'. __('category.select') .'</option>';
+            foreach ($data as $row) {
+                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
+            }
+            return $html;
+        }
+        return response()->json($data);
+    }
+    public function selectGift(Request $request)
+    {
+         $data = Gift::distinct()
+                ->where('active',true)
+                ->where(function ($query) use ($request) {
+                if ($request->filled('q')) {
+                    if(App::isLocale('en')) {
+                        return $query->where('title_en', 'like', '%'.$request->q.'%');
+                    } else {
+                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                    }
+                }
+                if ($request->filled('vendor_id')) {
+                    return $query->where('vendor_id',$request->vendor_id);
+                }
+                })->select('id', 'title_en', 'title_ar', 'description_ar', 'description_en')->get();
+
+        if ($request->filled('pure_select')) {
+            $html = '<option value="">'. __('category.select') .'</option>';
+            foreach ($data as $row) {
+                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
+            }
+            return $html;
+        }
+        return response()->json($data);
+    }
+    public function selectEffectivenes(Request $request)
+    {
+         $data = Effectivenes::distinct()
+                ->where('active',true)
+                ->where(function ($query) use ($request) {
+                if ($request->filled('q')) {
+                    if(App::isLocale('en')) {
+                        return $query->where('title_en', 'like', '%'.$request->q.'%');
+                    } else {
+                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                    }
+                }
+                if ($request->filled('vendor_id')) {
+                    return $query->where('vendor_id',$request->vendor_id);
+                }
+
+                })->select('id', 'title_en', 'title_ar', 'description_ar', 'description_en')->get();
+
+        if ($request->filled('pure_select')) {
+            $html = '<option value="">'. __('category.select') .'</option>';
+            foreach ($data as $row) {
+                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
+            }
+            return $html;
+        }
+        return response()->json($data);
     }
 }

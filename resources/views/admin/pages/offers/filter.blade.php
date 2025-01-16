@@ -38,18 +38,7 @@
                             </div>
                         </div>
 
-                        <div class="mb-1 col-md-12"  >
 
-                            <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label" for="city_id">{{ __('clients.city') }}</label>
-                                <div class="col-sm-10">
-                                    <select name="city_id" id="city_id" class="form-control ajax_select2 extra_field"
-                                            data-ajax--url="{{ route('admin.cities.select') }}"
-                                            data-ajax--cache="true" >
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                          <div class="mb-1 col-md-12"  >
                             <div class="form-group row">
                                 <label for=" active" class="col-sm-2 col-form-label">{{ __('clients.active') }}</label>
@@ -62,31 +51,8 @@
                                 </div>
                             </div>
                         </div>
-                  
-                        <div class="mb-1 col-md-12"  >
-                            <div class="form-group row">
-                                <label for=" start_date" class="col-sm-2 col-form-label">{{ __('offers.start_date') }}</label>
-                                <div class="col-sm-10">
-                                    <input type="text" type="text" id="start_date" class="form-control flatpickr-basic"  value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-1 col-md-12"  >
-                            <div class="form-group row">
-                                <label for=" end_date" class="col-sm-2 col-form-label">{{ __('offers.end_date') }}</label>
-                                <div class="col-sm-10">
-                                    <input type="text" type="text" id="end_date" class="form-control flatpickr-basic"  value="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-1 col-md-12"  >
-                            <div class="form-group row">
-                                <label for=" discount" class="col-sm-2 col-form-label">{{ __('offers.discount') }}</label>
-                                <div class="col-sm-10">
-                                    <input type="number" type="text" id="discount" class="form-control"  value="">
-                                </div>
-                            </div>
-                        </div>
+
+                       
 
                         <div class="col-md-12">
                             <button type="button" class="btn btn-primary btn_filter">{{ __('clients.search') }}</button>
