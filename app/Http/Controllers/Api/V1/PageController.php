@@ -11,6 +11,7 @@ use App\Http\Resources\LocationResource;
 use App\Http\Resources\SliderResource;
 use App\Http\Resources\OnboardingResource;
 use App\Http\Resources\FeatureResource;
+use App\Http\Resources\RequirementResource;
 use App\Http\Resources\SubCategoryResource;
 use App\Models\Add;
 use App\Models\Article;
@@ -31,6 +32,7 @@ use App\Models\UserPreferedSetting;
 use App\Models\WhyBooking;
 use App\Models\Feature;
 use App\Models\Onboarding;
+use App\Models\Requirement;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -300,6 +302,11 @@ class PageController extends Controller
     {
         $data = Feature::get();
         return apiResponse(true, FeatureResource::collection($data), null, null, 200);
+    }
+    public function requirements()
+    {
+        $data = Requirement::get();
+        return apiResponse(true, RequirementResource::collection($data), null, null, 200);
     }
     public function allLocations()
     {

@@ -50,6 +50,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('home', [HomeController::class,'home']);
         Route::get('onboardings', [App\Http\Controllers\Api\V1\PageController::class,'onboardings']);
         Route::get('features', [App\Http\Controllers\Api\V1\PageController::class,'features']);
+        Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
