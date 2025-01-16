@@ -310,7 +310,7 @@ class PageController extends Controller
     }
     public function allLocations()
     {
-        $trips = Trip::select('id', 'lat', 'long')
+        $trips = Trip::select('id', 'start_lat as lat', 'start_long as long')
                     ->whereNotNull('lat')
                     ->whereNotNull('long')
                     ->get()
