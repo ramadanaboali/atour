@@ -46,6 +46,43 @@
     </div>
     <input type="hidden" id="status" value="{{ $status }}">
     <input type="hidden" id="created_at" value="{{ $created_at }}">
+    <div class="modal fade text-start" id="SettingModal" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="SettingForm" method="get" action="#">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.client_status.title') }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <div class="row">
+                    <div class="mb-1 col-md-6  @error('can_pay_later') is-invalid @enderror">
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="can_pay_later"
+                                    value="1" id="can_pay_later"/>
+                            <label class="form-check-label" for="can_pay_later">{{ __('suppliers.can_pay_later') }}</label>
+                        </div>
+                    </div>
+                    <div class="mb-1 col-md-6  @error('can_cancel') is-invalid @enderror">
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="can_cancel"
+                                    value="1" id="can_cancel"/>
+                            <label class="form-check-label" for="can_cancel">{{ __('suppliers.can_cancel') }}</label>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-success">{{ __('admin.dialogs.client_status.confirm') }}</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">{{ __('admin.dialogs.client_status.cancel') }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @stop
 
 @push('scripts')
@@ -109,6 +146,9 @@
                         var statusUrl = '{{ route("admin.suppliers.status", ":id") }}';
                         statusUrl = statusUrl.replace(':id', row.id);
 
+                        var settingUrl = '{{ route("admin.suppliers.setting", ":id") }}';
+                        settingUrl = settingUrl.replace(':id', row.id);
+
                         return `
                                <div class="dropdown">
                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light" data-bs-toggle="dropdown">
@@ -133,6 +173,12 @@
                                 <span>{{ __('clients.actions.status') }}</span>
                         </a>
                         @endcan
+                                         @can('clients.status')
+                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`" >
+                            <i data-feather="settings" class="font-medium-2"></i>
+                                <span>{{ __('suppliers.actions.settings') }}</span>
+                        </a>
+                        @endcan
                         </div>
                    </div>
                     `;
@@ -143,6 +189,27 @@
         });
         $('.btn_filter').click(function (){
             dt_ajax.DataTable().ajax.reload();
+        });
+    $(window).on('load', function() {
+
+            $('body').on('click', '.vendor_setting', function (){
+                var url= $(this).attr('data-url');
+                var can_pay_later= $(this).attr('data-can_pay_later');
+                if(can_pay_later==1){
+                    document.getElementById('can_pay_later').checked = true;
+                }else{
+                    document.getElementById('can_pay_later').checked = false;
+                }
+                var can_cancel= $(this).attr('data-can_cancel');
+                if(can_cancel==1){
+                    document.getElementById('can_cancel').checked = true;
+                }else{
+                    document.getElementById('can_cancel').checked = false;
+                }
+                    $('#SettingForm').attr('action', url)
+                $('#SettingModal').modal('show')
+                return false;
+            });
         });
     </script>
 @endpush

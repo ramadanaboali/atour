@@ -185,6 +185,7 @@
     </div>
 </div>
 
+
  <div class="modal fade text-start" id="modalRestore" tabindex="-1" aria-labelledby="myModalLabel1"
         aria-hidden="true">
         <div class="modal-dialog">

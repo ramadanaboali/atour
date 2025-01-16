@@ -18,6 +18,7 @@ return [
         'restore' => 'استعادة',
         'save' => 'حفظ',
         'filter' => 'بحث',
+        'setting' => 'ضبط',
         'back' => 'العودة للخلف',
         'status' => 'الحالة',
 

@@ -82,6 +82,27 @@ class SupplierController extends Controller
 
         return back();
     }
+     public function setting(Request $request,$id)
+    {
+        $item=User::findOrFail($id);
+        if($request->can_cancel){
+            $item->can_cancel = 1;
+
+        }else{
+            $item->can_cancel = 0;
+        }
+        if($request->can_pay_later){
+            $item->can_pay_later = 1;
+
+        }else{
+            $item->can_pay_later = 0;
+        }
+        $item->save();
+
+        flash(__('suppliers.messages.updated'))->success();
+
+        return back();
+    }
     public function destroy($id): RedirectResponse
     {
         $item = Supplier::findOrFail($id);

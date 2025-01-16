@@ -19,6 +19,8 @@ return [
         'save' => 'حفظ',
         'filter' => 'بحث',
         'back' => 'العودة للخلف',
+        'settings'=> 'الضبط',
+
     ],
     'messages' => [
         'created' => 'تم إضافة المورد بنجاح .',
@@ -99,4 +101,7 @@ return [
     'place_content'=> 'ما يحتويه المكان',
     'expectations'=> 'التوقعات',
     'images'=> 'الصور',
+    'setting'=> 'الضبط',
+    'can_cancel'=> 'إلغاء الحجز',
+    'can_pay_later'=> 'الدفع لاحقا',
 ];

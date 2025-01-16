@@ -301,6 +301,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('current-suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'currentSuppliers'])->name('suppliers.current')->middleware('adminPermission:suppliers.current');
             Route::get('suppliers-request', [App\Http\Controllers\Admin\SupplierController::class, 'requestJoin'])->name('suppliers.requests')->middleware('adminPermission:suppliers.requests');
             Route::get('suppliers/status/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'status'])->name('suppliers.status')->middleware('adminPermission:suppliers.status');
+            Route::get('suppliers/setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'setting'])->name('suppliers.setting')->middleware('adminPermission:suppliers.setting');
             Route::get('suppliers/show/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'show'])->name('suppliers.show')->middleware('adminPermission:suppliers.show');
             Route::get('suppliers-orders/list', [App\Http\Controllers\Admin\SupplierController::class, 'orders'])->name('suppliers.orders')->middleware('adminPermission:suppliers.view');
 
