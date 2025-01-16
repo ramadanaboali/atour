@@ -23,27 +23,35 @@ class Trip extends Model
         'price',
         'start_point_ar',
         'start_point_en',
+        'end_point_ar',
+        'end_point_en',
         'program_time',
         'people',
         'free_cancelation',
         'available_days',
         'pay_later',
-        'long',
-        'lat',
+        'start_long',
+        'end_lat',
+        'start_long',
+        'start_lat',
+        'end_long',
+        'end_lat',
         'active',
         'cover',
         'available_times',
         'city_id',
         'vendor_id',
         'rate',
+        'steps_list',
         'created_by',
         'updated_by',
     ];
     protected $casts = [
         'available_times' => 'array',
         'available_days' => 'array',
+        'steps_list' => 'array',
     ];
-    protected $appends = ['title','photo','description','start_point','text'];
+    protected $appends = ['title','photo','description','start_point','end_point','text'];
 
     public function getPhotoAttribute()
     {
@@ -83,6 +91,17 @@ class Trip extends Model
             return $this->attributes['start_point_en'] ?? $this->attributes['start_point_ar'];
         } else {
             return $this->attributes['start_point_ar'] ?? $this->attributes['start_point_en'];
+        }
+    }
+    public function getEndPointAttribute()
+    {
+        if(!array_key_exists('end_point_en', $this->attributes)||!array_key_exists('end_point_ar', $this->attributes)){
+            return "";
+        }
+        if (App::isLocale('en')) {
+            return $this->attributes['end_point_en'] ?? $this->attributes['end_point_ar'];
+        } else {
+            return $this->attributes['end_point_ar'] ?? $this->attributes['end_point_en'];
         }
     }
     public function getDescriptionAttribute()
