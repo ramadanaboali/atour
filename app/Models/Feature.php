@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\App;
 
@@ -33,5 +34,10 @@ class Feature extends Model
         } else {
             return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
         }
+    }
+     public function trips():?BelongsToMany
+    {
+        return $this->belongsToMany(Trip::class, 'trip_features');
+
     }
 }

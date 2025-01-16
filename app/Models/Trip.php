@@ -122,9 +122,9 @@ class Trip extends Model
         return $this->belongsTo(User::class, 'vendor_id');
     }
 
-    public function features(): ?HasMany
+    public function features():?BelongsToMany
     {
-        return $this->hasMany(TripFeature::class, 'trip_id');
+        return $this->belongsToMany(Feature::class, 'trip_features');
 
     }
     public function createdBy(): ?BelongsTo
@@ -139,5 +139,6 @@ class Trip extends Model
     {
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'trip');
     }
+
 
 }

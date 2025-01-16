@@ -103,16 +103,10 @@ class TripController extends Controller
                 ];
                 TripSubCategory::create($feature);
             }
-            foreach ($request->featurs as $feature_data) {
-                $feature = [
-                    'trip_id' => $item->id,
-                    'title_ar' => $feature_data['title_ar'] ?? null,
-                    'title_en' => $feature_data['title_en'] ?? null,
-                    'description_en' => $feature_data['description_en'] ?? null,
-                    'description_ar' => $feature_data['description_ar'] ?? null,
-                ];
-                TripFeature::create($feature);
+            if($request->featur_ids){
+                $item->features()->sync($request->featur_ids);
             }
+
             $images = $request->file('images');
             foreach ($images as $image) {
                 $storedPath = $this->storageService->storeFile($image, $folder_path);
