@@ -35,8 +35,10 @@ class EffectivenesRequest extends FormRequest
                         'title_en' => 'required|string|min:2',
                         'title_ar' => 'required|string|min:2',
                         'price' => 'required|numeric',
-                        'date'=>'required',
-                        'time'=>'required',
+                        'from_date'=>'required',
+                        'to_date'=>'required',
+                        'from_time'=>'required',
+                        'to_time'=>'required',
                         'lat'=>'required',
                         'long'=>'required',
                     ];

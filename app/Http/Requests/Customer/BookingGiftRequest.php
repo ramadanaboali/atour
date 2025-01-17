@@ -5,6 +5,7 @@ namespace App\Http\Requests\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class BookingGiftRequest extends FormRequest
@@ -22,10 +23,12 @@ class BookingGiftRequest extends FormRequest
     {
         return [
             'payment_way' => 'required|in:online,cash',
-            'gift_id' => 'required|exists:gifts,id',
+            'gift_id' => 'required|'. Rule::exists('gifts', 'id')->whereNull('deleted_at'),
             'quantity' =>'required|numeric',
             'delivery_way' =>'required|in:delivery,myself',
-            'delivery_address'=>'required_if:delivery_way,delivery'
+            'delivery_address'=>'required_if:delivery_way,delivery',
+            'delivery_number'=>'required_if:delivery_way,delivery',
+            'location'=>'required_if:delivery_way,delivery'
             ];
     }
     protected function failedValidation(Validator $validator)

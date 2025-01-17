@@ -205,22 +205,36 @@ class AuthController extends Controller
     {
         try {
             $currentUser = User::findOrFail(auth()->user()->id);
-            $inputs = [
-                'name' => $request->name ?? $currentUser->name,
 
-            ];
+            $inputs = [];
+
+            if ($request->birthdate) {
+                $inputs['birthdate'] = $request->birthdate;
+            }
+
+            if ($request->name) {
+                $inputs['name'] = $request->name;
+            }
+            if ($request->nationality) {
+                $inputs['nationality'] = $request->nationality;
+            }
+
+            if ($request->password) {
+                $inputs['password'] = Hash::make($request->password);
+            }
+
             $image = $request->file('image');
             if ($image) {
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
             }
-            $data = $currentUser->update($inputs);
-            if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
-            } else {
-                return apiResponse(false, null, __('api.cant_update'), null, 401);
+
+            if (count($inputs) > 0) {
+                $currentUser->update($inputs);
             }
+            return apiResponse(true, null, __('api.update_success'), null, 200);
+
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }

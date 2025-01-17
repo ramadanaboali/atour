@@ -389,6 +389,9 @@ class AuthController extends Controller
             if ($request->name) {
                 $inputs['name'] = $request->name;
             }
+            if ($request->nationality) {
+                $inputs['nationality'] = $request->nationality;
+            }
 
             if ($request->password) {
                 $inputs['password'] = Hash::make($request->password);
@@ -400,7 +403,7 @@ class AuthController extends Controller
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
             }
-            
+
             if (count($inputs) > 0) {
                  $currentUser->update($inputs);
             }

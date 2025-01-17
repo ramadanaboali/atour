@@ -25,7 +25,8 @@ class Trip extends Model
         'start_point_en',
         'end_point_ar',
         'end_point_en',
-        'program_time',
+        'program_time_en',
+        'program_time_ar',
         'people',
         'free_cancelation',
         'available_days',
@@ -51,7 +52,7 @@ class Trip extends Model
         'available_days' => 'array',
         'steps_list' => 'array',
     ];
-    protected $appends = ['title','photo','description','start_point','end_point','text'];
+    protected $appends = ['title','photo','description','start_point','end_point','text','program_time'];
 
     public function getPhotoAttribute()
     {
@@ -67,6 +68,17 @@ class Trip extends Model
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getProgramTimeAttribute()
+    {
+        if(!array_key_exists('program_time_en', $this->attributes)||!array_key_exists('program_time_ar', $this->attributes)){
+            return "";
+        }
+        if (App::isLocale('en')) {
+            return $this->attributes['program_time_en'] ?? $this->attributes['program_time_ar'];
+        } else {
+            return $this->attributes['program_time_ar'] ?? $this->attributes['program_time_en'];
         }
     }
     public function getTextAttribute()

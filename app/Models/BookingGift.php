@@ -17,18 +17,23 @@ class BookingGift extends Model
         'payment_status',
         'total',
         'gift_id',
+        'lat',
+        'long',
         'delivery_way',
         'delivery_address',
+        'delivery_number',
+        'location',
         'quntity',
         'user_id',
         'vendor_id'
     ];
-        const STATUS_PENDING = 0;
-        const STATUS_ACCEPTED = 1;
-        const STATUS_COMPLEATED = 2;
-        const STATUS_REJECTED = 3;
-        const STATUS_CANCELED = 4;
-        const STATUS_WITHDRWAL = 5;
+         public const STATUS_PENDING = 0;
+    public const STATUS_ACCEPTED = 1;
+    public const STATUS_REJECTED = 2;
+    public const STATUS_ONPROGRESS = 3;
+    public const STATUS_COMPLEALED = 4;
+    public const STATUS_CANCELED = 5;
+    public const STATUS_WITHDRWAL = 6;
 
      public function user() :?BelongsTo
      {

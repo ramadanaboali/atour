@@ -48,8 +48,10 @@ class EffectivenesController extends Controller
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
-            'date' => $request->date,
-            'time' => $request->time,
+            'from_date' => $request->from_date,
+            'to_date' => $request->to_date,
+            'from_time' => $request->from_time,
+            'to_time' => $request->to_time,
             'title_en' => $request->title_en,
             'title_ar' => $request->title_ar,
             'description_en' => $request->description_en,
