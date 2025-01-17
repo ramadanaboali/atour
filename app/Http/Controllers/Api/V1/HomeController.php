@@ -37,7 +37,7 @@ class HomeController extends Controller
         $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::where('active', true)->get();
         $data['old_experiences'] = TripResource::collection($old_experiences);
-        $effectivenes = Effectivenes::where('active', true)->where('date', '>', date('Y-m-d'))->get();
+        $effectivenes = Effectivenes::where('active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->get();
         $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
         return apiResponse(true, $data, null, null, 200);
