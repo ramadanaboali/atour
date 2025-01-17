@@ -47,6 +47,8 @@ class TripRequest extends FormRequest
             'steps_list' => 'nullable|array',
             'sub_category_ids' => 'required|array',
             'sub_category_ids.*' => 'required|exists:sub_categories,id',
+            'requirement_ids' => 'required|array',
+            'requirement_ids.*' => 'required|exists:requirements,id',
         ];
 
 
