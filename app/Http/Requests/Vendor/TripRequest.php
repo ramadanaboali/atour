@@ -5,6 +5,7 @@ namespace App\Http\Requests\Vendor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class TripRequest extends FormRequest
@@ -48,7 +49,7 @@ class TripRequest extends FormRequest
             'sub_category_ids' => 'required|array',
             'sub_category_ids.*' => 'required|exists:sub_categories,id',
             'requirement_ids' => 'required|array',
-            'requirement_ids.*' => 'required|exists:requirements,id',
+            'requirement_ids.*' => 'required|'. Rule::exists('requirements', 'id')->whereNull('deleted_at'),
         ];
 
 
