@@ -67,6 +67,11 @@ Route::group(['prefix' => 'v1'], function () {
 
         Route::get('faqs', [HomeController::class,'faqs']);
 
+Route::get('onboardings', [App\Http\Controllers\Api\V1\PageController::class,'onboardings']);
+Route::get('features', [App\Http\Controllers\Api\V1\PageController::class,'features']);
+Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
+Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
+
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             /////user/////
