@@ -185,6 +185,7 @@ return [
     'current_orders' => 'الطلبات الحالية',
     'orders_list' => 'قائمة الطلبات',
     'canceled_orders' => 'الطلبات الملغية',
+    'new_orders' => 'الطلبات الجديدة',
     'code' => 'الكود',
     'next' => 'التالى',
     'save_next' => 'حفظ والتالى ',
@@ -223,8 +224,21 @@ return [
     'total_amount_reservasion'=>'Total Amount Of Reservations',
     'question'=>"السؤال",
     'answer'=>"الاجابة",
+
     'cancel_terms'=>"سياسة الالغاء",
     'helpping_questions'=>"تحتاج للمساعدة",
+    "BookingGift"=>'هدايا',
+    "BookingEffectivene"=>'فعاليات',
+    "BookingTrip"=>'رحلات',
+    'orders_statuses'=> [
+    '0'=>'معلقة',
+    '1'=>'مقبولة',
+    '2'=>'مرفوضة',
+    '3'=>'جارى  المعالجة',
+    '4'=>'مكتملة',
+    '5'=>'ملغاة',
+    '6'=>'تم سحب ارباحها',
+    ],
 
 
 ];

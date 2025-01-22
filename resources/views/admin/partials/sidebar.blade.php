@@ -80,8 +80,8 @@
                         @endcan
                 </ul>
             </li>
-            <li class=" nav-item {{ request()->routeIs('admin.orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'open active' : '' }} ">
-                <a class="d-flex align-items-center {{ request()->routeIs('admin.orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'active' : '' }}" href="#">
+            <li class=" nav-item {{ request()->routeIs('admin.orders*')||request()->routeIs('admin.canceled_orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.orders*')||request()->routeIs('admin.canceled_orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'active' : '' }}" href="#">
                     <i data-feather="user"></i>
                     <span class="menu-title text-truncate" data-i18n="">{{ __('admin.orders_list') }}</span>
                 </a>
@@ -90,7 +90,7 @@
                         <li class=" nav-item {{ request()->routeIs('admin.new_orders.index')?'active':''}}">
                             <a class="d-flex align-items-center" href="{{ route('admin.new_orders.index') }} ">
                                 <i data-feather="circle"></i>
-                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_orders') }}</span>
+                                <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.new_orders') }}</span>
                             </a>
                         </li>
                         @endcan
@@ -98,10 +98,10 @@
                     <li class=" nav-item  {{ request()->routeIs('admin.current_orders.index')?'active':''}}">
                         <a class="d-flex align-items-center" href="{{ route('admin.current_orders.index') }} ">
                             <i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.old_orders') }}</span>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.current_orders') }}</span>
                         </a>
                     </li>
-                    <li class=" nav-item  {{ request()->routeIs('admin.currents_orders.index')?'active':''}}">
+                    <li class=" nav-item  {{ request()->routeIs('admin.canceled_orders.index')?'active':''}}">
                         <a class="d-flex align-items-center" title="{{ __('admin.orders_requests') }}" href="{{ route('admin.canceled_orders.index') }} ">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.canceled_orders') }}</span>

@@ -94,6 +94,8 @@ return [
     'free_cancelation' => 'الالغاء المجانى',
     'pay_later' => 'الدفع لاحقا',
     'trips' => 'الرحلات',
+        'status'=>"الحالة",
+    'type'=>"النوع",
 
 
 ];

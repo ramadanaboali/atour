@@ -278,7 +278,6 @@ Route::middleware('throttle:60,1')->group(function () {
 
             Route::get('orders/select', [App\Http\Controllers\Admin\OrderController::class, 'select'])->name('orders.select');
             Route::delete('orders/bulk', [App\Http\Controllers\Admin\OrderController::class, 'deleteBulk'])->name('orders.deleteBulk')->middleware('adminPermission:orders.delete');
-            Route::get('orders/list', [App\Http\Controllers\Admin\OrderController::class, 'list'])->name('orders.list')->middleware('adminPermission:orders.view');
             Route::post('orders', [App\Http\Controllers\Admin\OrderController::class, 'store'])->name('orders.store')->middleware('adminPermission:orders.create');
             Route::delete('orders/{id}', [App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('orders.destroy')->middleware('adminPermission:orders.delete');
 
@@ -287,6 +286,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('new-orders', [App\Http\Controllers\Admin\OrderController::class, 'newOrders'])->name('new_orders.index')->middleware('adminPermission:new_orders.view');
             Route::get('current-orders', [App\Http\Controllers\Admin\OrderController::class, 'currentOrders'])->name('current_orders.index')->middleware('adminPermission:current_orders.view');
             Route::get('canceled-orders', [App\Http\Controllers\Admin\OrderController::class, 'canceledOrders'])->name('canceled_orders.index')->middleware('adminPermission:canceled_orders.view');
+            Route::get('orders/list', [App\Http\Controllers\Admin\OrderController::class, 'list'])->name('orders.list');
             Route::get('orders/show/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show')->middleware('adminPermission:orders.show');
 
             Route::get('suppliers/select', [App\Http\Controllers\Admin\SupplierController::class, 'select'])->name('suppliers.select');

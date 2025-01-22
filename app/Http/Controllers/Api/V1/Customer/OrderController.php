@@ -177,9 +177,9 @@ class OrderController extends Controller
         $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene.city','vendor'])->where('status', [Order::STATUS_REJECTED,Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get();
         $data['ended']['trips'] = BookingTrip::with(['trip.city','vendor'])->where('status', [Order::STATUS_REJECTED,Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get();
 
-        $data['ended']['gifts'] = BookingGift::with(['gift.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
-        $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
-        $data['ended']['trips'] = BookingTrip::with(['trip.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
+        $data['compleated']['gifts'] = BookingGift::with(['gift.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
+        $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
+        $data['compleated']['trips'] = BookingTrip::with(['trip.city','vendor'])->where('status', [Order::STATUS_COMPLEALED])->where('user_id', auth()->user()->id)->get();
         return response()->apiSuccess($data);
 
     }
