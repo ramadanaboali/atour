@@ -97,6 +97,21 @@ class SupplierController extends Controller
         }else{
             $item->can_pay_later = 0;
         }
+
+        if($request->pay_on_deliver){
+            $item->pay_on_deliver = 1;
+
+        }else{
+            $item->pay_on_deliver = 0;
+        }
+
+        if($request->ban_vendor){
+            $item->ban_vendor = 1;
+
+        }else{
+            $item->ban_vendor = 0;
+        }
+
         $item->save();
 
         flash(__('suppliers.messages.updated'))->success();

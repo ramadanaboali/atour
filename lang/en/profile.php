@@ -1,13 +1,13 @@
 <?php
 
 return [
-    'profile' => 'profile',
-    'change_password' => 'change Password',
-    'name' => 'the name',
-    'email' => 'E-mail',
-    'password' => 'password',
-    'update' => 'to update',
-    'password_confirmation' => 'confirm password',
-    'phone' => 'phone number',
+    'profile' => 'Profile',
+    'change_password' => 'Change Password',
+    'name' => 'Name',
+    'email' => 'Email',
+    'password' => 'Password',
+    'update' => 'Update',
+    'password_confirmation' => 'Confirm Password',
+    'phone' => 'Phone Number',
     'xxxxxx' => 'xxxxxx',
 ];

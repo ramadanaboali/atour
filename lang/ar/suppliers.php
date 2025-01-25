@@ -104,4 +104,6 @@ return [
     'setting'=> 'الضبط',
     'can_cancel'=> 'إلغاء الحجز',
     'can_pay_later'=> 'الدفع لاحقا',
+    'pay_on_deliver'=> 'الدفع عند الاستلام',
+    'ban_vendor'=> 'حظر المورد',
 ];

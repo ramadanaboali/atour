@@ -72,6 +72,22 @@
                             <label class="form-check-label" for="can_cancel">{{ __('suppliers.can_cancel') }}</label>
                         </div>
                     </div>
+                    <div class="mb-1 col-md-6  @error('pay_on_deliver') is-invalid @enderror">
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="pay_on_deliver"
+                                    value="1" id="pay_on_deliver"/>
+                            <label class="form-check-label" for="pay_on_deliver">{{ __('suppliers.pay_on_deliver') }}</label>
+                        </div>
+                    </div>
+                    <div class="mb-1 col-md-6  @error('ban_vendor') is-invalid @enderror">
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="ban_vendor"
+                                    value="1" id="ban_vendor"/>
+                            <label class="form-check-label" for="ban_vendor">{{ __('suppliers.ban_vendor') }}</label>
+                        </div>
+                    </div>
                 </div>
 
                 </div>
@@ -174,7 +190,7 @@
                         </a>
                         @endcan
                                          @can('clients.status')
-                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`" >
+                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`"  data-pay_on_deliver="`+row.pay_on_deliver+`" data-ban_vendor="`+row.ban_vendor+`" >
                             <i data-feather="settings" class="font-medium-2"></i>
                                 <span>{{ __('suppliers.actions.settings') }}</span>
                         </a>
@@ -193,19 +209,31 @@
     $(window).on('load', function() {
 
             $('body').on('click', '.vendor_setting', function (){
-                var url= $(this).attr('data-url');
-                var can_pay_later= $(this).attr('data-can_pay_later');
-                if(can_pay_later==1){
-                    document.getElementById('can_pay_later').checked = true;
-                }else{
-                    document.getElementById('can_pay_later').checked = false;
-                }
-                var can_cancel= $(this).attr('data-can_cancel');
-                if(can_cancel==1){
-                    document.getElementById('can_cancel').checked = true;
-                }else{
-                    document.getElementById('can_cancel').checked = false;
-                }
+                    var url= $(this).attr('data-url');
+                    var can_pay_later= $(this).attr('data-can_pay_later');
+                    if(can_pay_later==1){
+                        document.getElementById('can_pay_later').checked = true;
+                    }else{
+                        document.getElementById('can_pay_later').checked = false;
+                    }
+                    var can_cancel= $(this).attr('data-can_cancel');
+                    if(can_cancel==1){
+                        document.getElementById('can_cancel').checked = true;
+                    }else{
+                        document.getElementById('can_cancel').checked = false;
+                    }
+                    var pay_on_deliver= $(this).attr('data-pay_on_deliver');
+                    if(pay_on_deliver==1){
+                        document.getElementById('pay_on_deliver').checked = true;
+                    }else{
+                        document.getElementById('pay_on_deliver').checked = false;
+                    }
+                    var ban_vendor= $(this).attr('data-ban_vendor');
+                    if(ban_vendor==1){
+                        document.getElementById('ban_vendor').checked = true;
+                    }else{
+                        document.getElementById('ban_vendor').checked = false;
+                    }
                     $('#SettingForm').attr('action', url)
                 $('#SettingModal').modal('show')
                 return false;

@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'login' => 'Sign in',
-    'email' => 'E-mail',
-    'password' => 'password',
-    'remember_me' => 'remember me',
+    'login' => 'Login',
+    'email' => 'Email',
+    'password' => 'Password',
+    'remember_me' => 'Remember me',
     'forgot_password' => 'Forgot your password?',
-    'failed' => 'There is an error in the login data!',
+    'failed' => 'There is an error in your login information!',
 ];

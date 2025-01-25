@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    <title>{{ config('app.name') }} | {{ __('admin.footer_settings') }}</title>
+    <title>{{ config('app.name') }} | {{ __('admin.header_settings') }}</title>
 @endsection
 @section('content')
     <form method='post' enctype="multipart/form-data"  id="jquery-val-form" action="{{ route('admin.settings.update') }}">
@@ -13,7 +13,7 @@
                     <div class="col-12">
                         <h1 class="bold mb-0 mt-1 text-dark">
                             <i data-feather="box" class="font-medium-2"></i>
-                            <span>{{ __('admin.footer_settings') }}</span>
+                            <span>{{ __('admin.header_settings') }}</span>
                         </h1>
                     </div>
                 </div>
