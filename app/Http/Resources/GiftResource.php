@@ -35,6 +35,13 @@ class GiftResource extends JsonResource
             'total_amounts' => totalAmount($this->id,'gift'),
             'use_coupon' => useCoupon($this->id,'gift'),
             'use_offers' => useOffers($this->id,'gift'),
+            'title_en' => $this->title_en,
+            'title_ar' => $this->title_ar,
+            'description_en' => $this->description_en,
+            'description_ar' => $this->description_ar,
+            'location_en' => $this->location_en,
+            'location_ar' => $this->location_ar,
+
 
         ];
     }
