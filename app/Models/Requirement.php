@@ -10,14 +10,33 @@ use Illuminate\Support\Facades\App;
 
 class Requirement extends Model
 {
-  use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = ["title_en", "title_ar", "description_en", "description_ar"];
 
-     protected $appends = ['title','description'];
+    protected $appends = ['title','description','text'];
 
     public function getTitleAttribute()
     {
-        if(App::isLocale('en')) {
+
+        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
+            return "";
+        }
+
+        if (App::isLocale('en')) {
+            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
+        } else {
+            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
+        }
+    }
+    public function getTextAttribute()
+    {
+
+        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
+            return "";
+        }
+
+        if (App::isLocale('en')) {
             return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
         } else {
             return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
@@ -25,13 +44,18 @@ class Requirement extends Model
     }
     public function getDescriptionAttribute()
     {
-        if(App::isLocale('en')) {
+
+        if (!array_key_exists('description_en', $this->attributes) || !array_key_exists('description_ar', $this->attributes)) {
+            return "";
+        }
+
+        if (App::isLocale('en')) {
             return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
         } else {
             return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
         }
     }
-     public function trips():?BelongsToMany
+    public function trips(): ?BelongsToMany
     {
         return $this->belongsToMany(Trip::class, 'trip_requirements');
 

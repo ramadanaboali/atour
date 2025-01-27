@@ -108,4 +108,27 @@ class RequirementController extends Controller
              })
             ->make(true);
     }
+    public function select(Request $request): JsonResponse|string
+    {
+        $data = Requirement::distinct()
+                 ->where(function ($query) use ($request) {
+                     if ($request->filled('q')) {
+                         if (App::isLocale('en')) {
+                             return $query->where('title_en', 'like', '%'.$request->q.'%');
+                         } else {
+                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                         }
+                     }
+                 })->select('id', 'title_en', 'title_ar')->get();
+
+        if ($request->filled('pure_select')) {
+            $html = '<option value="">'. __('category.select') .'</option>';
+            foreach ($data as $row) {
+                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
+            }
+            return $html;
+        }
+        return response()->json($data);
+    }
+
 }

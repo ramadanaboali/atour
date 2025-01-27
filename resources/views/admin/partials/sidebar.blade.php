@@ -121,6 +121,14 @@
                 </li>
             @endcan
 
+           @can('trips.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.trips.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.trips') }}</span>
+                    </a>
+                </li>
+            @endcan
            @can('offers.view')
                 <li>
                     <a class='d-flex align-items-center' href='{{ route('admin.offers.index') }} '>
@@ -342,7 +350,19 @@
 
 
 
+        
         {{--addnewrouteheredontdeletemeplease--}}
+
+           @can('trips.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.trips.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.trips') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+        
 
 
 

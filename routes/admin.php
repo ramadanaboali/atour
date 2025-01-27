@@ -127,17 +127,21 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('settings/terms', [App\Http\Controllers\Admin\SettingController::class, 'terms'])->name('settings.terms')->middleware('adminPermission:settings.terms');
             Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update')->middleware('adminPermission:settings.edit');
 
-
             Route::get('profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
             Route::post('update-profile', [App\Http\Controllers\Admin\ProfileController::class, 'updateProfile'])->name('profile.update');
             Route::get('change-password', [App\Http\Controllers\Admin\ProfileController::class, 'changePassword'])->name('profile.change_password');
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
-
-
-
-
             //addnewrouteheredontdeletemeplease
+
+            Route::get('trips/select', [App\Http\Controllers\Admin\TripController::class, 'select'])->name('trips.select');
+            Route::delete('trips/bulk', [App\Http\Controllers\Admin\TripController::class, 'deleteBulk'])->name('trips.deleteBulk')->middleware('adminPermission:trips.delete');
+            Route::get('trips/list', [App\Http\Controllers\Admin\TripController::class, 'list'])->name('trips.list')->middleware('adminPermission:trips.view');
+            Route::post('trips', [App\Http\Controllers\Admin\TripController::class, 'store'])->name('trips.store')->middleware('adminPermission:trips.create');
+            Route::delete('trips/{id}', [App\Http\Controllers\Admin\TripController::class, 'destroy'])->name('trips.destroy')->middleware('adminPermission:trips.delete');
+            Route::get('trips', [App\Http\Controllers\Admin\TripController::class, 'index'])->name('trips.index')->middleware('adminPermission:trips.view');
+            Route::match(['PUT', 'PATCH'], 'trips/{id}', [App\Http\Controllers\Admin\TripController::class, 'update'])->name('trips.update')->middleware('adminPermission:trips.edit');
+            Route::get('trips/{id}/edit', [App\Http\Controllers\Admin\TripController::class, 'edit'])->name('trips.edit')->middleware('adminPermission:trips.edit');
 
             Route::get('blogs/select', [App\Http\Controllers\Admin\BlogController::class, 'select'])->name('blogs.select');
             Route::delete('blogs/bulk', [App\Http\Controllers\Admin\BlogController::class, 'deleteBulk'])->name('blogs.deleteBulk')->middleware('adminPermission:blogs.delete');
@@ -148,9 +152,6 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('blogs/create', [App\Http\Controllers\Admin\BlogController::class, 'create'])->name('blogs.create')->middleware('adminPermission:blogs.create');
             Route::match(['PUT', 'PATCH'], 'blogs/{id}', [App\Http\Controllers\Admin\BlogController::class, 'update'])->name('blogs.update')->middleware('adminPermission:blogs.edit');
             Route::get('blogs/{id}/edit', [App\Http\Controllers\Admin\BlogController::class, 'edit'])->name('blogs.edit')->middleware('adminPermission:blogs.edit');
-
-
-
 
             Route::get('currencies/select', [App\Http\Controllers\Admin\CurrencyController::class, 'select'])->name('currencies.select');
             Route::delete('currencies/bulk', [App\Http\Controllers\Admin\CurrencyController::class, 'deleteBulk'])->name('currencies.deleteBulk')->middleware('adminPermission:currencies.delete');
