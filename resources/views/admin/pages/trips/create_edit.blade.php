@@ -43,8 +43,8 @@ input[type="file"] {
 @section('content')
     <form method='post' enctype="multipart/form-data"  id="jquery-val-form"
           action="{{ isset($item) ? route('admin.trips.update', $item->id) : route('admin.trips.store') }}">
-        <input type="hidden" name="_method" value="{{ isset($item) ? 'PUT' : 'POST' }}">
         @csrf
+        @method(isset($item) ? 'PUT' : 'POST')
         <div class="content-header row">
             <div class="content-header-left col-md-6 col-12 mb-1">
                 <div class="row breadcrumbs-top">
@@ -144,10 +144,7 @@ input[type="file"] {
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <pre>
 
-                        'steps_list',
-                        </pre>
                         <div class="mb-1 col-md-4  @error('people') is-invalid @enderror">
                             <label class="form-label" for="people">{{ __('trips.people') }}</label>
                             <input type="number" name="people" id="people" class="form-control" placeholder=""
@@ -206,7 +203,7 @@ input[type="file"] {
                             <select name="requirement_ids[]" id="requirement_ids" class="form-control ajax_select2 extra_field"
                                     data-ajax--url="{{ route('admin.requirements.select') }}"
                                     data-ajax--cache="true" multiple>
-                                @isset($item->requirement_ids)
+                                @isset($item->requirements)
                                 @foreach ($item->requirements as $requirement)
 
                                 <option value="{{ $requirement->id }}" selected>{{ $requirement->title }}</option>
@@ -322,7 +319,7 @@ input[type="file"] {
                                     @foreach($item->available_times as $time)
                                         <div class="row mb-2">
                                             <div class="col-md-5">
-                                                <input type="time" name="available_times[from_time][]" class="form-control" value="{{ $time['from_time'] }}" required>
+                                                <input type="time" name="available_times[from_time][]" class="form-control" value="{{ $time['from_time']??null }}" required>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="time" name="available_times[to_time][]" class="form-control" value="{{ $time['to_time'] }}" required>
@@ -355,14 +352,14 @@ input[type="file"] {
 
                            <div class="mb-1 col-md-12  @error('description_en') is-invalid @enderror">
                             <label class="form-label" for="description_en">{{ __('trips.description_en') }}</label>
-                            <textarea type="text" name="description_en" id="description_en" class="form-control editor" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
+                            <textarea type="text" name="description_en" id="description_en" class="form-control " placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
                             @error('description_en')
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="mb-1 col-md-12  @error('description_ar') is-invalid @enderror">
                             <label class="form-label" for="description_ar">{{ __('trips.description_ar') }}</label>
-                            <textarea type="text" name="description_ar" id="description_ar" class="form-control editor" placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
+                            <textarea type="text" name="description_ar" id="description_ar" class="form-control " placeholder="">{{ $item->description_ar ?? old('description_ar') }}</textarea>
                             @error('description_ar')
                             <span class="error">{{ $message }}</span>
                             @enderror
@@ -422,7 +419,7 @@ input[type="file"] {
                                                     @foreach ($item->attachments as $image)
                                                     <span class="pip">
                                                         <input type="hidden" name="editimages[]" value="{{ $image->id }}" />
-                                                        <img class="imageThumb" src="{{ $image->photo }}" title="" />
+                                                        <img class="imageThumb" src="{{ $image->file }}" title="" />
                                                         <br/><span class="remove"><i data-feather="trash" class="font-medium-2"></i></span>
                                                     </span>
                                                     @endforeach

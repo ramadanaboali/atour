@@ -43,7 +43,7 @@ class TripController extends Controller
     public function edit($id): View
     {
         $item = Trip::findOrFail($id);
-        // dd($item->steps_list);
+        // dd($item->attachments[0]->file);
         return view($this->viewEdit, get_defined_vars());
     }
 
@@ -63,74 +63,47 @@ class TripController extends Controller
     }
 
 
-    public function update(TripRequest $request, $id): RedirectResponse
+
+
+     public function update(TripRequest $request,  $id)
     {
+        $data = $request->validated();
         $trip = Trip::findOrFail($id);
-
-        $folder_path = "images/trips";
-        $storedPath = null;
-        if ($request->hasFile('cover')) {
-            $file = $request->file('cover');
-            $storedPath = $this->storageService->storeFile($file, $folder_path);
+        // Format available_times
+        $available_times = [];
+        foreach ($data['available_times']['from_time'] as $index => $from_time) {
+            $available_times[] = [
+                'from_time' => $from_time,
+                'to_time' => $data['available_times']['to_time'][$index]
+            ];
         }
-        $data = [
-            'cover' => $storedPath ?? $trip->cover,
-            'title_ar' => $request->title_ar ?? $trip->title_ar,
-            'title_en' => $request->title_en ?? $trip->title_en,
-            'description_en' => $request->description_en ?? $trip->description_en,
-            'description_ar' => $request->description_ar ?? $trip->description_ar,
-            'price' => $request->price ?? $trip->price,
-            'start_point_en' => $request->start_point_en ?? $trip->start_point_en,
-            'start_point_ar' => $request->start_point_ar ?? $trip->start_point_ar,
-            'end_point_en' => $request->end_point_en ?? $trip->end_point_en,
-            'end_point_ar' => $request->end_point_ar ?? $trip->end_point_ar,
-            'program_time_en' => $request->program_time_en ?? $trip->program_time_en,
-            'program_time_ar' => $request->program_time_ar ?? $trip->program_time_ar,
-            'people' => $request->people ?? $trip->people,
-            'steps_list' => $request->steps_list ?? $trip->steps_list,
-            'start_long' => $request->start_long ?? $trip->start_long,
-            'start_lat' => $request->start_lat ?? $trip->start_lat,
-            'end_long' => $request->end_long ?? $trip->end_long,
-            'end_lat' => $request->end_lat ?? $trip->end_lat,
-            'free_cancelation' => $request->free_cancelation ?? $trip->free_cancelation,
-            'available_days' => $request->available_days ?? $trip->available_days,
-            'available_times' => $request->available_times ?? $trip->available_times,
-            'pay_later' => $request->pay_later ?? $trip->pay_later,
-            'city_id' => $request->city_id ?? $trip->city_id,
-            'updated_by' => auth()->user()->id,
-        ];
-        $item = $trip->update($data);
+        $data['available_times'] = $available_times;
 
-        if ($item) {
-            if ($request->filled('sub_category_ids')) {
-                TripSubCategory::where('trip_id', $trip->id)->delete();
-            }
-            foreach ($request->sub_category_ids as $sub_category_id) {
-                $feature = [
-                    'trip_id' => $trip->id,
-                    'sub_category_id' => $sub_category_id,
-                ];
-                TripSubCategory::create($feature);
-            }
-            if ($request->filled('featurs')) {
-                TripFeature::where('trip_id', $trip->id)->delete();
-            }
-            foreach ($request->featurs as $feature_data) {
-                $feature = [
-                    'trip_id' => $trip->id,
-                    'title_ar' => $feature_data['title_ar'] ?? null,
-                    'title_en' => $feature_data['title_en'] ?? null,
-                    'description_en' => $feature_data['description_en'] ?? null,
-                    'description_ar' => $feature_data['description_ar'] ?? null,
-                ];
-                TripFeature::create($feature);
-            }
+        // Format available_days
+        $data['available_days'] = array_values($data['available_days']);
+
+        // Handle file upload
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        // Update trip
+        $trip->update($data);
+
+        // Sync relationships
+        $trip->requirements()->sync($data['requirement_ids']);
+        $trip->subCategory()->sync($data['sub_category_ids']);
+        $trip->features()->sync($data['featur_ids']);
+
+        // Handle images
+        if ($request->hasFile('images')) {
+            // Delete existing attachments
+            Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
+
+            // Save new images
             $images = $request->file('images');
-            if ($request->filled('images')) {
-                Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
-            }
             foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path);
+                $storedPath = $image->store('trip_images', 'public');
                 $attachment = [
                     'model_id' => $trip->id,
                     'model_type' => 'trip',
@@ -141,12 +114,12 @@ class TripController extends Controller
             }
         }
 
-        flash(__('trips.messages.created'))->success();
-
-        return to_route($this->route . '.index');
+        // Redirect
+        return redirect()->route('admin.trips.index')->with('success', 'Trip updated successfully.');
     }
 
-   
+
+
     public function list(Request $request): JsonResponse
     {
         $data = Trip::with('vendor')->select('trips.*');
