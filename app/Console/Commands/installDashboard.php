@@ -27,7 +27,7 @@ class installDashboard extends Command
      */
     public function handle()
     {
-        // $this->recurseCopy("trips", 'Trip');
+        $this->recurseCopy("gifts", 'Gift');
 
 
         return 0;
@@ -47,7 +47,7 @@ class installDashboard extends Command
                 continue;
             }
             if (is_dir("$copy/$file") === true) {
-                recurseCopy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
+                $this->recurseCopy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
             } else {
                 copy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
             }
