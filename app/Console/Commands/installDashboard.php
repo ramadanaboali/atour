@@ -27,7 +27,7 @@ class installDashboard extends Command
      */
     public function handle()
     {
-        $this->recurseCopy("gifts", 'Gift');
+        // $this->recurseCopy("gifts", 'Gift');
 
 
         return 0;
