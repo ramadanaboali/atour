@@ -27,7 +27,7 @@ class OrderController extends Controller
     {
         $title = __('admin.new_orders');
 
-        $status = [Order::STATUS_PENDING];
+        $status = [Order::STATUS_COMPLEALED];
 
         return view($this->viewIndex, get_defined_vars());
     }

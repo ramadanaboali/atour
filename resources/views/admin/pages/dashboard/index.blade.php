@@ -17,19 +17,23 @@
                         <div class="row">
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
-                                    <div class="card-body">
-                                        <div class="avatar bg-light-info p-50 mb-1">
-                                            <div class="avatar-content">
-                                                <i data-feather="users" class="font-medium-5"></i>
+                                    <a href="{{ route('admin.clients.index') }}">
+                                        <div class="card-body">
+                                            <div class="avatar bg-light-info p-50 mb-1">
+                                                <div class="avatar-content">
+                                                    <i data-feather="users" class="font-medium-5"></i>
+                                                </div>
                                             </div>
+                                            <h2 class="fw-bolder">{{ $customers }}</h2>
+                                            <p class="card-text">{{ __('admin.customers') }}</p>
                                         </div>
-                                        <h2 class="fw-bolder">{{ $customers }}</h2>
-                                        <p class="card-text">{{ __('admin.customers') }}</p>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
+                                    <a href="{{ route('admin.suppliers.index') }}">
+
                                     <div class="card-body">
                                         <div class="avatar bg-light-warning p-50 mb-1">
                                             <div class="avatar-content">
@@ -39,10 +43,12 @@
                                         <h2 class="fw-bolder">{{ $suppliers }}</h2>
                                         <p class="card-text">{{ __('admin.suppliers') }}</p>
                                     </div>
+                                </a>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
+                                    <a href="{{ route('admin.current_orders.index') }}">
                                     <div class="card-body">
                                         <div class="avatar bg-light-danger p-50 mb-1">
                                             <div class="avatar-content">
@@ -52,10 +58,12 @@
                                         <h2 class="fw-bolder">{{ $current_orders }}</h2>
                                         <p class="card-text">{{ __('admin.current_orders') }}</p>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
+                                    <a href="{{ route('admin.orders.index') }}">
                                     <div class="card-body">
                                         <div class="avatar bg-light-primary p-50 mb-1">
                                             <div class="avatar-content">
@@ -65,10 +73,12 @@
                                         <h2 class="fw-bolder">{{ $old_orders }}</h2>
                                         <p class="card-text">{{ __('admin.old_orders') }}</p>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
+                                    <a href="{{ route('admin.canceled_orders.index') }}">
                                     <div class="card-body">
                                         <div class="avatar bg-light-danger p-50 mb-1">
                                             <div class="avatar-content">
@@ -78,10 +88,12 @@
                                         <h2 class="fw-bolder">{{ $canceled_orders }}</h2>
                                         <p class="card-text">{{ __('admin.canceled_orders') }}</p>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-xl-2 col-md-4 col-sm-6">
                                 <div class="card text-center">
+                                    <a href="{{ route('admin.trips.index') }}">
                                     <div class="card-body">
                                         <div class="avatar bg-light-success p-50 mb-1">
                                             <div class="avatar-content">
@@ -91,6 +103,7 @@
                                         <h2 class="fw-bolder">{{ $trips }}</h2>
                                         <p class="card-text">{{ __('admin.trips') }}</p>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
