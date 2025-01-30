@@ -124,8 +124,25 @@
            @can('trips.view')
                 <li>
                     <a class='d-flex align-items-center' href='{{ route('admin.trips.index') }} '>
-                        <i data-feather='key'></i>
+                        <i data-feather='smile'></i>
                         <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.trips') }}</span>
+                    </a>
+                </li>
+            @endcan
+           @can('gifts.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.gifts.index') }} '>
+                        <i data-feather='gift'></i>
+
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.gifts') }}</span>
+                    </a>
+                </li>
+            @endcan
+           @can('effectivenes.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.effectivenes.index') }} '>
+                        <i data-feather='circle'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.effectivenes') }}</span>
                     </a>
                 </li>
             @endcan
@@ -140,13 +157,13 @@
 
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.accountants.list') }}">
-                    <i data-feather="image"></i>
+                    <i data-feather="calendar"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.accountants') }}</span>
                 </a>
             </li>
             <li>
                 <a class="d-flex align-items-center" href="">
-                    <i data-feather="image"></i>
+                    <i data-feather="phone"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppports_contact_us') }}</span>
                 </a>
             </li>
@@ -350,8 +367,32 @@
 
 
 
-        
+
+
+
         {{--addnewrouteheredontdeletemeplease--}}
+
+           @can('effectivenes.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.effectivenes.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.effectivenes') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+
+
+           @can('gifts.view')
+                <li>
+                    <a class='d-flex align-items-center' href='{{ route('admin.gifts.index') }} '>
+                        <i data-feather='key'></i>
+                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.gifts') }}</span>
+                    </a>
+                </li>
+            @endcan
+
+
 
            @can('trips.view')
                 <li>
@@ -362,7 +403,7 @@
                 </li>
             @endcan
 
-        
+
 
 
 

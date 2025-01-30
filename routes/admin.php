@@ -132,7 +132,35 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('change-password', [App\Http\Controllers\Admin\ProfileController::class, 'changePassword'])->name('profile.change_password');
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
-            //addnewrouteheredontdeletemeplease
+            
+        
+        //addnewrouteheredontdeletemeplease
+
+            Route::get('effectivenes/select', [App\Http\Controllers\Admin\EffectivenesController::class, 'select'])->name('effectivenes.select');
+            Route::delete('effectivenes/bulk', [App\Http\Controllers\Admin\EffectivenesController::class, 'deleteBulk'])->name('effectivenes.deleteBulk')->middleware('adminPermission:effectivenes.delete');
+            Route::get('effectivenes/list', [App\Http\Controllers\Admin\EffectivenesController::class, 'list'])->name('effectivenes.list')->middleware('adminPermission:effectivenes.view');
+            Route::post('effectivenes', [App\Http\Controllers\Admin\EffectivenesController::class, 'store'])->name('effectivenes.store')->middleware('adminPermission:effectivenes.create');
+            Route::delete('effectivenes/{id}', [App\Http\Controllers\Admin\EffectivenesController::class, 'destroy'])->name('effectivenes.destroy')->middleware('adminPermission:effectivenes.delete');
+            Route::get('effectivenes', [App\Http\Controllers\Admin\EffectivenesController::class, 'index'])->name('effectivenes.index')->middleware('adminPermission:effectivenes.view');
+            Route::get('effectivenes/create', [App\Http\Controllers\Admin\EffectivenesController::class, 'create'])->name('effectivenes.create')->middleware('adminPermission:effectivenes.create');
+            Route::match(['PUT', 'PATCH'], 'effectivenes/{id}', [App\Http\Controllers\Admin\EffectivenesController::class, 'update'])->name('effectivenes.update')->middleware('adminPermission:effectivenes.edit');
+            Route::get('effectivenes/{id}/edit', [App\Http\Controllers\Admin\EffectivenesController::class, 'edit'])->name('effectivenes.edit')->middleware('adminPermission:effectivenes.edit');
+
+
+        
+
+            Route::get('gifts/select', [App\Http\Controllers\Admin\GiftController::class, 'select'])->name('gifts.select');
+            Route::delete('gifts/bulk', [App\Http\Controllers\Admin\GiftController::class, 'deleteBulk'])->name('gifts.deleteBulk')->middleware('adminPermission:gifts.delete');
+            Route::get('gifts/list', [App\Http\Controllers\Admin\GiftController::class, 'list'])->name('gifts.list')->middleware('adminPermission:gifts.view');
+            Route::post('gifts', [App\Http\Controllers\Admin\GiftController::class, 'store'])->name('gifts.store')->middleware('adminPermission:gifts.create');
+            Route::delete('gifts/{id}', [App\Http\Controllers\Admin\GiftController::class, 'destroy'])->name('gifts.destroy')->middleware('adminPermission:gifts.delete');
+            Route::get('gifts', [App\Http\Controllers\Admin\GiftController::class, 'index'])->name('gifts.index')->middleware('adminPermission:gifts.view');
+            Route::get('gifts/create', [App\Http\Controllers\Admin\GiftController::class, 'create'])->name('gifts.create')->middleware('adminPermission:gifts.create');
+            Route::match(['PUT', 'PATCH'], 'gifts/{id}', [App\Http\Controllers\Admin\GiftController::class, 'update'])->name('gifts.update')->middleware('adminPermission:gifts.edit');
+            Route::get('gifts/{id}/edit', [App\Http\Controllers\Admin\GiftController::class, 'edit'])->name('gifts.edit')->middleware('adminPermission:gifts.edit');
+
+
+        
 
             Route::get('trips/select', [App\Http\Controllers\Admin\TripController::class, 'select'])->name('trips.select');
             Route::delete('trips/bulk', [App\Http\Controllers\Admin\TripController::class, 'deleteBulk'])->name('trips.deleteBulk')->middleware('adminPermission:trips.delete');

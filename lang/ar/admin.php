@@ -202,6 +202,8 @@ return [
     'blogs' => 'المدونات',
     'publisher_name' => 'اسم الناشر',
     'trips' => 'الرحلات',
+    'gifts' => 'الهدايا',
+    'effectivenes' => 'الفعاليات',
     'customers' => 'العملاء',
     'orders_statistics' => 'احصائيات الطلبات',
     'clients_vendors' => 'الحملاء والموردين',

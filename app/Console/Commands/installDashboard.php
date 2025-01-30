@@ -27,7 +27,7 @@ class installDashboard extends Command
      */
     public function handle()
     {
-        // $this->recurseCopy("gifts", 'Gift');
+        // $this->recurseCopy("effectivenes", 'Effectivenes');
 
 
         return 0;
@@ -37,7 +37,7 @@ class installDashboard extends Command
         string $model_name,
         string $model
     ): void {
-        $copy = 'resources/views/admin/pages/onboardings';
+        $copy = 'resources/views/admin/pages/gifts';
         $directory = opendir($copy);
         if (is_dir('resources/views/admin/pages/'.$model_name) === false) {
             mkdir('resources/views/admin/pages/'.$model_name);
@@ -52,26 +52,26 @@ class installDashboard extends Command
                 copy("$copy/$file", "resources/views/admin/pages/$model_name/$file");
             }
             $file_content = file_get_contents("resources/views/admin/pages/$model_name/$file");
-            $str = str_replace("onboardings", $model_name, $file_content);
+            $str = str_replace("gifts", $model_name, $file_content);
             file_put_contents("resources/views/admin/pages/$model_name/$file", $str);
         }
-        copy('app/Http/Controllers/Admin/OnboardingController.php', 'app/Http/Controllers/Admin/'.$model.'Controller.php');
+        copy('app/Http/Controllers/Admin/GiftController.php', 'app/Http/Controllers/Admin/'.$model.'Controller.php');
 
         $file_content = file_get_contents('app/Http/Controllers/Admin/'.$model.'Controller.php');
-        $str = str_replace("onboardings", $model_name, $file_content);
+        $str = str_replace("gifts", $model_name, $file_content);
         file_put_contents('app/Http/Controllers/Admin/'.$model.'Controller.php', $str);
 
         $file_content = file_get_contents('app/Http/Controllers/Admin/'.$model.'Controller.php');
-        $str = str_replace("Onboarding", $model, $file_content);
+        $str = str_replace("Gift", $model, $file_content);
         file_put_contents('app/Http/Controllers/Admin/'.$model.'Controller.php', $str);
 
-        copy('app/Http/Requests/OnboardingRequest.php', 'app/Http/Requests/'.$model.'Request.php');
+        copy('app/Http/Requests/GiftRequest.php', 'app/Http/Requests/'.$model.'Request.php');
         $file_content = file_get_contents('app/Http/Requests/'.$model.'Request.php');
-        $str = str_replace("Onboarding", $model, $file_content);
+        $str = str_replace("Gift", $model, $file_content);
         file_put_contents('app/Http/Requests/'.$model.'Request.php', $str);
 
-        copy('lang/en/onboardings.php', 'lang/en/'.$model_name.'.php');
-        copy('lang/ar/onboardings.php', 'lang/ar/'.$model_name.'.php');
+        copy('lang/en/gifts.php', 'lang/en/'.$model_name.'.php');
+        copy('lang/ar/gifts.php', 'lang/ar/'.$model_name.'.php');
 
         $file_content = file_get_contents('routes/admin.php');
         $routes = "

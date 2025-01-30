@@ -253,6 +253,14 @@
             basicPickr.flatpickr();
         }
 
+        var  timePickr = $('.flatpickr-time');
+          if (timePickr.length) {
+                timePickr.flatpickr({
+                enableTime: true,
+                noCalendar: true
+                });
+            }
+
         $('.select2-input').select2();
         $('.ajax_select2').select2({
             placeholder: "{{ __('admin.select') }}",
