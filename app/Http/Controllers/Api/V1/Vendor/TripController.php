@@ -208,6 +208,10 @@ class TripController extends Controller
     public function delete($id)
     {
         $trip=$this->service->get($id);
+        if(count($trip->bookings)){
+            return response()->apiFail(__('api.trip_has_bookings'));
+        }
+        $this->storageService->deleteFile($trip->cover);
         Offer::where('trip_id', $id)->delete();
         return response()->apiSuccess($this->service->delete($trip));
     }

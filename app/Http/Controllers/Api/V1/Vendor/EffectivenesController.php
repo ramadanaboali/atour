@@ -134,9 +134,15 @@ class EffectivenesController extends Controller
 
         return response()->apiSuccess($item);
     }
-     public function delete($id)
+    public function delete($id)
     {
-        $effectivenes=$this->service->get($id);
+
+        $effectivenes = $this->service->get($id);
+
+        if (count($effectivenes->bookings)) {
+            return response()->apiFail(__('api.effectivene_has_bookings'));
+        }
+
         return response()->apiSuccess($this->service->delete($effectivenes));
     }
 

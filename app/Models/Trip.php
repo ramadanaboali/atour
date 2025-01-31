@@ -174,6 +174,10 @@ class Trip extends Model
     {
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'trip');
     }
+    public function bookings()
+    {
+        return $this->hasMany(BookingTrip::class, 'trip_id');
+    }
 
 
 }

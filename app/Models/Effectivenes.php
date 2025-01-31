@@ -95,5 +95,9 @@ class Effectivenes extends Model
     {
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'effectivenes');
     }
+       public function bookings()
+    {
+        return $this->hasMany(BookingEffectivene::class, 'effectivene_id');
+    }
 
 }

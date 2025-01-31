@@ -38,6 +38,8 @@ return [
     'verification_code' => 'تم ارسال رمز التحقق',
     'order_not_exist' => 'هذا الحجز غير موجود',
     'user_not_active' => 'عفوا حسابك غير مفعل يرجى التواصل مع المسؤل لأعادة تنشيط حسابك',
-    'order_paid_befor'=>'تم الدفع مسبقا'
+    'order_paid_befor'=>'تم الدفع مسبقا',
+    'trip_has_bookings'=>'هذه الرحلة بها حجوزات',
+    'effectivene_has_bookings'=>'هذه الفاعلية بها حجوزات',
 
 ];
