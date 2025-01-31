@@ -8,6 +8,41 @@ use App\Http\Controllers\Api\V1\SettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Services\OneSignalService;
+
+
+Route::post('/send-notification', function (Request $request) {
+    $request->validate([
+        'player_id' => 'required|string',
+        'title' => 'required|string',
+        'message' => 'required|string',
+    ]);
+
+    $response = OneSignalService::sendToUser(
+        $request->player_id,
+        $request->title,
+        $request->message
+    );
+
+    return response()->json($response);
+});
+
+Route::post('/send-broadcast', function (Request $request) {
+    $request->validate([
+        'title' => 'required|string',
+        'message' => 'required|string',
+    ]);
+
+    $response = OneSignalService::sendToAll(
+        $request->title,
+        $request->message
+    );
+
+    return response()->json($response);
+});
+
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
