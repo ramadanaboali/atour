@@ -17,8 +17,11 @@ class OrderController extends Controller
     {
 
         $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene', function ($query) {
+            return $query->where('date_to','<=',date('Y-m-d') );
+        })->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
         $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+
 
         $profit_gifts = BookingGift::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
         $profit_effectivenes = BookingEffectivene::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
@@ -34,7 +37,9 @@ class OrderController extends Controller
 
 
         $data['day_invoice']['gifts'] = BookingGift::with(['gift', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
-        $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
+        $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene', function ($query) {
+            return $query->where('date_to','<=',date('Y-m-d') );
+        })->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
         $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
         $data['can_pay_later'] = auth()->user()->can_pay_later;
         $data['can_cancel'] = auth()->user()->can_cancel;
