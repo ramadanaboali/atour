@@ -5,6 +5,7 @@ namespace App\Http\Requests\Customer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class BookingTripRequest extends FormRequest
@@ -25,7 +26,7 @@ class BookingTripRequest extends FormRequest
             'people_number'=>'required|integer',
             'children_number'=>'required|integer',
             'payment_way'=>'required|in:online,cash',
-            'trip_id'=>'required|exists:trips,id'
+            'trip_id'=>'required|'. Rule::exists('trips', 'id')->whereNull('deleted_at'),
             ];
     }
     protected function failedValidation(Validator $validator)

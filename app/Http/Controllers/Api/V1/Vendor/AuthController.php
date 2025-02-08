@@ -250,7 +250,6 @@ class AuthController extends Controller
             if ($user) {
                 $userinputs = [
                              'name' => $request->name ?? $user->name,
-                             'nationality' => $request->nationality ?? $user->nationality,
                              'address' => $request->address ?? $user->address,
                              'city_id' => $request->city_id ?? $user->city_id,
                          ];
