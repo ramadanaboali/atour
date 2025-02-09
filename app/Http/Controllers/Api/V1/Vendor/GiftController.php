@@ -76,8 +76,10 @@ class GiftController extends Controller
             }
 
             $images = $request->file('images');
+            // log::info('images'.json_encode($images));
+            $i=0;
             foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path);
+                $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
                 $attachment = [
                     'model_id' => $item->id,
                     'model_type' => 'gift',
@@ -85,6 +87,7 @@ class GiftController extends Controller
                     'title' => "gift",
                 ];
                 Attachment::create($attachment);
+                $i++;
             }
         }
         return response()->apiSuccess(new GiftResource($item));

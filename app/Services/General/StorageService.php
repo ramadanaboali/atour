@@ -16,9 +16,9 @@ class StorageService
         $this->disk='public';
     }
 
-    public function storeFile($file,$path): bool|string|null
+    public function storeFile($file,$path,$i=0): bool|string|null
     {
-        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $filename = time() . '.' .$i.''. $file->getClientOriginalExtension();
         return upload($file, $this->disk, $path, $filename);
     }
 
