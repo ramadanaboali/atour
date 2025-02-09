@@ -18,7 +18,7 @@ class StorageService
 
     public function storeFile($file,$path,$i=0): bool|string|null
     {
-        $filename = time() . '.' .$i.''. $file->getClientOriginalExtension();
+        $filename = time().$i.'.' . $file->getClientOriginalExtension();
         return upload($file, $this->disk, $path, $filename);
     }
 
