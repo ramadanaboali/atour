@@ -38,6 +38,12 @@ return [
     'verification_code' => 'The code has been sent Verification',
     'order_not_exist' => 'This reservation does not exist',
     'user_not_active' => 'Sorry, your account is not activated. Please contact the administrator to reactivate your account',
-    'order_paid_befor'=>'تم الدفع مسبقا'
+    'order_paid_befor'=>'تم الدفع مسبقا',
+    'trip_compleated_cant_compleate_reservation'=>'Exceed maximum you can try on other date',
+    'new_order'=>'لديك طلب جديد',
+    'new_trip_booking_code'=>'لديك حجز على رحلة :item_name',
+    'new_gift_booking_code'=>'لديك حجز للهدية   :item_name',
+    'new_effectivnes_booking_code'=>'لديك حجز على الفاعلية  :item_name',
+
 
 ];

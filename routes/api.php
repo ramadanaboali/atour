@@ -5,10 +5,42 @@ use App\Http\Controllers\Api\V1\Customer\OrderController;
 use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SettingController;
+use App\Models\Notification;
+use App\Models\PlayerId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+use App\Services\OneSignalService;
+
+Route::post('/send-notification', function (Request $request) {
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'title' => 'required|string',
+        'message' => 'required|string',
+    ]);
+
+    $response = OneSignalService::sendToUser($request->user_id, $request->title, $request->message);
+
+    return response()->json($response);
+});
+
+Route::post('/send-broadcast', function (Request $request) {
+    $request->validate([
+        'title' => 'required|string',
+        'message' => 'required|string',
+    ]);
+
+    $response = OneSignalService::sendToAll($request->title, $request->message);
+
+    return response()->json($response);
+});
+
+
+
+Route::get('/notifications', function (Request $request) {
+    return response()->json(Notification::latest()->get());
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -56,6 +88,19 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
+            Route::post('/store-player-id', function (Request $request) {
+                $request->validate([
+                    'player_id' => 'required|string|unique:player_ids,player_id',
+                ]);
+
+                PlayerId::create([
+                    'user_id' => auth()->user()->id,
+                    'player_id' => $request->player_id,
+                ]);
+
+                return response()->apiSuccess( 'Player ID saved successfully');
+            });
+            Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
             Route::get('trips', [HomeController::class,'trips']);
             Route::get('gifts', [HomeController::class,'gifts']);
             Route::get('effectivenes', [HomeController::class,'effectivenes']);

@@ -40,7 +40,7 @@ class AuthController extends Controller
         })->first();
 
         if ($user) {
-            if ($user->active == 0) {
+        if ($user->status == 'pendding') {
                 return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
@@ -297,5 +297,11 @@ class AuthController extends Controller
         Auth::user()->currentAccessToken()->delete();
         $data['message'] = 'Logout successfully';
         return $this->successResponse($data, Response::HTTP_CREATED);
+    }
+    public function updateToken(Request $request)
+    {
+        $user=Auth::user();
+        $user->fcm_token = $request->fcm_token;
+        return response()->apiSuccess($user->save());
     }
 }

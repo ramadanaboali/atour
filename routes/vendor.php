@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Vendor\AuthController;
 use App\Http\Controllers\Api\V1\Vendor\GiftController;
 use App\Http\Controllers\Api\V1\Vendor\TripController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
+use App\Http\Controllers\Api\V1\Vendor\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -120,6 +121,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
             Route::get('orders/{type}/{id}', [OrderController::class, 'showOrder']);
             Route::get('show-all/{type}', [OrderController::class, 'getAll']);
+            Route::get('vendor-status', [VendorController::class, 'status']);
 
         });
     });

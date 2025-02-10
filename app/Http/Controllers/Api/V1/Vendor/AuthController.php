@@ -59,7 +59,7 @@ class AuthController extends Controller
             return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if ($user->active == 0) {
+        if ($user->status == 'pendding') {
             return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

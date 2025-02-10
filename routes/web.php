@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+
+
+Route::get('/dashboard/notifications', function () {
+    return view('admin.pages.notifications', ['notifications' => auth()->user()->notifications]);
+})->middleware('auth');
+
+
+
 Route::get('/tap/callback/{type}', [OrderController::class,'callBack'])->name('callBack');
 
 Route::get('/privacy', [HomeController::class, 'privacy']);

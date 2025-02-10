@@ -16,11 +16,11 @@ class OrderController extends Controller
     public function homePage()
     {
 
-        $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene', function ($query) {
+        $data['pendding_requests']['gifts'] = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereHas('effectivene', function ($query) {
             return $query->where('to_date','<=',date('Y-m-d') );
         })->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['pendding_requests']['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
 
 
         $profit_gifts = BookingGift::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
@@ -36,11 +36,11 @@ class OrderController extends Controller
         $data['balance'] = $total_gifts + $total_effectivenes + $total_trips;
 
 
-        $data['day_invoice']['gifts'] = BookingGift::with(['gift', 'user'])->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
-        $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene', function ($query) {
+        $data['day_invoice']['gifts'] = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
+        $data['day_invoice']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereHas('effectivene', function ($query) {
             return $query->where('to_date','<=',date('Y-m-d') );
         })->whereDate('created_at', Carbon::today())->where('vendor_id', auth()->user()->id)->get();
-        $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
+        $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
         $data['can_pay_later'] = auth()->user()->can_pay_later;
         $data['can_cancel'] = auth()->user()->can_cancel;
         return response()->apiSuccess($data);
@@ -121,20 +121,20 @@ class OrderController extends Controller
     public function penddingRequests()
     {
 
-        $data['gifts'] = BookingGift::with(['gift', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
-        $data['trips'] = BookingTrip::with(['trip', 'user'])->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['gifts'] = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
+        $data['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->where('status', Order::STATUS_PENDING)->where('vendor_id', auth()->user()->id)->get();
 
         return response()->apiSuccess($data);
     }
     public function invoices()
     {
-        $data['current']['gifts'] = BookingGift::with(['gift', 'user'])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
-        $data['current']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
-        $data['current']['trips'] = BookingTrip::with(['trip', 'user'])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
-        $data['compleated']['gifts'] = BookingGift::with(['gift', 'user'])->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
-        $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
-        $data['compleated']['trips'] = BookingTrip::with(['trip', 'user'])->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
+        $data['current']['gifts'] = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
+        $data['current']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
+        $data['current']['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_ONPROGRESS])->where('vendor_id', auth()->user()->id)->get();
+        $data['compleated']['gifts'] = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
+        $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
+        $data['compleated']['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_REJECTED,Order::STATUS_WITHDRWAL])->where('vendor_id', auth()->user()->id)->get();
         return response()->apiSuccess($data);
     }
     public function acceptOrder($type, $id)
@@ -166,26 +166,26 @@ class OrderController extends Controller
     public function showOrder($type, $id)
     {
         if ($type == 'gift') {
-            $order = BookingGift::with(['gift', 'user'])->findOrFail($id);
+            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->findOrFail($id);
             return response()->apiSuccess($order);
         } elseif ($type == 'effectivene') {
-            $order = BookingEffectivene::with(['effectivene', 'user'])->findOrFail($id);
+            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->findOrFail($id);
             return response()->apiSuccess($order);
         } else {
-            $order = BookingTrip::with(['trip', 'user'])->findOrFail($id);
+            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->findOrFail($id);
             return response()->apiSuccess($order);
         }
     }
     public function getAll($type)
     {
         if ($type == 'gifts') {
-            $order = BookingGift::with(['gift', 'user'])->get();
+            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->get();
             return response()->apiSuccess($order);
         } elseif ($type == 'effectivenes') {
-            $order = BookingEffectivene::with(['effectivene', 'user'])->get();
+            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->get();
             return response()->apiSuccess($order);
         } else {
-            $order = BookingTrip::with(['trip', 'user'])->get();
+            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->get();
             return response()->apiSuccess($order);
         }
     }

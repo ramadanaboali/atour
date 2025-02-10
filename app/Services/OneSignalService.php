@@ -3,36 +3,34 @@
 namespace App\Services;
 
 use Ladumor\OneSignal\OneSignal;
+use App\Models\Notification;
+use App\Models\PlayerId;
 
 class OneSignalService
 {
-    /**
-     * Send a notification to a specific user
-     */
-    public static function sendToUser($playerId, $title, $message, $data = [])
+    public static function sendToUser($userId, $title, $message)
     {
         $payload = [
-            'include_player_ids' => [$playerId], // Send to a specific user
+            'include_player_ids' => [self::getPlayerId($userId)],
             'headings' => ['en' => $title],
             'contents' => ['en' => $message],
-            'data' => $data, // Custom payload (optional)
         ];
 
-        return OneSignal::sendPush($payload);
+        $response = OneSignal::sendPush($payload,$message);
+
+        // Store in the database
+        Notification::create([
+            'user_id' => $userId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false
+        ]);
+
+        return $response;
     }
 
-    /**
-     * Send a notification to all users
-     */
-    public static function sendToAll($title, $message, $data = [])
+    private static function getPlayerId($userId)
     {
-        $payload = [
-            'included_segments' => ['All'], // Send to all users
-            'headings' => ['en' => $title],
-            'contents' => ['en' => $message],
-            'data' => $data,
-        ];
-
-        return OneSignal::sendPush($payload);
+        return PlayerId::where('user_id', $userId)->pluck('player_id')->first();
     }
 }

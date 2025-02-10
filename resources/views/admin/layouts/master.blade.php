@@ -315,8 +315,41 @@
       appId: "3ef5e7f1-c5f5-4d5d-b6d2-ff417a361369",
     });
   });
+
+    function fetchNotifications() {
+        $.get("{{ url('/api/notifications') }}", function(data) {
+            let notificationsHtml = '';
+            data.forEach(notification => {
+                notificationsHtml += `
+                    <li class="list-group-item ${notification.is_read ? 'bg-light' : ''}">
+                        <strong>${notification.title}</strong><br>
+                        ${notification.message}<br>
+                        <small>${new Date(notification.created_at).toLocaleString()}</small>
+                        ${!notification.is_read ? `<button onclick="markAsRead(${notification.id})" class="btn btn-sm btn-primary mt-1">Mark as Read</button>` : ''}
+                    </li>
+                `;
+            });
+            $("#notification-list").html(notificationsHtml);
+        });
+    }
+
+    function markAsRead(id) {
+        $.ajax({
+            url: `{{ url('/dashboard/notifications') }}/${id}/read`,
+            type: 'PATCH',
+            data: {_token: "{{ csrf_token() }}"},
+            success: function() {
+                fetchNotifications();
+            }
+        });
+    }
+
+    setInterval(fetchNotifications, 5000);
 </script>
+
 @stack('scripts')
+
+
 </body>
 
 </html>

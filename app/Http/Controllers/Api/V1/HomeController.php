@@ -33,11 +33,17 @@ class HomeController extends Controller
             }
         }
 
-        $data['offer'] = Offer::where('active',1)->first();
+        $data['offer'] = Offer::whereHas('vendor')->join('users',function($query){
+            $query->on('users.id','=','offers.vendor_id')->where('users.active', 1);
+        })->where('offers.active',1)->first();
         $data['most_visited'] = City::where('active', true)->get();
-        $old_experiences = Trip::where('active', true)->get();
+        $old_experiences = Trip::whereHas('vendor')->join('users',function($query){
+            $query->on('users.id','=','trips.vendor_id')->where('users.active', 1);
+        })->where('trips.active', true)->get();
         $data['old_experiences'] = TripResource::collection($old_experiences);
-        $effectivenes = Effectivenes::where('active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->get();
+        $effectivenes = Effectivenes::whereHas('vendor')->join('users',function($query){
+            $query->on('users.id','=','effectivenes.vendor_id')->where('users.active', 1);
+        })->where('effectivenes.active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->get();
         $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
         return apiResponse(true, $data, null, null, 200);

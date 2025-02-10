@@ -365,50 +365,7 @@
             </ul>
         </li>
 
-
-
-
-
-
         {{--addnewrouteheredontdeletemeplease--}}
-
-           @can('effectivenes.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.effectivenes.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.effectivenes') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-           @can('gifts.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.gifts.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.gifts') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-           @can('trips.view')
-                <li>
-                    <a class='d-flex align-items-center' href='{{ route('admin.trips.index') }} '>
-                        <i data-feather='key'></i>
-                        <span class='menu-item text-truncate' data-i18n='List'>{{ __('admin.trips') }}</span>
-                    </a>
-                </li>
-            @endcan
-
-
-
-
-
-
-
         </ul>
     </div>
 </div>

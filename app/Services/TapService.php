@@ -7,6 +7,8 @@ use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
 use App\Models\BookingTrip;
 use App\Models\Order;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class TapService
@@ -51,16 +53,21 @@ class TapService
 
     public function callback($tap_id, $type)
     {
+        $message="";
         if ($type == "trip") {
-            $order = BookingTrip::where('payment_id', $tap_id)->first();
+            $order = BookingTrip::with('trip')->where('payment_id', $tap_id)->first();
+            $message = __('api.new_trip_booking_code', ['item_name' => $order->trip?->title]);
         } elseif ($type == 'gift') {
-            $order = BookingGift::where('payment_id', $tap_id)->first();
+            $order = BookingGift::with('gift')->where('payment_id', $tap_id)->first();
+            $message = __('api.new_gift_booking_code', ['item_name' => $order->gift?->title]);
         } else {
-            $order = BookingEffectivene::where('payment_id', $tap_id)->first();
+            $order = BookingEffectivene::with('effectivene')->where('payment_id', $tap_id)->first();
+            $message = __('api.new_effectivnes_booking_code', ['item_name' => $order->effectivene?->title]);
         }
         if (!$order) {
             return ['success' => false,'data' => null,'message' => __('api.order_not_exist')];
         }
+        $vendor_id = $order->vendor_id;
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -79,6 +86,13 @@ class TapService
         $order->payment_status = $result->status;
         if ($result->status == 'CAPTURED') {
             $user = $order->user;
+            if($vendor_id){
+                try {
+                    OneSignalService::sendToUser($vendor_id, __('api.new_order'), $message);
+                } catch (Exception $e) {
+                    Log::error($e->getMessage());
+                }
+            }
             Mail::to($user->email)->send(new SendOrder($user->email, $order->id));
         }
         $order->save();

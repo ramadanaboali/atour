@@ -2,9 +2,7 @@
 
 namespace App\Services\General;
 
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Storage;
 
 class StorageService

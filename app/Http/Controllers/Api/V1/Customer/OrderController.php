@@ -15,8 +15,11 @@ use App\Models\Effectivenes;
 use App\Models\Gift;
 use App\Models\Order;
 use App\Models\Trip;
+use App\Services\OneSignalService;
 use App\Services\TapService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use function response;
 
@@ -40,6 +43,10 @@ class OrderController extends Controller
     public function bookingTrip(BookingTripRequest $request)
     {
         $item = Trip::findOrFail($request->trip_id);
+        $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $request->booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
+        if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
+            return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
+        }
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
@@ -62,6 +69,11 @@ class OrderController extends Controller
             return response()->apiSuccess($tap);
         }
         $order = new OrderResource($order);
+        try {
+            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
         return response()->apiSuccess($order);
     }
     public function tripPay($id)
@@ -75,6 +87,7 @@ class OrderController extends Controller
                 $order->payment_id = $result['data']['id'];
                 $order->save();
             }
+
             return response()->apiSuccess($result);
         } else {
 
@@ -84,6 +97,13 @@ class OrderController extends Controller
     public function bookingEffectivenes(BookingEffectivenesRequest $request)
     {
         $item = Effectivenes::findOrFail($request->effectivene_id);
+        if ($item->people) {
+            $booking_count = BookingEffectivene::where('effectivene_id', $request->effectivene_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->count();
+            if (($booking_count + 1) > $item->people) {
+                return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
+            }
+        }
+
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
@@ -101,6 +121,13 @@ class OrderController extends Controller
             }
             return response()->apiSuccess($tap);
         }
+
+        try {
+            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_effectivnes_booking_code', ['item_name' => $item->title]));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
         return response()->apiSuccess($order);
     }
 
@@ -147,6 +174,13 @@ class OrderController extends Controller
             }
             return response()->apiSuccess($tap);
         }
+
+        try {
+            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_gift_booking_code', ['item_name' => $item->title]));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
         return response()->apiSuccess($order);
     }
 
