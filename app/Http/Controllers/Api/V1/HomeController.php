@@ -35,7 +35,9 @@ class HomeController extends Controller
 
         $data['offer'] = Offer::whereHas('vendor')->join('users',function($query){
             $query->on('users.id','=','offers.vendor_id')->where('users.active', 1);
-        })->where('offers.active',1)->first();
+        })->where('offers.active',1)->select('offers.*')->first();
+
+
         $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::whereHas('vendor')->join('users',function($query){
             $query->on('users.id','=','trips.vendor_id')->where('users.active', 1);
