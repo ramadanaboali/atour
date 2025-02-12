@@ -41,28 +41,26 @@ class HomeController extends Controller
         $data['offer'] = $offer;
         if ($offer) {
             if ($offer->type == 'gift') {
-                $gift = Gift::find($offer->gift_id);
-                if (!$gift) {
+
+                $gift = Gift::where('id',$offer->gift_id)->first();
+                if ($gift==null) {
                     $data['offer'] = null;
                 }
             }
             if ($offer->type == 'trip') {
-                $trip = Trip::find($offer->trip_id);
-                if (!$trip) {
+                $trip = Trip::where('id',$offer->trip_id)->first();
+                if ($trip==null) {
                     $data['offer'] = null;
                 }
             }
             if ($offer->type == 'effectivenes') {
-                $effectivenes = Effectivenes::find($offer->effectivenes_id);
-                if (!$effectivenes) {
+                $effectivenes = Effectivenes::where('id',$offer->effectivenes_id)->first();
+                if ($effectivenes==null) {
                     $data['offer'] = null;
                 }
             }
         }
 
-        $data['offer'] = Offer::whereHas('vendor')->join('users', function ($query) {
-            $query->on('users.id', '=', 'offers.vendor_id')->where('users.active', 1);
-        })->where('offers.active', 1)->select('offers.*')->first();
 
 
         $data['most_visited'] = City::where('active', true)->get();
