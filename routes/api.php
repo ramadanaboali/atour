@@ -90,10 +90,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('/store-player-id', function (Request $request) {
                 $request->validate([
-                    'player_id' => 'required|string|unique:player_ids,player_id',
+                    'player_id' => 'required|string',
                 ]);
 
-                PlayerId::create([
+                PlayerId::updateOrCreate([
+                    'user_id' => auth()->user()->id,
+                    'player_id' => $request->player_id,
+                ],[
                     'user_id' => auth()->user()->id,
                     'player_id' => $request->player_id,
                 ]);
