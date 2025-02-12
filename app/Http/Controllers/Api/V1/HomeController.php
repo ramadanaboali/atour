@@ -71,7 +71,7 @@ class HomeController extends Controller
         $data['old_experiences'] = TripResource::collection($old_experiences);
         $effectivenes = Effectivenes::whereHas('vendor')->join('users', function ($query) {
             $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
-        })->where('effectivenes.active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->select('trips.*')->get();
+        })->where('effectivenes.active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->select('effectivenes.*')->get();
         $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
         return apiResponse(true, $data, null, null, 200);
