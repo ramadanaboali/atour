@@ -74,24 +74,23 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
 
-
         Route::group(['middleware' => 'auth:sanctum'], function () {
 
-Route::post('/store-player-id', function (Request $request) {
-    $request->validate([
-        'player_id' => 'required|string',
-    ]);
+            Route::post('/store-player-id', function (Request $request) {
+                $request->validate([
+                    'player_id' => 'required|string',
+                ]);
 
-    PlayerId::updateOrCreate([
-        'user_id' => auth()->user()->id,
-        'player_id' => $request->player_id,
-    ], [
-        'user_id' => auth()->user()->id,
-        'player_id' => $request->player_id,
-    ]);
+                PlayerId::updateOrCreate([
+                    'user_id' => auth()->user()->id,
+                    'player_id' => $request->player_id,
+                ], [
+                    'user_id' => auth()->user()->id,
+                    'player_id' => $request->player_id,
+                ]);
 
-    return response()->apiSuccess('Player ID saved successfully');
-});
+                return response()->apiSuccess('Player ID saved successfully');
+            });
 
             /////user/////
             Route::get('/profile', [App\Http\Controllers\Api\V1\AuthController::class, 'profile']);

@@ -43,6 +43,7 @@ class OrderController extends Controller
         $data['day_invoice']['trips'] = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->where('booking_date', date('Y-m-d'))->where('vendor_id', auth()->user()->id)->get();
         $data['can_pay_later'] = auth()->user()->can_pay_later;
         $data['can_cancel'] = auth()->user()->can_cancel;
+        $data['status'] = auth()->user()->active;
         return response()->apiSuccess($data);
     }
     public function walletPage()

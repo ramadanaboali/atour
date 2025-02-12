@@ -12,9 +12,10 @@ class VendorController extends Controller
     public function status()
     {
         $user = Auth::user();
-        $user->active = !$user->active;
-
-        return response()->apiSuccess($user->save());
+        $status = !$user->active;
+        $user->active = $status;
+        $user->save();
+        return response()->apiSuccess($status);
 
     }
 
