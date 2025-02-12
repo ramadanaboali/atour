@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\Vendor\GiftController;
 use App\Http\Controllers\Api\V1\Vendor\TripController;
 use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use App\Http\Controllers\Api\V1\Vendor\VendorController;
+use App\Models\PlayerId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +76,23 @@ Route::group(['prefix' => 'v1'], function () {
 
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
+
+Route::post('/store-player-id', function (Request $request) {
+    $request->validate([
+        'player_id' => 'required|string',
+    ]);
+
+    PlayerId::updateOrCreate([
+        'user_id' => auth()->user()->id,
+        'player_id' => $request->player_id,
+    ], [
+        'user_id' => auth()->user()->id,
+        'player_id' => $request->player_id,
+    ]);
+
+    return response()->apiSuccess('Player ID saved successfully');
+});
+
             /////user/////
             Route::get('/profile', [App\Http\Controllers\Api\V1\AuthController::class, 'profile']);
             Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);

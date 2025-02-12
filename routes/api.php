@@ -28,7 +28,7 @@ Route::post('/send-notification', function (Request $request) {
 Route::get('/send-broadcast', function (Request $request) {
 
 
- $response =OneSignalService::sendToUser($request->id, "testle tit", "test message");
+ $response =OneSignalService::sendToUser($request->id, "test le tit", "test message");
 
 
     return response()->json($response);
