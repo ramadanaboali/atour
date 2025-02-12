@@ -33,18 +33,45 @@ class HomeController extends Controller
             }
         }
 
-        $data['offer'] = Offer::whereHas('vendor')->join('users',function($query){
-            $query->on('users.id','=','offers.vendor_id')->where('users.active', 1);
-        })->where('offers.active',1)->select('offers.*')->first();
+        $offer = Offer::whereHas('vendor')->join('users', function ($query) {
+            $query->on('users.id', '=', 'offers.vendor_id')->where('users.active', 1);
+
+        })->where('offers.active', 1)->select('offers.*')->first();
+
+        $data['offer'] = $offer;
+        if ($offer) {
+            if ($offer->type == 'gift') {
+                $gift = Gift::find($offer->gift_id);
+                if (!$gift) {
+                    $data['offer'] = null;
+                }
+            }
+            if ($offer->type == 'trip') {
+                $trip = Trip::find($offer->trip_id);
+                if (!$trip) {
+                    $data['offer'] = null;
+                }
+            }
+            if ($offer->type == 'effectivenes') {
+                $effectivenes = Effectivenes::find($offer->effectivenes_id);
+                if (!$effectivenes) {
+                    $data['offer'] = null;
+                }
+            }
+        }
+
+        $data['offer'] = Offer::whereHas('vendor')->join('users', function ($query) {
+            $query->on('users.id', '=', 'offers.vendor_id')->where('users.active', 1);
+        })->where('offers.active', 1)->select('offers.*')->first();
 
 
         $data['most_visited'] = City::where('active', true)->get();
-        $old_experiences = Trip::whereHas('vendor')->join('users',function($query){
-            $query->on('users.id','=','trips.vendor_id')->where('users.active', 1);
+        $old_experiences = Trip::whereHas('vendor')->join('users', function ($query) {
+            $query->on('users.id', '=', 'trips.vendor_id')->where('users.active', 1);
         })->where('trips.active', true)->get();
         $data['old_experiences'] = TripResource::collection($old_experiences);
-        $effectivenes = Effectivenes::whereHas('vendor')->join('users',function($query){
-            $query->on('users.id','=','effectivenes.vendor_id')->where('users.active', 1);
+        $effectivenes = Effectivenes::whereHas('vendor')->join('users', function ($query) {
+            $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
         })->where('effectivenes.active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->get();
         $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
@@ -107,11 +134,11 @@ class HomeController extends Controller
             'model_id' => $id,
             'user_id' => auth()->user()->id
         ];
-        $favourit = Favorite::where('model_id',$id)->where('model_type',$type)->where('user_id',auth()->user()->id)->first();
+        $favourit = Favorite::where('model_id', $id)->where('model_type', $type)->where('user_id', auth()->user()->id)->first();
         if ($favourit) {
             $favourit->delete();
             $favourit->forceDelete();
-        }else{
+        } else {
 
             $favourit = Favorite::create($data);
         }
