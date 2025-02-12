@@ -83,7 +83,7 @@ class AuthController extends Controller
                 'active' => false,
                 'type' => User::TYPE_SUPPLIER,
             ];
-            $user = User::create($data);
+            $user = User::updateOrCreate(['temperory_email' => $request->email],$data);
             Mail::to($request->email)->send(new SendCodeResetPassword($request->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
