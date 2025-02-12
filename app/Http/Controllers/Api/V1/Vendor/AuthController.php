@@ -77,7 +77,7 @@ class AuthController extends Controller
         try {
             $MsgID = rand(100000, 999999);
             $data = [
-                'email' => $request->email,
+                'temperory_email' => $request->email,
                 'reset_code' => $MsgID,
                 'status' => 'pendding',
                 'active' => false,
@@ -94,7 +94,7 @@ class AuthController extends Controller
     {
 
         try {
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('temperory_email', $request->email)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -116,7 +116,7 @@ class AuthController extends Controller
             DB::beginTransaction();
             $userInput = [
                 'name' => $request->name,
-                'phone' => $request->phone,
+                'temperory_phone' => $request->phone,
                 'address' => $request->address,
                 'postal_code' => $request->postal_code,
                 'national_id' => $request->national_id,
@@ -124,7 +124,7 @@ class AuthController extends Controller
                 'status' => 'pendding',
                 'type' => User::TYPE_SUPPLIER,
             ];
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('temperory_email', $request->email)->first();
             if ($request->has('cover')) {
                 $fileNames = time() . rand(0, 999999999) . '.' . $request->file('cover')->getClientOriginalExtension();
                 $request->file('cover')->move(public_path('storage/users'), $fileNames);
@@ -279,6 +279,11 @@ class AuthController extends Controller
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+            if($user){
+                $user->email = $user->temperory_email;
+                $user->phone = $user->temperory_phone;
+                $user->save();
+            }
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
