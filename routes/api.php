@@ -25,13 +25,11 @@ Route::post('/send-notification', function (Request $request) {
     return response()->json($response);
 });
 
-Route::post('/send-broadcast', function (Request $request) {
-    $request->validate([
-        'title' => 'required|string',
-        'message' => 'required|string',
-    ]);
+Route::get('/send-broadcast', function (Request $request) {
 
-    $response = OneSignalService::sendToAll($request->title, $request->message);
+
+ $response =OneSignalService::sendToUser($request->id, "testle tit", "test message");
+
 
     return response()->json($response);
 });
