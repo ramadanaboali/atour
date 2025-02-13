@@ -162,7 +162,9 @@ class AuthController extends Controller
                 'user_id' => $request->user_id,
                 'general_name' => $request->general_name,
                 'description' => $request->description,
-                'url' => $request->url
+                'url' => $request->url,
+
+
             ];
             DB::beginTransaction();
             if ($request->has('profile')) {
@@ -197,6 +199,18 @@ class AuthController extends Controller
             }
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+
+            if ($user) {
+                $user_data = [
+                    'banck_acount' => $request->banck_acount,
+                    'banck_name' => $request->banck_name,
+                    'banck_iban' => $request->banck_iban,
+                    'tax_number' => $request->tax_number,
+                ];
+                $user->update($user_data);
+
+            }
+
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
@@ -226,7 +240,7 @@ class AuthController extends Controller
     public function setup5(Setup5Request $request)
     {
         try {
-Log::info('user_id'.json_encode($request->all()));
+            Log::info('user_id'.json_encode($request->all()));
             Log::info('setup5');
 
             $supplier = Supplier::where('user_id', $request->user_id)->first();
@@ -240,7 +254,7 @@ Log::info('user_id'.json_encode($request->all()));
             }
 
             $user = User::with('supplier')->where('id', $request->user_id)->first();
-            
+
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
@@ -251,7 +265,7 @@ Log::info('user_id'.json_encode($request->all()));
     {
         try {
             Log::info('setup6');
-        Log::info('user_id'.json_encode($request->all()));
+            Log::info('user_id'.json_encode($request->all()));
 
             $inputs = [
                          'nationality' => $request->nationality,
