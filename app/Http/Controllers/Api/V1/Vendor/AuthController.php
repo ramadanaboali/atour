@@ -46,7 +46,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('type', User::TYPE_SUPPLIER)->where(function($query) use($request){
+        $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
             $query->where('email', $request->username)->orWhere('phone', $request->username);
         })->first();
 
@@ -84,7 +84,7 @@ class AuthController extends Controller
                 'active' => false,
                 'type' => User::TYPE_SUPPLIER,
             ];
-            $user = User::updateOrCreate(['temperory_email' => $request->email],$data);
+            $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
             Mail::to($request->email)->send(new SendCodeResetPassword($request->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
@@ -114,6 +114,8 @@ class AuthController extends Controller
     public function setup1(Setup1Request $request)
     {
         try {
+            Log::info('setup1');
+
             DB::beginTransaction();
             $userInput = [
                 'name' => $request->name,
@@ -154,6 +156,8 @@ class AuthController extends Controller
     public function setup2(Setup2Request $request)
     {
         try {
+            Log::info('setup2');
+
             $inputs = [
                 'user_id' => $request->user_id,
                 'general_name' => $request->general_name,
@@ -179,6 +183,8 @@ class AuthController extends Controller
     public function setup3(Setup3Request $request)
     {
         try {
+            Log::info('setup3');
+
             $inputs = [
                 'country_id' => $request->country_id,
                 'city_id' => $request->city_id,
@@ -201,6 +207,8 @@ class AuthController extends Controller
     public function setup4(Setup4Request $request)
     {
         try {
+            Log::info('setup4');
+
             $inputs = [
                 'type' => $request->type,
                 'user_id' => $request->user_id
@@ -217,6 +225,9 @@ class AuthController extends Controller
     public function setup5(Setup5Request $request)
     {
         try {
+
+            Log::info('setup5');
+
             $supplier = Supplier::where('user_id', $request->user_id)->first();
             if ($supplier) {
                 foreach ($request->sub_category_id as $sub_category_id) {
@@ -278,14 +289,14 @@ class AuthController extends Controller
     public function setup7(Setup7Request $request)
     {
         try {
-                        Log::info('setup7');
+            Log::info('setup7');
 
             $inputs = [
                 'languages' => json_encode($request->languages),
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::find($request->user_id);
-            if($user){
+            if ($user) {
                 $user->email = $user->temperory_email;
                 $user->phone = $user->temperory_phone;
                 $user->save();
@@ -417,7 +428,7 @@ class AuthController extends Controller
             }
 
             if (count($inputs) > 0) {
-                 $currentUser->update($inputs);
+                $currentUser->update($inputs);
             }
 
             return apiResponse(true, null, __('api.update_success'), null, 200);
