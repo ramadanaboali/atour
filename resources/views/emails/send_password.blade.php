@@ -10,6 +10,7 @@
 
         <br>
         email : <strong>{{ $email }}</strong>
+        <br>
         password : <strong>{{ $password }}</strong></p>
     <p>Please change your password after logging in.</p>
     <p>Thank you!</p>

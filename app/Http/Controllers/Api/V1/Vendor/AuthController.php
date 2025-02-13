@@ -240,8 +240,8 @@ Log::info('user_id'.json_encode($request->all()));
             }
 
             $user = User::with('supplier')->where('id', $request->user_id)->first();
-            $supplier->id = $user->id;
-            return apiResponse(true, $supplier, __('api.register_success'), null, Response::HTTP_CREATED);
+            
+            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
