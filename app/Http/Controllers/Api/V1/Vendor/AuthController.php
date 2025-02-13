@@ -238,7 +238,7 @@ class AuthController extends Controller
                 }
             }
 
-            $user = User::where('id', $request->user_id)->first();
+$user = User::with('supplier')->where('id', $request->user_id)->first();
 
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
