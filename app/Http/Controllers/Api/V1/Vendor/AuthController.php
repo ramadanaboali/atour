@@ -215,6 +215,7 @@ class AuthController extends Controller
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+            Log::info('user'.json_encode($user));
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
 
         } catch (Exception $e) {
