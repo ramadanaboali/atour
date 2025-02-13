@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Customer\OrderController;
 use App\Http\Controllers\Api\V1\HomeController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\SettingController;
+use App\Http\Controllers\Api\V1\Vendor\VendorController;
 use App\Models\Notification;
 use App\Models\PlayerId;
 use Illuminate\Http\Request;
@@ -134,6 +135,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/update-phone', [AuthController::class, 'updatePhone']);
             Route::get('/profile', [AuthController::class, 'profile']);
             Route::post('/logout', [AuthController::class, 'logout']);
+
+            Route::get('notifications', [VendorController::class, 'notifications']);
+            Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
+
         });
     });
 });
