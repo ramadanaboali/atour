@@ -127,7 +127,7 @@ class AuthController extends Controller
                 'status' => 'pendding',
                 'type' => User::TYPE_SUPPLIER,
             ];
-            $user = User::where('temperory_email', $request->email)->first();
+            $user = User::with('supplier')->where('temperory_email', $request->email)->first();
             if ($request->has('cover')) {
                 $fileNames = time() . rand(0, 999999999) . '.' . $request->file('cover')->getClientOriginalExtension();
                 $request->file('cover')->move(public_path('storage/users'), $fileNames);
@@ -315,7 +315,7 @@ class AuthController extends Controller
                 'languages' => json_encode($request->languages),
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::find($request->user_id);
+           $user = User::with('supplier')->find($request->user_id);
             if ($user) {
                 $user->email = $user->temperory_email;
                 $user->phone = $user->temperory_phone;
