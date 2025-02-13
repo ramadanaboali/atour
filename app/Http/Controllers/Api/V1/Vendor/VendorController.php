@@ -36,7 +36,7 @@ class VendorController extends Controller
     public function readAllNotification()
     {
         $data = Notification::where('user_id', auth()->user()->id)->where('is_read', 0)->orderBy('id', 'desc')->update(['is_read'=>1]);
-        return response()->apiSuccess($data);
+        return response()->apiSuccess(null);
 
     }
 
