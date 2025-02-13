@@ -141,6 +141,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('vendor-status', [VendorController::class, 'status']);
             Route::get('notifications', [VendorController::class, 'notifications']);
             Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
+            Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
 
         });
     });
