@@ -206,6 +206,8 @@ class AuthController extends Controller
                     'bank_account' => $request->bank_account,
                     'bank_iban' => $request->bank_iban,
                     'tax_number' => $request->tax_number,
+                    'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
                 ];
                 $user->update($user_data);
 
