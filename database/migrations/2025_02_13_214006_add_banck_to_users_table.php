@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('banck_acount')->nullable();
-            $table->string('banck_name')->nullable();
-            $table->string('banck_iban')->nullable();
+            $table->string('bank_acount')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('bank_iban')->nullable();
             $table->string('tax_number')->nullable();
         });
     }

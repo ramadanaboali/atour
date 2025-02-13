@@ -202,9 +202,9 @@ class AuthController extends Controller
 
             if ($user) {
                 $user_data = [
-                    'banck_acount' => $request->banck_acount,
-                    'banck_name' => $request->banck_name,
-                    'banck_iban' => $request->banck_iban,
+                    'bank_name' => $request->bank_name,
+                    'bank_account' => $request->bank_account,
+                    'bank_iban' => $request->bank_iban,
                     'tax_number' => $request->tax_number,
                 ];
                 $user->update($user_data);
