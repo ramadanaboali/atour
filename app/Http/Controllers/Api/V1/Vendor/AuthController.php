@@ -252,6 +252,8 @@ class AuthController extends Controller
             if ($user) {
                 $userinputs = [
                              'name' => $request->name ?? $user->name,
+                             'email' =>  $user->temperory_email,
+                             'phone' =>  $user->temperory_phone,
                              'address' => $request->address ?? $user->address,
                              'city_id' => $request->city_id ?? $user->city_id,
                          ];
@@ -278,7 +280,7 @@ class AuthController extends Controller
                 'languages' => json_encode($request->languages),
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
+            $user = User::find($request->user_id);
             if($user){
                 $user->email = $user->temperory_email;
                 $user->phone = $user->temperory_phone;

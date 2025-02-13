@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendPasswordMail;
 use App\Models\Order;
 use App\Models\Supplier;
 use App\Models\User;
@@ -10,7 +11,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class SupplierController extends Controller
@@ -69,15 +73,19 @@ class SupplierController extends Controller
      public function status($id)
     {
         $item=User::findOrFail($id);
+        if($item->status=='pendding'){
+            $password=Str::random(8);
+            $item->password = Hash::make($password);
+            Mail::to($item->email)->send(new SendPasswordMail($item->email, $password));
+        }
         if($item->active == 0){
             $item->active = 1;
             $item->status = "accepted";
-
         }else{
             $item->active = 0;
         }
-        $item->save();
 
+        $item->save();
         flash(__('suppliers.messages.updated'))->success();
 
         return back();
