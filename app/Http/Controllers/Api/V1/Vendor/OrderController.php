@@ -27,7 +27,7 @@ class OrderController extends Controller
         $profit_effectivenes = BookingEffectivene::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
         $profit_trips = BookingTrip::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_WITHDRWAL, Order::STATUS_COMPLEALED])->sum('total');
         $total_effectivenes = BookingEffectivene::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
-        $total_gifts = BookingGift::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
+        $total_gifts = BookingGift::where('vendor_id', auth()->user()->id)->whereIn('status', [Order::STATUS_COMPLEALED,Order::STATUS_ACCEPTED])->sum('total');
         $total_trips = BookingTrip::where('vendor_id', auth()->user()->id)->where('status', Order::STATUS_COMPLEALED)->sum('total');
 
 
