@@ -29,9 +29,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('banck_acount');
-            $table->dropColumn('banck_name');
-            $table->dropColumn('banck_iban');
+            $table->dropColumn('bank_acount');
+            $table->dropColumn('bank_name');
+            $table->dropColumn('bank_iban');
             $table->dropColumn('tax_number');
         });
     }
