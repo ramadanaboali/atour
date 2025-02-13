@@ -225,7 +225,7 @@ class AuthController extends Controller
     public function setup5(Setup5Request $request)
     {
         try {
-
+Log::info('user_id'.json_encode($request->all()));
             Log::info('setup5');
 
             $supplier = Supplier::where('user_id', $request->user_id)->first();
