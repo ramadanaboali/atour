@@ -28,6 +28,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -234,7 +235,7 @@ class AuthController extends Controller
     public function setup6(Setup6Request $request)
     {
         try {
-
+            Log::info('setup6');
             $inputs = [
                          'nationality' => $request->nationality,
                          'general_name' => $request->general_name,
@@ -249,6 +250,7 @@ class AuthController extends Controller
 
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
             $user = User::with('supplier')->where('id', $request->user_id)->first();
+            Log::info(json_encode($user));
             if ($user) {
                 $userinputs = [
                              'name' => $request->name ?? $user->name,
@@ -276,6 +278,8 @@ class AuthController extends Controller
     public function setup7(Setup7Request $request)
     {
         try {
+                        Log::info('setup7');
+
             $inputs = [
                 'languages' => json_encode($request->languages),
             ];
