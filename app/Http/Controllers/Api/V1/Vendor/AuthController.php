@@ -238,9 +238,10 @@ class AuthController extends Controller
                 }
             }
 
-$user = User::with('supplier')->where('id', $request->user_id)->first();
-
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
+            $user = User::with('supplier')->where('id', $request->user_id)->first();
+Log::info('user'.json_encode($user));
+Log::info('supplier'.json_encode($supplier));
+            return apiResponse(true, $supplier, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
