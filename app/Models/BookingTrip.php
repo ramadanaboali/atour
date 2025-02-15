@@ -23,7 +23,9 @@ class BookingTrip extends Model
         'total',
         'trip_id',
         'vendor_id',
-        'user_id'
+        'user_id',
+        'admin_value',
+        'admin_value_status'
     ];
 
     public function user() :?BelongsTo

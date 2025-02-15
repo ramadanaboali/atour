@@ -18,9 +18,11 @@ class BookingEffectivene extends Model
         'total',
         'effectivene_id',
         'user_id',
-        'vendor_id'
+        'vendor_id',
+        'admin_value',
+        'admin_value_status'
     ];
-   
+
 
      public function user() :?BelongsTo
      {

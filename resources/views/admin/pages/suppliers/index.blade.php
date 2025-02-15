@@ -89,6 +89,22 @@
                         </div>
                     </div>
                 </div>
+                <br>
+                <hr>
+                <p>{{ __('admin.admin_percentage') }}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="">{{ __('suppliers.type') }}</label>
+                        <select name="admin_value_type" id="admin_value_type" class="form-select">
+                            <option value="percentage">{{ __('suppliers.percentage') }}</option>
+                            <option value="const">{{ __('suppliers.const') }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="">{{ __('suppliers.value') }}</label>
+                            <input type="number" id="admin_value" name="admin_value" class="form-control">
+                    </div>
+                </div>
 
                 </div>
                 <div class="modal-footer">
@@ -190,7 +206,7 @@
                         </a>
                         @endcan
                                          @can('clients.status')
-                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`"  data-pay_on_deliver="`+row.pay_on_deliver+`" data-ban_vendor="`+row.ban_vendor+`" >
+                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`"  data-pay_on_deliver="`+row.pay_on_deliver+`" data-ban_vendor="`+row.ban_vendor+`" data-admin_value_type="`+row.admin_value_type+`" data-admin_value="`+row.admin_value+`" >
                             <i data-feather="settings" class="font-medium-2"></i>
                                 <span>{{ __('suppliers.actions.settings') }}</span>
                         </a>
@@ -211,6 +227,10 @@
             $('body').on('click', '.vendor_setting', function (){
                     var url= $(this).attr('data-url');
                     var can_pay_later= $(this).attr('data-can_pay_later');
+                    var admin_value_type= $(this).attr('data-admin_value_type');
+                    var admin_value= $(this).attr('data-admin_value');
+                    document.getElementById('admin_value').value = admin_value;
+                    document.getElementById('admin_value_type').value = admin_value_type;
                     if(can_pay_later==1){
                         document.getElementById('can_pay_later').checked = true;
                     }else{

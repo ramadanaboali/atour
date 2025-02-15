@@ -30,6 +30,8 @@
                         <th>{{ __('orders.vendor') }}</th>
                         <th>{{ __('orders.order_date') }}</th>
                         <th>{{ __('orders.total') }}</th>
+                        <th>{{ __('admin.admin_value') }}</th>
+
                         <th>{{ __('orders.status') }}</th>
                         <th>{{ __('orders.type') }}</th>
 
@@ -75,6 +77,7 @@
                 {data: 'vendor', name: 'vendor',orderable: false},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'total', name: 'total'},
+                {data: 'admin_value', name: 'admin_value'},
                 {data: 'status', name: 'status'},
                 {data: 'source', name: 'source'},
 

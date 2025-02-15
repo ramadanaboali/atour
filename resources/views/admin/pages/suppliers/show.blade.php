@@ -159,11 +159,11 @@
                                         </div>
                                         <div class="d-flex flex-row align-items-center mt-50">
                                             <h6 class="mb-0">{{ __('suppliers.banck_name') }} : </h6>
-                                            <h6 class="mb-0">{{ $item->banck_name }}</h6>
+                                            <h6 class="mb-0">{{ $item->bank_name }}</h6>
                                         </div>
                                         <div class="d-flex flex-row align-items-center mt-50">
                                             <h6 class="mb-0">{{ __('suppliers.banck_number') }} : </h6>
-                                            <h6 class="mb-0"> {{ $item->banck_number }}</h6>
+                                            <h6 class="mb-0"> {{ $item->bank_account }}</h6>
                                         </div>
                                     </div>
                                 </li>

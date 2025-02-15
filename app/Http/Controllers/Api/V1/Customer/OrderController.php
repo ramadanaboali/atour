@@ -52,11 +52,15 @@ class OrderController extends Controller
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
         $data['total'] = $item->price;
-
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
-
         $data['vendor_id'] = $item->vendor_id;
+        if ($item->vendor?->admin_value_type == 'const') {
+            $data['admin_value'] = $item->vendor->admin_value;
+        } else {
+            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
+
+        }
         $order = BookingTrip::create($data);
         if ($request->payment_way == 'online') {
             $payment = new TapService();
@@ -110,6 +114,14 @@ class OrderController extends Controller
         $data['total'] = $item->price;
         $data['vendor_id'] = $item->vendor_id;
         $data['effectivene_id'] = $request->effectivene_id;
+
+        if ($item->vendor?->admin_value_type == 'const') {
+            $data['admin_value'] = $item->vendor->admin_value;
+        } else {
+            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
+
+        }
+
         $order = BookingEffectivene::create($data);
         if ($request->payment_way == 'online') {
             $payment = new TapService();
@@ -163,6 +175,14 @@ class OrderController extends Controller
         $data['delivery_number'] = $request->delivery_number;
         $data['delivery_way'] = $request->delivery_way;
         $data['quantity'] = $request->quantity;
+
+        if ($item->vendor?->admin_value_type == 'const') {
+            $data['admin_value'] = $item->vendor->admin_value;
+        } else {
+            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
+
+        }
+
         $order = BookingGift::create($data);
         if ($request->payment_way == 'online') {
             $payment = new TapService();

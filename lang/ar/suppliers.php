@@ -106,4 +106,7 @@ return [
     'can_pay_later'=> 'الدفع لاحقا',
     'pay_on_deliver'=> 'الدفع عند الاستلام',
     'ban_vendor'=> 'حظر المورد',
+    'value'=>'القيمة',
+    'percentage'=>'نسبة',
+    'const'=>'قيمة ثابتة',
 ];

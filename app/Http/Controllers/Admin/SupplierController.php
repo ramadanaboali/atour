@@ -119,6 +119,8 @@ class SupplierController extends Controller
         }else{
             $item->ban_vendor = 0;
         }
+        $item->admin_value_type=$request->admin_value_type;
+        $item->admin_value=$request->admin_value;
 
         $item->save();
 

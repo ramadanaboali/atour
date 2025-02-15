@@ -146,14 +146,14 @@ class OrderController extends Controller
     public function list(Request $request): JsonResponse
     {
         $data =  BookingGift::with(['user','vendor'])->whereIn('status', $request->status)
-        ->select('id', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+        ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
         ->union(
             BookingTrip::with(['user','vendor'])->whereIn('status', $request->status)
-                ->select('id', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+                ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
         )
         ->union(
             BookingEffectivene::with(['user','vendor'])->whereIn('status', $request->status)
-                ->select('id', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+                ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
         )
         ->orderBy('created_at', 'desc')
         ->get();
