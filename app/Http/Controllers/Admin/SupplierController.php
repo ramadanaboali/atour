@@ -7,6 +7,7 @@ use App\Mail\SendPasswordMail;
 use App\Models\Order;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Models\UserFee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -90,7 +91,13 @@ class SupplierController extends Controller
 
         return back();
     }
-     public function setting(Request $request,$id)
+     public function setting($id)
+    {
+        $item = User::findOrFail($id);
+        $user_fee=UserFee::where('user_id', $item->id)->first();
+        return view('admin.pages.suppliers.settings', ['item' => $item,'user_fee'=> $user_fee]);
+    }
+     public function saveSetting(Request $request,$id)
     {
         $item=User::findOrFail($id);
         if($request->can_cancel){
@@ -119,8 +126,17 @@ class SupplierController extends Controller
         }else{
             $item->ban_vendor = 0;
         }
-        $item->admin_value_type=$request->admin_value_type;
-        $item->admin_value=$request->admin_value;
+        $payment = [
+        'tax_type'=>$request->tax_type,
+        'tax_value'=>$request->tax_value,
+        'payment_way_type'=>$request->payment_way_type,
+        'payment_way_value'=>$request->payment_way_value,
+        'admin_type'=>$request->admin_type,
+        'admin_value'=>$request->admin_value,
+        'admin_fee_type'=>$request->admin_fee_type,
+        'admin_fee_value'=>$request->admin_fee_value,
+        ];
+        UserFee::updateOrCreate(['user_id' => $item->id], $payment);
 
         $item->save();
 

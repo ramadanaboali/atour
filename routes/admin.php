@@ -132,8 +132,8 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('change-password', [App\Http\Controllers\Admin\ProfileController::class, 'changePassword'])->name('profile.change_password');
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
-            
-        
+
+
         //addnewrouteheredontdeletemeplease
 
             Route::get('effectivenes/select', [App\Http\Controllers\Admin\EffectivenesController::class, 'select'])->name('effectivenes.select');
@@ -147,7 +147,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('effectivenes/{id}/edit', [App\Http\Controllers\Admin\EffectivenesController::class, 'edit'])->name('effectivenes.edit')->middleware('adminPermission:effectivenes.edit');
 
 
-        
+
 
             Route::get('gifts/select', [App\Http\Controllers\Admin\GiftController::class, 'select'])->name('gifts.select');
             Route::delete('gifts/bulk', [App\Http\Controllers\Admin\GiftController::class, 'deleteBulk'])->name('gifts.deleteBulk')->middleware('adminPermission:gifts.delete');
@@ -160,7 +160,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('gifts/{id}/edit', [App\Http\Controllers\Admin\GiftController::class, 'edit'])->name('gifts.edit')->middleware('adminPermission:gifts.edit');
 
 
-        
+
 
             Route::get('trips/select', [App\Http\Controllers\Admin\TripController::class, 'select'])->name('trips.select');
             Route::delete('trips/bulk', [App\Http\Controllers\Admin\TripController::class, 'deleteBulk'])->name('trips.deleteBulk')->middleware('adminPermission:trips.delete');
@@ -331,6 +331,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('suppliers-request', [App\Http\Controllers\Admin\SupplierController::class, 'requestJoin'])->name('suppliers.requests')->middleware('adminPermission:suppliers.requests');
             Route::get('suppliers/status/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'status'])->name('suppliers.status')->middleware('adminPermission:suppliers.status');
             Route::get('suppliers/setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'setting'])->name('suppliers.setting')->middleware('adminPermission:suppliers.setting');
+            Route::post('suppliers/save-setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'saveSetting'])->name('suppliers.saveSetting')->middleware('adminPermission:suppliers.setting');
             Route::get('suppliers/show/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'show'])->name('suppliers.show')->middleware('adminPermission:suppliers.show');
             Route::get('suppliers-orders/list', [App\Http\Controllers\Admin\SupplierController::class, 'orders'])->name('suppliers.orders')->middleware('adminPermission:suppliers.view');
 

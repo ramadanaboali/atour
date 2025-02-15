@@ -175,12 +175,28 @@ class OrderController extends Controller
         $data['delivery_number'] = $request->delivery_number;
         $data['delivery_way'] = $request->delivery_way;
         $data['quantity'] = $request->quantity;
-
-        if ($item->vendor?->admin_value_type == 'const') {
-            $data['admin_value'] = $item->vendor->admin_value;
-        } else {
-            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
-
+        $admin_value = 0;
+        if($item->vendor?->feeSetting){
+            if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->tax_value;
+            } else {
+               $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+            } else {
+               $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_value;
+            } else {
+               $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+            } else {
+               $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+            }
         }
 
         $order = BookingGift::create($data);

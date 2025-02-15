@@ -241,8 +241,11 @@ return [
     '5'=>'ملغاة',
     '6'=>'تم سحب ارباحها',
     ],
-    'admin_percentage'=>'هامش ربح النظام',
-    'admin_value'=>'مستحقات النظام'
+    'admin_percentage'=>'عمولة النظام',
+    'admin_value'=>'مستحقات النظام',
+    'other_fee'=>'رسوم اخرى',
+    'payment_way_fee'=>'رسوم بوابة الدفع',
+    'additional_tax'=>'رسوم القيمه المضافه'
 
 
 

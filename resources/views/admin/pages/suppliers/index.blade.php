@@ -206,7 +206,7 @@
                         </a>
                         @endcan
                                          @can('clients.status')
-                        <a class="dropdown-item vendor_setting" data-url="`+settingUrl+`" href="#" data-can_cancel="`+row.can_cancel+`" data-can_pay_later="`+row.can_pay_later+`"  data-pay_on_deliver="`+row.pay_on_deliver+`" data-ban_vendor="`+row.ban_vendor+`" data-admin_value_type="`+row.admin_value_type+`" data-admin_value="`+row.admin_value+`" >
+                        <a class="dropdown-item "  href="`+settingUrl+`" >
                             <i data-feather="settings" class="font-medium-2"></i>
                                 <span>{{ __('suppliers.actions.settings') }}</span>
                         </a>
