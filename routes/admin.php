@@ -334,6 +334,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('suppliers/save-setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'saveSetting'])->name('suppliers.saveSetting')->middleware('adminPermission:suppliers.setting');
             Route::get('suppliers/show/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'show'])->name('suppliers.show')->middleware('adminPermission:suppliers.show');
             Route::get('suppliers-orders/list', [App\Http\Controllers\Admin\SupplierController::class, 'orders'])->name('suppliers.orders')->middleware('adminPermission:suppliers.view');
+            Route::get('suppliers-payments', [App\Http\Controllers\Admin\SupplierController::class, 'payments'])->name('suppliers.payments')->middleware('adminPermission:suppliers.payments');
 
 
 

@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendPasswordMail;
+use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
+use App\Models\BookingTrip;
 use App\Models\Order;
+use App\Models\OrderFee;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\UserFee;
@@ -12,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -71,18 +76,18 @@ class SupplierController extends Controller
     }
 
 
-     public function status($id)
+    public function status($id)
     {
-        $item=User::findOrFail($id);
-        if($item->status=='pendding'){
-            $password=Str::random(8);
+        $item = User::findOrFail($id);
+        if ($item->status == 'pendding') {
+            $password = Str::random(8);
             $item->password = Hash::make($password);
             Mail::to($item->email)->send(new SendPasswordMail($item->email, $password));
         }
-        if($item->active == 0){
+        if ($item->active == 0) {
             $item->active = 1;
             $item->status = "accepted";
-        }else{
+        } else {
             $item->active = 0;
         }
 
@@ -91,50 +96,50 @@ class SupplierController extends Controller
 
         return back();
     }
-     public function setting($id)
+    public function setting($id)
     {
         $item = User::findOrFail($id);
-        $user_fee=UserFee::where('user_id', $item->id)->first();
-        return view('admin.pages.suppliers.settings', ['item' => $item,'user_fee'=> $user_fee]);
+        $user_fee = UserFee::where('user_id', $item->id)->first();
+        return view('admin.pages.suppliers.settings', ['item' => $item,'user_fee' => $user_fee]);
     }
-     public function saveSetting(Request $request,$id)
+    public function saveSetting(Request $request, $id)
     {
-        $item=User::findOrFail($id);
-        if($request->can_cancel){
+        $item = User::findOrFail($id);
+        if ($request->can_cancel) {
             $item->can_cancel = 1;
 
-        }else{
+        } else {
             $item->can_cancel = 0;
         }
-        if($request->can_pay_later){
+        if ($request->can_pay_later) {
             $item->can_pay_later = 1;
 
-        }else{
+        } else {
             $item->can_pay_later = 0;
         }
 
-        if($request->pay_on_deliver){
+        if ($request->pay_on_deliver) {
             $item->pay_on_deliver = 1;
 
-        }else{
+        } else {
             $item->pay_on_deliver = 0;
         }
 
-        if($request->ban_vendor){
+        if ($request->ban_vendor) {
             $item->ban_vendor = 1;
 
-        }else{
+        } else {
             $item->ban_vendor = 0;
         }
         $payment = [
-        'tax_type'=>$request->tax_type,
-        'tax_value'=>$request->tax_value,
-        'payment_way_type'=>$request->payment_way_type,
-        'payment_way_value'=>$request->payment_way_value,
-        'admin_type'=>$request->admin_type,
-        'admin_value'=>$request->admin_value,
-        'admin_fee_type'=>$request->admin_fee_type,
-        'admin_fee_value'=>$request->admin_fee_value,
+        'tax_type' => $request->tax_type,
+        'tax_value' => $request->tax_value,
+        'payment_way_type' => $request->payment_way_type,
+        'payment_way_value' => $request->payment_way_value,
+        'admin_type' => $request->admin_type,
+        'admin_value' => $request->admin_value,
+        'admin_fee_type' => $request->admin_fee_type,
+        'admin_fee_value' => $request->admin_fee_value,
         ];
         UserFee::updateOrCreate(['user_id' => $item->id], $payment);
 
@@ -196,7 +201,7 @@ class SupplierController extends Controller
             }
             if ($request->filled('created_at')) {
 
-                $query->where('users.created_at','>=', $request->created_at.' 00:00:00');
+                $query->where('users.created_at', '>=', $request->created_at.' 00:00:00');
             }
 
         })->where('users.type', User::TYPE_SUPPLIER)->select(['users.*']);
@@ -216,13 +221,13 @@ class SupplierController extends Controller
 
     public function orders(Request $request): JsonResponse
     {
-        $data = Order::with(['trip.vendor.user','client'])->whereHas('trip',function($query) use ($request){
+        $data = Order::with(['trip.vendor.user','client'])->whereHas('trip', function ($query) use ($request) {
             $query->where('vendor_id', $request->user_id);
         })->select('*');
         return DataTables::of($data)
         ->addIndexColumn()
         ->editColumn('code', function ($item) {
-            return '<a href="'.route('admin.orders.show',['id'=>$item->id]).'">'.$item->code.'</a>';
+            return '<a href="'.route('admin.orders.show', ['id' => $item->id]).'">'.$item->code.'</a>';
         })
         ->addColumn('client', function ($item) {
             return $item->client?->name;
@@ -239,5 +244,64 @@ class SupplierController extends Controller
         })
         ->rawColumns(['active','members','meeting_place','code'])
         ->make(true);
+    }
+    public function payments(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $data = OrderFee::with(['vendor','effectiveness','trip','gift'])
+                ->leftJoin('trips', function ($join) {
+                    $join->on('trips.id', '=', 'order_fees.order_id')
+                        ->where('order_fees.order_type', 'trip');
+                })
+                ->leftJoin('gifts', function ($join) {
+                    $join->on('gifts.id', '=', 'order_fees.order_id')
+                        ->where('order_fees.order_type', 'gift');
+                })
+                ->leftJoin('effectivenes', function ($join) {
+                    $join->on('effectivenes.id', '=', 'order_fees.order_id')
+                        ->where('order_fees.order_type', 'effectivenes');
+                })
+                ->select([
+                    'order_fees.*'
+                ])
+                ->orderByDesc('created_at');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('vendor', function ($item) {
+                    return $item->vendor?->name;
+                })
+                ->addColumn('status', function ($item) {
+                    return __('admin.orders_statuses.' . $item->status);
+                })
+            ->editColumn('source_name', function ($item) {
+                if ($item->trip) {
+                    return $item->trip?->title;
+                }
+                if ($item->gift) {
+                    return $item->gift?->title;
+                }
+                if ($item->effectiveness) {
+                    return $item->effectiveness?->title;
+                }
+            })
+            ->editColumn('source', function ($item) {
+                if ($item->trip) {
+                    return __('admin.source_types.trip');
+                }
+                if ($item->gift) {
+                    return __('admin.source_types.gift');
+                }
+                if ($item->effectiveness) {
+                    return __('admin.source_types.effectivenes');
+                }
+            })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at?->format('Y-m-d H:i');
+            })
+            ->rawColumns(['source','source_name','created_at','vendor'])
+            ->make(true);
+        }
+        return view('admin.pages.suppliers.payments');
     }
 }

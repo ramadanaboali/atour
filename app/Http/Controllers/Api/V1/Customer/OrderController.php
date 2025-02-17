@@ -15,6 +15,7 @@ use App\Models\Effectivenes;
 use App\Models\Gift;
 use App\Models\Order;
 use App\Models\Trip;
+use App\Models\OrderFee;
 use App\Services\OneSignalService;
 use App\Services\TapService;
 use Exception;
@@ -55,13 +56,50 @@ class OrderController extends Controller
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
         $data['vendor_id'] = $item->vendor_id;
-        if ($item->vendor?->admin_value_type == 'const') {
-            $data['admin_value'] = $item->vendor->admin_value;
-        } else {
-            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
 
+        $admin_value = 0;
+        $order_fees = [];
+        if ($item->vendor?->feeSetting) {
+            if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->tax_value;
+                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_value;
+                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+            }
         }
+
         $order = BookingTrip::create($data);
+        if (count($order_fees) > 0) {
+            $order_fees['order_id'] = $order->id;
+            $order_fees['trip_id'] = $item->id;
+            $order_fees['vendor_id'] = $item->vendor_id;
+            $order_fees['order_type'] = 'trip';
+            OrderFee::create($order_fees);
+        }
+
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'trip']);
@@ -115,14 +153,52 @@ class OrderController extends Controller
         $data['vendor_id'] = $item->vendor_id;
         $data['effectivene_id'] = $request->effectivene_id;
 
-        if ($item->vendor?->admin_value_type == 'const') {
-            $data['admin_value'] = $item->vendor->admin_value;
-        } else {
-            $data['admin_value'] = ($item->vendor->admin_value * $item->price) / 100;
+        $admin_value = 0;
+        $order_fees = [];
+        if ($item->vendor?->feeSetting) {
+            if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->tax_value;
+                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
 
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_value;
+                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+            }
+            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+
+            } else {
+                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+            }
         }
 
         $order = BookingEffectivene::create($data);
+        if (count($order_fees) > 0) {
+            $order_fees['order_id'] = $order->id;
+
+            $order_fees['effectivenes_id'] = $item->id;
+            $order_fees['vendor_id'] = $item->vendor_id;
+
+            $order_fees['order_type'] = 'effectivenes';
+            OrderFee::create($order_fees);
+        }
+
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
@@ -176,30 +252,49 @@ class OrderController extends Controller
         $data['delivery_way'] = $request->delivery_way;
         $data['quantity'] = $request->quantity;
         $admin_value = 0;
-        if($item->vendor?->feeSetting){
+        $order_fees = [];
+        if ($item->vendor?->feeSetting) {
             if ($item->vendor?->feeSetting?->tax_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->tax_value;
+                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
             } else {
-               $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+
             } else {
-               $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->admin_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->admin_value;
+                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
             } else {
-               $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+
             } else {
-               $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
             }
         }
 
         $order = BookingGift::create($data);
+        if (count($order_fees) > 0) {
+            $order_fees['vendor_id'] = $item->vendor_id;
+            $order_fees['order_id'] = $order->id;
+            $order_fees['order_type'] = 'gift';
+            $order_fees['gift_id'] = $item->id;
+
+            OrderFee::create($order_fees);
+        }
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'gift']);

@@ -155,12 +155,16 @@
                 </li>
             @endcan
 
-            <li>
-                <a class="d-flex align-items-center" href="{{ route('admin.accountants.list') }}">
+
+            @can('suppliers.payments')
+            <li class=" nav-item {{ request()->routeIs('admin.suppliers.payments')?'active':''}}">
+                <a class="d-flex align-items-center" href="{{ route('admin.suppliers.payments') }} ">
                     <i data-feather="calendar"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.accountants') }}</span>
                 </a>
             </li>
+            @endcan
+
             <li>
                 <a class="d-flex align-items-center" href="">
                     <i data-feather="phone"></i>
@@ -279,6 +283,7 @@
                             </a>
                         </li>
                         @endcan
+
                         @can('why_bookings.view')
                             <li>
                                 <a class='d-flex align-items-center' href='{{ route('admin.why_bookings.index') }} '>

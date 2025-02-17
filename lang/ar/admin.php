@@ -245,7 +245,13 @@ return [
     'admin_value'=>'مستحقات النظام',
     'other_fee'=>'رسوم اخرى',
     'payment_way_fee'=>'رسوم بوابة الدفع',
-    'additional_tax'=>'رسوم القيمه المضافه'
+    'additional_tax'=>'رسوم القيمه المضافه',
+    'suppliers_payments'=>'حسابات الموردين',
+    'source_types'=>[
+    'trip'=>'رحلة',
+    'gift'=>'هدية',
+    'effectivenes'=>'فاعلية',
+    ]
 
 
 
