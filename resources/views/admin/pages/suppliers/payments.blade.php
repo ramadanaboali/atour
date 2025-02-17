@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 @section('title')
-    <title>{{ config('app.name') }} | {{ __('suppliers.plural') }}</title>
+    <title>{{ config('app.name') }} | {{ __('admin.accountants') }}</title>
 @endsection
 @section('content')
     <div class="content-header row">
@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <h1 class="bold mb-0 mt-1 text-dark">
                         <i data-feather="box" class="font-medium-2"></i>
-                        <span>{{ __('suppliers.plural') }}</span>
+                        <span>{{ __('admin.accountants') }}</span>
                     </h1>
                 </div>
             </div>
