@@ -304,4 +304,54 @@ class SupplierController extends Controller
         }
         return view('admin.pages.suppliers.payments');
     }
+
+    public function settlement($id)
+    {
+    $data=OrderFee::where('vendor_id',$id)->update(['status'=>1]);
+    flash(__('admin.messages.updated'))->success();
+    return to_route('admin.accounts.suppliers');
+
+    }
+    public function suppliers(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = DB::table('users')
+                ->where('users.type', User::TYPE_SUPPLIER)
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_gift, COALESCE(SUM(total), 0) as sum_booking_gift FROM booking_gifts GROUP BY vendor_id) as gifts"), 'users.id', '=', 'gifts.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_trib, COALESCE(SUM(total), 0) as sum_booking_trib FROM booking_trips GROUP BY vendor_id) as trips"), 'users.id', '=', 'trips.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_effectivenes, COALESCE(SUM(total), 0) as sum_booking_effectivenes FROM booking_effectivenes GROUP BY vendor_id) as effects"), 'users.id', '=', 'effects.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, 
+                    COALESCE(SUM(tax_value), 0) as total_tax_value,
+                    COALESCE(SUM(payment_way_value), 0) as total_payment_way_value,
+                    COALESCE(SUM(admin_value), 0) as total_admin_value,
+                    COALESCE(SUM(admin_fee_value), 0) as total_admin_fee_value,
+                    COALESCE(SUM(CASE WHEN status = 0 THEN (tax_value + payment_way_value + admin_value + admin_fee_value) ELSE 0 END), 0) as total_order_fees_0,
+                    COALESCE(SUM(CASE WHEN status = 1 THEN (tax_value + payment_way_value + admin_value + admin_fee_value) ELSE 0 END), 0) as total_order_fees_1
+                    FROM order_fees GROUP BY vendor_id) as orders"), 'users.id', '=', 'orders.vendor_id')
+                ->select(
+                 'users.name',
+                    'users.id',
+                    DB::raw('COALESCE(gifts.count_booking_gift, 0) as count_booking_gift'),
+                    DB::raw('COALESCE(trips.count_booking_trib, 0) as count_booking_trib'),
+                    DB::raw('COALESCE(effects.count_booking_effectivenes, 0) as count_booking_effectivenes'),
+                    DB::raw('COALESCE(gifts.sum_booking_gift, 0) + COALESCE(trips.sum_booking_trib, 0) + COALESCE(effects.sum_booking_effectivenes, 0) as total_money'),
+                    DB::raw('COALESCE(orders.total_tax_value, 0) as total_tax_value'),
+                    DB::raw('COALESCE(orders.total_payment_way_value, 0) as total_payment_way_value'),
+                    DB::raw('COALESCE(orders.total_admin_value, 0) as total_admin_value'),
+                    DB::raw('COALESCE(orders.total_admin_fee_value, 0) as total_admin_fee_value'),
+                    DB::raw('COALESCE(orders.total_order_fees_0, 0) as total_order_fees_0'),
+                    DB::raw('COALESCE(orders.total_order_fees_1, 0) as total_order_fees_1')
+                )
+                ->groupBy('users.id', 'users.name')->orderBy('total_order_fees_0','desc');
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+            ->addColumn('remain', function ($item) {
+                return ($item->total_order_fees_0 > $item->total_order_fees_1)?($item->total_order_fees_0 - $item->total_order_fees_1):0;
+            })
+            ->rawColumns(['remain'])
+            ->make(true);
+        }
+        return view('admin.pages.suppliers.payment_suppliers');
+    }
 }

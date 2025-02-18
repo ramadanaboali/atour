@@ -110,6 +110,30 @@
                     @endcan
             </ul>
         </li>
+        <li class=" nav-item {{ request()->routeIs('admin.accounts*') ? 'active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.accounts*') ? 'active' : '' }}" href="#">
+                    <i data-feather="user"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.accountants') }}</span>
+                </a>
+                <ul class="menu-content">
+                    @can('accounts.payments')
+                    <li class=" nav-item {{ request()->routeIs('admin.accounts.payments')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accounts.payments') }} ">
+                            <i data-feather="calendar"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.order_accounts') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accounts.suppliers')
+                    <li class=" nav-item {{ request()->routeIs('admin.accounts.suppliers')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accounts.suppliers') }} ">
+                            <i data-feather="calendar"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppliers_accounts') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                </ul>
+            </li>
 
 
            @can('adds.view')
@@ -154,17 +178,7 @@
                     </a>
                 </li>
             @endcan
-
-
-            @can('suppliers.payments')
-            <li class=" nav-item {{ request()->routeIs('admin.suppliers.payments')?'active':''}}">
-                <a class="d-flex align-items-center" href="{{ route('admin.suppliers.payments') }} ">
-                    <i data-feather="calendar"></i>
-                    <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.accountants') }}</span>
-                </a>
-            </li>
-            @endcan
-
+            
             <li>
                 <a class="d-flex align-items-center" href="">
                     <i data-feather="phone"></i>

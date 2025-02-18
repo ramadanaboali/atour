@@ -30,10 +30,10 @@
                         <th>{{ __('orders.vendor') }}</th>
                         <th>{{ __('orders.type') }}</th>
                         <th>{{ __('orders.default.name') }}</th>
-                        <th>{{ __('admin.other_fee') }}</th>
                         <th>{{ __('admin.payment_way_fee') }}</th>
                         <th>{{ __('admin.additional_tax') }}</th>
-                        <th>{{ __('admin.suppliers_payments') }}</th>
+                        <th>{{ __('admin.other_fee') }}</th>
+                        <th>{{ __('admin.admin_percentage') }}</th>
                     </tr>
                     </thead>
                 </table>
@@ -58,7 +58,7 @@
                 }
             },
             ajax: {
-                url: "{{ route('admin.suppliers.payments') }}",
+                url: "{{ route('admin.accounts.payments') }}",
                 data: function (d) {
                 }
             },
@@ -71,8 +71,8 @@
                 {data: 'source_name', name: 'source_name'},
                 {data: 'tax_value', name: 'tax_value'},
                 {data: 'payment_way_value', name: 'payment_way_value'},
-                {data: 'admin_value', name: 'admin_value'},
                 {data: 'admin_fee_value', name: 'admin_fee_value'},
+                {data: 'admin_value', name: 'admin_value'},
             ],
             columnDefs: [
             ],
