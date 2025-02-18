@@ -117,7 +117,7 @@
                 @endcan
             ],
               createdRow: function (row, data, dataIndex) {
-                if (data.total_order_fees_1 > 0) {
+                if (data.total_order_fees_0 > 0) {
                     $(row).addClass('table-danger');
                 }
             },
