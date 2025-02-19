@@ -137,9 +137,11 @@ class HomeController extends Controller
         if ($favourit) {
             $favourit->delete();
             $favourit->forceDelete();
+            $favourit->status = 0;
         } else {
-
+            
             $favourit = Favorite::create($data);
+            $favourit->status = 1;
         }
         return response()->apiSuccess($favourit);
 
