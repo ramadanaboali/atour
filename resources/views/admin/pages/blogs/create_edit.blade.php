@@ -50,7 +50,7 @@ input[type="file"] {
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-end col-md-6 col-12 d-md-block ">
                 <div class="mb-1 breadcrumb-right">
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-primary me-1 waves-effect">

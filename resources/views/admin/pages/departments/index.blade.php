@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-header-right text-md-end col-md-6 col-12 d-md-block d-none">
+        <div class="content-header-right text-md-end col-md-6 col-12 d-md-block ">
             <div class="mb-1 breadcrumb-right">
                 @can('departments.create')
                     <div class="dropdown">
