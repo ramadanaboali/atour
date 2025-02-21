@@ -5,6 +5,7 @@ namespace App\Services;
 use Ladumor\OneSignal\OneSignal;
 use App\Models\Notification;
 use App\Models\PlayerId;
+use App\Models\User;
 
 class OneSignalService
 {
@@ -27,6 +28,21 @@ class OneSignalService
         ]);
 
         return $response;
+    }
+    public static function sendToAll( $title, $message)
+    {
+        $users = User::get();
+        foreach($users as $user){
+            $payload = [
+                'include_player_ids' => [self::getPlayerId($user->id)],
+                'headings' => ['en' => $title],
+                'contents' => ['en' => $message],
+            ];
+            
+            $response = OneSignal::sendPush($payload,$message);
+        }
+
+      
     }
 
     private static function getPlayerId($userId)
