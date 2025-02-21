@@ -118,7 +118,7 @@ class AuthController extends Controller
     {
 
         try {
-            $user = User::where('temperory_email', $request->email)->first();
+            $user = User::where('temperory_email', $request->email)->orWhere('email',$request->email)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
