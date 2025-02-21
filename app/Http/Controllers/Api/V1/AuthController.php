@@ -72,7 +72,6 @@ class AuthController extends Controller
         ];
         $user = User::where('email', $request->email)->first();
         $user->update($userInput);
-
         return $this->successResponse($user, Response::HTTP_CREATED);
 
     }
