@@ -64,6 +64,7 @@ class AuthController extends Controller
     {
         $userInput = [
             'email' => $request->email,
+            'temperory_email' => $request->email,
             'name' => $request->name,
             'phone' => $request->phone,
             'status' => 'accepted',
@@ -71,7 +72,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ];
         $user = User::where('email', $request->email)->first();
-        $user->update($userInput);
+        if($user){
+            $user->update($userInput);
+        }else{
+            $user = User::updateOrCreate(['temperory_email' => $request->email], $userInput);
+        }
+
         return $this->successResponse($user, Response::HTTP_CREATED);
 
     }
