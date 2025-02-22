@@ -34,6 +34,14 @@ Route::get('/send-broadcast', function (Request $request) {
 
     return response()->json($response);
 });
+Route::get('/send-user', function (Request $request) {
+
+
+ $response =OneSignalService::sendToUser($request->id, "تجربة الاشعار", "test message");
+
+
+    return response()->json($response);
+});
 
 
 
