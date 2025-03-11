@@ -97,4 +97,34 @@ class Gift extends Model
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'gift');
     }
 
+   public function calculateAdminFees()
+{
+    $price = 0;
+    $vendor = $this->vendor; // No need for first() since it's already loaded
+
+    if ($vendor && $vendor->feeSetting) {
+        $feeSetting = $vendor->feeSetting;
+
+        $price += $feeSetting->tax_type === 'const'
+            ? $feeSetting->tax_value
+            : ($feeSetting->tax_value * $this->price) / 100;
+
+        $price += $feeSetting->payment_way_type === 'const'
+            ? $feeSetting->payment_way_value
+            : ($feeSetting->payment_way_value * $this->price) / 100;
+
+        $price += $feeSetting->admin_type === 'const'
+            ? $feeSetting->admin_value
+            : ($feeSetting->admin_value * $this->price) / 100;
+
+        $price += $feeSetting->admin_fee_type === 'const'
+            ? $feeSetting->admin_fee_value
+            : ($feeSetting->admin_fee_value * $this->price) / 100;
+    }
+
+    return $price;
+}
+
+
+
 }

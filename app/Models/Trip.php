@@ -52,7 +52,7 @@ class Trip extends Model
         'available_days' => 'array',
         'steps_list' => 'array',
     ];
-    protected $appends = ['title','photo','description','start_point','end_point','text','program_time'];
+    protected $appends = ['title', 'photo', 'description', 'start_point', 'end_point', 'text', 'program_time'];
 
     public function getPhotoAttribute()
     {
@@ -61,7 +61,7 @@ class Trip extends Model
 
     public function getTitleAttribute()
     {
-        if(!array_key_exists('title_en', $this->attributes)||!array_key_exists('title_ar', $this->attributes)){
+        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
             return "";
         }
         if (App::isLocale('en')) {
@@ -72,7 +72,7 @@ class Trip extends Model
     }
     public function getProgramTimeAttribute()
     {
-        if(!array_key_exists('program_time_en', $this->attributes)||!array_key_exists('program_time_ar', $this->attributes)){
+        if (!array_key_exists('program_time_en', $this->attributes) || !array_key_exists('program_time_ar', $this->attributes)) {
             return "";
         }
         if (App::isLocale('en')) {
@@ -96,7 +96,7 @@ class Trip extends Model
     }
     public function getStartPointAttribute()
     {
-        if(!array_key_exists('start_point_en', $this->attributes)||!array_key_exists('start_point_ar', $this->attributes)){
+        if (!array_key_exists('start_point_en', $this->attributes) || !array_key_exists('start_point_ar', $this->attributes)) {
             return "";
         }
         if (App::isLocale('en')) {
@@ -107,7 +107,7 @@ class Trip extends Model
     }
     public function getEndPointAttribute()
     {
-        if(!array_key_exists('end_point_en', $this->attributes)||!array_key_exists('end_point_ar', $this->attributes)){
+        if (!array_key_exists('end_point_en', $this->attributes) || !array_key_exists('end_point_ar', $this->attributes)) {
             return "";
         }
         if (App::isLocale('en')) {
@@ -152,12 +152,12 @@ class Trip extends Model
         return $this->belongsTo(User::class, 'vendor_id');
     }
 
-    public function features():?BelongsToMany
+    public function features(): ?BelongsToMany
     {
         return $this->belongsToMany(Feature::class, 'trip_features');
 
     }
-    public function requirements():?BelongsToMany
+    public function requirements(): ?BelongsToMany
     {
         return $this->belongsToMany(Requirement::class, 'trip_requirements');
 
@@ -179,5 +179,32 @@ class Trip extends Model
         return $this->hasMany(BookingTrip::class, 'trip_id');
     }
 
+public function calculateAdminFees()
+{
+    $price = 0;
+    $vendor = $this->vendor; // No need for first() since it's already loaded
+
+    if ($vendor && $vendor->feeSetting) {
+        $feeSetting = $vendor->feeSetting;
+
+        $price += $feeSetting->tax_type === 'const'
+            ? $feeSetting->tax_value
+            : ($feeSetting->tax_value * $this->price) / 100;
+
+        $price += $feeSetting->payment_way_type === 'const'
+            ? $feeSetting->payment_way_value
+            : ($feeSetting->payment_way_value * $this->price) / 100;
+
+        $price += $feeSetting->admin_type === 'const'
+            ? $feeSetting->admin_value
+            : ($feeSetting->admin_value * $this->price) / 100;
+
+        $price += $feeSetting->admin_fee_type === 'const'
+            ? $feeSetting->admin_fee_value
+            : ($feeSetting->admin_fee_value * $this->price) / 100;
+    }
+
+    return $price;
+}
 
 }
