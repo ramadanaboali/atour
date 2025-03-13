@@ -12,14 +12,14 @@ class GiftResourceCustomer extends JsonResource
     {
         $favourit = Favorite::where('model_type', 'like', 'gift%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
 
-$price = $this->price + $this->calculateAdminFees();
+        $price = $this->price + $this->calculateAdminFees();
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'location' => $this->location,
-            'price' => $price,
+            'price' => (double)$price,
             'free_cancelation' => $this->free_cancelation,
             'pay_later' => $this->pay_later,
             'rate' => $this->rate,
