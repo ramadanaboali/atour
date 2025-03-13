@@ -103,7 +103,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $tap = $payment->pay($item->price);
+            $tap = $payment->pay($item->price+$item->calculateAdminFees());
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
@@ -124,7 +124,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $result = $payment->pay($order->total);
+            $result = $payment->pay($order->total+$order->trip?->calculateAdminFees());
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
@@ -202,7 +202,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $tap = $payment->pay($item->price);
+            $tap = $payment->pay($item->price+$item->calculateAdminFees());
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
@@ -225,7 +225,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $result = $payment->pay($order->total);
+            $result = $payment->pay($order->total+$order->effectivene?->calculateAdminFees());
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
@@ -298,7 +298,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'gift']);
-            $tap = $payment->pay($item->price);
+            $tap = $payment->pay($item->price+$item->calculateAdminFees());
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
@@ -321,7 +321,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'gift']);
-            $result = $payment->pay($order->total);
+            $result = $payment->pay($order->total+$order->gift?->calculateAdminFees());
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
