@@ -116,8 +116,9 @@ class TripController extends Controller
             }
 
             $images = $request->file('images');
+            $i=0;
             foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path);
+                $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
                 $attachment = [
                     'model_id' => $item->id,
                     'model_type' => 'trip',
@@ -125,6 +126,7 @@ class TripController extends Controller
                     'title' => "trip",
                 ];
                 Attachment::create($attachment);
+                $i++;
             }
         }
         return response()->apiSuccess(new TripResource($item));

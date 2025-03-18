@@ -52,6 +52,8 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
+        $data['payment_way'] = $request->payment_way;
+
         $data['total'] = $item->price;
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
@@ -149,6 +151,7 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
+        $data['payment_way'] = $request->payment_way;
         $data['total'] = $item->price;
         $data['vendor_id'] = $item->vendor_id;
         $data['effectivene_id'] = $request->effectivene_id;
@@ -242,11 +245,13 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
-        $data['total'] = $item->price;
+        $data['total'] = $item->price*($request->quantity??1);
         $data['vendor_id'] = $item->vendor_id;
         $data['gift_id'] = $request->gift_id;
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
+        $data['payment_way'] = $request->payment_way;
+
         $data['delivery_address'] = $request->delivery_address;
         $data['delivery_number'] = $request->delivery_number;
         $data['delivery_way'] = $request->delivery_way;
@@ -256,34 +261,35 @@ class OrderController extends Controller
         if ($item->vendor?->feeSetting) {
             if ($item->vendor?->feeSetting?->tax_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->tax_value;
-                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+                $order_fees['tax_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->tax_value;
             } else {
                 $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                $order_fees['tax_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+                $order_fees['payment_way_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->payment_way_value;
 
             } else {
                 $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                $order_fees['payment_way_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->admin_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->admin_value;
-                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+                $order_fees['admin_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_value;
             } else {
                 $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                $order_fees['admin_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
             }
             if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
                 $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+                $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_fee_value;
 
             } else {
                 $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
             }
+            $admin_value = $admin_value * ($request->quantity ?? 1);
         }
 
         $order = BookingGift::create($data);
@@ -334,6 +340,7 @@ class OrderController extends Controller
     }
     public function bookings(Request $request)
     {
+        
         $data['curren']['gifts'] = BookingGift::with(['gift' => function ($query) {
             $query->withTrashed()->with('city');
         },'vendor' => function ($query) {

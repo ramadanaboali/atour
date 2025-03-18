@@ -72,8 +72,10 @@ class EffectivenesController extends Controller
         $item = $this->service->store($data);
 
         $images = $request->file('images');
+            $i=0;
+
         foreach ($images as $image) {
-            $storedPath = $this->storageService->storeFile($image, $folder_path);
+            $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
             $attachment = [
                 'model_id' => $item->id,
                 'model_type' => 'effectivenes',
@@ -81,6 +83,7 @@ class EffectivenesController extends Controller
                 'title' => "effectivenes",
             ];
             Attachment::create($attachment);
+            $i++;
         }
 
         return response()->apiSuccess(new EffectivenesResource($item));
@@ -119,9 +122,12 @@ class EffectivenesController extends Controller
         $item = $this->service->update($data, $effectivenes);
         if ($item) {
             $images = $request->file('images');
+            
+$i = 0;
+
             Attachment::where('model_id', $effectivenes->id)->where('model_type', 'effectivenes')->delete();
             foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path);
+                $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
                 $attachment = [
                     'model_id' => $effectivenes->id,
                     'model_type' => 'effectivenes',
@@ -129,6 +135,8 @@ class EffectivenesController extends Controller
                     'title' => "effectivenes",
                 ];
                 Attachment::create($attachment);
+                                $i++;
+
             }
         }
 
