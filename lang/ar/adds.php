@@ -67,4 +67,5 @@ return [
     'location' => 'الموقع',
     'views' => 'المشاهدات',
     'date' => 'التاريخ',
+    'send_notification' => 'ارسال اشعار',
 ];

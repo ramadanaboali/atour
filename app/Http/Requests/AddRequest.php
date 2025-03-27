@@ -33,7 +33,7 @@ class AddRequest extends FormRequest
                 'start_date' => 'required',
                 'end_date' => 'required',
                 'location' => 'required',
-                'image' => 'required',
+                'image' => 'required|image',
             ];
         }
     }

@@ -12,6 +12,7 @@ use App\Models\OrderFee;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\UserFee;
+use App\Models\Trip;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -70,8 +71,7 @@ class SupplierController extends Controller
     public function show($id): View
     {
         $item = Supplier::findOrFail($id);
-
-
+        $trips = Trip::where('vendor_id', $item->user_id)->orderByDesc('id')->get();
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -221,29 +221,43 @@ class SupplierController extends Controller
 
     public function orders(Request $request): JsonResponse
     {
-        $data = Order::with(['trip.vendor.user','client'])->whereHas('trip', function ($query) use ($request) {
-            $query->where('vendor_id', $request->user_id);
-        })->select('*');
-        return DataTables::of($data)
-        ->addIndexColumn()
-        ->editColumn('code', function ($item) {
-            return '<a href="'.route('admin.orders.show', ['id' => $item->id]).'">'.$item->code.'</a>';
-        })
-        ->addColumn('client', function ($item) {
-            return $item->client?->name;
-        })
-        ->addColumn('vendor', function ($item) {
-            return $item->trip?->vendor?->user?->name;
-        })
+        
+$data =  BookingGift::with(['user','vendor'])->where('vendor_id', $request->user_id)
+        ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+        ->union(
+            BookingTrip::with(['user','vendor'])->where('vendor_id', $request->user_id)
+                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+        )
+        ->union(
+            BookingEffectivene::with(['user','vendor'])->where('vendor_id', $request->user_id)
+                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+        )
+        ->orderBy('created_at', 'desc')
+        ->get();
+return DataTables::of($data)
+    ->addIndexColumn()
+    ->addColumn('client', function ($item) {
+        return $item->user?->name;
+    })
 
-        ->addColumn('booking_date', function ($item) {
-            return '';
-        })
-        ->addColumn('meeting_place', function ($item) {
-            return '';
-        })
-        ->rawColumns(['active','members','meeting_place','code'])
-        ->make(true);
+    ->addColumn('vendor', function ($item) {
+        return $item->vendor?->name;
+    })
+    ->addColumn('status', function ($item) {
+        return __('admin.orders_statuses.' . $item->status);
+    })
+
+->editColumn('source', function ($item) {
+    return __('admin.'.$item->source);
+})
+->editColumn('created_at', function ($item) {
+    return $item->created_at?->format('Y-m-d H:i');
+})
+
+
+->rawColumns(['source','created_at','client','vendor'])
+->make(true);
+
     }
     public function payments(Request $request)
     {

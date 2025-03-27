@@ -203,16 +203,13 @@
                                 <table class="invoice-table table text-nowrap datatables-orders">
                                     <thead>
                                         <tr>
-                                            <th>{{ __('orders.code') }}</th>
-                                            <th>{{ __('orders.vendor') }}</th>
-                                            <th>{{ __('orders.address') }}</th>
+                                            <th>{{ __('orders.client') }}</th>
                                             <th>{{ __('orders.order_date') }}</th>
-                                            <th>{{ __('orders.order_status') }}</th>
-                                            <th>{{ __('orders.order_type') }}</th>
-                                            <th>{{ __('orders.order_details') }}</th>
-                                            <th>{{ __('orders.members') }}</th>
-                                            <th>{{ __('orders.booking_date') }}</th>
-                                            <th>{{ __('orders.meeting_place') }}</th>
+                                            <th>{{ __('orders.total') }}</th>
+                                            <th>{{ __('admin.admin_value') }}</th>
+
+                                            <th>{{ __('orders.status') }}</th>
+                                            <th>{{ __('orders.type') }}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -273,11 +270,10 @@
                                             <th class="py-1">{{ __('orders.cancelation_policy') }}</th>
                                             <th class="py-1">{{ __('orders.free_cancelation') }}</th>
                                             <th class="py-1">{{ __('orders.pay_later') }}</th>
-                                            <th class="py-1">{{ __('orders.vendor') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($item->trips as $trip)
+                                        @foreach ($trips as $trip)
 
                                         <tr>
 
@@ -291,7 +287,6 @@
                                                 <span class="fw-bold">{{ $trip->cancelation_policy }}</span>
                                                 <span class="fw-bold">{{ $trip->free_cancelation }}</span>
                                                 <span class="fw-bold">{{ $trip->pay_later }}</span>
-                                                <span class="fw-bold">{{ $trip->vendor?->user?->name }}</span>
                                             </td>
 
                                         </tr>
@@ -344,24 +339,19 @@
             ajax: {
                 url: "{{ route('admin.suppliers.orders') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->id }};
+                    d.user_id  = {{ $item->user_id }};
                 }
             },
             drawCallback: function (settings) {
                 feather.replace();
             },
             columns: [
-                /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'code', name: 'code',orderable: false,searchable: false},
-                {data: 'vendor', name: 'vendor.name'},
-                {data: 'address', name: 'address'},
-                {data: 'order_date', name: 'order_date'},
+                {data: 'client', name: 'client',orderable: false},
+                {data: 'created_at', name: 'created_at'},
+                {data: 'total', name: 'total'},
+                {data: 'admin_value', name: 'admin_value'},
                 {data: 'status', name: 'status'},
-                {data: 'type', name: 'type'},
-                {data: 'details', name: 'details'},
-                {data: 'members', name: 'members'},
-                {data: 'booking_date', name: 'booking_date'},
-                {data: 'meeting_place', name: 'meeting_place'},
+                {data: 'source', name: 'source'},
             ],
             columnDefs: [
 
@@ -386,7 +376,7 @@
             ajax: {
                 url: "{{ route('admin.rates.list') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->id }};
+                    d.user_id  = {{ $item->user_id }};
                 }
             },
             drawCallback: function (settings) {
@@ -422,7 +412,7 @@
             ajax: {
                 url: "{{ route('admin.favorites.list') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->id }};
+                    d.user_id  = {{ $item->user_id }};
                 }
             },
             drawCallback: function (settings) {

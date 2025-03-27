@@ -32,36 +32,26 @@ class HomeController extends Controller
                 Auth::setUser($user);
             }
         }
-
-        $offer = Offer::whereHas('vendor')->join('users', function ($query) {
-            $query->on('users.id', '=', 'offers.vendor_id')->where('users.active', 1);
-
-        })->where('offers.active', 1)->select('offers.*')->first();
-
-        $data['offer'] = $offer;
-        if ($offer) {
-            if ($offer->type == 'gift') {
-
-                $gift = Gift::where('id',$offer->gift_id)->first();
-                if ($gift==null) {
-                    $data['offer'] = null;
+        $offer = Offer::whereHas('vendor')
+            ->whereHas('vendor', fn ($query) => $query->where('active', 1))
+            ->where('active', 1)
+            ->select('offers.*')
+            ->get()
+            ->filter(function ($item) {
+                if (in_array($item->type, ['gift', 'trip', 'effectivenes'])) {
+                    $relatedModel = match ($item->type) {
+                        'gift' => Gift::find($item->gift_id),
+                        'trip' => Trip::find($item->trip_id),
+                        'effectivenes' => Effectivenes::find($item->effectivenes_id),
+                        default => null,
+                    };
+                    return $relatedModel !== null; 
                 }
-            }
-            if ($offer->type == 'trip') {
-                $trip = Trip::where('id',$offer->trip_id)->first();
-                if ($trip==null) {
-                    $data['offer'] = null;
-                }
-            }
-            if ($offer->type == 'effectivenes') {
-                $effectivenes = Effectivenes::where('id',$offer->effectivenes_id)->first();
-                if ($effectivenes==null) {
-                    $data['offer'] = null;
-                }
-            }
-        }
+                return true; 
+            });
 
-
+        $data['offers'] = $offer->values();
+        $data['offer'] = null;
 
         $data['most_visited'] = City::where('active', true)->get();
         $old_experiences = Trip::whereHas('vendor')->join('users', function ($query) {
@@ -139,7 +129,7 @@ class HomeController extends Controller
             $favourit->forceDelete();
             $favourit->status = 0;
         } else {
-            
+
             $favourit = Favorite::create($data);
             $favourit->status = 1;
         }
@@ -170,28 +160,28 @@ class HomeController extends Controller
 
     }
     public function searchByCity(Request $request, $city_id)
-{
-    $isApiRoute = $request->is('api/*'); // Check if the request comes from the 'api' routes file
+    {
+        $isApiRoute = $request->is('api/*'); // Check if the request comes from the 'api' routes file
 
-    $data = City::with(['trips', 'gifts', 'effectivenes'])->find($city_id);
+        $data = City::with(['trips', 'gifts', 'effectivenes'])->find($city_id);
 
-    if ($data && $isApiRoute) {
-        $data->trips->transform(function ($trip) {
-            $trip->price = $trip->price + $trip->calculateAdminFees(); // Update price
-            return $trip;
-        });
-        $data->gifts->transform(function ($gift) {
-            $gift->price = $gift->price + $gift->calculateAdminFees(); // Update price
-            return $gift;
-        });
-        $data->effectivenes->transform(function ($effectivene) {
-            $effectivene->price = $effectivene->price + $effectivene->calculateAdminFees(); // Update price
-            return $effectivene;
-        });
+        if ($data && $isApiRoute) {
+            $data->trips->transform(function ($trip) {
+                $trip->price = $trip->price + $trip->calculateAdminFees(); // Update price
+                return $trip;
+            });
+            $data->gifts->transform(function ($gift) {
+                $gift->price = $gift->price + $gift->calculateAdminFees(); // Update price
+                return $gift;
+            });
+            $data->effectivenes->transform(function ($effectivene) {
+                $effectivene->price = $effectivene->price + $effectivene->calculateAdminFees(); // Update price
+                return $effectivene;
+            });
+        }
+
+        return apiResponse(true, $data, null, null, 200);
     }
-
-    return apiResponse(true, $data, null, null, 200);
-}
 
     public function faqs(Request $request)
     {

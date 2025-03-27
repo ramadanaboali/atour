@@ -46,10 +46,7 @@ class Supplier extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function trips(): ?HasMany
-    {
-        return $this->hasMany(Trip::class, 'vendor_id');
-    }
+  
     public function city(): ?BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');

@@ -67,4 +67,5 @@ return [
     'location' => 'Location',
     'views' => 'Views',
     'date' => 'Date',
+    'send_notification' => 'Send Notification',
 ];

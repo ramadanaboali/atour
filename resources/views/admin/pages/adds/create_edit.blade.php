@@ -85,6 +85,18 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-1 col-md-2  @error('send_notification') is-invalid @enderror">
+                            <br>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="send_notification"
+                                        value="1" id="send_notification"
+                                />
+                                <label class="form-check-label" for="send_notification">{{ __('adds.send_notification') }}</label>
+                            </div>
+                            @error('send_notification')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                           <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
                             <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
                             <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>

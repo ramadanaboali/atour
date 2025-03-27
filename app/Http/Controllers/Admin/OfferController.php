@@ -94,8 +94,8 @@ class OfferController extends Controller
     public function changeStatus($id): RedirectResponse
     {
         $item = Offer::findOrFail($id);
-        Offer::where('id', '!=', $id)->update(['active' => 0]);
-        $item->active = 1;
+        // Offer::where('id', '!=', $id)->update(['active' => 0]);
+        $item->active = !$item->active;
         $item->save();
         flash(__('offers.messages.updated'))->success();
         return to_route($this->route . '.index');
