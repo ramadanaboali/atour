@@ -70,7 +70,9 @@ class ClientController extends Controller
     {
         $item = Client::findOrFail($id);
         $compleated_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_COMPLEALED)->get();
-        $pendding_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_PENDING)->get();
+        $pendding_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_PENDING)->get();       
+        $status = [Order::STATUS_COMPLEALED,Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_REJECTED,Order::STATUS_ONPROGRESS,Order::STATUS_COMPLEALED,Order::STATUS_CANCELED,Order::STATUS_WITHDRWAL];
+
         return view($this->viewShow, get_defined_vars());
     }
 

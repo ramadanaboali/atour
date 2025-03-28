@@ -145,18 +145,38 @@ class OrderController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data =  BookingGift::with(['user','vendor'])->whereIn('status', $request->status)
-        ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+
+        $data =  BookingGift::with(['user','vendor'])
+        ->whereIn('status', (array) $request->status)
+         ->where(function ($query) use ($request) {
+             if ($request->filled('user_id')) {
+                 $query->where('user_id', $request->user_id);
+             }
+         })
+        ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
         ->union(
-            BookingTrip::with(['user','vendor'])->whereIn('status', $request->status)
-                ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            BookingTrip::with(['user','vendor'])
+            ->where(function ($query) use ($request) {
+                if ($request->filled('user_id')) {
+                    $query->where('user_id', $request->user_id);
+                }
+            })
+                ->whereIn('status', (array) $request->status)
+                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
         )
         ->union(
-            BookingEffectivene::with(['user','vendor'])->whereIn('status', $request->status)
-                ->select('id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            BookingEffectivene::with(['user','vendor'])
+             ->where(function ($query) use ($request) {
+                 if ($request->filled('user_id')) {
+                     $query->where('user_id', $request->user_id);
+                 }
+             })
+                ->whereIn('status', (array) $request->status)
+                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
         )
         ->orderBy('created_at', 'desc')
         ->get();
+
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('client', function ($item) {

@@ -268,6 +268,7 @@ return [
     'do_settlement' => ' تسويه الحسابات',
     'total_order_fee' => 'المتبقى لدى المورد ',
     'total_order_fee_setlment' => 'المبالغ تم تسويتها',
+    'false'=>'لا'
 
 
 ];

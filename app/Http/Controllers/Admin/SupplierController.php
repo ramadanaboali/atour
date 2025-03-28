@@ -70,8 +70,8 @@ class SupplierController extends Controller
 
     public function show($id): View
     {
-        $item = Supplier::findOrFail($id);
-        $trips = Trip::where('vendor_id', $item->user_id)->orderByDesc('id')->get();
+        $user=User::findOrFail($id);
+        $trips = Trip::where('vendor_id', $id)->orderByDesc('id')->get();
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -221,42 +221,49 @@ class SupplierController extends Controller
 
     public function orders(Request $request): JsonResponse
     {
-        
-$data =  BookingGift::with(['user','vendor'])->where('vendor_id', $request->user_id)
-        ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
-        ->union(
-            BookingTrip::with(['user','vendor'])->where('vendor_id', $request->user_id)
-                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
-        )
-        ->union(
-            BookingEffectivene::with(['user','vendor'])->where('vendor_id', $request->user_id)
-                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
-        )
-        ->orderBy('created_at', 'desc')
-        ->get();
-return DataTables::of($data)
-    ->addIndexColumn()
-    ->addColumn('client', function ($item) {
-        return $item->user?->name;
-    })
-
-    ->addColumn('vendor', function ($item) {
-        return $item->vendor?->name;
-    })
-    ->addColumn('status', function ($item) {
-        return __('admin.orders_statuses.' . $item->status);
-    })
-
-->editColumn('source', function ($item) {
-    return __('admin.'.$item->source);
-})
-->editColumn('created_at', function ($item) {
-    return $item->created_at?->format('Y-m-d H:i');
-})
 
 
-->rawColumns(['source','created_at','client','vendor'])
-->make(true);
+        $bookingGift = BookingGift::with(['user', 'vendor'])
+            ->where('vendor_id', $request->user_id)
+            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+            ->get();
+
+        $bookingTrip = BookingTrip::with(['user', 'vendor'])
+            ->where('vendor_id', $request->user_id)
+            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            ->get();
+
+        $bookingEffectivene = BookingEffectivene::with(['user', 'vendor'])
+            ->where('vendor_id', $request->user_id)
+            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            ->get();
+
+        // Merge collections to retain relationships
+        $data = $bookingGift->merge($bookingTrip)->merge($bookingEffectivene);
+
+        // Sort by created_at manually (since `orderBy` won't work with collections)
+        $data = $data->sortByDesc('created_at')->values();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('client', function ($item) {
+                return $item->user?->name;
+            })
+            ->addColumn('vendor', function ($item) {
+                return $item->vendor?->name;
+            })
+            ->addColumn('status', function ($item) {
+                return __('admin.orders_statuses.' . $item->status);
+            })
+            ->editColumn('source', function ($item) {
+                return __('admin.' . $item->source);
+            })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at?->format('Y-m-d H:i');
+            })
+            ->rawColumns(['source', 'created_at', 'client', 'vendor'])
+            ->make(true);
+
 
     }
     public function payments(Request $request)
@@ -321,9 +328,9 @@ return DataTables::of($data)
 
     public function settlement($id)
     {
-    $data=OrderFee::where('vendor_id',$id)->update(['status'=>1]);
-    flash(__('admin.messages.updated'))->success();
-    return to_route('admin.accounts.suppliers');
+        $data = OrderFee::where('vendor_id', $id)->update(['status' => 1]);
+        flash(__('admin.messages.updated'))->success();
+        return to_route('admin.accounts.suppliers');
 
     }
     public function suppliers(Request $request)
@@ -343,7 +350,7 @@ return DataTables::of($data)
                     COALESCE(SUM(CASE WHEN status = 1 THEN (tax_value + payment_way_value + admin_value + admin_fee_value) ELSE 0 END), 0) as total_order_fees_1
                     FROM order_fees GROUP BY vendor_id) as orders"), 'users.id', '=', 'orders.vendor_id')
                 ->select(
-                 'users.name',
+                    'users.name',
                     'users.id',
                     DB::raw('COALESCE(gifts.count_booking_gift, 0) as count_booking_gift'),
                     DB::raw('COALESCE(trips.count_booking_trib, 0) as count_booking_trib'),
@@ -356,12 +363,12 @@ return DataTables::of($data)
                     DB::raw('COALESCE(orders.total_order_fees_0, 0) as total_order_fees_0'),
                     DB::raw('COALESCE(orders.total_order_fees_1, 0) as total_order_fees_1')
                 )
-                ->groupBy('users.id', 'users.name')->orderBy('total_order_fees_0','desc');
+                ->groupBy('users.id', 'users.name')->orderBy('total_order_fees_0', 'desc');
 
             return DataTables::of($data)
                 ->addIndexColumn()
             ->addColumn('remain', function ($item) {
-                return ($item->total_order_fees_0 > $item->total_order_fees_1)?($item->total_order_fees_0 - $item->total_order_fees_1):0;
+                return ($item->total_order_fees_0 > $item->total_order_fees_1) ? ($item->total_order_fees_0 - $item->total_order_fees_1) : 0;
             })
             ->rawColumns(['remain'])
             ->make(true);

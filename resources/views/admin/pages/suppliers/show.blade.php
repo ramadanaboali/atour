@@ -16,9 +16,9 @@
                         <div class="card-body">
                             <div class="user-avatar-section">
                                 <div class="d-flex align-items-center flex-column">
-                                    <img class="img-fluid rounded mt-3 mb-2" src="{{ $item->user?->photo }}" height="110" width="110" alt="{{ $item->user?->name }}" />
+                                    <img class="img-fluid rounded mt-3 mb-2" src="{{ $user?->photo }}" height="110" width="110" alt="{{ $user?->name }}" />
                                     <div class="user-info text-center">
-                                        <h4>{{ $item->user?->name }}</h4>
+                                        <h4>{{ $user?->name }}</h4>
 
                                     </div>
                                 </div>
@@ -29,76 +29,76 @@
                                 <ul class="list-unstyled">
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.phone') }} : </span>
-                                        <span> {{ $item->user?->phone }}</span>
+                                        <span> {{ $user?->phone }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.email') }} : </span>
-                                        <span>{{ $item->user?->email }}</span>
+                                        <span>{{ $user?->email }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.status') }} : </span>
-                                        <span class="badge bg-light-success">{{ __('clients.statuses.'.$item->user?->status) }}</span>
+                                        <span class="badge bg-light-success">{{ __('clients.statuses.'.$user?->status) }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.birthdate') }}:</span>
-                                        <span>{{ $item->user?->birthdate }}</span>
+                                        <span>{{ $user?->birthdate }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.joining_date_from') }}:</span>
-                                        <span>{{ $item->user?->joining_date_from }}</span>
+                                        <span>{{ $user?->joining_date_from }}</span>
                                     </li>
 
 
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.country') }}:</span>
-                                        <span>{{ $item->country?->name }}</span>
+                                        <span>{{ $user->supplier?->country?->name }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.city') }}:</span>
-                                        <span>{{ $item->city?->name }}</span>
+                                        <span>{{ $user->supplier?->city?->name }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.streat') }}:</span>
-                                        <span>{{ $item->streat }}</span>
+                                        <span>{{ $user->supplier?->streat }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.postal_code') }}:</span>
-                                        <span>{{ $item->postal_code }}</span>
+                                        <span>{{ $user->supplier?->postal_code }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.url') }}:</span>
-                                        <span>{{ $item->url }}</span>
+                                        <span>{{ $user->supplier?->url }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
-                                        <span>{{ $item->tax_number }}</span>
+                                        <span>{{ $user->supplier?->tax_number }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.place_summary') }}:</span>
-                                        <span>{{ $item->place_summary }}</span>
+                                        <span>{{ $user->supplier?->place_summary }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.place_content') }}:</span>
-                                        <span>{{ $item->place_content }}</span>
+                                        <span>{{ $user->supplier?->place_content }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.expectations') }}:</span>
-                                        <span>{{ $item->expectations }}</span>
+                                        <span>{{ $user->supplier?->expectations }}</span>
                                     </li>
 
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.short_description') }}:</span>
-                                        <span>{{ $item->short_description }}</span>
+                                        <span>{{ $user->supplier?->short_description }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.description') }}:</span>
-                                        <span>{{ $item->description }}</span>
+                                        <span>{{ $user->supplier?->description }}</span>
                                     </li>
 
                                 </ul>
                                 <div class="d-flex justify-content-center pt-2">
 
-                                    <a  class="btn btn-outline-danger suspend-user client_status" data-url="{{ route("admin.clients.status", ['id'=>$item->id]) }}" href="#">{{ __('clients.actions.status') }}</a>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                                     <div class="timeline-event">
                                         <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
                                             <h6>{{ __('suppliers.is_profissional_guid') }}</h6>
-                                            <span class="me-1">{{ $item->profission_guide?__('admin.true'):__('admin.false') }}</span>
+                                            <span class="me-1">{{ $user->supplier?->profission_guide?__('admin.true'):__('admin.false') }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -129,7 +129,7 @@
                                     <div class="timeline-event">
                                         <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
                                             <h6>{{ __('suppliers.whats_your_job') }}</h6>
-                                            <span class="me-1">{{ $item->job }}</span>
+                                            <span class="me-1">{{ $user->supplier?->job }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -138,7 +138,7 @@
                                     <div class="timeline-event">
                                         <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
                                             <h6>{{ __('suppliers.how_get_inforamtion') }}</h6>
-                                            <span class="me-1">{{ $item->experience_info }}</span>
+                                            <span class="me-1">{{ $user->supplier?->experience_info }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -147,7 +147,7 @@
                                     <div class="timeline-event">
                                         <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
                                             <h6>{{ __('suppliers.languages') }}</h6>
-                                            <span class="me-1">{{ $item->languages }}</span>
+                                            <span class="me-1">{{ $user->supplier?->languages }}</span>
                                         </div>
                                     </div>
                                 </li>
@@ -159,11 +159,11 @@
                                         </div>
                                         <div class="d-flex flex-row align-items-center mt-50">
                                             <h6 class="mb-0">{{ __('suppliers.banck_name') }} : </h6>
-                                            <h6 class="mb-0">{{ $item->bank_name }}</h6>
+                                            <h6 class="mb-0">{{ $user->supplier?->bank_name }}</h6>
                                         </div>
                                         <div class="d-flex flex-row align-items-center mt-50">
                                             <h6 class="mb-0">{{ __('suppliers.banck_number') }} : </h6>
-                                            <h6 class="mb-0"> {{ $item->bank_account }}</h6>
+                                            <h6 class="mb-0"> {{ $user->supplier?->bank_account }}</h6>
                                         </div>
                                     </div>
                                 </li>
@@ -175,7 +175,7 @@
                                     <div class="timeline-event">
                                         <div class="d-flex justify-content-between flex-sm-row flex-column mb-sm-0 mb-1">
                                             <h6>{{ __('clients.last_login') }}</h6>
-                                            <span class="me-1">{{ $item->user?->last_login }}</span>
+                                            <span class="me-1">{{ $user?->last_login }}</span>
                                         </div>
 
                                     </div>
@@ -302,7 +302,7 @@
                     <div class="card">
                         <h4 class="card-header">{{ __('suppliers.images') }}</h4>
                         <div class="card-body">
-                            @foreach ($item->user?->photos as $photo)
+                            @foreach ($user?->photos as $photo)
                                 <div class="col-md-4">
                                     <img src="{{ $photo->file }}" alt="">
                                 </div>
@@ -339,7 +339,7 @@
             ajax: {
                 url: "{{ route('admin.suppliers.orders') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->user_id }};
+                    d.user_id  = {{ $user->id }};
                 }
             },
             drawCallback: function (settings) {
@@ -376,7 +376,7 @@
             ajax: {
                 url: "{{ route('admin.rates.list') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->user_id }};
+                    d.user_id  = {{ $user->id }};
                 }
             },
             drawCallback: function (settings) {
@@ -412,7 +412,7 @@
             ajax: {
                 url: "{{ route('admin.favorites.list') }}",
                 data: function (d) {
-                    d.user_id  = {{ $item->user_id }};
+                    d.user_id  = {{ $user->id }};
                 }
             },
             drawCallback: function (settings) {

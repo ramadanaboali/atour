@@ -136,16 +136,13 @@
                                 <table class="invoice-table table text-nowrap datatables-orders">
                                     <thead>
                                         <tr>
-                                            <th>{{ __('orders.code') }}</th>
                                             <th>{{ __('orders.vendor') }}</th>
-                                            <th>{{ __('orders.address') }}</th>
                                             <th>{{ __('orders.order_date') }}</th>
-                                            <th>{{ __('orders.order_status') }}</th>
-                                            <th>{{ __('orders.order_type') }}</th>
-                                            <th>{{ __('orders.order_details') }}</th>
-                                            <th>{{ __('orders.members') }}</th>
-                                            <th>{{ __('orders.booking_date') }}</th>
-                                            <th>{{ __('orders.meeting_place') }}</th>
+                                            <th>{{ __('orders.total') }}</th>
+                                            <th>{{ __('admin.admin_value') }}</th>
+
+                                            <th>{{ __('orders.status') }}</th>
+                                            <th>{{ __('orders.type') }}</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -201,6 +198,7 @@
 @stop
 @push('scripts')
     <script>
+        const statuses = @json($status); 
         var dt_ajax_table = $('.datatables-orders');
         var dt_ajax = dt_ajax_table.dataTable({
             processing: true,
@@ -220,6 +218,7 @@
                 url: "{{ route('admin.orders.list') }}",
                 data: function (d) {
                     d.user_id  = {{ $item->id }};
+                    d.status= statuses;
                 }
             },
             drawCallback: function (settings) {
@@ -227,16 +226,12 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'code', name: 'code'},
-                {data: 'vendor', name: 'vendor.name'},
-                {data: 'address', name: 'address'},
-                {data: 'order_date', name: 'order_date'},
+                {data: 'vendor', name: 'vendor',orderable: false},
+                {data: 'created_at', name: 'created_at'},
+                {data: 'total', name: 'total'},
+                {data: 'admin_value', name: 'admin_value'},
                 {data: 'status', name: 'status'},
-                {data: 'type', name: 'type'},
-                {data: 'details', name: 'details'},
-                {data: 'members', name: 'members'},
-                {data: 'booking_date', name: 'booking_date'},
-                {data: 'meeting_place', name: 'meeting_place'},
+                {data: 'source', name: 'source'},
             ],
             columnDefs: [
 
