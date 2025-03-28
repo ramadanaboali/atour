@@ -64,5 +64,7 @@ return [
     'reason' => 'Subject',
     'problem' => 'Message',
     'no_orders' => 'No results',
+    'title'=>'Title'
+
 
 ];

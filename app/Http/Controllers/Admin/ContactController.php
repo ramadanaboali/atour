@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Contact;
+use App\Models\ContactUs;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class ContactController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        $item = Contact::findOrFail($id);
+        $item = ContactUs::findOrFail($id);
         if ($item->delete()) {
             flash(__('contacts.messages.deleted'))->success();
         }
@@ -32,9 +32,20 @@ class ContactController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Contact::orderBy('id', 'DESC')->select('*');
+        $data = ContactUs::with('user')->orderBy('id', 'DESC')->select('contact_us.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
+        ->addColumn('name', function ($item) {
+                return $item->user?->name;
+            })
+        ->addColumn('email', function ($item) {
+                return $item->user?->email;
+            })
+        ->addColumn('phone', function ($item) {
+                return $item->user?->phone;
+            })
+       
+        ->rawColumns(['name','email','phone'])
             ->make(true);
     }
 }

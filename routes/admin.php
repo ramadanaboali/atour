@@ -359,6 +359,16 @@ Route::middleware('throttle:60,1')->group(function () {
 
 
 
+            Route::get('contacts/select', [App\Http\Controllers\Admin\ContactController::class, 'select'])->name('contacts.select');
+            Route::delete('contacts/bulk', [App\Http\Controllers\Admin\ContactController::class, 'deleteBulk'])->name('contacts.deleteBulk')->middleware('adminPermission:contacts.delete');
+            Route::get('contacts/list', [App\Http\Controllers\Admin\ContactController::class, 'list'])->name('contacts.list')->middleware('adminPermission:contacts.view');
+            Route::post('contacts', [App\Http\Controllers\Admin\ContactController::class, 'store'])->name('contacts.store')->middleware('adminPermission:contacts.create');
+            Route::delete('contacts/{id}', [App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy')->middleware('adminPermission:contacts.delete');
+            Route::get('contacts', [App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index')->middleware('adminPermission:contacts.view');
+            Route::get('contacts/create', [App\Http\Controllers\Admin\ContactController::class, 'create'])->name('contacts.create')->middleware('adminPermission:contacts.create');
+            Route::match(['PUT', 'PATCH'], 'contacts/{id}', [App\Http\Controllers\Admin\ContactController::class, 'update'])->name('contacts.update')->middleware('adminPermission:contacts.edit');
+            Route::get('contacts/{id}/edit', [App\Http\Controllers\Admin\ContactController::class, 'edit'])->name('contacts.edit')->middleware('adminPermission:contacts.edit');
+
             Route::get('cities/select', [App\Http\Controllers\Admin\CityController::class, 'select'])->name('cities.select');
             Route::delete('cities/bulk', [App\Http\Controllers\Admin\CityController::class, 'deleteBulk'])->name('cities.deleteBulk')->middleware('adminPermission:cities.delete');
             Route::get('cities/list', [App\Http\Controllers\Admin\CityController::class, 'list'])->name('cities.list')->middleware('adminPermission:cities.view');

@@ -28,6 +28,25 @@ class SettingController extends Controller
 
         return apiResponse(true, $data, null, null, 200);
     }
+    public function contactUs()
+    {
+        $items = Setting::whereIn('key', ['general_email','general_phone','general_whatsapp','helpping_content_'.app()->getLocale(),'cancel_terms_content_'.app()->getLocale(),'general_facebook_url','general_twitter','general_instagram','general_google_url'])->get();
+
+        $data = [
+            'email' => $items->where('key', 'general_email')->first()->value ?? '',
+            'phone' => $items->where('key', 'general_phone')->first()->value ?? '',
+            'whatsapp' => $items->where('key', 'general_whatsapp')->first()->value ?? '',
+
+            'cancel_terms' => $items->where('key', 'cancel_terms_content_'.app()->getLocale())->first()->value ?? '',
+            'facebook_url' => $items->where('key', 'general_facebook_url')->first()->value ?? '',
+            'twitter' => $items->where('key', 'general_twitter')->first()->value ?? '',
+            'instagram' => $items->where('key', 'general_instagram')->first()->value ?? '',
+            'google_url' => $items->where('key', 'general_google_url')->first()->value ?? '',
+            'helpping_content' => $items->where('key', 'helpping_content_'.app()->getLocale())->first()->value ?? '',
+        ];
+
+        return apiResponse(true, $data, null, null, 200);
+    }
     public function header()
     {
         $items = Setting::where('key', 'like', 'header_%')->get();
