@@ -67,8 +67,8 @@
             },
             columns: [
                 {data: 'vendor', name: 'vendor',orderable: false},
-                {data: 'source', name: 'source'},
-                {data: 'source_name', name: 'source_name'},
+                {data: 'source', name: 'source',orderable: false},
+                {data: 'source_name', name: 'source_name',orderable: false},
                 {data: 'payment_way_value', name: 'payment_way_value'},
                 {data: 'tax_value', name: 'tax_value'},
                 {data: 'admin_fee_value', name: 'admin_fee_value'},

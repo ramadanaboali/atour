@@ -16,6 +16,7 @@ class BookingEffectivene extends Model
         'payment_id',
         'payment_status',
         'total',
+         'customer_total',
         'effectivene_id',
         'user_id',
         'vendor_id',

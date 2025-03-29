@@ -16,6 +16,7 @@ class BookingGift extends Model
         'payment_id',
         'payment_status',
         'total',
+        'customer_total',
         'gift_id',
         'lat',
         'long',

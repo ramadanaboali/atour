@@ -7,6 +7,7 @@ use App\Http\Requests\PaginateRequest;
 use App\Http\Requests\Customer\BookingTripRequest;
 use App\Http\Requests\Customer\BookingEffectivenesRequest;
 use App\Http\Requests\Customer\BookingGiftRequest;
+use App\Http\Resources\OrderCustomerResource;
 use App\Http\Resources\OrderResource;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
@@ -29,7 +30,7 @@ class OrderController extends Controller
     public function index(PaginateRequest $request)
     {
         $data = Order::where('user_id', auth()->user()->id)->get();
-        $data = OrderResource::collection($data);
+        $data = OrderCustomerResource::collection($data);
         return response()->apiSuccess($data);
 
     }
@@ -37,7 +38,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $item = Order::findOrFail($id);
-        $data = new OrderResource($item);
+        $data = new OrderCustomerResource($item);
         return response()->apiSuccess($data);
     }
 
@@ -49,16 +50,16 @@ class OrderController extends Controller
             return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
         }
         $data = $request->all();
+        $quantity = ((int) $request->children_number + (int) $request->people_number) ?? 1;
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
         $data['payment_way'] = $request->payment_way;
 
-        $data['total'] = $item->price;
+        $data['total'] = $item->price*$quantity;
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
         $data['vendor_id'] = $item->vendor_id;
-
         $admin_value = 0;
         $order_fees = [];
         if ($item->vendor?->feeSetting) {
@@ -93,6 +94,7 @@ class OrderController extends Controller
             }
         }
 
+        $data['customer_total'] = ($item->price+$item->calculateAdminFees()) * $quantity;
         $order = BookingTrip::create($data);
         if (count($order_fees) > 0) {
             $order_fees['order_id'] = $order->id;
@@ -105,14 +107,14 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $tap = $payment->pay($item->price+$item->calculateAdminFees());
+            $tap = $payment->pay($order->customer_total);
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
             }
             return response()->apiSuccess($tap);
         }
-        $order = new OrderResource($order);
+        $order = new OrderCustomerResource($order);
         try {
             OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
         } catch (Exception $e) {
