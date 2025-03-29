@@ -105,7 +105,8 @@ class Effectivenes extends Model
         if (!array_key_exists('price', $this->attributes) ) {
             return 0;
         }
-        return $this->attributes['price']+$this->calculateAdminFees();
+
+return round($this->attributes['price'] + $this->calculateAdminFees(), 2);
         
     }
 public function calculateAdminFees()
