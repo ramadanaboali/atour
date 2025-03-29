@@ -349,11 +349,13 @@ class AuthController extends Controller
         }
 
     }
-    public function resetPassword(ResetRequest $request)
+   public function resetPassword(ResetRequest $request)
     {
         try {
 
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'supplier')->first();
+            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
+                $query->where('email', $request->username)->orWhere('phone', $request->username);
+            })->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -370,7 +372,9 @@ class AuthController extends Controller
     public function checkCode(CheckCodeRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'supplier')->first();
+            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
+                $query->where('email', $request->username)->orWhere('phone', $request->username);
+            })->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -388,7 +392,9 @@ class AuthController extends Controller
     public function confirmReset(ConfirmResetRequest $request)
     {
         try {
-            $user = User::where('email', $request->username)->orWhere('phone', $request->username)->where('type', 'supplier')->first();
+            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
+                $query->where('email', $request->username)->orWhere('phone', $request->username);
+            })->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -411,6 +417,7 @@ class AuthController extends Controller
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+
 
     public function profile(Request $request)
     {
