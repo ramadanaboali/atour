@@ -20,7 +20,7 @@ class EffectivenesResourceCustomer extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
-            'customer_price' => round($this->customer_price,2),
+            'customer_price' => $this->customer_price,
             'people' => $this->people,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

@@ -21,7 +21,7 @@ class TripResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
-            'customer_price' => round($this->customer_price,2),
+            'customer_price' => $this->customer_price,
 
             'start_point' => $this->start_point,
             'end_point' => $this->end_point,

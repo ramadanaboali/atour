@@ -106,8 +106,8 @@ class Effectivenes extends Model
             return 0;
         }
 
-return round($this->attributes['price'] + $this->calculateAdminFees(), 2);
-        
+        return number_format($this->attributes['price'] + $this->calculateAdminFees(), 2, '.', '');
+               
     }
 public function calculateAdminFees()
 {
