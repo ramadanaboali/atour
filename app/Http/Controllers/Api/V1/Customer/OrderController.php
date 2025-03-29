@@ -348,7 +348,7 @@ class OrderController extends Controller
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
@@ -356,7 +356,7 @@ $data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene' => fun
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['curren']['trips'] = BookingTrip::with(['trip' => function ($query) {
@@ -364,7 +364,7 @@ $data['curren']['trips'] = BookingTrip::with(['trip' => function ($query) {
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['ended']['gifts'] = BookingGift::with(['gift' => function ($query) {
@@ -372,7 +372,7 @@ $data['ended']['gifts'] = BookingGift::with(['gift' => function ($query) {
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
@@ -380,7 +380,7 @@ $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene' => func
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['ended']['trips'] = BookingTrip::with(['trip' => function ($query) {
@@ -388,7 +388,7 @@ $data['ended']['trips'] = BookingTrip::with(['trip' => function ($query) {
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['compleated']['gifts'] = BookingGift::with(['gift' => function ($query) {
@@ -396,7 +396,7 @@ $data['compleated']['gifts'] = BookingGift::with(['gift' => function ($query) {
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
@@ -404,7 +404,7 @@ $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene' =>
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 $data['compleated']['trips'] = BookingTrip::with(['trip' => function ($query) {
@@ -412,7 +412,7 @@ $data['compleated']['trips'] = BookingTrip::with(['trip' => function ($query) {
 },'vendor' => function ($query) {
     $query->withTrashed();
 }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (double)$item->customer_total;
+    // $item->total = (double)$item->customer_total;
 });
 
 return response()->apiSuccess($data);
