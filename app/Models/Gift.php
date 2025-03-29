@@ -102,7 +102,7 @@ class Gift extends Model
             return 0;
         }
 
-        return round($this->attributes['price']+$this->calculateAdminFees(),2);
+        return round($this->attributes['price'] + $this->calculateAdminFees(), 2);
         
     }
 
