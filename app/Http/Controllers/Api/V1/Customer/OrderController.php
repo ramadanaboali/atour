@@ -56,7 +56,7 @@ class OrderController extends Controller
         $data['status'] = 0;
         $data['payment_way'] = $request->payment_way;
 
-        $data['total'] = $item->price*$quantity;
+        $data['total'] = $item->price * $quantity;
         $data['lat'] = $request->lat;
         $data['long'] = $request->long;
         $data['vendor_id'] = $item->vendor_id;
@@ -94,7 +94,7 @@ class OrderController extends Controller
             }
         }
 
-        $data['customer_total'] = ($item->price+$item->calculateAdminFees()) * $quantity;
+        $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * $quantity;
         $order = BookingTrip::create($data);
         if (count($order_fees) > 0) {
             $order_fees['order_id'] = $order->id;
@@ -128,7 +128,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $result = $payment->pay($order->total+$order->trip?->calculateAdminFees());
+            $result = $payment->pay($order->customer_total);
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
@@ -149,6 +149,8 @@ class OrderController extends Controller
                 return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
             }
         }
+        
+
 
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
@@ -157,6 +159,7 @@ class OrderController extends Controller
         $data['total'] = $item->price;
         $data['vendor_id'] = $item->vendor_id;
         $data['effectivene_id'] = $request->effectivene_id;
+        $data['customer_total'] = ($item->price + $item->calculateAdminFees());
 
         $admin_value = 0;
         $order_fees = [];
@@ -207,7 +210,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $tap = $payment->pay($item->price+$item->calculateAdminFees());
+            $tap = $payment->pay($item->customer_total);
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
@@ -230,7 +233,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $result = $payment->pay($order->total+$order->effectivene?->calculateAdminFees());
+            $result = $payment->pay($order->customer_total);
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
@@ -247,7 +250,7 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
-        $data['total'] = $item->price*($request->quantity??1);
+        $data['total'] = $item->price * ($request->quantity ?? 1);
         $data['vendor_id'] = $item->vendor_id;
         $data['gift_id'] = $request->gift_id;
         $data['lat'] = $request->lat;
@@ -306,7 +309,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'gift']);
-            $tap = $payment->pay($item->price+$item->calculateAdminFees());
+            $tap = $payment->pay($item->customer_total);
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
@@ -329,7 +332,7 @@ class OrderController extends Controller
         if ($order->payment_status != 'CAPTURED') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'gift']);
-            $result = $payment->pay($order->total+$order->gift?->calculateAdminFees());
+            $result = $payment->pay($order->customer_total);
             if ($result['success']) {
                 $order->payment_id = $result['data']['id'];
                 $order->save();
@@ -342,80 +345,80 @@ class OrderController extends Controller
     }
     public function bookings(Request $request)
     {
-        
-       $data['curren']['gifts'] = BookingGift::with(['gift' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
 
-$data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['curren']['gifts'] = BookingGift::with(['gift' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['curren']['trips'] = BookingTrip::with(['trip' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['curren']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['ended']['gifts'] = BookingGift::with(['gift' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['curren']['trips'] = BookingTrip::with(['trip' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['ended']['gifts'] = BookingGift::with(['gift' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['ended']['trips'] = BookingTrip::with(['trip' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['ended']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['compleated']['gifts'] = BookingGift::with(['gift' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['ended']['trips'] = BookingTrip::with(['trip' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->whereIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['compleated']['gifts'] = BookingGift::with(['gift' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-$data['compleated']['trips'] = BookingTrip::with(['trip' => function ($query) {
-    $query->withTrashed()->with('city');
-},'vendor' => function ($query) {
-    $query->withTrashed();
-}])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
-    $item->total = (String)$item->customer_total;
-});
+        $data['compleated']['effectivenes'] = BookingEffectivene::with(['effectivene' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
 
-return response()->apiSuccess($data);
+        $data['compleated']['trips'] = BookingTrip::with(['trip' => function ($query) {
+            $query->withTrashed()->with('city');
+        },'vendor' => function ($query) {
+            $query->withTrashed();
+        }])->where('status', Order::STATUS_COMPLEALED)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+            $item->total = (string)$item->customer_total;
+        });
+
+        return response()->apiSuccess($data);
 
 
     }
