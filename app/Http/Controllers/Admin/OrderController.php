@@ -153,7 +153,7 @@ class OrderController extends Controller
                  $query->where('user_id', $request->user_id);
              }
          })
-        ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+        ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingGift' as source"))
         ->union(
             BookingTrip::with(['user','vendor'])
             ->where(function ($query) use ($request) {
@@ -162,7 +162,7 @@ class OrderController extends Controller
                 }
             })
                 ->whereIn('status', (array) $request->status)
-                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+                ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingTrip' as source"))
         )
         ->union(
             BookingEffectivene::with(['user','vendor'])
@@ -172,7 +172,7 @@ class OrderController extends Controller
                  }
              })
                 ->whereIn('status', (array) $request->status)
-                ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+                ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingEffectivene' as source"))
         )
         ->orderBy('created_at', 'desc')
         ->get();

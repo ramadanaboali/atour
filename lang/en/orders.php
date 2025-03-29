@@ -94,8 +94,10 @@ return [
     'free_cancelation' => 'Free Cancellation',
     'pay_later' => 'Pay Later',
     'trips' => 'Trips',
-        'status'=>"الحالة",
+    'status'=>"الحالة",
     'type'=>"النوع",
+    'vendor_total'=>'الاجمالى للمورد',
+    'customer_total'=>'المدفوع من العميل',
 
 
 ];
