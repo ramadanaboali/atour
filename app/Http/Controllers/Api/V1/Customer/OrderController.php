@@ -120,7 +120,7 @@ class OrderController extends Controller
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->apiSuccess($order);
+        return response()->apiSuccess();
     }
     public function tripPay($id)
     {
