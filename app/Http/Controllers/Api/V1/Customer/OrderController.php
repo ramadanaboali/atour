@@ -246,7 +246,10 @@ class OrderController extends Controller
     }
     public function bookingGifts(BookingGiftRequest $request)
     {
+        
+        
         $item = Gift::findOrFail($request->gift_id);
+        $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * ($request->quantity ?? 1);
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
