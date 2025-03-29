@@ -15,13 +15,13 @@ class TripResourceCustomer extends JsonResource
         if (count($this->rates)) {
             $total_rates = $this->rates->sum('rate') / count($this->rates);
         }
-        $price = round($this->price + $this->calculateAdminFees(),2);
 
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'price' => (double)$price,
+            'price' => $this->price,
+            'customer_price' => $this->customer_price,
             'start_point' => $this->start_point,
             'end_point' => $this->end_point,
             'trip_requirements' => RequirementResource::collection($this->requirements),

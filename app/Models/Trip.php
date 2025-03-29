@@ -212,7 +212,7 @@ public function calculateAdminFees()
             : ($feeSetting->admin_fee_value * $this->price) / 100;
     }
 
-    return round($price,2);
+    return round($price, 2);
 }
 
 }

@@ -21,6 +21,8 @@ class TripResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
+            'customer_price' => $this->customer_price,
+
             'start_point' => $this->start_point,
             'end_point' => $this->end_point,
             'trip_requirements' => RequirementResource::collection($this->requirements),
