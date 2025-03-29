@@ -34,7 +34,7 @@ class Gift extends Model
         'created_by',
         'updated_by',
     ];
-    protected $appends = ['title','photo','description','location'];
+    protected $appends = ['title','photo','description','location','customer_price'];
 
     public function getPhotoAttribute()
     {
@@ -95,6 +95,15 @@ class Gift extends Model
     public function attachments()
     {
         return $this->hasMany(Attachment::class, 'model_id')->where('model_type', 'gift');
+    }
+       public function getCustomerPriceAttribute()
+    {
+        if (!array_key_exists('price', $this->attributes) ) {
+            return 0;
+        }
+
+return $this->attributes['price'] + $this->calculateAdminFees();
+        
     }
 
    public function calculateAdminFees()

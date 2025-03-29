@@ -15,8 +15,8 @@ class TripResourceCustomer extends JsonResource
         if (count($this->rates)) {
             $total_rates = $this->rates->sum('rate') / count($this->rates);
         }
-        $price = $this->price + $this->calculateAdminFees();
-        
+        $price = round($this->price + $this->calculateAdminFees(),2);
+
         return [
             'id' => $this->id,
             'title' => $this->title,

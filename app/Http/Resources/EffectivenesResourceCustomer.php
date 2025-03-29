@@ -10,7 +10,7 @@ class EffectivenesResourceCustomer extends JsonResource
     public function toArray($request)
     {
         $favourit = Favorite::where('model_type', 'like', 'effectivene%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
-        $price = $this->price + $this->calculateAdminFees();
+        $price = round($this->price + $this->calculateAdminFees(),2);
 
         return [
             'id' => $this->id,

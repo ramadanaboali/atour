@@ -12,7 +12,7 @@ class GiftResourceCustomer extends JsonResource
     {
         $favourit = Favorite::where('model_type', 'like', 'gift%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
 
-        $price = $this->price + $this->calculateAdminFees();
+        $price = round($this->price + $this->calculateAdminFees(),2);
 
         return [
             'id' => $this->id,

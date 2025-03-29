@@ -37,7 +37,7 @@ class Effectivenes extends Model
         'created_by',
         'updated_by',
     ];
-    protected $appends = ['title','photo','description'];
+    protected $appends = ['title','photo','description','customer_price'];
 
 
     public function getPhotoAttribute()
@@ -100,6 +100,14 @@ class Effectivenes extends Model
         return $this->hasMany(BookingEffectivene::class, 'effectivene_id');
     }
 
+       public function getCustomerPriceAttribute()
+    {
+        if (!array_key_exists('price', $this->attributes) ) {
+            return 0;
+        }
+        return $this->attributes['price']+$this->calculateAdminFees();
+        
+    }
 public function calculateAdminFees()
 {
     $price = 0;

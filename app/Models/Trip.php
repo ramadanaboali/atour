@@ -52,7 +52,7 @@ class Trip extends Model
         'available_days' => 'array',
         'steps_list' => 'array',
     ];
-    protected $appends = ['title', 'photo', 'description', 'start_point', 'end_point', 'text', 'program_time'];
+    protected $appends = ['title', 'photo', 'description', 'start_point', 'end_point', 'text', 'program_time','customer_price'];
 
     public function getPhotoAttribute()
     {
@@ -80,6 +80,14 @@ class Trip extends Model
         } else {
             return $this->attributes['program_time_ar'] ?? $this->attributes['program_time_en'];
         }
+    }
+    public function getCustomerPriceAttribute()
+    {
+        if (!array_key_exists('price', $this->attributes) ) {
+            return 0;
+        }
+        return $this->attributes['price']+$this->calculateAdminFees();
+        
     }
     public function getTextAttribute()
     {
