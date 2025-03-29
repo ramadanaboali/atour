@@ -210,7 +210,7 @@ class OrderController extends Controller
         if ($request->payment_way == 'online') {
             $payment = new TapService();
             $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $tap = $payment->pay($item->customer_total);
+            $tap = $payment->pay($order->customer_total);
             if ($tap['success']) {
                 $order->payment_id = $tap['data']['id'];
                 $order->save();
