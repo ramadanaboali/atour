@@ -19,7 +19,7 @@ class GiftResourceCustomer extends JsonResource
             'description' => $this->description,
             'location' => $this->location,
             'price' => $this->price,
-            'customer_price' => $this->customer_price,  
+            'customer_price' => round($this->customer_price,2),
             'free_cancelation' => $this->free_cancelation,
             'pay_later' => $this->pay_later,
             'rate' => $this->rate,
