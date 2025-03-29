@@ -131,7 +131,7 @@ return $this->attributes['price'] + $this->calculateAdminFees();
             : ($feeSetting->admin_fee_value * $this->price) / 100;
     }
 
-    return $price;
+    return round($price,2);
 }
 
 
