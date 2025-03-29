@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/setup7', [AuthController::class, 'setup7']);
         Route::post('/login', [AuthController::class, 'login']);
 
+        Route::post('reset', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
         Route::post('reset-password', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
         Route::post('confirm-reset', [App\Http\Controllers\Api\V1\AuthController::class, 'confirmReset']);
         Route::post('check-code', [App\Http\Controllers\Api\V1\AuthController::class, 'checkCode']);
