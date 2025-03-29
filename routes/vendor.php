@@ -43,10 +43,10 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('/setup7', [AuthController::class, 'setup7']);
         Route::post('/login', [AuthController::class, 'login']);
 
-        Route::post('reset', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
-        Route::post('reset-password', [App\Http\Controllers\Api\V1\AuthController::class, 'resetPassword']);
-        Route::post('confirm-reset', [App\Http\Controllers\Api\V1\AuthController::class, 'confirmReset']);
-        Route::post('check-code', [App\Http\Controllers\Api\V1\AuthController::class, 'checkCode']);
+        Route::post('reset', [AuthController::class, 'resetPassword']);
+        Route::post('reset-password', [AuthController::class, 'resetPassword']);
+        Route::post('confirm-reset', [AuthController::class, 'confirmReset']);
+        Route::post('check-code', [AuthController::class, 'checkCode']);
         Route::post('register', [App\Http\Controllers\Api\V1\AuthController::class, 'register']);
         Route::post('verify', [App\Http\Controllers\Api\V1\AuthController::class, 'verify']);
         Route::get('privacy', [App\Http\Controllers\Api\V1\SettingController::class, 'privacy']);
@@ -143,6 +143,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('notifications', [VendorController::class, 'notifications']);
             Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
             Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
+            Route::post('/change-password', [AuthController::class, 'changePassword']);
 
         });
     });
