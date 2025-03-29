@@ -104,23 +104,23 @@ class OrderController extends Controller
             OrderFee::create($order_fees);
         }
 
-        if ($request->payment_way == 'online') {
-            $payment = new TapService();
-            $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $tap = $payment->pay($order->customer_total);
-            if ($tap['success']) {
-                $order->payment_id = $tap['data']['id'];
-                $order->save();
-            }
-            return response()->apiSuccess($tap);
-        }
+        // if ($request->payment_way == 'online') {
+        //     $payment = new TapService();
+        //     $payment->callback_url = route('callBack', ['type' => 'trip']);
+        //     $tap = $payment->pay($order->customer_total);
+        //     if ($tap['success']) {
+        //         $order->payment_id = $tap['data']['id'];
+        //         $order->save();
+        //     }
+        //     return response()->apiSuccess($tap);
+        // }
         $order = new OrderCustomerResource($order);
         try {
             OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-        return response()->apiSuccess();
+        return response()->apiSuccess($order);
     }
     public function tripPay($id)
     {
