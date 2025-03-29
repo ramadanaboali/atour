@@ -161,24 +161,24 @@ class HomeController extends Controller
     }
     public function searchByCity(Request $request, $city_id)
     {
-        $isApiRoute = $request->is('api/*'); // Check if the request comes from the 'api' routes file
+        // $isApiRoute = $request->is('api/*'); // Check if the request comes from the 'api' routes file
 
         $data = City::with(['trips', 'gifts', 'effectivenes'])->find($city_id);
 
-        if ($data && $isApiRoute) {
-            $data->trips->transform(function ($trip) {
-                $trip->price = $trip->price + $trip->calculateAdminFees(); // Update price
-                return $trip;
-            });
-            $data->gifts->transform(function ($gift) {
-                $gift->price = $gift->price + $gift->calculateAdminFees(); // Update price
-                return $gift;
-            });
-            $data->effectivenes->transform(function ($effectivene) {
-                $effectivene->price = $effectivene->price + $effectivene->calculateAdminFees(); // Update price
-                return $effectivene;
-            });
-        }
+        // if ($data && $isApiRoute) {
+        //     $data->trips->transform(function ($trip) {
+        //         $trip->price = $trip->price + $trip->calculateAdminFees(); // Update price
+        //         return $trip;
+        //     });
+        //     $data->gifts->transform(function ($gift) {
+        //         $gift->price = $gift->price + $gift->calculateAdminFees(); // Update price
+        //         return $gift;
+        //     });
+        //     $data->effectivenes->transform(function ($effectivene) {
+        //         $effectivene->price = $effectivene->price + $effectivene->calculateAdminFees(); // Update price
+        //         return $effectivene;
+        //     });
+        // }
 
         return apiResponse(true, $data, null, null, 200);
     }
