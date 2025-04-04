@@ -309,12 +309,14 @@
 </script>
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
-  window.OneSignalDeferred = window.OneSignalDeferred || [];
-  OneSignalDeferred.push(async function(OneSignal) {
-    await OneSignal.init({
-      appId: "3ef5e7f1-c5f5-4d5d-b6d2-ff417a361369",
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+            appId: "4fd9fbd7-7f06-4dc6-8b67-088278aeb1b0"
+        , });
     });
-  });
+
+
 
     function fetchNotifications() {
         $.get("{{ url('/api/notifications') }}", function(data) {
