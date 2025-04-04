@@ -9,7 +9,9 @@
         Try to login using email and password
 
         <br>
+        <br>
         email : <strong>{{ $email }}</strong>
+        <br>
         <br>
         password : <strong>{{ $password }}</strong></p>
     <p>Please change your password after logging in.</p>

@@ -430,8 +430,31 @@ class OrderController extends Controller
     {
         $payment = new TapService();
         $result = $payment->callBack($request->tap_id, $type);
+        $order=null;
+        $message = "";
+        if($type=='gift'){
+            $order = BookingGift::with('gift')->where('payment_id', $result['data']['id'])->first();
+            $message = __('api.new_gift_booking_code', ['item_name' => $order->gift?->title]);
+        }
+        elseif($type=='gift'){
+            $order = BookingTrip::with('trip')->where('payment_id', $result['data']['id'])->first();
+            $message = __('api.new_trip_booking_code', ['item_name' => $order->trip?->title]);
+        }
+        elseif($type=='effectivenes'){
+            $order = BookingEffectivene::with('effectivene')->where('payment_id', $result['data']['id'])->first();
+            $message = __('api.new_effectivnes_booking_code', ['item_name' => $order->effectivene?->title]);
+        }
+        if (!$order) {
+            return response()->apiFail(__('api.order_not_found_contact_us'));
+        }
         if ($result['success']) {
-            // return "success";
+            // return "success";            
+            try {
+                OneSignalService::sendToUser($order->vendor_id, __('api.new_order'), $message);
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            
             return response()->apiSuccess($result['data']);
         }
         // return "error";
