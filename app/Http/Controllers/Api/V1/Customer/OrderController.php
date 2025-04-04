@@ -430,7 +430,6 @@ class OrderController extends Controller
     {
         $payment = new TapService();
         $result = $payment->callBack($request->tap_id, $type);
-        Log::info()
         $order=null;
         $message = "";
         if($type=='gift'){
