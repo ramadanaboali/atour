@@ -2,12 +2,19 @@
 
 use App\Http\Controllers\Api\V1\Customer\OrderController;
 use App\Http\Controllers\HomeController;
+use App\Services\OneSignalService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
+
+
+Route::get('/test-notifications', function () {
+    $service =new OneSignalService();
+    $service->sendToAll('test', 'Test Body from system');
+});
 
 
 Route::get('/dashboard/notifications', function () {
