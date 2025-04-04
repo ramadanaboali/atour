@@ -84,7 +84,6 @@ Route::group(['prefix' => 'v1'], function () {
                 Log::info('vendor-player_id'.auth()->user()->id.'--'.$request->player_id);
 
                 PlayerId::updateOrCreate([
-                    'user_id' => auth()->user()->id,
                     'player_id' => $request->player_id,
                 ], [
                     'user_id' => auth()->user()->id,
