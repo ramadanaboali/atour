@@ -117,8 +117,8 @@ class AddController extends Controller
                 $item->image = $fileName;
                 $item->save();
             }
-            if($item->send_notification==1){
-                $users=User::where('type',User::TYPE_CLIENT)->get();
+            if($request->send_notification==1){
+                $users=User::get();
                 foreach($users as $user){
                    OneSignalService::sendToUser($user->id,$item->title,$item->description);
                 }
