@@ -110,6 +110,8 @@ Route::group(['prefix' => 'v1'], function () {
 
                 return response()->apiSuccess( 'Player ID saved successfully');
             });
+                Route::post('contact-us', [PageController::class, 'contactUs']);
+
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
             Route::get('trips', [HomeController::class,'trips']);
             Route::get('gifts', [HomeController::class,'gifts']);
