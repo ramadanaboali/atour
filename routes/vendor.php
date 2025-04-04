@@ -81,6 +81,7 @@ Route::group(['prefix' => 'v1'], function () {
                 $request->validate([
                     'player_id' => 'required|string',
                 ]);
+                Log::info('vendor-player_id'.auth()->user()->id.'--'.$request->player_id);
 
                 PlayerId::updateOrCreate([
                     'user_id' => auth()->user()->id,
