@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 
 use App\Services\OneSignalService;
+use Illuminate\Support\Facades\Log;
 
 Route::post('/send-notification', function (Request $request) {
     $request->validate([
@@ -99,7 +100,7 @@ Route::group(['prefix' => 'v1'], function () {
                 $request->validate([
                     'player_id' => 'required|string',
                 ]);
-
+                Log::info($request->player_id);
                 PlayerId::updateOrCreate([
                     'user_id' => auth()->user()->id,
                     'player_id' => $request->player_id,
