@@ -22,7 +22,7 @@ class BookingTrip extends Model
         'payment_status',
         'total',
         'customer_total',
-
+        'confirm_code',
         'trip_id',
         'vendor_id',
         'user_id',

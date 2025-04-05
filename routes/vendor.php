@@ -136,6 +136,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('pendding-orders', [OrderController::class, 'penddingRequests']);
             // Route::get('invoices', [OrderController::class, 'invoices']);
             Route::get('accept/{type}/{id}', [OrderController::class, 'acceptOrder']);
+            Route::get('confirm/{type}/{id}', [OrderController::class, 'confirmOrder']);
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
             Route::get('orders/{type}/{id}', [OrderController::class, 'showOrder']);
             Route::get('show-all/{type}', [OrderController::class, 'getAll']);

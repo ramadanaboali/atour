@@ -3,7 +3,7 @@
 return [
     'wallet_charged' => ' تم شحن رصيدك بقيمة :amount ورصيدك الان :wallet',
     'charged_before' => 'لقد تم شحن الكود من قبل',
-    'code_not_found' => 'عفوا هذا الكود غير موجود',
+    'code_not_found' => 'عفوا الكود غير موجود',
     'validation_error' => 'يوجد خطأ ما',
     'not_found' => 'غير موجود',
     'answered_before' => 'لقد قمت بالاجابة سابقا',
@@ -42,10 +42,13 @@ return [
     'trip_has_bookings' => 'هذه الرحلة بها حجوزات',
     'effectivene_has_bookings' => 'هذه الفاعلية بها حجوزات',
     'trip_compleated_cant_compleate_reservation' => 'عفوا وصلت للحد الاقصى من الافراد يمكنك الحجز فى معاد اخر',
-    'new_order'=>'لديك طلب جديد',
-    'new_trip_booking_code'=>'لديك حجز على رحلة :item_name',
-    'new_gift_booking_code'=>'لديك حجز للهدية   :item_name',
-    'new_effectivnes_booking_code'=>'لديك حجز على الفاعلية  :item_name',
-    'order_not_found_contact_us'=>'طلبك غير موجود يرجى الاتصال بنا'
+    'new_order' => 'لديك طلب جديد',
+    'new_trip_booking_code' => 'لديك حجز على رحلة :item_name',
+    'new_gift_booking_code' => 'لديك حجز للهدية   :item_name',
+    'new_effectivnes_booking_code' => 'لديك حجز على الفاعلية  :item_name',
+    'order_not_found_contact_us' => 'طلبك غير موجود يرجى الاتصال بنا',
+    'order_accepted' => 'تم قبول طلبك',
+    'order_confirmed_save_code' => 'تم قبول طلبك بنجاح يرجى الاحتفاظ بالكود :code لتأكيد الطلب',
+    'order_confirmed_success' => 'تم تأكيد الاستلام'
 
 ];

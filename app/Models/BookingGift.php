@@ -29,6 +29,7 @@ class BookingGift extends Model
         'vendor_id',
         'admin_value',
         'quantity',
+        'confirm_code',
         'admin_value_status'
     ];
 

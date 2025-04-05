@@ -447,7 +447,7 @@ class OrderController extends Controller
         if (!$order) {
             return response()->apiFail(__('api.order_not_found_contact_us'));
         }
-        // if ($result['success']) {
+        if ($result['success']) {
             // return "success";            
             try {
                 OneSignalService::sendToUser($order->vendor_id, __('api.new_order'), $message);
@@ -456,7 +456,7 @@ class OrderController extends Controller
             }
             
             return response()->apiSuccess($result['data']);
-        // }
+        }
         // return "error";
         return response()->apiFail($result['message']);
 
