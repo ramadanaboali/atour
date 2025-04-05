@@ -338,9 +338,9 @@ class SupplierController extends Controller
         if ($request->ajax()) {
             $data = DB::table('users')
                 ->where('users.type', User::TYPE_SUPPLIER)
-                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_gift, COALESCE(SUM(customer_total), 0) as sum_booking_gift FROM booking_gifts GROUP BY vendor_id) as gifts"), 'users.id', '=', 'gifts.vendor_id')
-                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_trib, COALESCE(SUM(customer_total), 0) as sum_booking_trib FROM booking_trips GROUP BY vendor_id) as trips"), 'users.id', '=', 'trips.vendor_id')
-                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_effectivenes, COALESCE(SUM(customer_total), 0) as sum_booking_effectivenes FROM booking_effectivenes GROUP BY vendor_id) as effects"), 'users.id', '=', 'effects.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_gift, COALESCE(SUM(customer_total), 0) as sum_booking_gift FROM booking_gifts where status=".Order::STATUS_COMPLEALED." GROUP BY vendor_id) as gifts"), 'users.id', '=', 'gifts.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_trib, COALESCE(SUM(customer_total), 0) as sum_booking_trib FROM booking_trips where status=".Order::STATUS_COMPLEALED." GROUP BY vendor_id) as trips"), 'users.id', '=', 'trips.vendor_id')
+                ->leftJoin(DB::raw("(SELECT vendor_id, COUNT(id) as count_booking_effectivenes, COALESCE(SUM(customer_total), 0) as sum_booking_effectivenes FROM booking_effectivenes where status=".Order::STATUS_COMPLEALED." GROUP BY vendor_id) as effects"), 'users.id', '=', 'effects.vendor_id')
                 ->leftJoin(DB::raw("(SELECT vendor_id, 
                     COALESCE(SUM(tax_value), 0) as total_tax_value,
                     COALESCE(SUM(payment_way_value), 0) as total_payment_way_value,
