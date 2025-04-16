@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Vendor\ServiceController;
 use App\Http\Controllers\Api\V1\Vendor\VendorController;
 use App\Models\PlayerId;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*

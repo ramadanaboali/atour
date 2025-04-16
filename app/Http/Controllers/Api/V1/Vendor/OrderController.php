@@ -162,6 +162,7 @@ class OrderController extends Controller
         $order->save();
         return response()->apiSuccess($order);
     }
+    
     public function confirmOrder($type, $id)
     {
         if (request()->code) {

@@ -16,12 +16,11 @@ use App\Models\Trip;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Str;
 use Yajra\DataTables\Facades\DataTables;
 
 class SupplierController extends Controller
