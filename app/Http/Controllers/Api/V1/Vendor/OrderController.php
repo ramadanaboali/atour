@@ -168,6 +168,31 @@ class OrderController extends Controller
         if (request()->code) {
             $code = request()->code;
             if ($type == 'gift') {
+                $order = BookingGift::findOrFail($id);
+            } elseif ($type == 'effectivene') {
+                $order = BookingEffectivene::findOrFail($id);
+            } else {
+                $order = BookingTrip::findOrFail($id);
+            }
+            if (!$order) {
+                return response()->apiFail(__('api.order_not_exist'));
+            }
+            try {
+                OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            $order->status = Order::STATUS_ONPROGRESS;
+            $order->save();
+            return response()->apiSuccess($order);
+        }
+        return response()->apiFail(__('api.code_not_found'));
+    }
+    public function deliverOrder($type, $id)
+    {
+        if (request()->code) {
+            $code = request()->code;
+            if ($type == 'gift') {
                 $order = BookingGift::where('gift_id',$id)->where('confirm_code',$code)->first();
             } elseif ($type == 'effectivene') {
                 $order = BookingEffectivene::where('effectivene_id',$id)->where('confirm_code',$code)->first();
@@ -182,7 +207,7 @@ class OrderController extends Controller
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
-            $order->status = Order::STATUS_ONPROGRESS;
+            $order->status = Order::STATUS_COMPLEALED;
             $order->save();
             return response()->apiSuccess($order);
         }
