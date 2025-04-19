@@ -166,14 +166,15 @@ class OrderController extends Controller
     public function confirmOrder($type, $id)
     {
         if (request()->code) {
+            $code = request()->code;
             if ($type == 'gift') {
-                $order = BookingGift::findOrFail($id);
+                $order = BookingGift::where('gift_id',$id)->where('confirm_code',$code)->first();
             } elseif ($type == 'effectivene') {
-                $order = BookingEffectivene::findOrFail($id);
+                $order = BookingEffectivene::where('effectivene_id',$id)->where('confirm_code',$code)->first();
             } else {
-                $order = BookingTrip::findOrFail($id);
+                $order = BookingTrip::where('trip_id',$id)->where('confirm_code',$code)->first();
             }
-            if ($order->confirm_code != request()->code) {
+            if (!$order) {
                 return response()->apiFail(__('api.code_error'));
             }
             try {

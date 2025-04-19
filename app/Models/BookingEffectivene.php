@@ -21,7 +21,7 @@ class BookingEffectivene extends Model
         'user_id',
         'vendor_id',
         'admin_value',
-                'confirm_code',
+            'confirm_code',
         'admin_value_status'
     ];
 
