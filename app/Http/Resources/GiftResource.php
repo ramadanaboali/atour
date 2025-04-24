@@ -10,7 +10,9 @@ class GiftResource extends JsonResource
 {
     public function toArray($request)
     {
-        $favourit = Favorite::where('model_type','like', 'gift%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+        $favourit = Favorite::where('model_type', 'like', 'gift%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+
+        $pay_later = $this->vendor?->pay_on_deliver ? ($this->pay_later ? 1 : 0) : 0;
 
         return [
             'id' => $this->id,
@@ -20,7 +22,7 @@ class GiftResource extends JsonResource
             'price' => $this->price,
             'customer_price' => $this->customer_price,
             'free_cancelation' => $this->free_cancelation,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'rate' => $this->rate,
             'cover' => $this->photo,
             'active' => $this->active,
@@ -32,10 +34,10 @@ class GiftResource extends JsonResource
             'city' => new CityResource($this->city),
             'vendor' => new UserResource($this->vendor),
             'is_favourit' => $favourit ? 1 : 0,
-            'booking_count' => bookingCount($this->id,'gift'),
-            'total_amounts' => totalAmount($this->id,'gift'),
-            'use_coupon' => useCoupon($this->id,'gift'),
-            'use_offers' => useOffers($this->id,'gift'),
+            'booking_count' => bookingCount($this->id, 'gift'),
+            'total_amounts' => totalAmount($this->id, 'gift'),
+            'use_coupon' => useCoupon($this->id, 'gift'),
+            'use_offers' => useOffers($this->id, 'gift'),
             'title_en' => $this->title_en,
             'title_ar' => $this->title_ar,
             'description_en' => $this->description_en,

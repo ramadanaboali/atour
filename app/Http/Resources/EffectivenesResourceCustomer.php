@@ -11,6 +11,8 @@ class EffectivenesResourceCustomer extends JsonResource
     {
         $favourit = Favorite::where('model_type', 'like', 'effectivene%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
 
+        $pay_later = $this->vendor?->pay_on_deliver ? ($this->pay_later ? 1 : 0) : 0;
+
         return [
             'id' => $this->id,
             'title_en' => $this->title_en,
@@ -33,7 +35,7 @@ class EffectivenesResourceCustomer extends JsonResource
             'cover' => $this->photo,
             'city_id' => $this->city_id,
             'free_cancelation' => $this->free_cancelation,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'active' => $this->active,
             'created_by' => $this->createdBy?->name,
             'vendor' => new UserResource($this->vendor),

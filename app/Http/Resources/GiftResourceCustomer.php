@@ -12,16 +12,16 @@ class GiftResourceCustomer extends JsonResource
     {
         $favourit = Favorite::where('model_type', 'like', 'gift%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
 
-
+        $pay_later = $this->vendor?->pay_on_deliver ?( $this->pay_later ? 1 : 0) : 0;
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'location' => $this->location,
             'price' => $this->price,
-            'customer_price' => $this->customer_price,  
+            'customer_price' => $this->customer_price,
             'free_cancelation' => $this->free_cancelation,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'rate' => $this->rate,
             'cover' => $this->photo,
             'active' => $this->active,

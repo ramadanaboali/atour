@@ -9,7 +9,9 @@ class EffectivenesResource extends JsonResource
 {
     public function toArray($request)
     {
-        $favourit = Favorite::where('model_type','like', 'effectivene%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+        $favourit = Favorite::where('model_type', 'like', 'effectivene%')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
+
+        $pay_later = $this->vendor?->pay_on_deliver ? ($this->pay_later ? 1 : 0) : 0;
 
         return [
             'id' => $this->id,
@@ -22,28 +24,28 @@ class EffectivenesResource extends JsonResource
             'price' => $this->price,
             'customer_price' => $this->customer_price,
             'people' => $this->people,
-            'from_date'=>$this->from_date,
-            'to_date'=>$this->to_date,
-            'from_time'=>$this->from_time,
-            'to_time'=>$this->to_time,
-            'location'=>$this->location,
-            'lat'=>$this->lat,
-            'long'=>$this->long,
+            'from_date' => $this->from_date,
+            'to_date' => $this->to_date,
+            'from_time' => $this->from_time,
+            'to_time' => $this->to_time,
+            'location' => $this->location,
+            'lat' => $this->lat,
+            'long' => $this->long,
             'rate' => $this->rate,
             'cover' => $this->photo,
             'city_id' => $this->city_id,
             'free_cancelation' => $this->free_cancelation,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'active' => $this->active,
             'created_by' => $this->createdBy?->name,
             'vendor' => new UserResource($this->vendor),
             'city' => new CityResource($this->city),
             'attachments' => AttachmentResource::collection($this->attachments),
             'is_favourit' => $favourit ? 1 : 0,
-             'booking_count' => bookingCount($this->id,'effectivenes'),
-            'total_amounts' => totalAmount($this->id,'effectivenes'),
-            'use_coupon' => useCoupon($this->id,'effectivenes'),
-            'use_offers' => useOffers($this->id,'effectivenes'),
+             'booking_count' => bookingCount($this->id, 'effectivenes'),
+            'total_amounts' => totalAmount($this->id, 'effectivenes'),
+            'use_coupon' => useCoupon($this->id, 'effectivenes'),
+            'use_offers' => useOffers($this->id, 'effectivenes'),
 
         ];
     }

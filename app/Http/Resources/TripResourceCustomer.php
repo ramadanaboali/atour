@@ -15,6 +15,9 @@ class TripResourceCustomer extends JsonResource
         if (count($this->rates)) {
             $total_rates = $this->rates->sum('rate') / count($this->rates);
         }
+        
+$pay_later = $this->vendor?->pay_on_deliver ? ($this->pay_later ? 1 : 0) : 0;
+
 
         return [
             'id' => $this->id,
@@ -35,7 +38,7 @@ class TripResourceCustomer extends JsonResource
             'free_cancelation' => $this->free_cancelation,
             'available_days' => $this->available_days,
             'available_times' => $this->available_times,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'rates' => RateResource::collection($this->rates),
             'total_rates' => $total_rates,
             'cover' => $this->photo,

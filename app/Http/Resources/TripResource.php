@@ -13,9 +13,12 @@ class TripResource extends JsonResource
 
         $favourit = Favorite::where('model_type', 'trip')->where('model_id', $this->id)->where('user_id', auth()->user()->id ?? 0)->first();
         $total_rates = 0;
-        if(count($this->rates)){
-            $total_rates=$this->rates->sum('rate')/count($this->rates);
+        if (count($this->rates)) {
+            $total_rates = $this->rates->sum('rate') / count($this->rates);
         }
+
+        $pay_later = $this->vendor?->pay_on_deliver ? ($this->pay_later ? 1 : 0) : 0;
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -31,12 +34,12 @@ class TripResource extends JsonResource
             'start_lat' => $this->start_lat,
             'end_long' => $this->end_long,
             'end_lat' => $this->end_lat,
-            'steps_list' => $this->steps_list??[],
+            'steps_list' => $this->steps_list ?? [],
             'people' => $this->people,
             'free_cancelation' => $this->free_cancelation,
             'available_days' => $this->available_days,
             'available_times' => $this->available_times,
-            'pay_later' => $this->pay_later,
+            'pay_later' => $pay_later,
             'rates' => RateResource::collection($this->rates),
             'total_rates' => $total_rates,
             'cover' => $this->photo,
@@ -49,10 +52,10 @@ class TripResource extends JsonResource
             'vendor' => new UserResource($this->vendor),
             'offers' => $this->offers,
             'is_favourit' => $favourit ? 1 : 0,
-            'booking_count' => bookingCount($this->id,'trip'),
-            'total_amounts' => totalAmount($this->id,'trip'),
-            'use_coupon' => useCoupon($this->id,'trip'),
-            'use_offers' => useOffers($this->id,'trip'),
+            'booking_count' => bookingCount($this->id, 'trip'),
+            'total_amounts' => totalAmount($this->id, 'trip'),
+            'use_coupon' => useCoupon($this->id, 'trip'),
+            'use_offers' => useOffers($this->id, 'trip'),
             'title_en' => $this->title_en,
             'title_ar' => $this->title_ar,
             'description_en' => $this->description_en,
