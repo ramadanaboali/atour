@@ -30,6 +30,7 @@ class BookingGift extends Model
         'admin_value',
         'quantity',
         'confirm_code',
+        'cancel_date',
         'admin_value_status'
     ];
 

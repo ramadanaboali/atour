@@ -483,6 +483,9 @@ class OrderController extends Controller
         } else {
             $order = BookingTrip::findOrFail($id);
         }
+        
+        $order->cancel_date = date('Y-m-d H:-i:s');
+
         $order->status = Order::STATUS_CANCELED;
         $order->save();
         return response()->apiSuccess($order);

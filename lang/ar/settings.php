@@ -29,5 +29,7 @@ return [
     'google_play' => 'رابط الاندرونيد',
     'app_store' => 'رابط الايفون',
     'tiktok' => 'تيك توك',
+    'linkedin' => 'لينكد ان',
+    'youtube' => 'اليوتيوب',
     'xxxxxx' => 'xxxxxx',
 ];

@@ -24,6 +24,7 @@ class BookingTrip extends Model
         'customer_total',
         'confirm_code',
         'trip_id',
+        'cancel_date',
         'vendor_id',
         'user_id',
         'admin_value',

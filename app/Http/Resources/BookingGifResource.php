@@ -33,6 +33,8 @@ class BookingGifResource extends JsonResource
             'program_name' => $this->program?->title,
             'trip_name' => $this->trip?->title,
             'client_name' => $this->client?->name,
+            'created_at'=>$this->created_at?->format('Y-m-d H:i:s'),
+            'cancel_date'=>$this->cancel_date,
         ];
     }
 

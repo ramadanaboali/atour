@@ -120,6 +120,24 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-1 col-md-6 @error('general_youtube_url') is-invalid @enderror">
+                                <?php $general_youtube_url = $items->where('key', 'general_youtube_url')->first()->value ?? old('general_youtube_url'); ?>
+                            <label class="form-label" for="general_youtube_url">{{ __('settings.youtube') }}</label>
+                            <input type="text" name="general_youtube_url" id="general_youtube_url" class="form-control" placeholder=""
+                                   value="{{ $general_youtube_url ?? old('general_youtube_url') }}"/>
+                            @error('general_youtube_url')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-1 col-md-6 @error('general_linkedin_url') is-invalid @enderror">
+                                <?php $general_linkedin_url = $items->where('key', 'general_linkedin_url')->first()->value ?? old('general_linkedin_url'); ?>
+                            <label class="form-label" for="general_linkedin_url">{{ __('settings.linkedin') }}</label>
+                            <input type="text" name="general_linkedin_url" id="general_linkedin_url" class="form-control" placeholder=""
+                                   value="{{ $general_linkedin_url ?? old('general_linkedin_url') }}"/>
+                            @error('general_linkedin_url')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-1 col-md-6 @error('general_twitter') is-invalid @enderror">
                                 <?php $generalTwitter = $items->where('key', 'general_twitter')->first()->value ?? old('general_twitter'); ?>
                             <label class="form-label" for="general_twitter">{{ __('settings.twitter') }}</label>

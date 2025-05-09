@@ -66,6 +66,8 @@ class SettingController extends Controller
             'footer_instagram' => $items->where('key', 'footer_instagram')->first()->value ?? '',
             'footer_snapchat' => $items->where('key', 'footer_snapchat')->first()->value ?? '',
             'footer_tiktok' => $items->where('key', 'footer_tiktok')->first()->value ?? '',
+            'general_youtube_url' => $items->where('key', 'general_youtube_url')->first()->value ?? '',
+            'general_linkedin_url' => $items->where('key', 'general_linkedin_url')->first()->value ?? '',
             'footer_google_play' => $items->where('key', 'footer_google_play')->first()->value ?? '',
             'footer_app_store' => $items->where('key', 'footer_app_store')->first()->value ?? '',
             'email' => $items->where('key', 'general_email')->first()->value ?? '',

@@ -29,6 +29,7 @@
                         <th>{{ __('orders.client') }}</th>
                         <th>{{ __('orders.vendor') }}</th>
                         <th>{{ __('orders.order_date') }}</th>
+                        <th>{{ __('orders.cancel_date') }}</th>
                         <th>{{ __('orders.vendor_total') }}</th>
                         <th>{{ __('orders.customer_total') }}</th>
                         <th>{{ __('admin.admin_value') }}</th>
@@ -77,6 +78,7 @@
                 {data: 'client', name: 'client',orderable: false},
                 {data: 'vendor', name: 'vendor',orderable: false},
                 {data: 'created_at', name: 'created_at'},
+                {data: 'cancel', name: 'cancel'},
                 {data: 'total', name: 'total'},
                 {data: 'customer_total', name: 'customer_total'},
                 {data: 'admin_value', name: 'admin_value'},
