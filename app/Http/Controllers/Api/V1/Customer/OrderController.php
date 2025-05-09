@@ -476,6 +476,10 @@ class OrderController extends Controller
 
     public function cancelOrder($type, $id)
     {
+        Log::info('sss');
+        Log::info($type);
+        Log::info($id);
+        Log::info('sss');
         if ($type == 'gift') {
             $order = BookingGift::findOrFail($id);
         } elseif ($type == 'effectivene') {
