@@ -90,6 +90,7 @@ function getNextBookingDate($bookingDay)
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
+        $data['booking_date'] = $booking_date;
         $data['payment_way'] = $request->payment_way;
 
         $data['total'] = $item->price * $quantity;
