@@ -150,6 +150,9 @@ function getNextBookingDate($bookingDay)
                 $order->save();
             }
             return response()->apiSuccess($tap);
+        }else{
+            $order->payment_status = 'CAPTURED';
+            $order->save();
         }
         $order = new OrderCustomerResource($order);
         try {
