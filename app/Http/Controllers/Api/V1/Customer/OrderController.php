@@ -44,6 +44,7 @@ class OrderController extends Controller
 
     public function bookingTrip(BookingTripRequest $request)
     {
+        Log::info(json_encode($request->all()));
         $item = Trip::findOrFail($request->trip_id);
         $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $request->booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
         if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
