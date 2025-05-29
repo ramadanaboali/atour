@@ -44,36 +44,36 @@ class OrderController extends Controller
     }
 
 
-    
 
-function getNextBookingDate($bookingDay)
-{
-    // Normalize input
-    $bookingDay = strtolower($bookingDay);
 
-    // Get today
-    $today = Carbon::today();
+    public function getNextBookingDate($bookingDay)
+    {
+        // Normalize input
+        $bookingDay = strtolower($bookingDay);
 
-    // Map days to Carbon constants
-    $daysMap = [
-        'sunday'    => Carbon::SUNDAY,
-        'monday'    => Carbon::MONDAY,
-        'tuesday'   => Carbon::TUESDAY,
-        'wednesday' => Carbon::WEDNESDAY,
-        'thursday'  => Carbon::THURSDAY,
-        'friday'    => Carbon::FRIDAY,
-        'saturday'  => Carbon::SATURDAY,
-    ];
+        // Get today
+        $today = Carbon::today();
 
-    if (!array_key_exists($bookingDay, $daysMap)) {
-        throw new Exception("Invalid booking day: $bookingDay");
+        // Map days to Carbon constants
+        $daysMap = [
+            'sunday'    => Carbon::SUNDAY,
+            'monday'    => Carbon::MONDAY,
+            'tuesday'   => Carbon::TUESDAY,
+            'wednesday' => Carbon::WEDNESDAY,
+            'thursday'  => Carbon::THURSDAY,
+            'friday'    => Carbon::FRIDAY,
+            'saturday'  => Carbon::SATURDAY,
+        ];
+
+        if (!array_key_exists($bookingDay, $daysMap)) {
+            throw new Exception("Invalid booking day: $bookingDay");
+        }
+
+        // Get the next occurrence of that day
+        $bookingDate = $today->next($daysMap[$bookingDay]);
+
+        return $bookingDate->toDateString(); // returns in Y-m-d format
     }
-
-    // Get the next occurrence of that day
-    $bookingDate = $today->next($daysMap[$bookingDay]);
-
-    return $bookingDate->toDateString(); // returns in Y-m-d format
-}
 
     public function bookingTrip(BookingTripRequest $request)
     {
@@ -153,7 +153,7 @@ function getNextBookingDate($bookingDay)
                 $order->save();
             }
             return response()->apiSuccess($tap);
-        }else{
+        } else {
             $order->payment_status = 'CAPTURED';
             $order->save();
         }
@@ -186,13 +186,18 @@ function getNextBookingDate($bookingDay)
     public function bookingEffectivenes(BookingEffectivenesRequest $request)
     {
         $item = Effectivenes::findOrFail($request->effectivene_id);
+
+        if ($item->vendor?->active == 0) {
+            return response()->apiFail(__('api.vendor_not_active'));
+        }
+
         if ($item->people) {
             $booking_count = BookingEffectivene::where('effectivene_id', $request->effectivene_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->count();
             if (($booking_count + 1) > $item->people) {
                 return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
             }
         }
-        
+
 
 
         $data['user_id'] = auth()->user()->id;
@@ -289,9 +294,14 @@ function getNextBookingDate($bookingDay)
     }
     public function bookingGifts(BookingGiftRequest $request)
     {
-        
-        
+
+
         $item = Gift::findOrFail($request->gift_id);
+
+        if ($item->vendor?->active == 0) {
+            return response()->apiFail(__('api.vendor_not_active'));
+        }
+
         $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * ($request->quantity ?? 1);
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
@@ -473,17 +483,15 @@ function getNextBookingDate($bookingDay)
     {
         $payment = new TapService();
         $result = $payment->callBack($request->tap_id, $type);
-        $order=null;
+        $order = null;
         $message = "";
-        if($type=='gift'){
+        if ($type == 'gift') {
             $order = BookingGift::with('gift')->where('payment_id', $result['data']['id'])->first();
             $message = __('api.new_gift_booking_code', ['item_name' => $order->gift?->title]);
-        }
-        elseif($type=='gift'){
+        } elseif ($type == 'gift') {
             $order = BookingTrip::with('trip')->where('payment_id', $result['data']['id'])->first();
             $message = __('api.new_trip_booking_code', ['item_name' => $order->trip?->title]);
-        }
-        elseif($type=='effectivenes'){
+        } elseif ($type == 'effectivenes') {
             $order = BookingEffectivene::with('effectivene')->where('payment_id', $result['data']['id'])->first();
             $message = __('api.new_effectivnes_booking_code', ['item_name' => $order->effectivene?->title]);
         }
@@ -491,13 +499,13 @@ function getNextBookingDate($bookingDay)
             return response()->apiFail(__('api.order_not_found_contact_us'));
         }
         if ($result['success']) {
-            // return "success";            
+            // return "success";
             try {
                 OneSignalService::sendToUser($order->vendor_id, __('api.new_order'), $message);
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
-            
+
             return response()->apiSuccess($result['data']);
         }
         // return "error";
@@ -530,7 +538,7 @@ function getNextBookingDate($bookingDay)
         } else {
             $order = BookingTrip::findOrFail($id);
         }
-        
+
         $order->cancel_date = date('Y-m-d H:-i:s');
 
         $order->status = Order::STATUS_CANCELED;
