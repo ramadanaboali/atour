@@ -19,6 +19,7 @@ use App\Models\Trip;
 use App\Models\OrderFee;
 use App\Services\OneSignalService;
 use App\Services\TapService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,11 +43,45 @@ class OrderController extends Controller
         return response()->apiSuccess($data);
     }
 
+
+    
+
+function getNextBookingDate($bookingDay)
+{
+    // Normalize input
+    $bookingDay = strtolower($bookingDay);
+
+    // Get today
+    $today = Carbon::today();
+
+    // Map days to Carbon constants
+    $daysMap = [
+        'sunday'    => Carbon::SUNDAY,
+        'monday'    => Carbon::MONDAY,
+        'tuesday'   => Carbon::TUESDAY,
+        'wednesday' => Carbon::WEDNESDAY,
+        'thursday'  => Carbon::THURSDAY,
+        'friday'    => Carbon::FRIDAY,
+        'saturday'  => Carbon::SATURDAY,
+    ];
+
+    if (!array_key_exists($bookingDay, $daysMap)) {
+        throw new Exception("Invalid booking day: $bookingDay");
+    }
+
+    // Get the next occurrence of that day
+    $bookingDate = $today->next($daysMap[$bookingDay]);
+
+    return $bookingDate->toDateString(); // returns in Y-m-d format
+}
+
     public function bookingTrip(BookingTripRequest $request)
     {
         Log::info(json_encode($request->all()));
         $item = Trip::findOrFail($request->trip_id);
-        $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $request->booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
+        $booking_date = $this->getNextBookingDate($request->booking_day);
+        Log::info($booking_date);
+        $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
         if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
             return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
         }
