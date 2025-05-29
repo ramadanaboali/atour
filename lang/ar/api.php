@@ -49,6 +49,7 @@ return [
     'order_not_found_contact_us' => 'طلبك غير موجود يرجى الاتصال بنا',
     'order_accepted' => 'تم قبول طلبك',
     'order_confirmed_save_code' => 'تم قبول طلبك بنجاح يرجى الاحتفاظ بالكود :code لتأكيد الطلب',
-    'order_confirmed_success' => 'تم تأكيد الاستلام'
+    'order_confirmed_success' => 'تم تأكيد الاستلام',
+    'vendor_not_active'=>'مقدم الخدمة لا يمكنه تلقى طلبات الان'
 
 ];

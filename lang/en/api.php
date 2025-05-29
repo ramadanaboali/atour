@@ -44,7 +44,9 @@ return [
     'new_trip_booking_code'=>'لديك حجز على رحلة :item_name',
     'new_gift_booking_code'=>'لديك حجز للهدية   :item_name',
     'new_effectivnes_booking_code'=>'لديك حجز على الفاعلية  :item_name',
-    'order_not_found_contact_us'=>'طلبك غير موجود يرجى الاتصال بنا'
+    'order_not_found_contact_us'=>'طلبك غير موجود يرجى الاتصال بنا',
+    'vendor_not_active'=>'Vendor can not receive Orders right now'
+
 
 
 

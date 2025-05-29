@@ -79,6 +79,9 @@ function getNextBookingDate($bookingDay)
     {
         Log::info(json_encode($request->all()));
         $item = Trip::findOrFail($request->trip_id);
+        if ($item->vendor?->active == 0) {
+            return response()->apiFail(__('api.vendor_not_active'));
+        }
         $booking_date = $this->getNextBookingDate($request->booking_day);
         Log::info($booking_date);
         $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
