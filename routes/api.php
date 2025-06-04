@@ -95,6 +95,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
 
+        Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
+
         Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('/store-player-id', function (Request $request) {
                 $request->validate([
@@ -118,7 +120,6 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('effectivenes', [HomeController::class,'effectivenes']);
             Route::get('similar_trips/{id}', [HomeController::class,'similler_trips']);
             Route::get('trips/{id}', [HomeController::class,'trip']);
-            Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
             Route::get('gifts/{id}', [HomeController::class,'gift']);
             Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
             Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
