@@ -69,4 +69,5 @@ class TripResource extends JsonResource
         ];
     }
 
+    
 }

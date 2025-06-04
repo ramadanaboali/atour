@@ -7,6 +7,7 @@ use App\Http\Resources\CityResource;
 use App\Http\Resources\EffectivenesResourceCustomer;
 use App\Http\Resources\GiftResourceCustomer;
 use App\Http\Resources\TripResourceCustomer;
+use App\Models\BookingTrip;
 use App\Models\City;
 use App\Models\Effectivenes;
 use App\Models\FAQ;
@@ -15,6 +16,7 @@ use App\Models\Gift;
 use App\Models\Offer;
 use App\Models\Trip;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,6 +93,39 @@ class HomeController extends Controller
         $trip = Trip::findOrFail($id);
         $data = new TripResourceCustomer($trip);
         return apiResponse(true, $data, null, null, 200);
+    }
+    function getYearlyAvailability(Trip $trip)
+    {
+        $start = Carbon::now()->startOfYear();
+        $end = Carbon::now()->endOfYear();
+        $availableDays = $trip->available_days; // e.g. ["sunday", "monday"]
+    
+        $daysWithStatus = [];
+    
+        while ($start->lte($end)) {
+            $date = $start->toDateString();
+            $dayName = strtolower($start->format('l'));
+    
+            if (!in_array($dayName, $availableDays)) {
+                $status = "not_available";
+            } else {
+                $bookedPeople = BookingTrip::where('trip_id', $trip->id)
+                    ->whereDate('booking_date', $date)
+                    ->sum('people_number');
+    
+                $status = $bookedPeople >= $trip->people ? "full" : "available";
+            }
+    
+            $daysWithStatus[] = [
+                'date' => $date,
+                'day' => $dayName,
+                'status' => $status,
+            ];
+            
+            $start->addDay();
+        }
+        return apiResponse(true, $daysWithStatus, null, null, 200);
+    
     }
     public function gifts()
     {

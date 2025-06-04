@@ -118,6 +118,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('effectivenes', [HomeController::class,'effectivenes']);
             Route::get('similar_trips/{id}', [HomeController::class,'similler_trips']);
             Route::get('trips/{id}', [HomeController::class,'trip']);
+            Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
             Route::get('gifts/{id}', [HomeController::class,'gift']);
             Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
             Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
