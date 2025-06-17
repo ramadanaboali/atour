@@ -79,7 +79,7 @@ class SupplierController extends Controller
     {
         $item = User::findOrFail($id);
         if (!$item->email) {
-            flash(__('يرجى اضافة بريد الكترونى اولا'))->success();
+            flash(__('يرجى اضافة بريد الكترونى اولا'))->error();
 
             return back();
 
