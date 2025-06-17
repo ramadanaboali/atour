@@ -121,7 +121,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label for="">{{ __('suppliers.type') }}</label>
-                            <select name="admin_fee_type" id="admin_fee_type" class="form-select">
+                            <select name="admin_fee_type" id="admin_fee_type" class="form-select" required>
+
                                 <option value="percentage" {{ ($user_fee->admin_fee_type??null)=='percentage'?'selected':'' }}>{{ __('suppliers.percentage') }}</option>
                                 <option value="const" {{ ($user_fee->admin_fee_type??null)=='const'?'selected':'' }}>{{ __('suppliers.const') }}</option>
                             </select>
