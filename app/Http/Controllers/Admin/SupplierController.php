@@ -78,6 +78,12 @@ class SupplierController extends Controller
     public function status($id)
     {
         $item = User::findOrFail($id);
+        if (!$item->email) {
+            flash(__('يرجى اضافة بريد الكترونى اولا'))->success();
+
+            return back();
+
+        }
         if ($item->status == 'pendding') {
             $password = Str::random(8);
             $item->password = Hash::make($password);
