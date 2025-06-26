@@ -153,14 +153,17 @@ class OrderController extends Controller
         $data = $model::with(['user', 'vendor'])
             ->when($request->filled('user_id'), fn($q) => $q->where('user_id', $request->user_id))
             ->whereIn('status', (array) $request->status)
-            ->select('id', 'admin_value', 'status', 'total', 'customer_total', 'created_at','cancel_date')
+            ->select('id','vendor_id','user_id', 'admin_value', 'status', 'total', 'customer_total', 'created_at','cancel_date')
             ->latest();
+            
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('client', fn($item) => $item->user?->name)
             ->addColumn('vendor', fn($item) => $item->vendor?->name)
             ->addColumn('status', fn($item) => __('admin.orders_statuses.' . $item->status))
             ->editColumn('created_at', fn($item) => $item->created_at?->format('Y-m-d H:i'))
+        ->rawColumns(['client','vendor','status','created_at'])
+
             ->make(true);
 
     }
