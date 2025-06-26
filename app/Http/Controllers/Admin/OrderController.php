@@ -145,61 +145,24 @@ class OrderController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-
-        $data =  BookingGift::with(['user','vendor'])
-        ->whereIn('status', (array) $request->status)
-         ->where(function ($query) use ($request) {
-             if ($request->filled('user_id')) {
-                 $query->where('user_id', $request->user_id);
-             }
-         })
-        ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingGift' as source"))
-        ->union(
-            BookingTrip::with(['user','vendor'])
-            ->where(function ($query) use ($request) {
-                if ($request->filled('user_id')) {
-                    $query->where('user_id', $request->user_id);
-                }
-            })
-                ->whereIn('status', (array) $request->status)
-                ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingTrip' as source"))
-        )
-        ->union(
-            BookingEffectivene::with(['user','vendor'])
-             ->where(function ($query) use ($request) {
-                 if ($request->filled('user_id')) {
-                     $query->where('user_id', $request->user_id);
-                 }
-             })
-                ->whereIn('status', (array) $request->status)
-                ->select('id', 'admin_value', 'status', 'total','customer_total', 'created_at', DB::raw("'BookingEffectivene' as source"))
-        )
-        ->orderBy('created_at', 'desc')
-        ->get();
-
+        $type = $request->type;
+        if (!in_array($type, ['BookingGift', 'BookingTrip', 'BookingEffectivene'])) {
+            return response()->json([]);
+        }
+        $model = app("App\\Models\\$type");
+        $data = $model::with(['user', 'vendor'])
+            ->when($request->filled('user_id'), fn($q) => $q->where('user_id', $request->user_id))
+            ->whereIn('status', (array) $request->status)
+            ->select('id', 'admin_value', 'status', 'total', 'customer_total', 'created_at','cancel_date')
+            ->latest();
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('client', function ($item) {
-                return $item->user?->name;
-            })
+            ->addColumn('client', fn($item) => $item->user?->name)
+            ->addColumn('vendor', fn($item) => $item->vendor?->name)
+            ->addColumn('status', fn($item) => __('admin.orders_statuses.' . $item->status))
+            ->editColumn('created_at', fn($item) => $item->created_at?->format('Y-m-d H:i'))
+            ->make(true);
 
-            ->addColumn('vendor', function ($item) {
-                return $item->vendor?->name;
-            })
-            ->addColumn('status', function ($item) {
-                return __('admin.orders_statuses.' . $item->status);
-            })
-
-        ->editColumn('source', function ($item) {
-            return __('admin.'.$item->source);
-        })
-        ->editColumn('created_at', function ($item) {
-            return $item->created_at?->format('Y-m-d H:i');
-        })
-
-
-        ->rawColumns(['source','created_at','client','vendor'])
-        ->make(true);
     }
     public function accountants(Request $request)
     {
