@@ -84,8 +84,8 @@ class OrderController extends Controller
         if ($item->vendor?->active == 0) {
             return response()->apiFail(__('api.vendor_not_active'));
         }
-        // $booking_date = $this->getNextBookingDate($request->booking_day);
-        // Log::info($booking_date);
+        $booking_date = $this->getNextBookingDate($request->booking_day);
+        Log::info($booking_date);
         $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $request->booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
         if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
             return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
@@ -95,7 +95,7 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
-        $data['booking_date'] = $request->booking_date;
+        $data['booking_date'] = $request->booking_date??$booking_date;
         $data['payment_way'] = $request->payment_way;
 
         $data['total'] = $item->price * $quantity;
