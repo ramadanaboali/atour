@@ -431,7 +431,7 @@ class OrderController extends Controller
             $query->withTrashed()->with('city');
         },'vendor' => function ($query) {
             $query->withTrashed();
-        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+        }])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ONPROGRESS,Order::STATUS_ACCEPTED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
             $item->total = (string)$item->customer_total;
         });
 
@@ -439,7 +439,7 @@ class OrderController extends Controller
             $query->withTrashed()->with('city');
         },'vendor' => function ($query) {
             $query->withTrashed();
-        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+        }])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ONPROGRESS,Order::STATUS_ACCEPTED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
             $item->total = (string)$item->customer_total;
         });
 
@@ -447,9 +447,12 @@ class OrderController extends Controller
             $query->withTrashed()->with('city');
         },'vendor' => function ($query) {
             $query->withTrashed();
-        }])->where('status', Order::STATUS_PENDING)->where('user_id', auth()->user()->id)->get()->each(function ($item) {
+        }])->whereIn('status', [Order::STATUS_PENDING,Order::STATUS_ONPROGRESS,Order::STATUS_ACCEPTED])->where('user_id', auth()->user()->id)->get()->each(function ($item) {
             $item->total = (string)$item->customer_total;
         });
+
+
+
 
         $data['ended']['gifts'] = BookingGift::with(['gift' => function ($query) {
             $query->withTrashed()->with('city');

@@ -1,4 +1,4 @@
-<h2>Order Confirmation</h2>
+<h2>Atour Order</h2>
 <p>Dear {{ $order->user?->name }},</p>
 
 <p>Thank you for your order! Here are your order details:</p>
