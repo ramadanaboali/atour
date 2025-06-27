@@ -36,7 +36,7 @@ class BookingGift extends Model
 
      public function user() :?BelongsTo
      {
-        return $this->belongsTo(User::class,'user_if');
+        return $this->belongsTo(User::class,'user_id');
      }
      public function gift() :?BelongsTo
      {
