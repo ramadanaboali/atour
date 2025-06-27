@@ -156,7 +156,7 @@ class OrderController extends Controller
         }
 
         try {
-            Mail::to($order->user?->email)->send(new OrderCodeMail($order->refresh(),$code));
+            Mail::to($order->user?->email)->send(new OrderCodeMail($order->refresh(), $code));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -189,19 +189,19 @@ class OrderController extends Controller
             }
 
             try {
-                 Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
-
-            } catch (Exception $e) {
-                Log::error($e->getMessage());
-            }
-
-            try {
                 OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
             $order->status = Order::STATUS_ONPROGRESS;
             $order->save();
+
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
             return response()->apiSuccess($order);
         }
         return response()->apiFail(__('api.code_not_found'));
@@ -221,18 +221,18 @@ class OrderController extends Controller
                 return response()->apiFail(__('api.code_error'));
             }
             try {
-                 Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
-
-            } catch (Exception $e) {
-                Log::error($e->getMessage());
-            }
-            try {
                 OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
             $order->status = Order::STATUS_COMPLEALED;
             $order->save();
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
             return response()->apiSuccess($order);
         }
         return response()->apiFail(__('api.code_not_found'));

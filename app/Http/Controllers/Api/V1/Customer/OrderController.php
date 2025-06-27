@@ -95,7 +95,7 @@ class OrderController extends Controller
         $data['user_id'] = auth()->user()->id;
         $data['payment_status'] = 'pendding';
         $data['status'] = 0;
-        $data['booking_date'] = $request->booking_date??$booking_date;
+        $data['booking_date'] = $request->booking_date ?? $booking_date;
         $data['payment_way'] = $request->payment_way;
 
         $data['total'] = $item->price * $quantity;
@@ -528,13 +528,13 @@ class OrderController extends Controller
         }
         if ($result['success']) {
             // return "success";
-            
-try {
-    Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
 
-} catch (Exception $e) {
-    Log::error($e->getMessage());
-}
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
 
             try {
                 OneSignalService::sendToUser($order->vendor_id, __('api.new_order'), $message);
