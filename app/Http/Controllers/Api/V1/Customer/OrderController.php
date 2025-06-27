@@ -162,8 +162,7 @@ class OrderController extends Controller
         $order = new OrderCustomerResource($order);
 
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
-
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
@@ -278,7 +277,7 @@ class OrderController extends Controller
 
 
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -393,7 +392,7 @@ class OrderController extends Controller
 
 
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -528,7 +527,7 @@ class OrderController extends Controller
             // return "success";
             
 try {
-    Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
+    Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
 
 } catch (Exception $e) {
     Log::error($e->getMessage());
