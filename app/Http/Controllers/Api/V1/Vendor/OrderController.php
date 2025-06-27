@@ -155,7 +155,7 @@ class OrderController extends Controller
         }
 
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -188,7 +188,7 @@ class OrderController extends Controller
             }
 
             try {
-                Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
 
             } catch (Exception $e) {
                 Log::error($e->getMessage());
@@ -220,7 +220,7 @@ class OrderController extends Controller
                 return response()->apiFail(__('api.code_error'));
             }
             try {
-                Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->id));
 
             } catch (Exception $e) {
                 Log::error($e->getMessage());
