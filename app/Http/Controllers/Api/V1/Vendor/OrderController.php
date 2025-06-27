@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderCodeMail;
 use App\Mail\OrderDetailsMail;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
@@ -155,7 +156,7 @@ class OrderController extends Controller
         }
 
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+            Mail::to($order->user?->email)->send(new OrderCodeMail($order->refresh(),$code));
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
