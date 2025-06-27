@@ -9,6 +9,7 @@ use App\Http\Requests\Customer\BookingEffectivenesRequest;
 use App\Http\Requests\Customer\BookingGiftRequest;
 use App\Http\Resources\OrderCustomerResource;
 use App\Http\Resources\OrderResource;
+use App\Mail\OrderDetailsMail;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
 use App\Models\BookingTrip;
@@ -23,6 +24,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 use function response;
 
@@ -158,6 +160,14 @@ class OrderController extends Controller
             $order->save();
         }
         $order = new OrderCustomerResource($order);
+
+        try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
         try {
             OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
         } catch (Exception $e) {
@@ -266,6 +276,14 @@ class OrderController extends Controller
             return response()->apiSuccess($tap);
         }
 
+
+        try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
         try {
             OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_effectivnes_booking_code', ['item_name' => $item->title]));
         } catch (Exception $e) {
@@ -371,6 +389,14 @@ class OrderController extends Controller
                 $order->save();
             }
             return response()->apiSuccess($tap);
+        }
+
+
+        try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
         }
 
         try {
@@ -500,6 +526,14 @@ class OrderController extends Controller
         }
         if ($result['success']) {
             // return "success";
+            
+try {
+    Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+} catch (Exception $e) {
+    Log::error($e->getMessage());
+}
+
             try {
                 OneSignalService::sendToUser($order->vendor_id, __('api.new_order'), $message);
             } catch (Exception $e) {

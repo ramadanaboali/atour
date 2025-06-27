@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderDetailsMail;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
 use App\Models\BookingTrip;
@@ -11,6 +12,7 @@ use App\Services\OneSignalService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 use function response;
 
@@ -153,6 +155,13 @@ class OrderController extends Controller
         }
 
         try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
             OneSignalService::sendToUser($order->user_id, __('api.order_accepted'), __('api.order_confirmed_save_code', ['code' => $code]));
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -162,7 +171,7 @@ class OrderController extends Controller
         $order->save();
         return response()->apiSuccess($order);
     }
-    
+
     public function confirmOrder($type, $id)
     {
         if (request()->code) {
@@ -177,6 +186,14 @@ class OrderController extends Controller
             if (!$order) {
                 return response()->apiFail(__('api.order_not_exist'));
             }
+
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
             try {
                 OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
             } catch (Exception $e) {
@@ -193,14 +210,20 @@ class OrderController extends Controller
         if (request()->code) {
             $code = request()->code;
             if ($type == 'gift') {
-                $order = BookingGift::where('gift_id',$id)->where('confirm_code',$code)->first();
+                $order = BookingGift::where('gift_id', $id)->where('confirm_code', $code)->first();
             } elseif ($type == 'effectivene') {
-                $order = BookingEffectivene::where('effectivene_id',$id)->where('confirm_code',$code)->first();
+                $order = BookingEffectivene::where('effectivene_id', $id)->where('confirm_code', $code)->first();
             } else {
-                $order = BookingTrip::where('trip_id',$id)->where('confirm_code',$code)->first();
+                $order = BookingTrip::where('trip_id', $id)->where('confirm_code', $code)->first();
             }
             if (!$order) {
                 return response()->apiFail(__('api.code_error'));
+            }
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
             }
             try {
                 OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
@@ -213,6 +236,7 @@ class OrderController extends Controller
         }
         return response()->apiFail(__('api.code_not_found'));
     }
+
     public function cancelOrder($type, $id)
     {
         if ($type == 'gift') {
