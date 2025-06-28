@@ -268,13 +268,13 @@ class OrderController extends Controller
     public function getAll($type)
     {
         if ($type == 'gifts') {
-            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->get();
+            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->where('vendor_id',auth()->user()->id)->get();
             return response()->apiSuccess($order);
         } elseif ($type == 'effectivenes') {
-            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->get();
+            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->where('vendor_id',auth()->user()->id)->get();
             return response()->apiSuccess($order);
         } else {
-            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->get();
+            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->where('vendor_id',auth()->user()->id)->get();
             return response()->apiSuccess($order);
         }
     }
