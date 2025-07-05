@@ -94,6 +94,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('features', [App\Http\Controllers\Api\V1\PageController::class,'features']);
         Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
+        Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
 
         Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
 
@@ -149,9 +150,8 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('/logout', [AuthController::class, 'logout']);
 
             Route::get('notifications', [VendorController::class, 'notifications']);
-            Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
             Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
-
+            
         });
     });
 });
