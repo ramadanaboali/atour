@@ -529,7 +529,7 @@ function convertArabicNumbersToEnglish($value)
         if ($type == 'gift') {
             $order = BookingGift::with('gift')->where('payment_id', $result['data']['id'])->first();
             $message = __('api.new_gift_booking_code', ['item_name' => $order->gift?->title]);
-        } elseif ($type == 'gift') {
+        } elseif ($type == 'trip') {
             $order = BookingTrip::with('trip')->where('payment_id', $result['data']['id'])->first();
             $message = __('api.new_trip_booking_code', ['item_name' => $order->trip?->title]);
         } elseif ($type == 'effectivenes') {
