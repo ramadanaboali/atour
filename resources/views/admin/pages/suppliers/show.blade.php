@@ -39,10 +39,7 @@
                                         <span class="fw-bolder me-25">{{ __('clients.status') }} : </span>
                                         <span class="badge bg-light-success">{{ __('clients.statuses.'.$user?->status) }}</span>
                                     </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('clients.birthdate') }}:</span>
-                                        <span>{{ $user?->birthdate }}</span>
-                                    </li>
+                                   
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.joining_date_from') }}:</span>
                                         <span>{{ $user?->created_at?->format('Y-m-d') }}</span>
