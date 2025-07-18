@@ -45,7 +45,7 @@
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('clients.joining_date_from') }}:</span>
-                                        <span>{{ $user?->joining_date_from }}</span>
+                                        <span>{{ $user?->created_at?->format('Y-m-d') }}</span>
                                     </li>
 
 
