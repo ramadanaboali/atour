@@ -8,6 +8,7 @@ use App\Http\Resources\EffectivenesResourceCustomer;
 use App\Http\Resources\GiftResourceCustomer;
 use App\Http\Resources\TripResourceCustomer;
 use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
 use App\Models\BookingTrip;
 use App\Models\City;
 use App\Models\Effectivenes;
@@ -17,6 +18,7 @@ use App\Models\Gift;
 use App\Models\Offer;
 use App\Models\Trip;
 use App\Models\User;
+use App\Services\TapService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,9 +50,9 @@ class HomeController extends Controller
                         'effectivenes' => Effectivenes::find($item->effectivenes_id),
                         default => null,
                     };
-                    return $relatedModel !== null; 
+                    return $relatedModel !== null;
                 }
-                return true; 
+                return true;
             });
 
         $data['offers'] = $offer->values();
@@ -95,7 +97,7 @@ class HomeController extends Controller
         $data = new TripResourceCustomer($trip);
         return apiResponse(true, $data, null, null, 200);
     }
-    function getYearlyAvailability(Trip $trip)
+    public function getYearlyAvailability(Trip $trip)
     {
         $start = Carbon::now();
         $end = Carbon::now()->endOfYear();
@@ -120,7 +122,7 @@ class HomeController extends Controller
             $start->addDay();
         }
         return apiResponse(true, $daysWithStatus, null, null, 200);
-    
+
     }
     public function gifts()
     {
@@ -223,8 +225,64 @@ class HomeController extends Controller
     public function effectivenePayment($id)
     {
 
-        $data = BookingEffectivene::findOrFail($id);
+        $item = BookingEffectivene::findOrFail($id);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer ".config('tab.secret_key'),
+                "content-type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response);
 
-        return apiResponse(true, $data, null, null, 200);
+
+        return apiResponse(true, $result, null, null, 200);
+    }
+    public function tripPayment($id)
+    {
+
+        $item = BookingTrip::findOrFail($id);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer ".config('tab.secret_key'),
+                "content-type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response);
+
+
+        return apiResponse(true, $result, null, null, 200);
+    }
+    public function giftPayment($id)
+    {
+
+        $item = BookingGift::findOrFail($id);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Bearer ".config('tab.secret_key'),
+                "content-type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        $result = json_decode($response);
+
+
+        return apiResponse(true, $result, null, null, 200);
     }
 }
