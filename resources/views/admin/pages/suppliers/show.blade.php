@@ -50,10 +50,6 @@
 
 
                                     <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.country') }}:</span>
-                                        <span>{{ $user->supplier?->country?->name }}</span>
-                                    </li>
-                                    <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.city') }}:</span>
                                         <span>{{ $user->supplier?->city?->name }}</span>
                                     </li>
