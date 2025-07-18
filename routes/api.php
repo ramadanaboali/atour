@@ -150,6 +150,9 @@ Route::get('notifications-read/{id}', [VendorController::class, 'readNotificatio
             Route::get('/profile', [AuthController::class, 'profile']);
             Route::post('/logout', [AuthController::class, 'logout']);
 
+            Route::get('trip-payment/{id}', [HomeController::class, 'tripPayment']);
+            Route::get('gift-payment/{id}', [HomeController::class, 'giftPayment']);
+            Route::get('effectivenes-payment/{id}', [HomeController::class, 'effectivenePayment']);
             Route::get('notifications', [VendorController::class, 'notifications']);
             Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
             

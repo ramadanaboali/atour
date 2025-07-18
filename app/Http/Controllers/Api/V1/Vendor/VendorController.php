@@ -21,7 +21,7 @@ class VendorController extends Controller
     }
     public function notifications()
     {
-        $data=Notification::where('user_id',auth()->user()->id)->where('is_read',0)->orderBy('id','desc')->get();
+        $data=Notification::where('user_id',auth()->user()->id)->orderBy('id','desc')->get();
         return response()->apiSuccess($data);
 
     }

@@ -7,6 +7,7 @@ use App\Http\Resources\CityResource;
 use App\Http\Resources\EffectivenesResourceCustomer;
 use App\Http\Resources\GiftResourceCustomer;
 use App\Http\Resources\TripResourceCustomer;
+use App\Models\BookingEffectivene;
 use App\Models\BookingTrip;
 use App\Models\City;
 use App\Models\Effectivenes;
@@ -216,6 +217,13 @@ class HomeController extends Controller
     {
 
         $data = FAQ::get();
+
+        return apiResponse(true, $data, null, null, 200);
+    }
+    public function effectivenePayment($id)
+    {
+
+        $data = BookingEffectivene::findOrFail($id);
 
         return apiResponse(true, $data, null, null, 200);
     }
