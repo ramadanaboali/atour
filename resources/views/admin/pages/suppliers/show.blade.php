@@ -58,19 +58,6 @@
                                         <span>{{ $user->supplier?->city?->name }}</span>
                                     </li>
                                     <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.streat') }}:</span>
-                                        <span>{{ $user->supplier?->streat }}</span>
-                                    </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.postal_code') }}:</span>
-                                        <span>{{ $user->supplier?->postal_code }}</span>
-
-                                    </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.url') }}:</span>
-                                        <span>{{ $user->supplier?->url }}</span>
-                                    </li>
-                                    <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
                                         <span>{{ $user->supplier?->tax_number }}</span>
 
