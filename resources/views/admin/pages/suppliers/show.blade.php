@@ -64,6 +64,7 @@
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.postal_code') }}:</span>
                                         <span>{{ $user->supplier?->postal_code }}</span>
+
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.url') }}:</span>
@@ -72,29 +73,9 @@
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
                                         <span>{{ $user->supplier?->tax_number }}</span>
-                                    </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.place_summary') }}:</span>
-                                        <span>{{ $user->supplier?->place_summary }}</span>
-                                    </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.place_content') }}:</span>
-                                        <span>{{ $user->supplier?->place_content }}</span>
-                                    </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.expectations') }}:</span>
-                                        <span>{{ $user->supplier?->expectations }}</span>
-                                    </li>
 
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.short_description') }}:</span>
-                                        <span>{{ $user->supplier?->short_description }}</span>
                                     </li>
-                                    <li class="mb-75">
-                                        <span class="fw-bolder me-25">{{ __('suppliers.description') }}:</span>
-                                        <span>{{ $user->supplier?->description }}</span>
-                                    </li>
-
+                                 
                                 </ul>
                                 <div class="d-flex justify-content-center pt-2">
 

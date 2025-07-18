@@ -70,6 +70,7 @@ class SupplierController extends Controller
     public function show($id): View
     {
         $user = User::findOrFail($id);
+        // dd($user->supplier);
         $trips = Trip::where('vendor_id', $id)->orderByDesc('id')->get();
         return view($this->viewShow, get_defined_vars());
     }
