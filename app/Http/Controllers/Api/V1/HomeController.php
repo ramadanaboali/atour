@@ -226,63 +226,75 @@ class HomeController extends Controller
     {
 
         $item = BookingEffectivene::findOrFail($id);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+        if ($item->payment_id) {
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
                 "content-type: application/json"
             ),
         ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        $result = json_decode($response);
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            $result = json_decode($response);
 
 
-        return apiResponse(true, $result, null, null, 200);
+            return apiResponse(true, $result, null, null, 200);
+        }
+        return apiResponse(true, null, null, null, 200);
     }
     public function tripPayment($id)
     {
 
         $item = BookingTrip::findOrFail($id);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+        if ($item->payment_id) {
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
                 "content-type: application/json"
             ),
         ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        $result = json_decode($response);
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            $result = json_decode($response);
 
 
-        return apiResponse(true, $result, null, null, 200);
+            return apiResponse(true, $result, null, null, 200);
+        }
+        return apiResponse(true, null, null, null, 200);
     }
     public function giftPayment($id)
     {
 
         $item = BookingGift::findOrFail($id);
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->id,
+        if ($item->payment_id) {
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
                 "content-type: application/json"
             ),
         ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        $result = json_decode($response);
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            $result = json_decode($response);
 
 
-        return apiResponse(true, $result, null, null, 200);
+            return apiResponse(true, $result, null, null, 200);
+        }
+        return apiResponse(true, null, null, null, 200);
     }
 }
