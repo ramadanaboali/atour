@@ -207,8 +207,8 @@ return [
     'currencies' => 'العملات',
     'blogs' => 'المدونات',
     'publisher_name' => 'اسم الناشر',
-    'trips' => 'الرحلات',
-    'gifts' => 'الهدايا',
+    'trips' => 'الجولات',
+    'gifts' => 'الهدايا تذكارية',
     'effectivenes' => 'الفعاليات',
     'customers' => 'العملاء',
     'orders_statistics' => 'احصائيات الطلبات',
@@ -235,7 +235,7 @@ return [
 
     'cancel_terms' => "سياسة الالغاء",
     'helpping_questions' => "تحتاج للمساعدة",
-    "BookingGift" => 'هدايا',
+    "BookingGift" => 'هدايا تذكارية',
     "BookingEffectivene" => 'فعاليات',
     "BookingTrip" => 'رحلات',
     'orders_statuses' => [
@@ -254,8 +254,8 @@ return [
     'additional_tax' => 'رسوم القيمه المضافه',
     'suppliers_payments' => 'حسابات الموردين',
     'source_types' => [
-        'trip' => 'رحلة',
-        'gift' => 'هدية',
+        'trip' => 'جولة',
+        'gift' => 'هدية تذكارية',
         'effectivenes' => 'فاعلية',
     ],
     'order_accounts' => 'حسابات الطلبات',
@@ -268,7 +268,7 @@ return [
     'do_settlement' => ' تسويه الحسابات',
     'total_order_fee' => 'المتبقى لدى المورد ',
     'total_order_fee_setlment' => 'المبالغ تم تسويتها',
-    'false'=>'لا'
+    'false' => 'لا'
 
 
 ];

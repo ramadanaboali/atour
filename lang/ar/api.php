@@ -39,17 +39,17 @@ return [
     'order_not_exist' => 'هذا الحجز غير موجود',
     'user_not_active' => 'عفوا حسابك غير مفعل يرجى التواصل مع المسؤل لأعادة تنشيط حسابك',
     'order_paid_befor' => 'تم الدفع مسبقا',
-    'trip_has_bookings' => 'هذه الرحلة بها حجوزات',
+    'trip_has_bookings' => 'هذه الجولة بها حجوزات',
     'effectivene_has_bookings' => 'هذه الفاعلية بها حجوزات',
     'trip_compleated_cant_compleate_reservation' => 'عفوا وصلت للحد الاقصى من الافراد يمكنك الحجز فى معاد اخر',
     'new_order' => 'لديك طلب جديد',
-    'new_trip_booking_code' => 'لديك حجز على رحلة :item_name',
-    'new_gift_booking_code' => 'لديك حجز للهدية   :item_name',
+    'new_trip_booking_code' => 'لديك حجز على جولة :item_name',
+    'new_gift_booking_code' => 'لديك حجز للهدية تذكارية   :item_name',
     'new_effectivnes_booking_code' => 'لديك حجز على الفاعلية  :item_name',
     'order_not_found_contact_us' => 'طلبك غير موجود يرجى الاتصال بنا',
     'order_accepted' => 'تم قبول طلبك',
     'order_confirmed_save_code' => 'تم قبول طلبك بنجاح يرجى الاحتفاظ بالكود :code لتأكيد الطلب',
     'order_confirmed_success' => 'تم تأكيد الاستلام',
-    'vendor_not_active'=>'مقدم الخدمة لا يمكنه تلقى طلبات الان'
+    'vendor_not_active' => 'مقدم الخدمة لا يمكنه تلقى طلبات الان'
 
 ];

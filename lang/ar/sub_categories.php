@@ -64,11 +64,11 @@ return [
     'sort' => 'الترتيب',
     'active' => 'نشط',
     'category' => 'الفئة',
-    'available'=>'المنتج متوفر',
-    'categories'=>[
+    'available' => 'المنتج متوفر',
+    'categories' => [
         ''  => '',
-        'gift'=> 'هدايا',
-        'trip'=> 'رحلات',
-        'effectiveness'=> 'فعاليات',
+        'gift' => 'هدايا تذكارية',
+        'trip' => 'رحلات',
+        'effectiveness' => 'فعاليات',
     ],
 ];
