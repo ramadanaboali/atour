@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'plural' => 'City',
+    'plural' => 'Cities',
     'singular' => 'City',
     'singular2' => 'City',
-    'empty' => 'No city',
+    'empty' => 'No cities available',
     'select' => 'Select',
     'select-type' => 'All',
     'perPage' => 'Number of results per page',
@@ -12,7 +12,7 @@ return [
     'actions' => [
         'list' => 'Show all',
         'show' => 'Show',
-        'create' => 'Add city',
+        'create' => 'Add City',
         'edit' => 'Edit',
         'delete' => 'Delete',
         'restore' => 'Restore',
@@ -22,17 +22,17 @@ return [
     ],
     'messages' => [
         'created' => 'City added successfully.',
-        'updated' => 'City edited successfully.',
+        'updated' => 'City updated successfully.',
         'deleted' => 'City deleted successfully.',
         'restored' => 'City restored successfully.',
-        'deleted_bulk' => 'Selected city deleted successfully.',
+        'deleted_bulk' => 'Selected cities deleted successfully.',
     ],
     'attributes' => [
-        'name' => 'City name',
-        '%name%' => 'City name',
+        'name' => 'City Name',
+        '%name%' => 'City Name',
     ],
     'default' => [
-        'name' => 'City name',
+        'name' => 'City Name',
     ],
     'dialogs' => [
         'delete' => [
@@ -49,20 +49,20 @@ return [
         ],
     ],
     'save' => 'Save',
-    'options' => 'Commands',
-    'created_at' => 'Created date',
+    'options' => 'Options',
+    'created_at' => 'Creation Date',
     'advanced_filter' => 'Filter',
     'search' => 'Search',
     'cancel' => 'Cancel',
-    'delete_selected' => 'Clear selected',
-    'restore_trashed' => 'Return selected',
-    'unarchived' => 'Show unhidden',
+    'delete_selected' => 'Delete selected',
+    'restore_trashed' => 'Restore selected',
+    'unarchived' => 'Show non-archived',
     'description' => 'Description',
     'attachments' => 'Attachments',
     'file' => 'File',
     'image' => 'Image',
-    'sort' => 'Sort',
+    'sort' => 'Sort Order',
     'active' => 'Active',
-    'available'=>'المنتج متوفر',
-    'country'=>'الدولة'
+    'available' => 'Product Available',
+    'country' => 'Country',
 ];

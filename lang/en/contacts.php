@@ -4,18 +4,18 @@ return [
     'plural' => 'Contact Us',
     'singular' => 'Contact',
     'singular2' => 'Contact',
-    'empty' => 'No Contacts',
+    'empty' => 'No contacts',
     'select' => 'Select',
     'name' => 'Name',
     'email' => 'Email',
-    'subject' => 'Title',
+    'subject' => 'Subject',
     'notes' => 'Message',
     'select-type' => 'All',
-    'perPage' => 'Number of results per page',
-    'filter' => 'Search for a Contact',
+    'perPage' => 'Results per page',
+    'filter' => 'Search contacts',
     'actions' => [
-        'list' => 'Show all',
-        'show' => 'Show',
+        'list' => 'View All',
+        'show' => 'View',
         'create' => 'Add Contact',
         'edit' => 'Edit',
         'delete' => 'Delete',
@@ -26,17 +26,17 @@ return [
     ],
     'messages' => [
         'created' => 'Contact added successfully.',
-        'updated' => 'Contact modified successfully.',
+        'updated' => 'Contact updated successfully.',
         'deleted' => 'Contact deleted successfully.',
         'restored' => 'Contact restored successfully.',
-        'deleted_bulk' => 'Selected units deleted successfully.',
+        'deleted_bulk' => 'Selected contacts deleted successfully.',
     ],
     'attributes' => [
-        'name' => 'Contact name',
-        '%name%' => 'Contact name',
+        'name' => 'Contact Name',
+        '%name%' => 'Contact Name',
     ],
     'default' => [
-        'name' => 'Contact name',
+        'name' => 'Contact Name',
     ],
     'dialogs' => [
         'delete' => [
@@ -53,18 +53,16 @@ return [
         ],
     ],
     'save' => 'Save',
-    'options' => 'Commands',
-    'created_at' => 'Created Date',
+    'options' => 'Actions',
+    'created_at' => 'Created At',
     'advanced_filter' => 'Filter',
     'search' => 'Search',
     'cancel' => 'Cancel',
-    'delete_selected' => 'Clear Selected',
-    'restore_trashed' => 'Return Selected',
+    'delete_selected' => 'Delete Selected',
+    'restore_trashed' => 'Restore Selected',
     'description' => 'Description',
     'reason' => 'Subject',
     'problem' => 'Message',
-    'no_orders' => 'No results',
-    'title'=>'Title'
-
-
+    'no_orders' => 'No results found',
+    'title' => 'Subject'
 ];

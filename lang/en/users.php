@@ -19,7 +19,7 @@ return [
         'save' => 'Save',
         'filter' => 'Search',
         'back' => 'Back',
-        'show_hidden'=> 'Show cacheف'
+        'show_hidden'=> 'Show Deleted'
     ],
     'messages' => [
         'created' => 'User added successfully.',
