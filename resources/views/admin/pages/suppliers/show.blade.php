@@ -48,7 +48,7 @@
 
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.city') }}:</span>
-                                        <span>{{ $user->city?->name }}</span>
+                                        <span>{{ $user->city?->title }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
