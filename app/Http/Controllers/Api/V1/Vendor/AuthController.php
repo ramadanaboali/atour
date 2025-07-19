@@ -271,12 +271,6 @@ class AuthController extends Controller
 
             $inputs = [
                          'nationality' => $request->nationality,
-                         'general_name' => $request->general_name,
-                         'description' => $request->description,
-                         'url' => $request->url,
-                         'country_id' => $request->country_id,
-                         'city_id' => $request->city_id,
-                         'streat' => $request->streat,
                          'job' => $request->job,
                          'experience_info' => $request->experience_info,
                      ];
