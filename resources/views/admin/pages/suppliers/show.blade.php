@@ -48,11 +48,11 @@
 
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.city') }}:</span>
-                                        <span>{{ $user->supplier?->city?->name }}</span>
+                                        <span>{{ $user->city?->name }}</span>
                                     </li>
                                     <li class="mb-75">
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
-                                        <span>{{ $user->supplier?->tax_number }}</span>
+                                        <span>{{ $user->tax_number }}</span>
 
                                     </li>
                                  
