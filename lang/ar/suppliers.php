@@ -108,5 +108,6 @@ return [
     'ban_vendor'=> 'حظر المورد',
     'value'=>'القيمة',
     'percentage'=>'نسبة',
+    'national_id'=>'رقم الهوية',
     'const'=>'قيمة ثابتة',
 ];

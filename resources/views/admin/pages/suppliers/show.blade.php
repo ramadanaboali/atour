@@ -51,6 +51,12 @@
                                         <span class="fw-bolder me-25">{{ __('suppliers.tax_number') }}:</span>
                                         <span>{{ $user->tax_number }}</span>
                                     </li>
+                                    <li class="mb-75">
+                                        <span class="fw-bolder me-25">{{ __('suppliers.national_id') }}:</span>
+
+                                        <span>{{ $user->supplier?->national_id }}</span>
+
+                                    </li>
                                 </ul>
                                 <div class="d-flex justify-content-center pt-2">
 
