@@ -225,12 +225,10 @@ class HomeController extends Controller
     public function effectivenePayment($id)
     {
 
-        $item = BookingEffectivene::findOrFail($id);
-        if ($item->payment_id) {
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
@@ -244,18 +242,15 @@ class HomeController extends Controller
 
 
             return apiResponse(true, $result, null, null, 200);
-        }
-        return apiResponse(true, null, null, null, 200);
+        
     }
     public function tripPayment($id)
     {
 
-        $item = BookingTrip::findOrFail($id);
-        if ($item->payment_id) {
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
@@ -269,18 +264,15 @@ class HomeController extends Controller
 
 
             return apiResponse(true, $result, null, null, 200);
-        }
-        return apiResponse(true, null, null, null, 200);
+       
     }
     public function giftPayment($id)
     {
 
-        $item = BookingGift::findOrFail($id);
-        if ($item->payment_id) {
-
+     
             $curl = curl_init();
             curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $item->payment_id,
+            CURLOPT_URL => "https://api.tap.company/v2/charges/" . $id,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array(
                 "authorization: Bearer ".config('tab.secret_key'),
@@ -294,7 +286,6 @@ class HomeController extends Controller
 
 
             return apiResponse(true, $result, null, null, 200);
-        }
-        return apiResponse(true, null, null, null, 200);
+        
     }
 }
