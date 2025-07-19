@@ -121,7 +121,6 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'temperory_phone' => $request->phone,
                 'address' => $request->address,
-                'postal_code' => $request->postal_code,
                 'national_id' => $request->national_id,
                 'active' => false,
                 'status' => 'pendding',
@@ -135,7 +134,7 @@ class AuthController extends Controller
             }
             $user->update($userInput);
 
-            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality]);
+            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality,'postal_code'=>$request->postal_code]);
 
             $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
 
@@ -202,8 +201,8 @@ class AuthController extends Controller
 
             if ($user) {
                 $user_data = [
-                    'bank_name' => $request->bank_name,
-                    'bank_account' => $request->bank_account,
+                    'banck_name' => $request->bank_name,
+                    'banck_account' => $request->bank_account,
                     'bank_iban' => $request->bank_iban,
                     'tax_number' => $request->tax_number,
                     'country_id' => $request->country_id,
