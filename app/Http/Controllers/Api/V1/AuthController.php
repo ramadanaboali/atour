@@ -227,6 +227,10 @@ class AuthController extends Controller
                 $inputs['birthdate'] = $request->birthdate;
             }
 
+            if ($request->phone) {
+                $inputs['phone'] = $request->phone;
+            }
+
             if ($request->name) {
                 $inputs['name'] = $request->name;
             }

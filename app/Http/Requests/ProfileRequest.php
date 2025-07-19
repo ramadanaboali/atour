@@ -29,6 +29,8 @@ class ProfileRequest extends FormRequest
         return [
             'name' => 'nullable|min:2',
             'image'      => 'nullable|image|mimes:png,jpg,jpeg',
+            'phone' => 'required|unique:users,phone,' . auth()->id(),
+
         ];
     }
 
