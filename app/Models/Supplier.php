@@ -23,6 +23,7 @@ class Supplier extends Model
         'city_id',
         'streat',
         'postal_code',
+        'national_id',
         'user_id',
         'description',
         'short_description',

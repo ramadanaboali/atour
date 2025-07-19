@@ -31,7 +31,7 @@ class Setup1Request extends FormRequest
             'address' => 'required|string|min:2',
             'national_id' => 'required|string|min:2',
             'email' => 'required|email|exists:users,temperory_email',
-            'phone' => 'required|exists:users,temperory_phone',
+            'phone' => 'required|unique:users,temperory_phone',
         ];
 
     }

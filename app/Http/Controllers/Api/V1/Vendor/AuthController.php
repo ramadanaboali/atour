@@ -134,7 +134,7 @@ class AuthController extends Controller
             }
             $user->update($userInput);
 
-            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality,'postal_code'=>$request->postal_code]);
+            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality,'postal_code' => $request->postal_code]);
 
             $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
 
@@ -310,7 +310,7 @@ class AuthController extends Controller
                 'languages' => json_encode($request->languages),
             ];
             Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-           $user = User::with('supplier')->find($request->user_id);
+            $user = User::with('supplier')->find($request->user_id);
             if ($user) {
                 $user->email = $user->temperory_email;
                 $user->phone = $user->temperory_phone;
@@ -342,7 +342,7 @@ class AuthController extends Controller
         }
 
     }
-   public function resetPassword(ResetRequest $request)
+    public function resetPassword(ResetRequest $request)
     {
         try {
 
@@ -430,6 +430,11 @@ class AuthController extends Controller
             if ($request->birthdate) {
                 $inputs['birthdate'] = $request->birthdate;
             }
+
+            if ($request->phone) {
+                $inputs['phone'] = $request->phone;
+            }
+
 
             if ($request->name) {
                 $inputs['name'] = $request->name;
