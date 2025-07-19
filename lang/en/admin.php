@@ -164,7 +164,7 @@ return [
     'title_en' => 'Title (English)',
     'description_ar' => 'Description (Arabic)',
     'description_en' => 'Description (English)',
-    'language' => 'English',
+    'language' => 'Arabic',
     'agency' => 'Agencies',
     'indivedual' => 'Individuals',
     'sale_products_count' => 'Sale Products',
