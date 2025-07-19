@@ -40,7 +40,7 @@ class AuthController extends Controller
         })->first();
 
         if ($user) {
-        if ($user->status == 'pendding') {
+            if ($user->status == 'pendding') {
                 return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
 
             }
@@ -72,9 +72,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ];
         $user = User::where('email', $request->email)->first();
-        if($user){
+        if ($user) {
             $user->update($userInput);
-        }else{
+        } else {
             $user = User::updateOrCreate(['temperory_email' => $request->email], $userInput);
         }
 
@@ -111,7 +111,7 @@ class AuthController extends Controller
                 'status' => 'pendding',
                 'active' => false,
                 'type' => User::TYPE_CLIENT,
-            ]; 
+            ];
             $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
             Mail::to($user->temperory_email)->send(new SendCodeResetPassword($user->temperory_email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
@@ -123,7 +123,7 @@ class AuthController extends Controller
     {
 
         try {
-            $user = User::where('temperory_email', $request->email)->orWhere('email',$request->email)->first();
+            $user = User::where('temperory_email', $request->email)->orWhere('email', $request->email)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
@@ -222,13 +222,14 @@ class AuthController extends Controller
             $currentUser = User::findOrFail(auth()->user()->id);
 
             $inputs = [];
-
+            Log::info(json_encode($request->all()));
             if ($request->birthdate) {
                 $inputs['birthdate'] = $request->birthdate;
             }
 
             if ($request->phone) {
                 $inputs['phone'] = $request->phone;
+                $inputs['temperory_phone'] = $request->phone;
             }
 
             if ($request->name) {
@@ -310,7 +311,7 @@ class AuthController extends Controller
     }
     public function updateToken(Request $request)
     {
-        $user=Auth::user();
+        $user = Auth::user();
         $user->fcm_token = $request->fcm_token;
         return response()->apiSuccess($user->save());
     }
