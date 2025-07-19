@@ -54,6 +54,12 @@ class User extends Authenticatable
     public function supplier(){
         return $this->hasOne(Supplier::class,'user_id');
     }
+    public function city(){
+        return $this->hasOne(City::class,'city_id');
+    }
+    public function country(){
+        return $this->hasOne(Country::class,'country_id');
+    }
     public function feeSetting(){
         return $this->hasOne(UserFee::class,'user_id');
     }
