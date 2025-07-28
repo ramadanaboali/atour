@@ -53,7 +53,7 @@ class TapService
 
     public function callback($tap_id, $type)
     {
-        $message="";
+        $message = "";
         if ($type == "trip") {
             $order = BookingTrip::with('trip')->where('payment_id', $tap_id)->first();
             $message = __('api.new_trip_booking_code', ['item_name' => $order->trip?->title]);
@@ -83,10 +83,10 @@ class TapService
         curl_close($curl);
         $result = json_decode($response);
 
-        $order->payment_status = $result->status;
         if ($result->status == 'CAPTURED') {
+            $order->payment_status = $result->status;
             $user = $order->user;
-            if($vendor_id){
+            if ($vendor_id) {
                 try {
                     OneSignalService::sendToUser($vendor_id, __('api.new_order'), $message);
                 } catch (Exception $e) {
@@ -94,8 +94,10 @@ class TapService
                 }
             }
             Mail::to($user->email)->send(new SendOrder($user->email, $order->id));
+            $order->save();
+        } else {
+            $order->delete();
         }
-        $order->save();
         return ['success' => true,'data' => json_decode($response, true)];
     }
 
