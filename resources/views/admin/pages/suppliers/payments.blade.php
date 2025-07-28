@@ -34,6 +34,7 @@
                         <th>{{ __('admin.additional_tax') }}</th>
                         <th>{{ __('admin.other_fee') }}</th>
                         <th>{{ __('admin.admin_percentage') }}</th>
+                        <th>{{ __('admin.created_at') }}</th>
                     </tr>
                     </thead>
                 </table>
@@ -73,6 +74,7 @@
                 {data: 'tax_value', name: 'tax_value'},
                 {data: 'admin_fee_value', name: 'admin_fee_value'},
                 {data: 'admin_value', name: 'admin_value'},
+                {data: 'created_at', name: 'created_at'},
             ],
             columnDefs: [
             ],
