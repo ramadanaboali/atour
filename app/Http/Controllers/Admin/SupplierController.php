@@ -162,7 +162,7 @@ class SupplierController extends Controller
 
     public function select(Request $request): JsonResponse|string
     {
-        $data = User::distinct()
+        $data = User::distinct()->whereNotNull('email')
             ->where(function ($query) use ($request) {
                 if ($request->filled('q')) {
                     return $query->where('name', 'like', '%' . $request->q . '%');
