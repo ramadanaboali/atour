@@ -183,7 +183,7 @@ class SupplierController extends Controller
     public function list(Request $request)
     {
         $data = User::leftJoin('suppliers', 'suppliers.user_id', 'users.id')
-            ->where(function ($query) use ($request) {
+            ->whereNotNull('email')->where(function ($query) use ($request) {
                 if ($request->filled('name')) {
                     $query->where('users.name', 'like', '%' . $request->name . '%');
                 }
