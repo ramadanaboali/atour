@@ -226,7 +226,6 @@
                                             <th class="py-1">{{ __('orders.client_name') }}</th>
                                             <th class="py-1">{{ __('orders.description') }}</th>
                                             <th class="py-1">{{ __('orders.total') }}</th>
-                                            <th class="py-1">{{ __('orders.phone') }}</th>
                                             <th class="py-1">{{ __('orders.start_point') }}</th>
                                             <th class="py-1">{{ __('orders.end_point') }}</th>
                                             <th class="py-1">{{ __('orders.cancelation_policy') }}</th>
@@ -242,12 +241,11 @@
                                                 <td>{{ $trip->title }}</td>
                                                 <td>{{ $trip->description }}</td>
                                                 <td>{{ $trip->price }}</td>
-                                                <td>{{ $trip->phone }}</td>
                                                 <td>{{ $trip->start_point }}</td>
                                                 <td>{{ $trip->end_point }}</td>
                                                 <td>{{ $trip->cancelation_policy }}</td>
-                                                <td>{{ $trip->free_cancelation }}</td>
-                                                <td>{{ $trip->pay_later }}</td>
+                                                <td>{{ $trip->free_cancelation==1?'✅':'❌' }}</td>
+                                                <td>{{ $trip->pay_later==1?'✅':'❌' }}</td>
 
                                         </tr>
                                         @endforeach
