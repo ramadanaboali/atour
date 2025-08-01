@@ -239,17 +239,15 @@
 
                                         <tr>
 
-                                            <td class="py-1">
-                                                <span class="fw-bold">{{ $trip->title }}</span>
-                                                <span class="fw-bold">{{ $trip->description }}</span>
-                                                <span class="fw-bold">{{ $trip->price }}</span>
-                                                <span class="fw-bold">{{ $trip->phone }}</span>
-                                                <span class="fw-bold">{{ $trip->start_point }}</span>
-                                                <span class="fw-bold">{{ $trip->end_point }}</span>
-                                                <span class="fw-bold">{{ $trip->cancelation_policy }}</span>
-                                                <span class="fw-bold">{{ $trip->free_cancelation }}</span>
-                                                <span class="fw-bold">{{ $trip->pay_later }}</span>
-                                            </td>
+                                                <td>{{ $trip->title }}</td>
+                                                <td>{{ $trip->description }}</td>
+                                                <td>{{ $trip->price }}</td>
+                                                <td>{{ $trip->phone }}</td>
+                                                <td>{{ $trip->start_point }}</td>
+                                                <td>{{ $trip->end_point }}</td>
+                                                <td>{{ $trip->cancelation_policy }}</td>
+                                                <td>{{ $trip->free_cancelation }}</td>
+                                                <td>{{ $trip->pay_later }}</td>
 
                                         </tr>
                                         @endforeach
