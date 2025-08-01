@@ -355,6 +355,7 @@ class SupplierController extends Controller
     {
         if ($request->ajax()) {
             $data = DB::table('users')
+            ->whereNotNull('users.email')
                 ->where('users.type', User::TYPE_SUPPLIER)
                 // Gifts subquery
                 ->leftJoin(DB::raw("(
