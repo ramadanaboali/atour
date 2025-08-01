@@ -406,7 +406,7 @@ class SupplierController extends Controller
                     DB::raw('COALESCE(gifts.count_booking_gift, 0) AS count_booking_gift'),
                     DB::raw('COALESCE(trips.count_booking_trib, 0) AS count_booking_trib'),
                     DB::raw('COALESCE(effects.count_booking_effectivenes, 0) AS count_booking_effectivenes'),
-                    DB::raw('COALESCE(gifts.sum_booking_gift, 0) + COALESCE(trips.sum_booking_trib, 0) + COALESCE(effects.sum_booking_effectivenes, 0) AS total_money'),
+                    DB::raw('ROUND(COALESCE(gifts.sum_booking_gift, 0) + COALESCE(trips.sum_booking_trib, 0) + COALESCE(effects.sum_booking_effectivenes, 0) AS total_money,2)'),
                     DB::raw('COALESCE(orders.total_tax_value, 0) AS total_tax_value'),
                     DB::raw('COALESCE(orders.total_payment_way_value, 0) AS total_payment_way_value'),
                     DB::raw('COALESCE(orders.total_admin_value, 0) AS total_admin_value'),
