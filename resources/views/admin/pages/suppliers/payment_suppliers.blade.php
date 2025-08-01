@@ -164,17 +164,17 @@
                         }, 0 );               
 
                     $( api.column( 0 ).footer() ).html("{{ __('admin.total') }}");
-                    $( api.column( 1 ).footer() ).html(col_1);
-                    $( api.column( 2 ).footer() ).html(col_2);
-                    $( api.column( 3 ).footer() ).html(col_3);
-                    $( api.column( 4 ).footer() ).html(col_4);
-                    $( api.column( 5 ).footer() ).html(col_5);
-                    $( api.column( 6 ).footer() ).html(col_6);
-                    $( api.column( 7 ).footer() ).html(col_7);
-                    $( api.column( 8 ).footer() ).html(col_8);
-                    $( api.column( 9 ).footer() ).html(col_9);
-                    $( api.column( 10 ).footer() ).html(col_10);
-                    $( api.column( 11 ).footer() ).html(col_11);
+                    $( api.column( 1 ).footer() ).html(parseFloat(col_1).toFixed(2));
+                    $( api.column( 2 ).footer() ).html(parseFloat(col_2).toFixed(2));
+                    $( api.column( 3 ).footer() ).html(parseFloat(col_3).toFixed(2));
+                    $( api.column( 4 ).footer() ).html(parseFloat(col_4).toFixed(2));
+                    $( api.column( 5 ).footer() ).html(parseFloat(col_5).toFixed(2));
+                    $( api.column( 6 ).footer() ).html(parseFloat(col_6).toFixed(2));
+                    $( api.column( 7 ).footer() ).html(parseFloat(col_7).toFixed(2));
+                    $( api.column( 8 ).footer() ).html(parseFloat(col_8).toFixed(2));
+                    $( api.column( 9 ).footer() ).html(parseFloat(col_9).toFixed(2));
+                    $( api.column( 10 ).footer() ).html(parseFloat(col_10).toFixed(2));
+                    $( api.column( 11 ).footer() ).html(parseFloat(col_11).toFixed(2));
                 },
             columnDefs: [
                  @canany('accounts.settlement')
