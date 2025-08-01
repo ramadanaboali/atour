@@ -225,17 +225,17 @@ class SupplierController extends Controller
 
         $bookingGift = BookingGift::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
             ->get();
 
         $bookingTrip = BookingTrip::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
             ->get();
 
         $bookingEffectivene = BookingEffectivene::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
             ->get();
 
         // Merge collections to retain relationships
