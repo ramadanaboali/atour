@@ -158,7 +158,7 @@ class ClientController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Client::where(function ($query) use ($request) {
+        $data = Client::whereNotNull('email')->where(function ($query) use ($request) {
             if ($request->filled('name')) {
                 $query->where('name', 'like', '%'. $request->name .'%');
             }
