@@ -223,8 +223,8 @@ class AuthController extends Controller
 
             $inputs = [];
             Log::info(json_encode($request->all()));
-            if ($request->birthdate) {
-                $inputs['birthdate'] = $request->birthdate;
+            if ($request->birth_date) {
+                $inputs['birthdate'] = $request->birth_date;
             }
 
             if ($request->phone) {
