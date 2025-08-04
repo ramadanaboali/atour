@@ -65,6 +65,7 @@ class AuthController extends Controller
         $userInput = [
             'email' => $request->email,
             'temperory_email' => $request->email,
+            'joining_date_from' => date('Y-m-d'),
             'name' => $request->name,
             'phone' => $request->phone,
             'status' => 'accepted',
