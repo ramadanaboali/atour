@@ -224,7 +224,10 @@ class AuthController extends Controller
             $inputs = [];
             Log::info(json_encode($request->all()));
             if ($request->birth_date) {
-                $inputs['birthdate'] = $request->birth_date;
+
+                $formattedDate = Carbon::createFromFormat('j M, Y', $request->birth_date)->format('Y-m-d');
+
+                $inputs['birthdate'] = $formattedDate;
             }
 
             if ($request->phone) {
