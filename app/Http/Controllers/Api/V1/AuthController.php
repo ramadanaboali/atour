@@ -267,6 +267,12 @@ class AuthController extends Controller
                 $request->image->move(public_path('storage/users'), $fileName);
                 $inputs['image'] = $fileName;
             }
+            $image = $request->file('cover');
+            if ($image) {
+                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                $request->image->move(public_path('storage/users'), $fileName);
+                $inputs['image'] = $fileName;
+            }
 
             if (count($inputs) > 0) {
                 $currentUser->update($inputs);
