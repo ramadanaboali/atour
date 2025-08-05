@@ -112,16 +112,20 @@ class AuthController extends Controller
         }
 
     }
-      private function generateCode()
+    private function generateCode()
     {
         // Generate P-2500001 +1 to P-9999999
         // Ensure the code is unique
         $code = 'P-2500001';
-        $user= User::where('type',User::TYPE_SUPPLIER)->orderby('id','desc')->first();
-        if ($user && $user->code) {
+        $user = User::where('type', User::TYPE_SUPPLIER)->orderby('id', 'desc')->first();
+
+        if ($user && $user->code != null) {
             //return code +1
-            return 'P-' . (intval(substr($user->code, 2)) + 1);
+            //
+            return 'C-' . (intval(substr($user->code, 2)) + 1);
         }
+        // If no user found or no code, return the initial code
+        // This ensures that the code starts from C-2500001 and increments correctly
         return $code;
     }
     public function setup1(Setup1Request $request)
@@ -165,7 +169,7 @@ class AuthController extends Controller
         }
 
     }
-    
+
     public function setup2(Setup2Request $request)
     {
         try {

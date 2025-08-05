@@ -257,7 +257,7 @@ class AuthController extends Controller
             if ($request->nationality) {
                 $inputs['nationality'] = $request->nationality;
             }
-            $inputs['code'] =  $this->generateCode();
+            // $inputs['code'] =  $this->generateCode();
 
             if ($request->password) {
                 $inputs['password'] = Hash::make($request->password);
