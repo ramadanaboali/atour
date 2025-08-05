@@ -22,8 +22,8 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
-        $customers = User::where('type', User::TYPE_CLIENT)->count();
-        $suppliers = Supplier::count();
+        $customers = User::where('type', User::TYPE_CLIENT)->whereNotNull('email')->count();
+        $suppliers = User::where('type', User::TYPE_SUPPLIER)->whereNotNull('email')->count();
         $current_orders = Order::where('status', Order::STATUS_PENDING)->count();
         $old_orders = Order::where('status', Order::STATUS_COMPLEALED)->count();
         $canceled_orders = Order::where('status', Order::STATUS_CANCELED)->count();
