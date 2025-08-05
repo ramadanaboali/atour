@@ -112,13 +112,15 @@ class AuthController extends Controller
         }
 
     }
-     private function generateCode()
+      private function generateCode()
     {
         // Generate P-2500001 +1 to P-9999999
         // Ensure the code is unique
-        $code = 'P-' . rand(2500001, 9999999);
-        if (User::where('code', $code)->exists()) {
-            return $this->generateCode();
+        $code = 'P-2500001';
+        $user= User::where('type',User::TYPE_SUPPLIER)->orderby('id','desc')->first();
+        if ($user && $user->code) {
+            //return code +1
+            return 'P-' . (intval(substr($user->code, 2)) + 1);
         }
         return $code;
     }

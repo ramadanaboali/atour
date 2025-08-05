@@ -70,6 +70,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'code' => $this->generateCode(),
             'status' => 'accepted',
+            'active' => 1,
             'type' => User::TYPE_CLIENT,
             'password' => Hash::make($request->password),
         ];
@@ -88,9 +89,11 @@ class AuthController extends Controller
     {
         // Generate C-2500001 +1 to C-9999999
         // Ensure the code is unique
-        $code = 'C-' . rand(2500001, 9999999);
-        if (User::where('code', $code)->exists()) {
-            return $this->generateCode();
+        $code = 'C-2500001';
+        $user= User::where('type',User::TYPE_CLIENT)->orderby('id','desc')->first();
+        if ($user && $user->code) {
+            //return code +1
+            return 'C-' . (intval(substr($user->code, 2)) + 1);
         }
         return $code;
     }
