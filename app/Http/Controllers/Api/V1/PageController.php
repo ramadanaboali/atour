@@ -13,6 +13,7 @@ use App\Http\Resources\OnboardingResource;
 use App\Http\Resources\FeatureResource;
 use App\Http\Resources\RequirementResource;
 use App\Http\Resources\SubCategoryResource;
+use App\Mail\ContactUsMail;
 use App\Models\Add;
 use App\Models\Article;
 use App\Models\Attachment;
@@ -36,6 +37,7 @@ use App\Models\Requirement;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
@@ -291,6 +293,9 @@ class PageController extends Controller
             'user_id' => auth()->user()->id
         ];
         $data = ContactUs::create($data);
+        //send email to admin
+        $adminEmail = config('mail.admin_email');
+        Mail::to($adminEmail)->send(new ContactUsMail($data));
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
     public function onboardings()
