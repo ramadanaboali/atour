@@ -29,7 +29,7 @@
             <table class="dt-multilingual table datatables-ajax">
                 <thead>
                     <tr>
-                        <th>{{ __('clients.code') }}</th>
+                        <th>{{ __('suppliers.code') }}</th>
 
 
                         <th>{{ __('suppliers.image') }}</th>
