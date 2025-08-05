@@ -13,8 +13,8 @@ return [
     |
     */
     //admin mail
-    // 'admin_email' => env('MAIL_ADMIN_ADDRESS', 'helpdesk@atour.sa'),
-    'admin_email' => env('MAIL_ADMIN_ADDRESS', 'mastafa3alie@gmail.com'),
+    'admin_email' => env('MAIL_ADMIN_ADDRESS', 'helpdesk@atour.sa'),
+    // 'admin_email' => env('MAIL_ADMIN_ADDRESS', 'mastafa3alie@gmail.com'),
 
     'default' => env('MAIL_MAILER', 'smtp'),
 
