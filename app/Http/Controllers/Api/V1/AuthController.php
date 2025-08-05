@@ -91,8 +91,9 @@ class AuthController extends Controller
         // Ensure the code is unique
         $code = 'C-2500001';
         $user= User::where('type',User::TYPE_CLIENT)->orderby('id','desc')->first();
-        if ($user && $user->code) {
+        if ($user && $user->code != null) {
             //return code +1
+            //
             return 'C-' . (intval(substr($user->code, 2)) + 1);
         }
         return $code;
