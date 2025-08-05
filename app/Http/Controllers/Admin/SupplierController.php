@@ -153,7 +153,7 @@ class SupplierController extends Controller
     }
     public function destroy($id): RedirectResponse
     {
-        $item = Supplier::findOrFail($id);
+        $item = User::findOrFail($id);
         if ($item->delete()) {
             flash(__('suppliers.messages.deleted'))->success();
         }
