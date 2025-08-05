@@ -1,15 +1,18 @@
-@component('mail::message')
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Contact Us Email</title>
+</head>
+<body>
+	<h1>Hello</h1>
+	{{-- contact us email template --}}
 
-# Hello
-{{-- contact us email template --}}
-@endcomponent
-
-@component('mail::panel')
-**Title:**
- {{ $contactData['title'] }}
-
-**Description:**  
-{{ $contactData['description'] }}
-
-**User ID:** {{ $contactData['user_id'] }}
-@endcomponent
+	<div style="border:1px solid #ccc; padding:16px; background:#f9f9f9;">
+		<strong>Title:</strong> {{ $contactData['title'] }}<br><br>
+		<strong>Description:</strong><br>
+		{{ $contactData['description'] }}<br><br>
+		<strong>User ID:</strong> {{ $contactData['user_id'] }}
+	</div>
+</body>
+</html>
