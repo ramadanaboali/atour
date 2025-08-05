@@ -12,7 +12,7 @@
 		<strong>Title:</strong> {{ $contactData['title'] }}<br><br>
 		<strong>Description:</strong><br>
 		{{ $contactData['description'] }}<br><br>
-		<strong>User Name:</strong> {{ $contactData['user_name'] }}
+		<strong>User Name:</strong> {{ $contactData['user_name'] }}<br>
 		<strong>User Email:</strong> {{ $contactData['user_email'] }}
 	</div>
 </body>
