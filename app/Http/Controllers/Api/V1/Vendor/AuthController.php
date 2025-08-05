@@ -101,6 +101,7 @@ class AuthController extends Controller
             }
             if ($user->reset_code == $request->code) {
                 $user->reset_code = null;
+                $user->code = $this->generateCode();
                 $user->password = Hash::make($request->code);
                 $user->save();
                 return apiResponse(true, $user, __('api.code_success'), null, 200);
@@ -110,6 +111,16 @@ class AuthController extends Controller
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+    }
+     private function generateCode()
+    {
+        // Generate P-2500001 +1 to P-9999999
+        // Ensure the code is unique
+        $code = 'P-' . rand(2500001, 9999999);
+        if (User::where('code', $code)->exists()) {
+            return $this->generateCode();
+        }
+        return $code;
     }
     public function setup1(Setup1Request $request)
     {
@@ -152,6 +163,7 @@ class AuthController extends Controller
         }
 
     }
+    
     public function setup2(Setup2Request $request)
     {
         try {

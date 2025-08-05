@@ -68,6 +68,7 @@ class AuthController extends Controller
             'joining_date_from' => date('Y-m-d'),
             'name' => $request->name,
             'phone' => $request->phone,
+            'code' => $this->generateCode(),
             'status' => 'accepted',
             'type' => User::TYPE_CLIENT,
             'password' => Hash::make($request->password),
@@ -83,6 +84,16 @@ class AuthController extends Controller
 
     }
 
+    private function generateCode()
+    {
+        // Generate C-2500001 +1 to C-9999999
+        // Ensure the code is unique
+        $code = 'C-' . rand(2500001, 9999999);
+        if (User::where('code', $code)->exists()) {
+            return $this->generateCode();
+        }
+        return $code;
+    }
     public function sendCode(SendCodeRequest $request)
     {
         try {
