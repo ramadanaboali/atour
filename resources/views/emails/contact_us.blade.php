@@ -1,10 +1,10 @@
-@component('Illuminate\Mail\Markdown::message')
+@component('mail::message')
 
 # Hello
 {{-- contact us email template --}}
 @endcomponent
 
-@component('Illuminate\Mail\Markdown::panel')
+@component('mail::panel')
 **Title:**
  {{ $contactData['title'] }}
 
