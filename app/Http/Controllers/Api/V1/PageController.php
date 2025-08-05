@@ -295,6 +295,8 @@ class PageController extends Controller
         $data = ContactUs::create($data);
         //send email to admin
         $adminEmail = config('mail.admin_email');
+        $data['user_email'] = auth()->user()->email;
+        $data['user_name'] = auth()->user()->name;
         Mail::to($adminEmail)->send(new ContactUsMail($data));
         return apiResponse(true, $data, __('api.update_success'), null, 200);
     }
