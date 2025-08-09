@@ -216,9 +216,12 @@ class SupplierController extends Controller
             ->editColumn('code', function ($item) {
                 return $item->code ? 'P-' . $item->code : '-';
             })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at?->format('Y-m-d H:i');
+            })
 
 
-            ->rawColumns(['photo', 'active','code'])
+            ->rawColumns(['photo', 'active','code','created_at'])
             ->make(true);
     }
 

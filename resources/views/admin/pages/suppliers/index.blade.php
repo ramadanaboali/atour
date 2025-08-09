@@ -36,7 +36,7 @@
                         <th>{{ __('suppliers.name') }}</th>
                         <th>{{ __('suppliers.email') }}</th>
                         <th>{{ __('suppliers.phone') }}</th>
-                        <th>{{ __('suppliers.birthdate') }}</th>
+                        <th>{{ __('suppliers.joining_date') }}</th>
                         <th>{{ __('suppliers.active') }}</th>
                         @canany('suppliers.edit','suppliers.delete')
                         <th width="15%" class="text-center">{{ __('suppliers.options') }}</th>
@@ -173,8 +173,8 @@
                 , name: 'phone'
             }
             , {
-                data: 'birthdate'
-                , name: 'birthdate'
+                data: 'created_at'
+                , name: 'created_at'
             }
             , {
                 data: 'active'
