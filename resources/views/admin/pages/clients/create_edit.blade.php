@@ -42,14 +42,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-1 col-md-4  @error('code') is-invalid @enderror">
-                            <label class="form-label" for="code">{{ __('clients.code') }}</label>
-                            <input type="number" name="code" id="code" class="form-control" placeholder=""
-                                   value="{{ $item->code ?? old('code') }}" required/>
-                            @error('code')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
+                       
                         <div class="mb-1 col-md-4  @error('email') is-invalid @enderror">
                             <label class="form-label" for="email">{{ __('admin.email') }}</label>
                             <input type="email" name="email" id="email" class="form-control" placeholder=""
