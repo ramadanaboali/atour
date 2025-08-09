@@ -153,7 +153,7 @@ class AuthController extends Controller
     }
     public function resetPassword(ResetRequest $request)
     {
-        try {
+        // try {
 
             $user = User::where('type', User::TYPE_CLIENT)->where(function ($query) use ($request) {
                 $query->where('email', $request->username)->orWhere('phone', $request->username);
@@ -166,9 +166,9 @@ class AuthController extends Controller
             $user->update(['reset_code' => $MsgID]);
             Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
             return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
-        } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // } catch (Exception $e) {
+        //     return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
     }
     public function checkCode(CheckCodeRequest $request)
