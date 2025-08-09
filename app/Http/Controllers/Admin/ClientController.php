@@ -195,7 +195,7 @@ class ClientController extends Controller
             ->addColumn('order_count', function ($item) {
                 return 0;
             })
-            ->addColumn('code', function ($item) {
+            ->editColumn('code', function ($item) {
                 return $item->code ? 'C-'.$item->code : '';
             })
             ->editColumn('active', function ($item) {
