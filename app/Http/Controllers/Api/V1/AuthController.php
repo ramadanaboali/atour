@@ -87,14 +87,11 @@ class AuthController extends Controller
 
     private function generateCode()
     {
-        // Generate C-2500001 +1 to C-9999999
-        // Ensure the code is unique
-        $code = 'C-2500001';
-        $user= User::where('type',User::TYPE_CLIENT)->orderby('id','desc')->first();
+
+        $code = 2500001;
+        $user = User::where('type', User::TYPE_CLIENT)->orderby('id', 'desc')->first();
         if ($user && $user->code != null) {
-            //return code +1
-            //
-            return 'C-' . (intval(substr($user->code, 2)) + 1);
+            return intval($user->code) + 1;
         }
         return $code;
     }

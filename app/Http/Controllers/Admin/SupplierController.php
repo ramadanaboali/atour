@@ -213,9 +213,12 @@ class SupplierController extends Controller
             ->editColumn('active', function ($item) {
                 return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
             })
+            ->editColumn('code', function ($item) {
+                return $item->code ? 'P-' . $item->code : '-';
+            })
 
 
-            ->rawColumns(['photo', 'active'])
+            ->rawColumns(['photo', 'active','code'])
             ->make(true);
     }
 

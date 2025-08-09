@@ -195,6 +195,9 @@ class ClientController extends Controller
             ->addColumn('order_count', function ($item) {
                 return 0;
             })
+            ->addColumn('code', function ($item) {
+                return $item->code ? 'C-'.$item->code : '';
+            })
             ->editColumn('active', function ($item) {
             return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect " ><i data-feather="x" ></i></button>';
         })
