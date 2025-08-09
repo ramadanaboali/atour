@@ -23,6 +23,7 @@ use App\Services\TapService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -77,112 +78,127 @@ class OrderController extends Controller
         return $bookingDate->toDateString(); // returns in Y-m-d format
     }
 
-    
-function convertArabicNumbersToEnglish($value)
-{
-    $arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-    $english = ['0','1','2','3','4','5','6','7','8','9'];
-    return str_replace($arabic, $english, $value);
-}
+
+    public function convertArabicNumbersToEnglish($value)
+    {
+        $arabic = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        $english = ['0','1','2','3','4','5','6','7','8','9'];
+        return str_replace($arabic, $english, $value);
+    }
 
     public function bookingTrip(BookingTripRequest $request)
     {
-        Log::info(json_encode($request->all()));
-        $item = Trip::findOrFail($request->trip_id);
-        if ($item->vendor?->active == 0) {
-            return response()->apiFail(__('api.vendor_not_active'));
-        }
-        // $booking_date = $this->getNextBookingDate($request->booking_day);
-        $booking_date = $this->convertArabicNumbersToEnglish($request->booking_date);
-        Log::info($booking_date);
-        $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
-        if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
-            return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
-        }
-        $data = $request->all();
-        $quantity = ((int) $request->children_number + (int) $request->people_number) ?? 1;
-        $data['user_id'] = auth()->user()->id;
-        $data['payment_status'] = 'pendding';
-        $data['status'] = 0;
-        $data['booking_date'] = $booking_date;
-        $data['payment_way'] = $request->payment_way;
 
-        $data['total'] = $item->price * $quantity;
-        $data['lat'] = $request->lat;
-        $data['long'] = $request->long;
-        $data['vendor_id'] = $item->vendor_id;
-        $admin_value = 0;
-        $order_fees = [];
-        if ($item->vendor?->feeSetting) {
-            if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->tax_value;
-                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+        try {
+            DB::beginTransaction();
+            Log::info(json_encode($request->all()));
+            $item = Trip::findOrFail($request->trip_id);
+            if ($item->vendor?->active == 0) {
+                return response()->apiFail(__('api.vendor_not_active'));
             }
-            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+            $booking_date = $this->convertArabicNumbersToEnglish($request->booking_date);
+            Log::info($booking_date);
+            $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
+            if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
+                return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
+            }
+            $data = $request->all();
+            $quantity = ((int) $request->children_number + (int) $request->people_number) ?? 1;
+            $data['user_id'] = auth()->user()->id;
+            $data['payment_status'] = 'pendding';
+            $data['status'] = 0;
+            $data['booking_date'] = $booking_date;
+            $data['payment_way'] = $request->payment_way;
 
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_value;
-                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-            }
-        }
+            $data['total'] = $item->price * $quantity;
+            $data['lat'] = $request->lat;
+            $data['long'] = $request->long;
+            $data['vendor_id'] = $item->vendor_id;
+            $admin_value = 0;
+            $order_fees = [];
+            if ($item->vendor?->feeSetting) {
+                if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
 
-        $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * $quantity;
-        $order = BookingTrip::create($data);
-        if (count($order_fees) > 0) {
-            $order_fees['order_id'] = $order->id;
-            $order_fees['trip_id'] = $item->id;
-            $order_fees['vendor_id'] = $item->vendor_id;
-            $order_fees['order_type'] = 'trip';
-            OrderFee::create($order_fees);
-        }
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                }
+            }
 
-        if ($request->payment_way == 'online') {
-            $payment = new TapService();
-            $payment->callback_url = route('callBack', ['type' => 'trip']);
-            $tap = $payment->pay($order->customer_total);
-            if ($tap['success']) {
-                $order->payment_id = $tap['data']['id'];
+            $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * $quantity;
+            $order = BookingTrip::create($data);
+            if (count($order_fees) > 0) {
+                $order_fees['order_id'] = $order->id;
+                $order_fees['trip_id'] = $item->id;
+                $order_fees['vendor_id'] = $item->vendor_id;
+                $order_fees['order_type'] = 'trip';
+                OrderFee::create($order_fees);
+            }
+
+            if ($request->payment_way == 'online') {
+                $payment = new TapService();
+                $payment->callback_url = route('callBack', ['type' => 'trip']);
+                $tap = $payment->pay($order->customer_total);
+
+
+                if (isset($tap['data']['errors'])) {
+                    DB::rollBack();
+                    return response()->apiFail($tap['data']['errors'][0]['description']);
+                }
+                if ($tap['success']) {
+                    $order->payment_id = $tap['data']['id'];
+                    $order->save();
+                }
+                DB::commit();
+                return response()->apiSuccess($tap);
+            } else {
+                $order->payment_status = 'CAPTURED';
                 $order->save();
             }
-            return response()->apiSuccess($tap);
-        } else {
-            $order->payment_status = 'CAPTURED';
-            $order->save();
-        }
-        $order = new OrderCustomerResource($order);
+            $order = new OrderCustomerResource($order);
 
-        try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
-            Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+                Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
 
-        try {
-            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
+            try {
+                OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_trip_booking_code', ['item_name' => $item->title]));
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            DB::commit();
+            return response()->apiSuccess($order);
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
+            return response()->apiFail(__('api.error_occurred'));
         }
-        return response()->apiSuccess($order);
     }
     public function tripPay($id)
     {
@@ -204,104 +220,118 @@ function convertArabicNumbersToEnglish($value)
     }
     public function bookingEffectivenes(BookingEffectivenesRequest $request)
     {
-        $item = Effectivenes::findOrFail($request->effectivene_id);
-
-        if ($item->vendor?->active == 0) {
-            return response()->apiFail(__('api.vendor_not_active'));
-        }
-
-        if ($item->people) {
-            $booking_count = BookingEffectivene::where('effectivene_id', $request->effectivene_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->count();
-            if (($booking_count + 1) > $item->people) {
-                return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
-            }
-        }
-
-
-
-        $data['user_id'] = auth()->user()->id;
-        $data['payment_status'] = 'pendding';
-        $data['status'] = 0;
-        $data['payment_way'] = $request->payment_way;
-        $data['total'] = $item->price;
-        $data['vendor_id'] = $item->vendor_id;
-        $data['effectivene_id'] = $request->effectivene_id;
-        $data['customer_total'] = ($item->price + $item->calculateAdminFees());
-
-        $admin_value = 0;
-        $order_fees = [];
-        if ($item->vendor?->feeSetting) {
-            if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->tax_value;
-                $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
-
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_value;
-                $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
-
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-            }
-        }
-
-        $order = BookingEffectivene::create($data);
-        if (count($order_fees) > 0) {
-            $order_fees['order_id'] = $order->id;
-
-            $order_fees['effectivenes_id'] = $item->id;
-            $order_fees['vendor_id'] = $item->vendor_id;
-
-            $order_fees['order_type'] = 'effectivenes';
-            OrderFee::create($order_fees);
-        }
-
-        if ($request->payment_way == 'online') {
-            $payment = new TapService();
-            $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
-            $tap = $payment->pay($order->customer_total);
-            if ($tap['success']) {
-                $order->payment_id = $tap['data']['id'];
-                $order->save();
-            }
-            return response()->apiSuccess($tap);
-        }
-
-
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
-            Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+            DB::beginTransaction();
+            $item = Effectivenes::findOrFail($request->effectivene_id);
+
+            if ($item->vendor?->active == 0) {
+                return response()->apiFail(__('api.vendor_not_active'));
+            }
+
+            if ($item->people) {
+                $booking_count = BookingEffectivene::where('effectivene_id', $request->effectivene_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->count();
+                if (($booking_count + 1) > $item->people) {
+                    return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
+                }
+            }
 
 
+
+            $data['user_id'] = auth()->user()->id;
+            $data['payment_status'] = 'pendding';
+            $data['status'] = 0;
+            $data['payment_way'] = $request->payment_way;
+            $data['total'] = $item->price;
+            $data['vendor_id'] = $item->vendor_id;
+            $data['effectivene_id'] = $request->effectivene_id;
+            $data['customer_total'] = ($item->price + $item->calculateAdminFees());
+
+            $admin_value = 0;
+            $order_fees = [];
+            if ($item->vendor?->feeSetting) {
+                if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                }
+            }
+
+            $order = BookingEffectivene::create($data);
+            if (count($order_fees) > 0) {
+                $order_fees['order_id'] = $order->id;
+
+                $order_fees['effectivenes_id'] = $item->id;
+                $order_fees['vendor_id'] = $item->vendor_id;
+
+                $order_fees['order_type'] = 'effectivenes';
+                OrderFee::create($order_fees);
+            }
+
+            if ($request->payment_way == 'online') {
+                $payment = new TapService();
+                $payment->callback_url = route('callBack', ['type' => 'effectivenes']);
+                $tap = $payment->pay($order->customer_total);
+
+                if (isset($tap['data']['errors'])) {
+                    DB::rollBack();
+                    return response()->apiFail($tap['data']['errors'][0]['description']);
+                }
+
+                if ($tap['success']) {
+                    $order->payment_id = $tap['data']['id'];
+                    $order->save();
+                }
+                DB::commit();
+                return response()->apiSuccess($tap);
+            }
+
+
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+                Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            try {
+                OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_effectivnes_booking_code', ['item_name' => $item->title]));
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            DB::commit();
+            return response()->apiSuccess($order);
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
+            return response()->apiFail(__('api.error_occurred'));
         }
-
-        try {
-            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_effectivnes_booking_code', ['item_name' => $item->title]));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        return response()->apiSuccess($order);
     }
 
     public function effectivenePay($id)
@@ -324,100 +354,116 @@ function convertArabicNumbersToEnglish($value)
     public function bookingGifts(BookingGiftRequest $request)
     {
 
-
-        $item = Gift::findOrFail($request->gift_id);
-
-        if ($item->vendor?->active == 0) {
-            return response()->apiFail(__('api.vendor_not_active'));
-        }
-
-        $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * ($request->quantity ?? 1);
-        $data['user_id'] = auth()->user()->id;
-        $data['payment_status'] = 'pendding';
-        $data['status'] = 0;
-        $data['total'] = $item->price * ($request->quantity ?? 1);
-        $data['vendor_id'] = $item->vendor_id;
-        $data['gift_id'] = $request->gift_id;
-        $data['lat'] = $request->lat;
-        $data['long'] = $request->long;
-        $data['payment_way'] = $request->payment_way;
-
-        $data['delivery_address'] = $request->delivery_address;
-        $data['delivery_number'] = $request->delivery_number;
-        $data['delivery_way'] = $request->delivery_way;
-        $data['quantity'] = $request->quantity;
-        $admin_value = 0;
-        $order_fees = [];
-        if ($item->vendor?->feeSetting) {
-            if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->tax_value;
-                $order_fees['tax_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->tax_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                $order_fees['tax_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                $order_fees['payment_way_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->payment_way_value;
-
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                $order_fees['payment_way_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_value;
-                $order_fees['admin_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_value;
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                $order_fees['admin_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-            }
-            if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_fee_value;
-
-            } else {
-                $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-            }
-            $admin_value = $admin_value * ($request->quantity ?? 1);
-        }
-
-        $order = BookingGift::create($data);
-        if (count($order_fees) > 0) {
-            $order_fees['vendor_id'] = $item->vendor_id;
-            $order_fees['order_id'] = $order->id;
-            $order_fees['order_type'] = 'gift';
-            $order_fees['gift_id'] = $item->id;
-
-            OrderFee::create($order_fees);
-        }
-        if ($request->payment_way == 'online') {
-            $payment = new TapService();
-            $payment->callback_url = route('callBack', ['type' => 'gift']);
-            $tap = $payment->pay($order->customer_total);
-            if ($tap['success']) {
-                $order->payment_id = $tap['data']['id'];
-                $order->save();
-            }
-            return response()->apiSuccess($tap);
-        }
-
-
         try {
-            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
-            Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+            DB::beginTransaction();
 
+            $item = Gift::findOrFail($request->gift_id);
+
+            if ($item->vendor?->active == 0) {
+                return response()->apiFail(__('api.vendor_not_active'));
+            }
+
+            $data['customer_total'] = ($item->price + $item->calculateAdminFees()) * ($request->quantity ?? 1);
+            $data['user_id'] = auth()->user()->id;
+            $data['payment_status'] = 'pendding';
+            $data['status'] = 0;
+            $data['total'] = $item->price * ($request->quantity ?? 1);
+            $data['vendor_id'] = $item->vendor_id;
+            $data['gift_id'] = $request->gift_id;
+            $data['lat'] = $request->lat;
+            $data['long'] = $request->long;
+            $data['payment_way'] = $request->payment_way;
+
+            $data['delivery_address'] = $request->delivery_address;
+            $data['delivery_number'] = $request->delivery_number;
+            $data['delivery_way'] = $request->delivery_way;
+            $data['quantity'] = $request->quantity;
+            $admin_value = 0;
+            $order_fees = [];
+            if ($item->vendor?->feeSetting) {
+                if ($item->vendor?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->tax_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->payment_way_value;
+
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_value;
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                }
+                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_fee_value;
+
+                } else {
+                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                }
+                $admin_value = $admin_value * ($request->quantity ?? 1);
+            }
+
+            $order = BookingGift::create($data);
+            if (count($order_fees) > 0) {
+                $order_fees['vendor_id'] = $item->vendor_id;
+                $order_fees['order_id'] = $order->id;
+                $order_fees['order_type'] = 'gift';
+                $order_fees['gift_id'] = $item->id;
+
+                OrderFee::create($order_fees);
+            }
+            if ($request->payment_way == 'online') {
+                $payment = new TapService();
+                $payment->callback_url = route('callBack', ['type' => 'gift']);
+                $tap = $payment->pay($order->customer_total);
+
+
+                if (isset($tap['data']['errors'])) {
+                    DB::rollBack();
+                    return response()->apiFail($tap['data']['errors'][0]['description']);
+                }
+
+
+                if ($tap['success']) {
+                    $order->payment_id = $tap['data']['id'];
+                    $order->save();
+                }
+                DB::commit();
+                return response()->apiSuccess($tap);
+            }
+
+
+            try {
+                Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+                Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            try {
+                OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_gift_booking_code', ['item_name' => $item->title]));
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+            DB::commit();
+            return response()->apiSuccess($order);
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage());
+            return response()->apiFail(__('api.error_occurred'));
         }
-
-        try {
-            OneSignalService::sendToUser($item->vendor_id, __('api.new_order'), __('api.new_gift_booking_code', ['item_name' => $item->title]));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-        return response()->apiSuccess($order);
     }
 
     public function GiftPay($id)
