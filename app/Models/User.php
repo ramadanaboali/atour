@@ -48,7 +48,7 @@ class User extends Authenticatable
     protected $appends = ['photo'];
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : asset('atour.jpg')) : asset('atour.jpg');
     }
 
     public function supplier(){
