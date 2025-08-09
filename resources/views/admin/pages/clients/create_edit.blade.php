@@ -91,14 +91,7 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="mb-1 col-md-4  @error('joining_date_to') is-invalid @enderror">
-                            <label class="form-label" for="joining_date_to">{{ __('clients.joining_date_to') }}</label>
-                            <input type="text" name="joining_date_to" id="joining_date_to" class="form-control flatpickr-basic" placeholder=""
-                                   value="{{ $item->joining_date_to ?? old('joining_date_to') }}" />
-                            @error('joining_date_to')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        
                         <div class="mb-1 col-md-4  @error('city_id') is-invalid @enderror">
                             <label class="form-label" for="city_id">{{ __('clients.city') }}</label>
                             <select name="city_id" id="city_id" class="form-control ajax_select2 extra_field"
