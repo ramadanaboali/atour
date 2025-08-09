@@ -89,7 +89,7 @@ class AuthController extends Controller
     {
 
         $code = 2500001;
-        $user = User::where('type', User::TYPE_CLIENT)->orderby('id', 'desc')->first();
+        $user = User::where('type', User::TYPE_CLIENT)->whereNotNull('code')->orderby('id', 'desc')->first();
         if ($user && $user->code != null) {
             return intval($user->code) + 1;
         }
