@@ -80,6 +80,7 @@ class AuthController extends Controller
         } else {
             $user = User::updateOrCreate(['temperory_email' => $request->email], $userInput);
         }
+        
 
         return $this->successResponse($user, Response::HTTP_CREATED);
 
