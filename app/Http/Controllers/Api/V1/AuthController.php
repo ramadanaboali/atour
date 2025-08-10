@@ -82,7 +82,7 @@ class AuthController extends Controller
         }
         
 
-        return $this->successResponse($user, Response::HTTP_CREATED);
+        return $this->successResponse($user, 200);
 
     }
 
