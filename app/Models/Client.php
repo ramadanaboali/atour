@@ -12,7 +12,7 @@ class Client extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table = 'users';
-    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by','status','last_login'];
+    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','deleted_at','code','birthdate','joining_date_from','joining_date_to','city_id','created_by','updated_by','last_login','can_pay_later','can_cancel','nationality','ban_vendor','pay_on_deliver','status','temperory_email','bank_account','bank_name','bank_iban','tax_number','temperory_phone'];
 
     public function city(): ?BelongsTo
     {
@@ -28,7 +28,7 @@ class Client extends Model
     }
 
     protected $appends = ['photo'];
-  public function getPhotoAttribute()
+    public function getPhotoAttribute()
     {
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/users/' . $this->attributes['image']) : asset('atour.jpg')) : asset('atour.jpg');
     }

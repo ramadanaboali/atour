@@ -136,6 +136,12 @@ class ClientController extends Controller
             $item->active = 0;
         }
         $item->type = User::TYPE_CLIENT;
+        if ($request->filled('email')) {
+            $item->temperory_email = $request->email;
+        }
+        if ($request->filled('phone')) {
+            $item->temperory_phone = $request->phone;
+        }
 
         if ($item->save()) {
 
