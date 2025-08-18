@@ -17,9 +17,8 @@
         <p style="font-size:16px; margin:0;">{{ __('emails.activation.greeting_ar', ['name' => $userName]) }}</p>
         <p style="font-size:16px; margin:5px 0;">{{ __('emails.activation.greeting_en', ['name' => $userName]) }}</p>
 
-        <p style="font-size:15px; color:#333;">
-            {{ __('emails.activation.thank_you') }}
-        </p>
+            {!! nl2br(__('emails.activation.thank_you')) !!}
+            
 
         <p style="font-size:15px; color:#333;">
             {{ __('emails.activation.use_code') }}
@@ -42,6 +41,8 @@
 
         <p style="font-size:14px; font-weight:bold; margin-top:10px;">
             {{ __('emails.activation.team') }}
+            <br>(ATOUR Team)
+
         </p>
     </div>
 
