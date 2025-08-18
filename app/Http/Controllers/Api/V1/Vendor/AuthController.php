@@ -37,6 +37,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
+use App\Mail\ActivationMail;
 use App\Models\SupplierService;
 use Carbon\Carbon;
 
@@ -85,7 +86,10 @@ class AuthController extends Controller
                 'type' => User::TYPE_SUPPLIER,
             ];
             $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
-            Mail::to($request->email)->send(new SendCodeResetPassword($request->email, $MsgID));
+            // Mail::to($request->email)->send(new SendCodeResetPassword($request->email, $MsgID));
+
+            Mail::to($request->email)->send(new ActivationMail($user->name, $MsgID));
+
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
