@@ -10,7 +10,7 @@
 
         <!-- Logo -->
         <div style="margin-bottom:20px;">
-            <img src="{{ asset('images/atour-logo.png') }}" alt="{{ __('emails.activation.logo_alt') }}" style="max-height:60px;">
+            <img src="{{ asset('atour.jpg') }}" alt="{{ __('emails.activation.logo_alt') }}" style="max-height:60px;">
         </div>
 
         <!-- Message -->
@@ -28,7 +28,7 @@
         <!-- Activation Code -->
         <div style="background:#f8f8f8; border:1px dashed #345c76; padding:10px; margin:15px 0;">
             <strong style="font-size:18px; color:#345c76;">
-                {{ $activationCode }}
+                {!! nl2br(e($activationCode)) !!}
             </strong>
         </div>
 
