@@ -11,6 +11,7 @@ return [
         'ru' => 'Russian',
         'zh' => 'Chinese',
         'ku' => 'Kurdish',
+        'ur' => 'Urdu',
         'ja' => 'Japanese'
     ],
     'default' => 'ar',
