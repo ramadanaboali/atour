@@ -22,14 +22,20 @@
     </div>
     <div class="content-body">
         <div class="card">
-            <div class="card-datatable">
+            <div class="card-datatable table-responsive">
+
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
+                        <th>{{ __('contacts.code') }}</th>
                         <th>{{ __('contacts.name') }}</th>
                         <th>{{ __('contacts.email') }}</th>
                         <th>{{ __('admin.phone') }}</th>
                         <th>{{ __('contacts.title') }}</th>
+                        <th>{{ __('contacts.status') }}</th>
+                        <th>{{ __('contacts.closed_at') }}</th>
+                        <th>{{ __('contacts.notes') }}</th>
+                        <th>{{ __('contacts.created_at') }}</th>
                         <th>{{ __('contacts.description') }}</th>
                         @canany('contacts.delete')
                             <th width="15%" class="text-center">{{ __('contacts.options') }}</th>
@@ -70,10 +76,15 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
+                {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
                 {data: 'title', name: 'title'},
+                {data: 'status', name: 'status'},
+                {data: 'closed_at', name: 'closed_at'},
+                {data: 'notes', name: 'notes'},
+                {data: 'created_at', name: 'created_at'},
                 {data: 'description', name: 'description'},
                     @canany('contacts.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},

@@ -10,7 +10,7 @@
 
         <!-- Logo -->
         <div style="margin-bottom:20px;">
-            <img src="{{ asset('atour.jpg') }}" alt="{{ __('emails.activation.logo_alt') }}" style="max-height:60px;">
+            <img src="{{ asset('atour.jpg') }}" alt="{{ __('emails.activation.logo_alt') }}" style="max-height:80px;">
         </div>
 
         <!-- Message -->
