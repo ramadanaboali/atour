@@ -16,8 +16,8 @@
         <!-- Message -->
         <p style="font-size:16px; margin:0;">{{ __('emails.activation.greeting_ar', ['name' => $userName]) }}</p>
         <p style="font-size:16px; margin:5px 0;">{{ __('emails.activation.greeting_en', ['name' => $userName]) }}</p>
-
-            {{__('emails.activation.thank_you') }}
+            <span>{{__('emails.activation.thank_you') }}</span>
+            <br>
             <strong>جولة (ATOUR)</strong>
 
         <p style="font-size:15px; color:#333;">
