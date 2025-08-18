@@ -146,6 +146,7 @@ return [
     'payments' => 'طرق الدفع',
     'notifications' => 'الاشعارات',
     'pendding_orders' => 'الطلبات المعلقة',
+    'pending_orders' => 'الطلبات المعلقة',
     'rejected_orders' => 'الطلبات المرفوضة',
     'deliverd_orders' => 'الطلبات المسلمة',
     'all_orders' => 'كل الطلبات',
@@ -191,6 +192,7 @@ return [
     'current_orders' => 'الطلبات الحالية',
     'orders_list' => 'قائمة الطلبات',
     'canceled_orders' => 'الطلبات الملغية',
+    'compleated_orders' => 'الطلبات المكتملة',
     'new_orders' => 'الطلبات الجديدة',
     'code' => 'الكود',
     'next' => 'التالى',
@@ -237,7 +239,7 @@ return [
     'helpping_questions' => "تحتاج للمساعدة",
     "BookingGift" => 'هدايا تذكارية',
     "BookingEffectivene" => 'فعاليات',
-    "BookingTrip" => 'رحلات',
+    "BookingTrip" => 'جولات',
     'orders_statuses' => [
     '0' => 'معلقة',
     '1' => 'مقبولة',
@@ -268,7 +270,21 @@ return [
     'do_settlement' => ' تسويه الحسابات',
     'total_order_fee' => 'المتبقى لدى المورد ',
     'total_order_fee_setlment' => 'المبالغ تم تسويتها',
-    'false' => 'لا'
+    'false' => 'لا',
+    'activation_mail_subject' => 'تفعيل حسابك في جولة',
+    'Select Language' => 'اختر اللغة',
+    'Add Language' => 'اضافة لغة',
+    'translations' => 'الترجمات',
+    'English' => 'الانجليزية',
+    'Arabic' => 'العربية',
+    'French' => 'الفرنسية',
+    'German' => 'الالمانية',
+    'Spanish' => 'الاسبانية',
+    'Turkish' => 'التركية',
+    'Russian' => 'الروسية',
+    'Chinese' => 'الصينية',
+    'Kurdish' => 'الكردية',
+    'Japanese' => 'اليابانية',
 
 
 ];

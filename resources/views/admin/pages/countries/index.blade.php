@@ -74,7 +74,7 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'title', name: 'title',orderable: false},
+                {data: 'title', name: 'title'},
                 {data: 'active', name: 'active'},
                 @canany('countries.edit','countries.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},

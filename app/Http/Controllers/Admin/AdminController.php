@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
+use App\Models\BookingTrip;
 use App\Models\Effectivenes;
 use App\Models\Favorite;
 use App\Models\Gift;
@@ -22,30 +25,50 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
+        // Customers & Suppliers
         $customers = User::where('type', User::TYPE_CLIENT)->whereNotNull('email')->count();
         $suppliers = User::where('type', User::TYPE_SUPPLIER)->whereNotNull('email')->count();
-        $current_orders = Order::where('status', Order::STATUS_PENDING)->count();
-        $old_orders = Order::where('status', Order::STATUS_COMPLEALED)->count();
-        $canceled_orders = Order::where('status', Order::STATUS_CANCELED)->count();
-        $trips = Trip::count();
-        $current_orders_chart = [];
-        $old_orders_chart = [];
-        $canceled_orders_chart = [];
-        $vendors_chart = [];
-        $clients_chart = [];
-        $period = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        foreach ($period as $dt) {
-            $current_orders_chart[] = Order::whereMonth('created_at', $dt)->where('status', Order::STATUS_PENDING)->count();
-            $old_orders_chart[] = Order::whereMonth('created_at', $dt)->where('status', Order::STATUS_COMPLEALED)->count();
-            $canceled_orders_chart[] = Order::whereMonth('created_at', $dt)->where('status', Order::STATUS_CANCELED)->count();
-            $vendors_chart[] = User::where('type', User::TYPE_SUPPLIER)->whereMonth('created_at', $dt)->count();
-            $clients_chart[] = User::where('type', User::TYPE_CLIENT)->whereMonth('created_at', $dt)->count();
-        }
-        $max_order_chart = max(max($current_orders_chart), max($old_orders_chart), max($current_orders_chart));
-        $max_clients_vendors_chart = max(max($clients_chart), max($vendors_chart));
 
-        return view($this->viewIndex, get_defined_vars());
+        // Orders
+        $current_orders   = BookingTrip::where('status', Order::STATUS_PENDING)->count();
+        $old_orders       = BookingTrip::where('status', Order::STATUS_COMPLEALED)->count();
+        $canceled_orders  = BookingTrip::where('status', Order::STATUS_CANCELED)->count();
+
+        $effectiveness = BookingEffectivene::where('status', Order::STATUS_CANCELED)->count();
+        $gifts = BookingGift::where('status', Order::STATUS_CANCELED)->count();
+        $trips = Trip::count();
+        $getChartData = function ($model) {
+            return [
+                __('orders.current')   => $model::whereIn('status', [
+                                    Order::STATUS_PENDING,
+                                    Order::STATUS_ONPROGRESS,
+                                    Order::STATUS_ACCEPTED
+                                ])->count(),
+                __('orders.completed') => $model::where('status', Order::STATUS_COMPLEALED)->count(),
+                __('orders.canceled')  => $model::where('status', Order::STATUS_CANCELED)->count(),
+            ];
+        };
+
+        // Charts
+        $tripChart          = $getChartData(BookingTrip::class);
+        $giftChart          = $getChartData(BookingGift::class);
+        $effectivenessChart = $getChartData(BookingEffectivene::class);
+
+        return view($this->viewIndex, compact(
+            'customers',
+            'suppliers',
+            'current_orders',
+            'old_orders',
+            'canceled_orders',
+            'trips',
+            'tripChart',
+            'giftChart',
+            'gifts',
+            'effectiveness',
+            'effectivenessChart'
+        ));
     }
+
     public function updateToken(Request $request)
     {
         try {
@@ -230,15 +253,15 @@ class AdminController extends Controller
 
         $html = '<option value="">'. __('admin.select') .'</option>';
         foreach ($data as $row) {
-            $selected='';
-            if($request->trip_id== $row->id){
-                $selected= 'selected';
+            $selected = '';
+            if ($request->trip_id == $row->id) {
+                $selected = 'selected';
             }
-            if($request->effectivenes_id== $row->id){
-                $selected= 'selected';
+            if ($request->effectivenes_id == $row->id) {
+                $selected = 'selected';
             }
-            if($request->gift_id== $row->id){
-                $selected= 'selected';
+            if ($request->gift_id == $row->id) {
+                $selected = 'selected';
             }
             $html .= '<option value="'.$row->id.'" '.$selected.'>'.$row->title.'</option>';
         }

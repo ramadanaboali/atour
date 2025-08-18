@@ -157,7 +157,9 @@ class PageController extends Controller
 
     public function countries()
     {
-        $data = Country::where('active', 1)->get();
+        $data = Country::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('active', 1)->get();
         $result = CountryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }

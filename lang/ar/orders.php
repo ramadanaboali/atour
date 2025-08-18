@@ -102,6 +102,10 @@ return [
     'type' => "النوع",
 'vendor_total' => 'الاجمالى للمورد',
 'customer_total' => 'المدفوع من العميل',
-'cancel_date' => 'تاريخ الالغاء'
+'cancel_date' => 'تاريخ الالغاء',
+'canceled' => 'ملغي',
+'completed' => 'مكتمل',
+'current' => 'جارى العمل',
+'current_trips' => 'الجولات الحالية',
 
 ];

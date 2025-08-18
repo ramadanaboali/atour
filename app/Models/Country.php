@@ -12,10 +12,20 @@ class Country extends Model
     use HasFactory;
     use SoftDeletes;
     protected $table = 'countries';
-    protected $fillable = ['title_en','title_ar','active'];
+    protected $fillable = ['active'];
     protected $appends = ['title','text'];
 
 
+    public function translations()
+    {
+        return $this->hasMany(CountryTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
 
     public function getTextAttribute()
     {

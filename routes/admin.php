@@ -315,6 +315,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('new-orders', [App\Http\Controllers\Admin\OrderController::class, 'newOrders'])->name('new_orders.index')->middleware('adminPermission:new_orders.view');
             Route::get('current-orders', [App\Http\Controllers\Admin\OrderController::class, 'currentOrders'])->name('current_orders.index')->middleware('adminPermission:current_orders.view');
             Route::get('canceled-orders', [App\Http\Controllers\Admin\OrderController::class, 'canceledOrders'])->name('canceled_orders.index')->middleware('adminPermission:canceled_orders.view');
+            Route::get('compleated-orders', [App\Http\Controllers\Admin\OrderController::class, 'compleatedOrders'])->name('compleated_orders.index')->middleware('adminPermission:compleated_orders.view');
             Route::get('orders/list', [App\Http\Controllers\Admin\OrderController::class, 'list'])->name('orders.list');
             Route::get('orders/show/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show')->middleware('adminPermission:orders.show');
 
@@ -344,6 +345,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('clients/select', [App\Http\Controllers\Admin\ClientController::class, 'select'])->name('clients.select');
             Route::delete('clients/bulk', [App\Http\Controllers\Admin\ClientController::class, 'deleteBulk'])->name('clients.deleteBulk')->middleware('adminPermission:clients.delete');
             Route::get('clients/list', [App\Http\Controllers\Admin\ClientController::class, 'list'])->name('clients.list')->middleware('adminPermission:clients.view');
+            Route::get('clients-orders', [App\Http\Controllers\Admin\ClientController::class, 'orders'])->name('clients.orders')->middleware('adminPermission:clients.view');
             Route::post('clients', [App\Http\Controllers\Admin\ClientController::class, 'store'])->name('clients.store')->middleware('adminPermission:clients.create');
             Route::delete('clients/{id}', [App\Http\Controllers\Admin\ClientController::class, 'destroy'])->name('clients.destroy')->middleware('adminPermission:clients.delete');
             Route::get('clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index')->middleware('adminPermission:clients.view');

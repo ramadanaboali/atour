@@ -51,6 +51,12 @@ class OrderController extends Controller
         $title = __('admin.canceled_orders');
         return view($this->viewIndex, get_defined_vars());
     }
+    public function compleatedOrders(Request $request): View
+    {
+        $status = [Order::STATUS_COMPLEALED];
+        $title = __('admin.compleated_orders');
+        return view($this->viewIndex, get_defined_vars());
+    }
 
     public function create(): View
     {
@@ -158,8 +164,8 @@ class OrderController extends Controller
             
         return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('client', fn($item) => $item->user?->name)
-            ->addColumn('vendor', fn($item) => $item->vendor?->name)
+            ->addColumn('client', fn($item) => $item->user?->name.' ('.'C-'.$item->user?->code.')')
+            ->addColumn('vendor', fn($item) => $item->vendor?->name.' ('.'C-'.$item->vendor?->code.')')
             ->addColumn('status', fn($item) => __('admin.orders_statuses.' . $item->status))
             ->editColumn('created_at', fn($item) => $item->created_at?->format('Y-m-d H:i'))
         ->rawColumns(['client','vendor','status','created_at'])

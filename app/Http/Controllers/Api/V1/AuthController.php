@@ -16,6 +16,7 @@ use App\Http\Requests\PhoneRequest;
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\ActivationMail;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
 use App\Traits\ApiResponser;
@@ -80,7 +81,7 @@ class AuthController extends Controller
         } else {
             $user = User::updateOrCreate(['temperory_email' => $request->email], $userInput);
         }
-        
+
 
         return $this->successResponse($user, 200);
 
@@ -127,7 +128,7 @@ class AuthController extends Controller
                 'type' => User::TYPE_CLIENT,
             ];
             $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
-            Mail::to($user->temperory_email)->send(new SendCodeResetPassword($user->temperory_email, $MsgID));
+            Mail::to($user->temperory_email)->send(new ActivationMail($user->name, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -156,17 +157,17 @@ class AuthController extends Controller
     {
         // try {
 
-            $user = User::where('type', User::TYPE_CLIENT)->where(function ($query) use ($request) {
-                $query->where('email', $request->username)->orWhere('phone', $request->username);
-            })->first();
-            if (!$user) {
-                return apiResponse(false, null, __('api.not_found'), null, 404);
-            }
+        $user = User::where('type', User::TYPE_CLIENT)->where(function ($query) use ($request) {
+            $query->where('email', $request->username)->orWhere('phone', $request->username);
+        })->first();
+        if (!$user) {
+            return apiResponse(false, null, __('api.not_found'), null, 404);
+        }
 
-            $MsgID = rand(100000, 999999);
-            $user->update(['reset_code' => $MsgID]);
-            Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
-            return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
+        $MsgID = rand(100000, 999999);
+        $user->update(['reset_code' => $MsgID]);
+        Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
+        return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
         // } catch (Exception $e) {
         //     return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
         // }

@@ -59,17 +59,17 @@ class CountryController extends Controller
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = Country::distinct()
-                ->where('active',true)
-                ->where(function ($query) use ($request) {
-                if ($request->filled('q')) {
-                    if(App::isLocale('en')) {
-                        return $query->where('title_en', 'like', '%'.$request->q.'%');
-                    } else {
-                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                    }
-                }
-                })->select('id', 'title_en', 'title_ar')->get();
+        $data = Country::distinct()
+                 ->where('active', true)
+                 ->where(function ($query) use ($request) {
+                     if ($request->filled('q')) {
+                         if (App::isLocale('en')) {
+                             return $query->where('title_en', 'like', '%'.$request->q.'%');
+                         } else {
+                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                         }
+                     }
+                 })->select('id', 'title_en', 'title_ar')->get();
 
         if ($request->filled('pure_select')) {
             $html = '<option value="">'. __('Country.select') .'</option>';
@@ -94,36 +94,46 @@ class CountryController extends Controller
     protected function processForm($request, $id = null): Country|null
     {
         $item = $id == null ? new Country() : Country::find($id);
-        $data= $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-            if($request->filled('active')){
-                $item->active = 1;
-            }else{
-                $item->active = 0;
-            }
+        if ($request->filled('active')) {
+            $item->active = 1;
+        } else {
+            $item->active = 0;
+        }
         if ($item->save()) {
+
+            $id != null ? $item->translations()->delete() : null; // مسح القديم
+
+            foreach ($request->translations as $tr) {
+                $item->translations()->create($tr);
+            }
+
             return $item;
         }
         return null;
     }
 
+
     public function list(Request $request): JsonResponse
     {
-        $data = Country::select('*');
+        $data = Country::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('countries.*');
+
         return FacadesDataTables::of($data)
-        ->addIndexColumn()
-        ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
-        })
-        ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-        ->rawColumns(['active'])
-        ->make(true);
+            ->addIndexColumn()
+            ->addColumn('title', function ($item) {
+                // Get the title from the first translation or fallback
+                return $item->translations->first()->title ?? '';
+            })
+            ->editColumn('active', function ($item) {
+                return $item->active == 1
+                    ? '<button class="btn btn-sm btn-outline-primary me-1 waves-effect"><i data-feather="check" ></i></button>'
+                    : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            })
+            ->rawColumns(['active'])
+            ->make(true);
     }
 }

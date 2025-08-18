@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
+use App\Models\BookingEffectivene;
+use App\Models\BookingGift;
+use App\Models\BookingTrip;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\User;
@@ -11,8 +14,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class ClientController extends Controller
@@ -34,12 +39,12 @@ class ClientController extends Controller
     }
     public function status($id)
     {
-        $item=Client::findOrFail($id);
-        if($item->active == 0){
+        $item = Client::findOrFail($id);
+        if ($item->active == 0) {
             $item->active = 1;
             $item->status = "accepted";
 
-        }else{
+        } else {
             $item->active = 0;
         }
         $item->save();
@@ -69,8 +74,8 @@ class ClientController extends Controller
     public function show($id): View
     {
         $item = Client::findOrFail($id);
-        $compleated_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_COMPLEALED)->get();
-        $pendding_orders=Order::where("user_id", $item->id)->where('status',Order::STATUS_PENDING)->get();       
+        $completedOrders = Order::where("user_id", $item->id)->where('status', Order::STATUS_COMPLEALED)->get();
+        $pendingOrders = Order::where("user_id", $item->id)->where('status', Order::STATUS_PENDING)->get();
         $status = [Order::STATUS_COMPLEALED,Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_REJECTED,Order::STATUS_ONPROGRESS,Order::STATUS_COMPLEALED,Order::STATUS_CANCELED,Order::STATUS_WITHDRWAL];
 
         return view($this->viewShow, get_defined_vars());
@@ -97,7 +102,7 @@ class ClientController extends Controller
         $data = Client::distinct()
                  ->where(function ($query) use ($request) {
                      if ($request->filled('q')) {
-                         if(App::isLocale('en')) {
+                         if (App::isLocale('en')) {
                              return $query->where('title_en', 'like', '%'.$request->q.'%');
                          } else {
                              return $query->where('title_ar', 'like', '%'.$request->q.'%');
@@ -130,7 +135,7 @@ class ClientController extends Controller
         $item = $id == null ? new Client() : Client::find($id);
         $data = $request->except(['_token', '_method']);
         $item = $item->fill($data);
-        if($request->filled('active')) {
+        if ($request->filled('active')) {
             $item->active = 1;
         } else {
             $item->active = 0;
@@ -189,7 +194,7 @@ class ClientController extends Controller
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
             }
-        })->where('type',User::TYPE_CLIENT)->select('*');
+        })->where('type', User::TYPE_CLIENT)->select('clients.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('photo', function ($item) {
@@ -205,10 +210,55 @@ class ClientController extends Controller
                 return $item->code ? 'C-'.$item->code : '';
             })
             ->editColumn('active', function ($item) {
-            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect " ><i data-feather="x" ></i></button>';
-        })
+                return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect " ><i data-feather="x" ></i></button>';
+            })
 
         ->rawColumns(['photo','active','joining_date'])
         ->make(true);
     }
+
+
+    public function orders(Request $request): JsonResponse
+    {
+
+
+        $bookingGift = BookingGift::with(['user', 'vendor'])
+            ->where('user_id', $request->user_id)
+            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+            ->get();
+
+        $bookingTrip = BookingTrip::with(['user', 'vendor'])
+            ->where('user_id', $request->user_id)
+            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            ->get();
+
+        $bookingEffectivene = BookingEffectivene::with(['user', 'vendor'])
+            ->where('user_id', $request->user_id)
+            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            ->get();
+
+        $data = $bookingGift->merge($bookingTrip)->merge($bookingEffectivene);
+        $data = $data->sortByDesc('created_at')->values();
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('client', function ($item) {
+                return $item->user?->name;
+            })
+            ->addColumn('vendor', function ($item) {
+                return $item->vendor?->name . '(P' . $item->vendor?->code . ')';
+            })
+            ->addColumn('status', function ($item) {
+                return __('admin.orders_statuses.' . $item->status);
+            })
+            ->editColumn('source', function ($item) {
+                return __('admin.' . $item->source);
+            })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at?->format('Y-m-d H:i');
+            })
+            ->rawColumns(['source', 'created_at', 'client', 'vendor'])
+            ->make(true);
+    }
+
 }
