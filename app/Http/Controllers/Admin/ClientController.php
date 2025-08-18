@@ -201,7 +201,7 @@ class ClientController extends Controller
                 return $item->photo ? '<img src="' . $item->photo . '" height="100px" width="100px">' : '';
             })
             ->addColumn('joining_date', function ($item) {
-                return $item->joining_date_from . ' - ' . $item->joining_date_to;
+                return $item->created_at?->format('Y-m-d H:i');
             })
             ->addColumn('order_count', function ($item) {
                 return 0;
