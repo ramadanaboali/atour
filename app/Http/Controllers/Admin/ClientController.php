@@ -194,7 +194,7 @@ class ClientController extends Controller
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
             }
-        })->where('type', User::TYPE_CLIENT)->select('clients.*');
+        })->where('type', User::TYPE_CLIENT)->select('users.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('photo', function ($item) {
