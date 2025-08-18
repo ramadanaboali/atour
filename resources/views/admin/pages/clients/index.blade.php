@@ -57,28 +57,7 @@
 
 <input type="hidden" id="hiddenstatus" value="{{ $status??null }}">
 @stop
-<div class="modal fade text-start" id="modalStatus2" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
 
-    <div class="modal-dialog">
-        <form id="statusForm2" method="post" action="#">
-            <input type="hidden" name="_method" value="DELETE">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.delete.title') }}</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {{ __('admin.dialogs.delete.info') }}
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-danger">{{ __('admin.dialogs.delete.confirm') }}</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">{{ __('admin.dialogs.delete.cancel') }}</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 @push('scripts')
 <script>
     var dt_ajax_table = $('.datatables-ajax');
@@ -224,13 +203,6 @@
     $('.btn_filter').click(function() {
         dt_ajax.DataTable().ajax.reload();
     });
-    $('body').on('click', '.change_status', function() {
-        var url = $(this).attr('data-url');
-        // alert('Change status clicked'+url);
-        $('#statusForm2').attr('action', url)
-        $('#modalStatus2').modal('show')
-        return false;
-    });
-
+  
 </script>
 @endpush
