@@ -10,7 +10,8 @@ return [
         'tr' => 'Turkish',
         'ru' => 'Russian',
         'zh' => 'Chinese',
-        'ku' => 'Kurdish',
+        'ko' => 'Korean',
+        'pt' => 'Portuguese',
         'ur' => 'Urdu',
         'ja' => 'Japanese'
     ],
