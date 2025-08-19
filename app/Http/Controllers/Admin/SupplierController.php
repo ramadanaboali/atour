@@ -294,7 +294,7 @@ class SupplierController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('vendor', function ($item) {
-                    return $item->vendor?->name;
+                    return $item->vendor?->name.' (P-'.$item->vendor?->code.')';
                 })
                 ->addColumn('status', function ($item) {
                     return __('admin.orders_statuses.' . $item->status);
@@ -408,7 +408,7 @@ class SupplierController extends Controller
                 // Select fields
                 ->select(
                     'users.id',
-                    'users.name',
+                    DB::raw("CONCAT( users.name,' (P-', users.code, ')') AS name"),
                     DB::raw('COALESCE(gifts.count_booking_gift, 0) AS count_booking_gift'),
                     DB::raw('COALESCE(trips.count_booking_trib, 0) AS count_booking_trib'),
                     DB::raw('COALESCE(effects.count_booking_effectivenes, 0) AS count_booking_effectivenes'),
@@ -420,7 +420,7 @@ class SupplierController extends Controller
                     DB::raw('COALESCE(orders.total_order_fees_0, 0) AS total_order_fees_0'),
                     DB::raw('COALESCE(orders.total_order_fees_1, 0) AS total_order_fees_1')
                 )
-                ->groupBy('users.id', 'users.name', 'gifts.count_booking_gift', 'gifts.sum_booking_gift', 'trips.count_booking_trib', 'trips.sum_booking_trib', 'effects.count_booking_effectivenes', 'effects.sum_booking_effectivenes', 'orders.total_tax_value', 'orders.total_payment_way_value', 'orders.total_admin_value', 'orders.total_admin_fee_value', 'orders.total_order_fees_0', 'orders.total_order_fees_1')
+                ->groupBy('users.id', 'name', 'gifts.count_booking_gift', 'gifts.sum_booking_gift', 'trips.count_booking_trib', 'trips.sum_booking_trib', 'effects.count_booking_effectivenes', 'effects.sum_booking_effectivenes', 'orders.total_tax_value', 'orders.total_payment_way_value', 'orders.total_admin_value', 'orders.total_admin_fee_value', 'orders.total_order_fees_0', 'orders.total_order_fees_1')
                 ->orderByDesc('total_order_fees_0');
 
             return DataTables::of($data)

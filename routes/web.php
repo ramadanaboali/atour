@@ -13,7 +13,7 @@ Auth::routes();
 
 Route::get('/test-notifications', function () {
     $service =new OneSignalService();
-    $service->sendToAll('test', 'Test Body from system');
+    $service->sendToAll('test', 'Welcome To Atour Notifications from system');
 });
 
 
