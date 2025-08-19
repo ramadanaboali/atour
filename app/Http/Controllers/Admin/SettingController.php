@@ -66,9 +66,9 @@ class SettingController extends Controller
 
     public function terms(): View
     {
-        $items = $this->setting
-            ->where('key', 'LIKE', 'terms_%')
-            ->get();
+        $item = $this->setting
+            ->where('key',  'terms')
+            ->first();
         return view($this->viewTerms, get_defined_vars());
     }
 
@@ -89,6 +89,26 @@ class SettingController extends Controller
         } catch (\Exception $e) {
             flash($e->getMessage())->error();
         }
+        return back();
+    }
+    public function updateTerm(Request $request): RedirectResponse
+    {
+        // try {
+            $item = $this->setting->where('key', 'terms')->first();
+            $item = $item ?? new Setting();
+        $item->key = "terms";
+        $item->save();
+        $item->translations()->delete();
+
+            foreach ($request->translations as $tr) {
+                // dd($tr);
+                $item->translations()->create($tr);
+            }
+
+            flash(__('settings.messages.saved'))->success();
+        // } catch (\Exception $e) {
+        //     flash($e->getMessage())->error();
+        // }
         return back();
     }
 }

@@ -94,10 +94,15 @@ class SettingController extends Controller
 
     public function terms()
     {
-        if (App::isLocale('en')) {
-            $data = Setting::where('key', 'LIKE', 'terms_content_en')->value('value');
-        } else {
-            $data = Setting::where('key', 'LIKE', 'terms_content_ar')->value('value');
+
+
+        $item = Setting::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('key', 'terms')->first();
+        if ($item && count($item->translations)>0) {
+            $data = $item->translations[0];
+        }else{
+            $data=null;
         }
         return apiResponse(true, $data, null, null, 200);
     }

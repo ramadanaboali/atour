@@ -220,17 +220,7 @@
     <script src="{{ $assetsPath }}/js/core/app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
-    <script src="https://cdn.ckeditor.com/4.16.2/full/ckeditor.js"></script>
-    <script>
-        CKEDITOR.editorConfig = function(config) {
-            config.language = 'es';
-            config.uiColor = '#F7B42C';
-            config.height = 200;
-            config.toolbarCanCollapse = true;
-        };
-        var editor = CKEDITOR.replaceAll('editor');
 
-    </script>
     <script>
         $(window).on('load', function() {
 

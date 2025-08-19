@@ -126,6 +126,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('settings/cancel_terms', [App\Http\Controllers\Admin\SettingController::class, 'cancel_terms'])->name('settings.cancel_terms')->middleware('adminPermission:settings.cancel_terms');
             Route::get('settings/terms', [App\Http\Controllers\Admin\SettingController::class, 'terms'])->name('settings.terms')->middleware('adminPermission:settings.terms');
             Route::post('settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update')->middleware('adminPermission:settings.edit');
+            Route::post('settings-terms', [App\Http\Controllers\Admin\SettingController::class, 'updateTerm'])->name('settings.updateTerm')->middleware('adminPermission:settings.edit');
 
             Route::get('profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile.index');
             Route::post('update-profile', [App\Http\Controllers\Admin\ProfileController::class, 'updateProfile'])->name('profile.update');
