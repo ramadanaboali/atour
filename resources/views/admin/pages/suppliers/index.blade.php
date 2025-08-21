@@ -17,6 +17,12 @@
     <div class="content-header-right text-md-end col-md-6 col-12 d-md-block ">
         <div class="mb-1 breadcrumb-right">
             <div class="dropdown">
+  @can('suppliers.create')
+  <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.suppliers.create') }}">
+      <i data-feather="plus"></i>
+      <span class="active-sorting text-primary">{{ __('suppliers.actions.create') }}</span>
+  </a>
+  @endcan
 
                 @include('admin.pages.suppliers.filter')
             </div>
@@ -218,6 +224,13 @@
                                                     <a class="dropdown-item" href="` + showUrl + `">
                                         <i data-feather="eye" class="font-medium-2"></i>
                                             <span>{{ __('suppliers.actions.show') }}</span>
+                                        </a>
+                                        @endcan
+                                        @can('suppliers.edit')
+                                                    <a class="dropdown-item" href="` + editUrl + `">
+
+                                        <i data-feather="edit-2" class="font-medium-2"></i>
+                                            <span>{{ __('suppliers.actions.edit') }}</span>
                                         </a>
                                         @endcan
                         @can('suppliers.delete')

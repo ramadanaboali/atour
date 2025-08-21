@@ -321,9 +321,12 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('orders/show/{id}', [App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show')->middleware('adminPermission:orders.show');
 
             Route::get('suppliers/select', [App\Http\Controllers\Admin\SupplierController::class, 'select'])->name('suppliers.select');
+            Route::get('suppliers/create', [App\Http\Controllers\Admin\SupplierController::class, 'create'])->name('suppliers.create')->middleware('adminPermission:suppliers.create');
             Route::delete('suppliers/bulk', [App\Http\Controllers\Admin\SupplierController::class, 'deleteBulk'])->name('suppliers.deleteBulk')->middleware('adminPermission:suppliers.delete');
             Route::get('suppliers/list', [App\Http\Controllers\Admin\SupplierController::class, 'list'])->name('suppliers.list')->middleware('adminPermission:suppliers.view');
             Route::post('suppliers/first_setup', [App\Http\Controllers\Admin\SupplierController::class, 'firstSetup'])->name('suppliers.first_setup')->middleware('adminPermission:suppliers.create');
+            Route::post('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'store'])->name('suppliers.store')->middleware('adminPermission:suppliers.create');
+
             Route::delete('suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'destroy'])->name('suppliers.destroy')->middleware('adminPermission:suppliers.delete');
             Route::get('suppliers', [App\Http\Controllers\Admin\SupplierController::class, 'index'])->name('suppliers.index')->middleware('adminPermission:suppliers.view');
             Route::match(['PUT', 'PATCH'], 'suppliers/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'update'])->name('suppliers.update')->middleware('adminPermission:suppliers.edit');

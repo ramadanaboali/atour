@@ -110,4 +110,14 @@ return [
     'percentage'=>'نسبة',
     'national_id'=>'رقم الهوية',
     'const'=>'قيمة ثابتة',
+    'fee_setting' => 'إعدادات الرسوم',
+    'payment_methods' => 'طرق الدفع',
+    'licence_image' => 'صورة الترخيص',
+    'rerequest_reason' => 'سبب إعادة الطلب',
+    'tour_guid'=>'مرشد الجولة',
+    'general_name' => 'الاسم العام',
+    'experience_info' => 'معلومات الخبرة',
+    'profission_guide' => 'مرشد محترف',
+    'job' => 'المهنة'
+
 ];
