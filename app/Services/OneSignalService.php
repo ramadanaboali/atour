@@ -47,6 +47,6 @@ class OneSignalService
 
     private static function getPlayerId($userId)
     {
-        return PlayerId::where('user_id', $userId)->pluck('player_id')->first();
+        return PlayerId::where('user_id', $userId)->pluck('player_id')->toArray();
     }
 }

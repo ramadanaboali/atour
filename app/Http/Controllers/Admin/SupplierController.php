@@ -63,7 +63,7 @@ class SupplierController extends Controller
 
     public function edit($id): View
     {
-        $item = Supplier::findOrFail($id);
+        $item = User::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
@@ -442,4 +442,118 @@ class SupplierController extends Controller
 
         return view('admin.pages.suppliers.payment_suppliers');
     }
+    
+public function store(Request $request): RedirectResponse
+{
+    DB::beginTransaction();
+    try {
+        // User fields
+        $userData = $request->only([
+            'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
+            'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
+            'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
+            'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
+            'bank_iban', 'tax_number', 'temperory_phone'
+        ]);
+
+        // Handle password
+        if ($request->filled('password')) {
+            $userData['password'] = \Hash::make($request->password);
+        } else {
+            unset($userData['password']);
+        }
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $userData['image'] = $request->file('image')->store('users', 'public');
+        }
+
+        // Set type to supplier
+        $userData['type'] = \App\Models\User::TYPE_SUPPLIER;
+
+        $user = \App\Models\User::create($userData);
+
+        // Supplier fields
+        $supplierData = $request->only([
+            'tour_guid', 'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat',
+            'postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url', 'profission_guide',
+            'job', 'experience_info', 'languages', 'banck_name', 'banck_number', 'tax_number', 'place_summary',
+            'place_content', 'expectations', 'general_name', 'nationality'
+        ]);
+        $supplierData['user_id'] = $user->id;
+
+        // Handle licence_image upload
+        if ($request->hasFile('licence_image')) {
+            $supplierData['licence_image'] = $request->file('licence_image')->store('suppliers', 'public');
+        }
+
+        \App\Models\Supplier::create($supplierData);
+
+        DB::commit();
+        flash(__('suppliers.messages.created'))->success();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
+    }
+    return to_route($this->route . '.index');
+}
+
+public function update(Request $request, $id): RedirectResponse
+{
+    DB::beginTransaction();
+    try {
+        $user = \App\Models\User::findOrFail($id);
+
+        // User fields
+        $userData = $request->only([
+            'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
+            'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
+            'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
+            'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
+            'bank_iban', 'tax_number', 'temperory_phone'
+        ]);
+
+        // Handle password
+        if ($request->filled('password')) {
+            $userData['password'] = \Hash::make($request->password);
+        } else {
+            unset($userData['password']);
+        }
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $userData['image'] = $request->file('image')->store('users', 'public');
+        }
+
+        $user->update($userData);
+
+        // Supplier fields
+        $supplierData = $request->only([
+            'tour_guid', 'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat',
+            'postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url', 'profission_guide',
+            'job', 'experience_info', 'languages', 'banck_name', 'banck_number', 'tax_number', 'place_summary',
+            'place_content', 'expectations', 'general_name', 'nationality'
+        ]);
+        $supplierData['user_id'] = $user->id;
+
+        // Handle licence_image upload
+        if ($request->hasFile('licence_image')) {
+            $supplierData['licence_image'] = $request->file('licence_image')->store('suppliers', 'public');
+        }
+
+        $supplier = \App\Models\Supplier::where('user_id', $user->id)->first();
+        if ($supplier) {
+            $supplier->update($supplierData);
+        } else {
+            \App\Models\Supplier::create($supplierData);
+        }
+
+        DB::commit();
+        flash(__('suppliers.messages.updated'))->success();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
+    }
+    return to_route($this->route . '.index');
+}
 }
