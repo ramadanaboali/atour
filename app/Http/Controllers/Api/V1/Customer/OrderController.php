@@ -8,7 +8,6 @@ use App\Http\Requests\Customer\BookingTripRequest;
 use App\Http\Requests\Customer\BookingEffectivenesRequest;
 use App\Http\Requests\Customer\BookingGiftRequest;
 use App\Http\Resources\OrderCustomerResource;
-use App\Http\Resources\OrderResource;
 use App\Mail\OrderDetailsMail;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;

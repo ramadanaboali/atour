@@ -190,6 +190,7 @@ class OrderController extends Controller
 
             try {
                 OneSignalService::sendToUser($order->user_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
+                OneSignalService::sendToUser($order->vendor_id, __('api.order_confirmed_success'), __('api.order_confirmed', ['code' => $order->id]));
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }

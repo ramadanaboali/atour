@@ -10,8 +10,6 @@ use App\Models\Notification;
 use App\Models\PlayerId;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-
 use App\Services\OneSignalService;
 use Illuminate\Support\Facades\Log;
 
@@ -30,7 +28,7 @@ Route::post('/send-notification', function (Request $request) {
 Route::get('/send-broadcast', function (Request $request) {
 
 
- $response =OneSignalService::sendToAll( "test title", "test message");
+    $response = OneSignalService::sendToAll("test title", "test message");
 
 
     return response()->json($response);
@@ -38,7 +36,7 @@ Route::get('/send-broadcast', function (Request $request) {
 Route::get('/send-user', function (Request $request) {
 
 
- $response =OneSignalService::sendToUser($request->id, "تجربة الاشعار", "test message");
+    $response = OneSignalService::sendToUser($request->id, "تجربة الاشعار", "test message");
 
 
     return response()->json($response);
@@ -95,7 +93,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
         Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
 
-Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
+        Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
 
         Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
 
@@ -107,14 +105,14 @@ Route::get('notifications-read/{id}', [VendorController::class, 'readNotificatio
                 Log::info($request->player_id);
                 PlayerId::updateOrCreate([
                     'player_id' => $request->player_id,
-                ],[
+                ], [
                     'user_id' => auth()->user()->id,
                     'player_id' => $request->player_id,
                 ]);
 
-                return response()->apiSuccess( 'Player ID saved successfully');
+                return response()->apiSuccess('Player ID saved successfully');
             });
-                Route::post('contact-us', [PageController::class, 'contactUs']);
+            Route::post('contact-us', [PageController::class, 'contactUs']);
 
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
             Route::get('trips', [HomeController::class,'trips']);
@@ -155,7 +153,7 @@ Route::get('notifications-read/{id}', [VendorController::class, 'readNotificatio
             Route::get('effectivenes-payment/{id}', [HomeController::class, 'effectivenePayment']);
             Route::get('notifications', [VendorController::class, 'notifications']);
             Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
-            
+
         });
     });
 });

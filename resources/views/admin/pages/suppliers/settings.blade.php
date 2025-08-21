@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="">{{ __('suppliers.value') }}</label>
-                                <input type="number" id="tax_value" name="tax_value" class="form-control" value="{{ $user_fee->tax_value ?? old('tax_value') }}">
+                                <input type="number" id="tax_value" name="tax_value" class="form-control" value="{{ $user_fee->tax_value ?? (old('tax_value') ?? 0) }}">
                         </div>
                     </div>
                     <br>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="">{{ __('suppliers.value') }}</label>
-                                <input type="number" id="payment_way_value" name="payment_way_value" class="form-control"  value="{{ $user_fee->payment_way_value ?? old('payment_way_value') }}">
+                                <input type="number" id="payment_way_value" name="payment_way_value" class="form-control"  value="{{ $user_fee->payment_way_value ?? (old('payment_way_value') ?? 0) }}">
                         </div>
                     </div>
                     <br>
@@ -112,7 +112,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="">{{ __('suppliers.value') }}</label>
-                                <input type="number" id="admin_value" name="admin_value" class="form-control" value="{{ $user_fee->admin_value ?? old('admin_value') }}">
+                                <input type="number" id="admin_value" name="admin_value" class="form-control" value="{{ $user_fee->admin_value ?? (old('admin_value') ?? 0) }}">
                         </div>
                     </div>
                     <br>
@@ -129,7 +129,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="">{{ __('suppliers.value') }}</label>
-                                <input type="number" id="admin_fee_value" name="admin_fee_value" class="form-control" value="{{ $user_fee->admin_fee_value ?? old('admin_fee_value') }}">
+                                <input type="number" id="admin_fee_value" name="admin_fee_value" class="form-control" value="{{ $user_fee->admin_fee_value ?? (old('admin_fee_value') ?? 0) }}">
                         </div>
                     </div>
 

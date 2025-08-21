@@ -210,18 +210,26 @@ class SupplierController extends Controller
             ->addColumn('photo', function ($item) {
                 return '<img src="' . $item?->photo . '" height="100px" width="100px">';
             })
+            ->editColumn('name', function ($item) {
+                if(auth()->user()->can('suppliers.show')) {
+                    return '<a href="' . route('admin.suppliers.show', $item->id) . '">' . $item->name . '</a>';
+                }
+                return $item->name;
+            })
+            ->editColumn('code', function ($item) {
+                if(auth()->user()->can('suppliers.show')) {
+                    return '<a href="' . route('admin.suppliers.show', $item->id) . '">' . 'P-' . $item->code . '</a>';
+                }
+                return $item->code;
+            })
             ->editColumn('active', function ($item) {
                 return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
             })
-            ->editColumn('code', function ($item) {
-                return $item->code ? 'P-' . $item->code : '-';
-            })
+           
             ->editColumn('created_at', function ($item) {
                 return $item->created_at?->format('Y-m-d H:i');
             })
-
-
-            ->rawColumns(['photo', 'active','code','created_at'])
+            ->rawColumns(['photo', 'active','code','created_at','name','code'])
             ->make(true);
     }
 
