@@ -608,12 +608,7 @@ class OrderController extends Controller
         return response()->apiFail($result['message']);
 
     }
-    public function cancel($id)
-    {
-        $order = Order::findOrFail($id);
-        $data = ['status' => Order::STATUS_CANCELED];
-        return response()->apiSuccess($order->update($data, $order));
-    }
+
     public function delete($id)
     {
 
@@ -629,16 +624,34 @@ class OrderController extends Controller
         Log::info('sss');
         if ($type == 'gift') {
             $order = BookingGift::findOrFail($id);
+            $message = __('api.cancel_gift_booking_code', ['item_name' => $order->gift?->title]);
         } elseif ($type == 'effectivene') {
             $order = BookingEffectivene::findOrFail($id);
+            $message = __('api.cancel_effectivnes_booking_code', ['item_name' => $order->effectivene?->title]);
         } else {
             $order = BookingTrip::findOrFail($id);
+            $message = __('api.cancel_trip_booking_code', ['item_name' => $order->trip?->title]);
         }
 
         $order->cancel_date = date('Y-m-d H:-i:s');
 
         $order->status = Order::STATUS_CANCELED;
+
         $order->save();
+        try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+            Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
+            OneSignalService::sendToUser($order->vendor_id, __('api.cancel_order_request'), $message);
+            OneSignalService::sendToUser($order->user_id, __('api.cancel_order_request'), $message);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
         return response()->apiSuccess($order);
     }
 }

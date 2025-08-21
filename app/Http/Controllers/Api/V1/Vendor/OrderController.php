@@ -241,16 +241,37 @@ class OrderController extends Controller
 
     public function cancelOrder($type, $id)
     {
+
         if ($type == 'gift') {
             $order = BookingGift::findOrFail($id);
+            $message = __('api.cancel_gift_booking_code', ['item_name' => $order->gift?->title]);
         } elseif ($type == 'effectivene') {
             $order = BookingEffectivene::findOrFail($id);
+            $message = __('api.cancel_effectivnes_booking_code', ['item_name' => $order->effectivene?->title]);
         } else {
             $order = BookingTrip::findOrFail($id);
+            $message = __('api.cancel_trip_booking_code', ['item_name' => $order->trip?->title]);
         }
+
         $order->status = Order::STATUS_CANCELED;
         $order->cancel_date = date('Y-m-d H:-i:s');
         $order->save();
+
+        try {
+            Mail::to($order->user?->email)->send(new OrderDetailsMail($order->refresh()));
+            Mail::to($order->vendor?->email)->send(new OrderDetailsMail($order->refresh()));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
+            OneSignalService::sendToUser($order->vendor_id, __('api.cancel_order_request'), $message);
+            OneSignalService::sendToUser($order->user_id, __('api.cancel_order_request'), $message);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+
         return response()->apiSuccess($order);
     }
     public function showOrder($type, $id)
@@ -269,13 +290,13 @@ class OrderController extends Controller
     public function getAll($type)
     {
         if ($type == 'gifts') {
-            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->whereIn('status',[Order::STATUS_PENDING])->where('vendor_id',auth()->user()->id)->get();
+            $order = BookingGift::with(['gift', 'user'])->whereHas('gift')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING])->where('vendor_id', auth()->user()->id)->get();
             return response()->apiSuccess($order);
         } elseif ($type == 'effectivenes') {
-            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereIn('status',[Order::STATUS_PENDING])->where('vendor_id',auth()->user()->id)->get();
+            $order = BookingEffectivene::with(['effectivene', 'user'])->whereHas('effectivene')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING])->where('vendor_id', auth()->user()->id)->get();
             return response()->apiSuccess($order);
         } else {
-            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->whereIn('status',[Order::STATUS_PENDING])->where('vendor_id',auth()->user()->id)->get();
+            $order = BookingTrip::with(['trip', 'user'])->whereHas('trip')->whereHas('user')->whereIn('status', [Order::STATUS_PENDING])->where('vendor_id', auth()->user()->id)->get();
             return response()->apiSuccess($order);
         }
     }
