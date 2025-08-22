@@ -69,6 +69,12 @@ class EffectivenesController extends Controller
             $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
         $effectivenes->update($data);
+
+        $effectivenes->translations()->delete();
+        foreach ($request->translations as $tr) {
+            $effectivenes->translations()->create($tr);
+        }
+
         if ($request->hasFile('images')) {
             Attachment::where('model_id', $effectivenes->id)->where('model_type', 'effectivenes')->delete();
             $images = $request->file('images');
@@ -90,40 +96,29 @@ class EffectivenesController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Effectivenes::with('vendor')->select('effectivenes.*');
+        $data = Effectivenes::with(['vendor','translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->whereHas('vendor')->select('effectivenes.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('vendor', function ($item) {
-                return $item->vendor?->name ;
+                if (auth()->user()->can('suppliers.show') && $item->vendor) {
+                    return '<a href="' . route('admin.suppliers.show', $item->vendor?->id) . '">' . $item->vendor?->name . '</a>';
+                }
+                return $item->vendor ? $item->vendor?->name. ' (P-'.$item->vendor?->code .')' : '--';
             })
+        ->addColumn('title', function ($item) {
+            return $item->translations->first()->title ?? '';
+        })
+
             ->addColumn('status', function ($item) {
                 return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
             })
             ->editColumn('created_at', function ($item) {
                 return $item->created_at?->format('Y-m-d H:i') ;
             })
-             ->orderColumn('title', function ($query, $order) {
-                 if (App::isLocale('en')) {
-                     return $query->orderby('title_en', $order);
-                 } else {
-                     return $query->orderby('title_ar', $order);
-                 }
-             })
-             ->filterColumn('title', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-             ->filterColumn('description', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('description_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-            ->rawColumns(['vendor','status'])
+
+            ->rawColumns(['vendor','status','title'])
             ->make(true);
     }
 }

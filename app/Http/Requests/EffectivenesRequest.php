@@ -15,17 +15,17 @@ class EffectivenesRequest extends FormRequest
     public function rules()
     {
         return [
-                  'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
-                        'title_en' => 'required|string|min:2',
-                        'title_ar' => 'required|string|min:2',
-                        'price' => 'required|numeric',
-                        'from_date'=>'required',
-                        'to_date'=>'required',
-                        'from_time'=>'required',
-                        'to_time'=>'required',
-                        'lat'=>'required',
-                        'long'=>'required',
+           'translations' => 'required|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+            'translations.*.title' => 'required|string|max:255',
+            'translations.*.description' => 'required|string|max:1000',
+            'price' => 'required|numeric',
+            'from_date' => 'required',
+            'to_date' => 'required',
+            'from_time' => 'required',
+            'to_time' => 'required',
+            'lat' => 'required',
+            'long' => 'required',
         ];
     }
 }

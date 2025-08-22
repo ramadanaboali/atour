@@ -14,10 +14,7 @@ class Effectivenes extends Model
     use HasFactory;
     use SoftDeletes;
     protected $fillable = [
-        'title_en',
-        'title_ar',
-        'description_ar',
-        'description_en',
+  
         'price',
         'from_date',
         'from_time',
@@ -45,31 +42,28 @@ class Effectivenes extends Model
         return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/' . $this->attributes['cover']) : null) : null;
     }
 
-    public function getTitleAttribute()
+     public function translations()
     {
-        if (!array_key_exists('title_en', $this->attributes) || !array_key_exists('title_ar', $this->attributes)) {
-            return "";
-        }
-        if (App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->hasMany(EffectiveneTranslation::class);
     }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
+
+
+     public function getTitleAttribute()
+    {
+        return $this->translate()->title ?? null;
+    }
+
+
     public function getDescriptionAttribute()
     {
-
-        if (!array_key_exists('description_en', $this->attributes) || !array_key_exists('description_ar', $this->attributes)) {
-            return "";
-        }
-
-        if (App::isLocale('en')) {
-            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
-        } else {
-            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
-        }
+        return $this->translate()->description ?? null;
     }
-
     public function rates(): ?HasMany
     {
         return $this->hasMany(Rate::class, 'effectivenes_id');
