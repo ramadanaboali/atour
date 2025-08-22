@@ -118,6 +118,9 @@ return [
     'general_name' => 'الاسم العام',
     'experience_info' => 'معلومات الخبرة',
     'profission_guide' => 'مرشد محترف',
-    'job' => 'المهنة'
+    'job' => 'المهنة',
+    'sub_category' => 'الفئة الفرعية',
+    'select_type' => 'اختر النوع',
+    'individual' => 'فرد'
 
 ];
