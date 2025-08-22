@@ -87,7 +87,7 @@
                 {data: 'supplier_email', name: 'supplier_email'},
                 {data: 'supplier_phone', name: 'supplier_phone'},
                 {data: 'typeText', name: 'type'},
-                {data: 'model', name: 'model'},
+                {data: 'title', name: 'title'},
                 {data: 'active', name: 'active'},
                 @canany('offers.edit','offers.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},

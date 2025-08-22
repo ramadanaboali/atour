@@ -11,10 +11,6 @@ class Offer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'title_en',
-        'title_ar',
-        'description_en',
-        'description_ar',
         'image',
         'active',
         'type',
@@ -27,23 +23,28 @@ class Offer extends Model
     protected $table = 'offers';
     protected $appends = ['title','photo','description'];
 
-    public function getTitleAttribute()
+        public function translations()
     {
-        if (App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
-    public function getDescriptionAttribute()
-    {
-        if (App::isLocale('en')) {
-            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
-        } else {
-            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
-        }
+        return $this->hasMany(OfferTranslation::class);
     }
 
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
+
+
+     public function getTitleAttribute()
+    {
+        return $this->translate()->title ?? null;
+    }
+
+
+    public function getDescriptionAttribute()
+    {
+        return $this->translate()->description ?? null;
+    }
     public function getPhotoAttribute()
     {
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/offers/' . $this->attributes['image']) : null) : null;
