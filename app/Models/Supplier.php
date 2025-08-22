@@ -48,6 +48,10 @@ class Supplier extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
   
+    public function country(): ?BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
     public function city(): ?BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
@@ -60,10 +64,18 @@ class Supplier extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function subCategory(): ?HasMany
+    {
+        return $this->hasMany(SubCategory::class, 'supplier_id');
+    }
 
-    protected $appends = ['photo'];
+    protected $appends = ['photo','licence_file'];
       public function getPhotoAttribute()
     {
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/suppliers/' . $this->attributes['image']) : asset('atour.jpg')) : asset('atour.jpg');
+    }
+    public function getLicenceFileAttribute()
+    {
+        return array_key_exists('licence_file', $this->attributes) ? ($this->attributes['licence_file'] != null ? asset('storage/suppliers/' . $this->attributes['licence_file']) : asset('atour.jpg')) : asset('atour.jpg');
     }
 }

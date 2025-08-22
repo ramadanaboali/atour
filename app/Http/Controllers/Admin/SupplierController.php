@@ -10,6 +10,7 @@ use App\Models\BookingTrip;
 use App\Models\Order;
 use App\Models\OrderFee;
 use App\Models\Supplier;
+use App\Models\SupplierService;
 use App\Models\User;
 use App\Models\UserFee;
 use App\Models\Trip;
@@ -211,13 +212,13 @@ class SupplierController extends Controller
                 return '<img src="' . $item?->photo . '" height="100px" width="100px">';
             })
             ->editColumn('name', function ($item) {
-                if(auth()->user()->can('suppliers.show')) {
+                if (auth()->user()->can('suppliers.show')) {
                     return '<a href="' . route('admin.suppliers.show', $item->id) . '">' . $item->name . '</a>';
                 }
                 return $item->name;
             })
             ->editColumn('code', function ($item) {
-                if(auth()->user()->can('suppliers.show')) {
+                if (auth()->user()->can('suppliers.show')) {
                     return '<a href="' . route('admin.suppliers.show', $item->id) . '">' . 'P-' . $item->code . '</a>';
                 }
                 return $item->code;
@@ -225,7 +226,7 @@ class SupplierController extends Controller
             ->editColumn('active', function ($item) {
                 return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
             })
-           
+
             ->editColumn('created_at', function ($item) {
                 return $item->created_at?->format('Y-m-d H:i');
             })
@@ -239,17 +240,17 @@ class SupplierController extends Controller
 
         $bookingGift = BookingGift::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+            ->select('id', 'user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
             ->get();
 
         $bookingTrip = BookingTrip::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            ->select('id', 'user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
             ->get();
 
         $bookingEffectivene = BookingEffectivene::with(['user', 'vendor'])
             ->where('vendor_id', $request->user_id)
-            ->select('id','user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            ->select('id', 'user_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
             ->get();
 
         // Merge collections to retain relationships
@@ -442,11 +443,11 @@ class SupplierController extends Controller
 
         return view('admin.pages.suppliers.payment_suppliers');
     }
-    
-public function store(Request $request): RedirectResponse
-{
-    DB::beginTransaction();
-    try {
+
+    public function store(Request $request): RedirectResponse
+    {
+        DB::beginTransaction();
+        // try {
         // User fields
         $userData = $request->only([
             'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
@@ -458,7 +459,7 @@ public function store(Request $request): RedirectResponse
 
         // Handle password
         if ($request->filled('password')) {
-            $userData['password'] = \Hash::make($request->password);
+            $userData['password'] = Hash::make($request->password);
         } else {
             unset($userData['password']);
         }
@@ -469,9 +470,13 @@ public function store(Request $request): RedirectResponse
         }
 
         // Set type to supplier
-        $userData['type'] = \App\Models\User::TYPE_SUPPLIER;
+        $userData['type'] = User::TYPE_SUPPLIER;
 
-        $user = \App\Models\User::create($userData);
+        $userData['code'] = $this->generateCode();
+        $userData['temporary_email'] = $request->temporary_email;
+        $userData['temporary_phone'] = $request->temporary_phone;
+
+        $user = User::create($userData);
 
         // Supplier fields
         $supplierData = $request->only([
@@ -486,74 +491,92 @@ public function store(Request $request): RedirectResponse
         if ($request->hasFile('licence_image')) {
             $supplierData['licence_image'] = $request->file('licence_image')->store('suppliers', 'public');
         }
+        if ($request->hasFile('profile')) {
+            $supplierData['profile'] = $request->file('profile')->store('suppliers', 'public');
+        }
+        if ($request->filled('languages')) {
+            $supplierData['languages'] = json_encode($request->input('languages'));
+        }
 
-        \App\Models\Supplier::create($supplierData);
+
+
+        $supplierData['user_id'] = $user->id;
+        $supplier = Supplier::create($supplierData);
+
+        if ($supplier) {
+            foreach ($request->sub_category_id as $sub_category_id) {
+                SupplierService::create([
+                    'supplier_id' => $supplier->id,
+                    'sub_category_id' => $sub_category_id
+                ]);
+            }
+        }
 
         DB::commit();
         flash(__('suppliers.messages.created'))->success();
-    } catch (\Exception $e) {
-        DB::rollBack();
-        flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
+        // }
+        return to_route($this->route . '.index');
     }
-    return to_route($this->route . '.index');
-}
 
-public function update(Request $request, $id): RedirectResponse
-{
-    DB::beginTransaction();
-    try {
-        $user = \App\Models\User::findOrFail($id);
+    public function update(Request $request, $id): RedirectResponse
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::findOrFail($id);
+            $userData = $request->only([
+                'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
+                'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
+                'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
+                'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
+                'bank_iban', 'tax_number', 'temperory_phone'
+            ]);
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            } else {
+                unset($userData['password']);
+            }
+            if ($request->hasFile('image')) {
+                $userData['image'] = $request->file('image')->store('users', 'public');
+            }
 
-        // User fields
-        $userData = $request->only([
-            'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
-            'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
-            'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
-            'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
-            'bank_iban', 'tax_number', 'temperory_phone'
-        ]);
+            $user->update($userData);
+            $supplierData = $request->only([
+                'tour_guid', 'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat',
+                'postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url', 'profission_guide',
+                'job', 'experience_info', 'languages', 'banck_name', 'banck_number', 'tax_number', 'place_summary',
+                'place_content', 'expectations', 'general_name', 'nationality'
+            ]);
+            $supplierData['user_id'] = $user->id;
+            if ($request->hasFile('licence_image')) {
+                $supplierData['licence_image'] = $request->file('licence_image')->store('suppliers', 'public');
+            }
 
-        // Handle password
-        if ($request->filled('password')) {
-            $userData['password'] = \Hash::make($request->password);
-        } else {
-            unset($userData['password']);
+            $supplier = Supplier::where('user_id', $user->id)->first();
+            if ($supplier) {
+                $supplier->update($supplierData);
+            } else {
+                Supplier::create($supplierData);
+            }
+
+            DB::commit();
+            flash(__('suppliers.messages.updated'))->success();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
         }
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $userData['image'] = $request->file('image')->store('users', 'public');
-        }
-
-        $user->update($userData);
-
-        // Supplier fields
-        $supplierData = $request->only([
-            'tour_guid', 'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat',
-            'postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url', 'profission_guide',
-            'job', 'experience_info', 'languages', 'banck_name', 'banck_number', 'tax_number', 'place_summary',
-            'place_content', 'expectations', 'general_name', 'nationality'
-        ]);
-        $supplierData['user_id'] = $user->id;
-
-        // Handle licence_image upload
-        if ($request->hasFile('licence_image')) {
-            $supplierData['licence_image'] = $request->file('licence_image')->store('suppliers', 'public');
-        }
-
-        $supplier = \App\Models\Supplier::where('user_id', $user->id)->first();
-        if ($supplier) {
-            $supplier->update($supplierData);
-        } else {
-            \App\Models\Supplier::create($supplierData);
-        }
-
-        DB::commit();
-        flash(__('suppliers.messages.updated'))->success();
-    } catch (\Exception $e) {
-        DB::rollBack();
-        flash(__('admin.messages.error') . ' ' . $e->getMessage())->error();
+        return to_route($this->route . '.index');
     }
-    return to_route($this->route . '.index');
-}
+    private function generateCode()
+    {
+
+        $code = 2500001;
+        $user = User::where('type', User::TYPE_SUPPLIER)->whereNotNull('code')->orderby('id', 'desc')->first();
+        if ($user && $user->code != null) {
+            return intval($user->code) + 1;
+        }
+        return $code;
+    }
 }
