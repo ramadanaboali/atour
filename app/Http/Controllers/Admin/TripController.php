@@ -70,6 +70,7 @@ class TripController extends Controller
         $data = $request->validated();
         $trip = Trip::findOrFail($id);
         // Format available_times
+        // dd($request->all());
         $available_times = [];
         foreach ($data['available_times']['from_time'] as $index => $from_time) {
             $available_times[] = [

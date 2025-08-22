@@ -73,7 +73,7 @@
         <div class="card-body row g-3">
             @php
             $availableLangs = config('languages.available');
-         
+
             $translations = old('translations', $item->translations ?? []);
             @endphp
 
@@ -124,6 +124,25 @@
                         <div class="col-md-8">
                             <label class="form-label">{{ __('trips.description') }}</label>
                             <textarea class="form-control" name="translations[{{ $index }}][description]" placeholder="{{ __('trips.description') }}">{{ $t['description'] ?? '' }}</textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="steps_list_wrapper_{{ $index }}">
+                                <label class="form-label">{{ __('trips.steps_list') }}</label>
+                                @forelse($t['steps_list'][$t['locale']] ?? [''] as $step)
+
+                                <div class="d-flex mb-2">
+                                    <input type="text" name="translations[{{ $index }}][steps_list][{{ $t['locale'] }}][]" class="form-control me-2" value="{{ $step ?? '' }}">
+                                    <button type="button" class="btn btn-danger remove-step">-</button>
+                                </div>
+                                @empty
+                                <div class="d-flex mb-2">
+                                    <input type="text" name="translations[{{ $index }}][steps_list][{{ $t['locale'] }}][]" class="form-control me-2" value="">
+
+                                    <button type="button" class="btn btn-danger remove-step">-</button>
+                                </div>
+                                @endforelse
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm add_step" data-index="{{ $index }}" data-lang="{{ $t['locale'] }}">+ {{ __('trips.add_step') }}</button>
                         </div>
 
                     </div>
@@ -253,23 +272,7 @@
             </div>
 
             <!-- Steps -->
-            <div class="col-12">
-                <label class="form-label">{{ __('trips.steps_list') }}</label>
-                <div id="steps_list_wrapper">
-                    @forelse($item->steps_list ?? [''] as $step)
-                    <div class="d-flex mb-2">
-                        <input type="text" name="steps_list[]" class="form-control me-2" value="{{ $step }}">
-                        <button type="button" class="btn btn-danger remove-step">-</button>
-                    </div>
-                    @empty
-                    <div class="d-flex mb-2">
-                        <input type="text" name="steps_list[]" class="form-control me-2">
-                        <button type="button" class="btn btn-danger remove-step">-</button>
-                    </div>
-                    @endforelse
-                </div>
-                <button type="button" class="btn btn-outline-primary btn-sm" id="add_step">+ {{ __('trips.add_step') }}</button>
-            </div>
+
 
             <!-- Available Times -->
             <div class="col-12">
@@ -369,12 +372,18 @@
     $(document).on('click', '.remove-time', function() {
         $(this).closest('.row').remove();
     });
-    $('#add_step').click(function() {
-        $('#steps_list_wrapper').append(`
+    $('.add_step').click(function() {
+        var index_n = $(this).data('index');
+        var lang = $(this).data('lang');
+        $('#steps_list_wrapper_' + index_n).append(`
+
         <div class="d-flex mb-2">
-            <input type="text" name="steps_list[]" class="form-control me-2">
+            <input type="text" name="translations[${index_n}][steps_list][${lang}][]" class="form-control me-2" value="">
+
             <button type="button" class="btn btn-danger remove-step">-</button>
-        </div>`);
+        </div>
+
+       `);
     });
     $(document).on('click', '.remove-step', function() {
         $(this).closest('.d-flex').remove();
@@ -402,48 +411,55 @@
         let wrapper = document.getElementById('translations-wrapper');
         let index = wrapper.querySelectorAll('.translation-row').length;
 
-        let div = document.createElement('div');
-        div.setAttribute('data-locale', lang);
-        // Translate language name using translation key if available
+        // let div = document.createElement('div');
         let langLabel = getLangLabel(availableLangs[lang]);
-        div.innerHTML = `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+        wrapper.innerHTML += `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
 
-            <div class="col-md-12 d-flex align-items-center ">
-                <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
-                <div class="ms-auto">
-                    <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
-                        <i data-feather="x"></i> {{ __('admin.Remove') }}
-                    </button>
-                </div>
-                <input type="hidden" name="translations[${index}][locale]" value="${lang}">
-            </div>
-            <hr>
-            <div class="col-md-4">
-                <label class="form-label">{{ __('trips.title') }}</label>
-                <input type="text" class="form-control" name="translations[${index}][title]" value="" placeholder="{{ __('trips.title') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">{{ __('trips.start_point') }}</label>
-                <input type="text" class="form-control" name="translations[${index}][start_point]" value="" placeholder="{{ __('trips.start_point') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">{{ __('trips.end_point') }}</label>
-                <input type="text" class="form-control" name="translations[${index}][end_point]" value="" placeholder="{{ __('trips.end_point') }}">
-            </div>
-            <div class="col-md-4">
+                            <div class="col-md-12 d-flex align-items-center ">
+                                <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
+                                <div class="ms-auto">
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
+                                        <i data-feather="x"></i> {{ __('admin.Remove') }}
+                                    </button>
+                                </div>
+                                <input type="hidden" name="translations[${index}][locale]" value="${lang}">
+                            </div>
+                            <hr>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ __('trips.title') }}</label>
+                                <input type="text" class="form-control" name="translations[${index}][title]" value="" placeholder="{{ __('trips.title') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ __('trips.start_point') }}</label>
+                                <input type="text" class="form-control" name="translations[${index}][start_point]" value="" placeholder="{{ __('trips.start_point') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ __('trips.end_point') }}</label>
+                                <input type="text" class="form-control" name="translations[${index}][end_point]" value="" placeholder="{{ __('trips.end_point') }}">
+                            </div>
+                            <div class="col-md-4">
 
-                <label class="form-label">{{ __('trips.program_time') }}</label>
-                <input type="text" class="form-control" name="translations[${index}][program_time]" value="" placeholder="{{ __('trips.program_time') }}">
-            </div>
-            <div class="col-md-8">
-                <label class="form-label">{{ __('trips.description') }}</label>
-                <textarea class="form-control" name="translations[${index}][description]" placeholder="{{ __('trips.description') }}"></textarea>
-            </div>
+                                <label class="form-label">{{ __('trips.program_time') }}</label>
+                                <input type="text" class="form-control" name="translations[${index}][program_time]" value="" placeholder="{{ __('trips.program_time') }}">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label">{{ __('trips.description') }}</label>
+                                <textarea class="form-control" name="translations[${index}][description]" placeholder="{{ __('trips.description') }}"></textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">{{ __('trips.steps_list') }}</label>
+                                <div id="steps_list_wrapper_${index}">
+                                    <div class="d-flex mb-2">
+                                        <input type="text" name="translations[${index}][steps_list][${lang}][]" class="form-control me-2" value="">
+                                        <button type="button" class="btn btn-danger remove-step">-</button>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm add_step" data-index="${index}" data-lang="${lang}">+ {{ __('trips.add_step') }}</button>
+                            </div>
+                        </div>`;
 
-        </div>`;
 
-
-        wrapper.appendChild(div);
+        // wrapper.appendChild(innerHTML);
 
         // Disable added language in dropdown
         select.querySelector('option[value="' + lang + '"]').disabled = true;

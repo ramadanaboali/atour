@@ -39,8 +39,6 @@ class TripRequest extends FormRequest
             'free_cancelation' => 'nullable|boolean',
             'active' => 'nullable|boolean',
             'pay_later' => 'nullable|boolean',
-            'steps_list' => 'required|array',
-            'steps_list.*' => 'string',
             'available_times' => 'required|array',
             'available_times.from_time' => 'required|array',
             'available_times.to_time' => 'required|array',
