@@ -19,7 +19,6 @@ use App\Http\Requests\Vendor\Setup4Request;
 use App\Http\Requests\Vendor\Setup5Request;
 use App\Http\Requests\Vendor\Setup6Request;
 use App\Http\Requests\Vendor\Setup7Request;
-use App\Http\Resources\UserResource;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
 use App\Models\Supplier;
