@@ -13,7 +13,6 @@ class Country extends Model
     use SoftDeletes;
     protected $table = 'countries';
     protected $fillable = ['active'];
-    protected $appends = ['title','text'];
 
 
     public function translations()
@@ -27,22 +26,5 @@ class Country extends Model
         return $this->translations->where('locale', $locale)->first();
     }
 
-    public function getTextAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
-
-    public function getTitleAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
-
+    
 }

@@ -102,5 +102,10 @@ return [
     'thursday' => 'الخميس',
     'friday' => 'الجمعة',
     'saturday' => 'السبت',
+    'title' => 'العنوان',
+    'start_point' => 'نقطة البداية',
+    'end_point' => 'نقطة النهاية',
+    'program_time' => 'وقت البرنامج',
+    
 
 ];

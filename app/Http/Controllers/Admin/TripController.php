@@ -65,7 +65,7 @@ class TripController extends Controller
 
 
 
-     public function update(TripRequest $request,  $id)
+    public function update(TripRequest $request, $id)
     {
         $data = $request->validated();
         $trip = Trip::findOrFail($id);
@@ -90,6 +90,10 @@ class TripController extends Controller
         // Update trip
         $trip->update($data);
 
+        $trip->translations()->delete();
+        foreach ($request->translations as $tr) {
+            $trip->translations()->create($tr);
+        }
         // Sync relationships
         $trip->requirements()->sync($data['requirement_ids']);
         $trip->subCategory()->sync($data['sub_category_ids']);
@@ -99,7 +103,6 @@ class TripController extends Controller
         if ($request->hasFile('images')) {
             // Delete existing attachments
             Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
-
             // Save new images
             $images = $request->file('images');
             foreach ($images as $image) {
@@ -122,40 +125,29 @@ class TripController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Trip::with('vendor')->select('trips.*');
+        $data = Trip::with(['vendor','translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->whereHas('vendor')->select('trips.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('vendor', function ($item) {
-                return $item->vendor?->name ;
+                if (auth()->user()->can('suppliers.show') && $item->vendor) {
+                    return '<a href="' . route('admin.suppliers.show', $item->vendor?->id) . '">' . $item->vendor?->name . '</a>';
+                }
+                return $item->vendor ? $item->vendor?->name. ' (P-'.$item->vendor?->code .')' : '--';
             })
+        ->addColumn('title', function ($item) {
+            return $item->translations->first()->title ?? '';
+        })
+
             ->addColumn('status', function ($item) {
                 return $item?->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
             })
             ->editColumn('created_at', function ($item) {
                 return $item->created_at?->format('Y-m-d H:i') ;
             })
-             ->orderColumn('title', function ($query, $order) {
-                 if (App::isLocale('en')) {
-                     return $query->orderby('title_en', $order);
-                 } else {
-                     return $query->orderby('title_ar', $order);
-                 }
-             })
-             ->filterColumn('title', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-             ->filterColumn('description', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('description_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-            ->rawColumns(['vendor','status'])
+
+            ->rawColumns(['vendor','status','title'])
             ->make(true);
     }
 }

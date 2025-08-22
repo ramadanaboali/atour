@@ -125,7 +125,6 @@ class CountryController extends Controller
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('title', function ($item) {
-                // Get the title from the first translation or fallback
                 return $item->translations->first()->title ?? '';
             })
             ->editColumn('active', function ($item) {

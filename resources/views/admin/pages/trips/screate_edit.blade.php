@@ -73,61 +73,37 @@
         <div class="card-body row g-3">
             @php
             $availableLangs = config('languages.available');
-         
+            $translatableFields = [
+            'title' => __('trips.title'),
+            'start_point' => __('trips.start_point'),
+            'end_point' => __('trips.end_point'),
+            'program_time' => __('trips.program_time'),
+            'description' => __('trips.description'),
+            ];
             $translations = old('translations', $item->translations ?? []);
             @endphp
 
             <!-- Translatable Fields -->
             <!-- Translations Section -->
             <div class="col-12">
+                <h5 class="mb-3">{{ __('admin.translations') }}</h5>
 
+                <!-- Existing translations -->
                 <div id="translations-wrapper">
+
                     @php
                     $usedLangs = [];
                     $translations = old('translations', $item->translations ?? []);
                     @endphp
+
                     @foreach($translations as $index => $t)
                     @php $usedLangs[] = $t['locale']; @endphp
-                    <div class="border rounded p-1 row bg-light translation-row" data-locale="{{ $t['locale'] ?? $t->locale }}">
-                        <!-- make language label as badge -->
-                        {{-- add span and button on design --}}
-                        <div class="col-md-12 d-flex align-items-center ">
-                            <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">
-
-                                {{ __('admin.' . (config('languages.available')[$t['locale']] ?? strtoupper($t['locale']))) }}
-                            </span>
-                            <div class="ms-auto">
-                                <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
-                                    <i data-feather="x"></i> {{ __('admin.Remove') }}
-                                </button>
-                            </div>
-                            <input type="hidden" name="translations[{{ $index }}][locale]" value="{{ $t['locale'] }}">
-                        </div>
-                        <hr>
-                        <div class="col-md-4">
-                            <label class="form-label">{{ __('trips.title') }}</label>
-                            <input type="text" class="form-control" name="translations[{{ $index }}][title]" value="{{ $t['title'] ?? '' }}" placeholder="{{ __('trips.title') }}">
-
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">{{ __('trips.start_point') }}</label>
-                            <input type="text" class="form-control" name="translations[{{ $index }}][start_point]" value="{{ $t['start_point'] ?? '' }}" placeholder="{{ __('trips.start_point') }}">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">{{ __('trips.end_point') }}</label>
-                            <input type="text" class="form-control" name="translations[{{ $index }}][end_point]" value="{{ $t['end_point'] ?? '' }}" placeholder="{{ __('trips.end_point') }}">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">{{ __('trips.program_time') }}</label>
-                            <input type="text" class="form-control" name="translations[{{ $index }}][program_time]" value="{{ $t['program_time'] ?? '' }}" placeholder="{{ __('trips.program_time') }}">
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label">{{ __('trips.description') }}</label>
-                            <textarea class="form-control" name="translations[{{ $index }}][description]" placeholder="{{ __('trips.description') }}">{{ $t['description'] ?? '' }}</textarea>
-                        </div>
-
+                    <div class="translation-row input-group mb-1" data-locale="{{ $t['locale'] }}">
+                        <span class="input-group-text">{{ config('languages.available')[$t['locale']] ?? strtoupper($t['locale']) }}</span>
+                        <input type="hidden" name="translations[{{ $index }}][locale]" value="{{ $t['locale'] }}">
+                        <input type="text" name="translations[{{ $index }}][title]" class="form-control" value="{{ $t['title'] ?? '' }}" placeholder="{{ __('Title') }}">
+                        <button type="button" class="btn btn-danger remove-translation">-</button>
                     </div>
-
 
                     @endforeach
                 </div>
@@ -228,8 +204,7 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ __('trips.features') }}</label>
-                <select name="featur_ids[]" class="form-control ajax_select2" multiple data-ajax--url="{{ route('admin.features.select') }}">
-
+                <select name="feature_ids[]" class="form-control ajax_select2" multiple data-ajax--url="{{ route('admin.features.select') }}">
                     @isset($item->features)
                     @foreach($item->features as $feat)
                     <option value="{{ $feat->id }}" selected>{{ $feat->title }}</option>
@@ -291,32 +266,6 @@
                     @endforelse
                 </div>
                 <button type="button" class="btn btn-outline-primary btn-sm" id="add_time">+ {{ __('trips.add_time') }}</button>
-            </div>
-            <div class="card" style="border: 1px solid;padding: 20px;">
-                <h3 class="price">{{ __('trips.available_days') }}</h3>
-                <div class="content-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                @php
-                                $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                                @endphp
-                                @foreach($days as $index => $day)
-                                <div class="mb-1 col-md-2 @error('available_days') is-invalid @enderror">
-                                    <br>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="available_days[{{ $index }}]" value="{{ $day }}" id="available_days_{{ $day }}" @checked(in_array($day, $item->available_days ?? [])) />
-                                        <label class="form-check-label" for="available_days_{{ $day }}">{{ __('trips.' . $day) }}</label>
-                                    </div>
-                                    @error('available_days')
-                                    <span class="error">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Images -->
@@ -384,7 +333,7 @@
     const availableLangs = @json(config('languages.available'));
 
     function getLangLabel(lang) {
-        return translations[lang] ?? lang;
+        return translations[lang] ? ? lang;
     }
 
 
@@ -406,39 +355,32 @@
         div.setAttribute('data-locale', lang);
         // Translate language name using translation key if available
         let langLabel = getLangLabel(availableLangs[lang]);
-        div.innerHTML = `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+        div.innerHTML = `<div class="border rounded p-1 mb-12 bg-light">
+            <h6 class="fw-bold mb-2">${langLabel}</h6>
 
-            <div class="col-md-12 d-flex align-items-center ">
-                <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
-                <div class="ms-auto">
-                    <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
-                        <i data-feather="x"></i> {{ __('admin.Remove') }}
-                    </button>
-                </div>
-                <input type="hidden" name="translations[${index}][locale]" value="${lang}">
-            </div>
-            <hr>
-            <div class="col-md-4">
+
+            <input type="hidden" name="translations[${index}][locale]" value="${lang}">
+            <div class="mb-2">
                 <label class="form-label">{{ __('trips.title') }}</label>
                 <input type="text" class="form-control" name="translations[${index}][title]" value="" placeholder="{{ __('trips.title') }}">
             </div>
-            <div class="col-md-4">
+            <div class="mb-2">
                 <label class="form-label">{{ __('trips.start_point') }}</label>
                 <input type="text" class="form-control" name="translations[${index}][start_point]" value="" placeholder="{{ __('trips.start_point') }}">
             </div>
-            <div class="col-md-4">
+            <div class="mb-2">
                 <label class="form-label">{{ __('trips.end_point') }}</label>
                 <input type="text" class="form-control" name="translations[${index}][end_point]" value="" placeholder="{{ __('trips.end_point') }}">
             </div>
-            <div class="col-md-4">
-
+            <div class="mb-2">
                 <label class="form-label">{{ __('trips.program_time') }}</label>
                 <input type="text" class="form-control" name="translations[${index}][program_time]" value="" placeholder="{{ __('trips.program_time') }}">
             </div>
-            <div class="col-md-8">
+            <div class="mb-2">
                 <label class="form-label">{{ __('trips.description') }}</label>
                 <textarea class="form-control" name="translations[${index}][description]" placeholder="{{ __('trips.description') }}"></textarea>
             </div>
+            <button type="button" class="btn btn-danger remove-translation">-</button>
 
         </div>`;
 
@@ -452,9 +394,8 @@
 
     // Handle removal
     document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.remove-translation');
-        if (btn) {
-            let row = btn.closest('.translation-row');
+        if (e.target.classList.contains('remove-translation')) {
+            let row = e.target.closest('.translation-row');
             let lang = row.getAttribute('data-locale');
 
             // Re-enable language in dropdown

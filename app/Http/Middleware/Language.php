@@ -18,13 +18,13 @@ class Language
      */
     public function handle(Request $request, Closure $next)
     {
-
-        if(Session::get('lang') == 'en') {
-            App::setLocale('en');
+        //lang = header language
+        $lang = $request->header('lang');
+        if ($lang) {
+            App::setLocale($lang);
         } else {
             App::setLocale('ar');
         }
-        // dd(Session::get('lang'));
 
         return $next($request);
     }

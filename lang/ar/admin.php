@@ -288,7 +288,8 @@ return [
     'Urdu' => 'الأوردو',
     'Korean' => 'الكورية',
     'Portuguese' => 'البرتغالية',
-    'privacy_policy' => 'سياسة الخصوصية'
+    'privacy_policy' => 'سياسة الخصوصية',
+    'Remove' => 'إزالة'
 
 
 ];

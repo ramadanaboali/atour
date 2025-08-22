@@ -14,15 +14,15 @@ class TripRequest extends FormRequest
 
     public function rules()
     {
+        // dd(request()->all());
         return [
-            'title_en' => 'required|string|min:3',
-            'title_ar' => 'required|string|min:3',
-            'start_point_en' => 'required|string',
-            'start_point_ar' => 'required|string',
-            'end_point_en' => 'required|string',
-            'end_point_ar' => 'required|string',
-            'program_time_en' => 'required|string',
-            'program_time_ar' => 'required|string',
+           'translations' => 'required|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+            'translations.*.title' => 'required|string|max:255',
+            'translations.*.start_point' => 'required|string|max:255',
+            'translations.*.end_point' => 'required|string|max:255',
+            'translations.*.program_time' => 'required|string|max:255',
+            'translations.*.description' => 'required|string|max:1000',
             'price' => 'required|numeric',
             'people' => 'required|numeric',
             'start_long' => 'required|numeric',
@@ -46,8 +46,6 @@ class TripRequest extends FormRequest
             'available_times.to_time' => 'required|array',
             'available_times.from_time.*' => 'required|date_format:H:i',
             'available_times.to_time.*' => 'required|date_format:H:i',
-            'description_en' => 'required|string',
-            'description_ar' => 'required|string',
             'cover' => 'nullable|image',
             'images' => 'nullable|array',
             'images.*' => 'image',
