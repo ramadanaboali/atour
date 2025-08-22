@@ -15,52 +15,19 @@ class GiftRequest extends FormRequest
     public function rules()
     {
 
-
-
-        switch ($this->method()) {
-            case 'GET':
-            case 'DELETE':
-                {
-                    return [];
-                }
-            case 'POST':
-                {
-                    return [
-                        'title_en' => 'required|string|min:2',
-                    'title_ar' => 'required|string|min:2',
-                    'description_en' => 'required|string|min:2',
-                    'description_ar' => 'required|string|min:2',
-                    'price' => 'required|numeric',
-                    'cover' => 'nullable|image',
-                    'free_cancelation' => 'required|in:0,1',
-                    'active' => 'required|in:0,1',
-                    'pay_later' => 'required|in:0,1',
-                    'city_id' => 'required|exists:cities,id',
-                    'images' => 'required|array',
-                    'images.*' => 'required|image',
-                    'sub_category_ids' => 'required|array',
-                    'sub_category_ids.*' => 'required|exists:sub_categories,id',
-                    ];
-                }
-            case 'PATCH':
-            case 'PUT':
-                {
-                    $rules = [
-                        'title_en' => 'required|string|min:2',
-                        'title_ar' => 'required|string|min:2',
-                        'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
-                        'price' => 'required|numeric',
-                        'active' => 'required|in:0,1',
-                        'city_id' => 'required|exists:cities,id',
-                        'sub_category_ids' => 'required|array',
-                        'sub_category_ids.*' => 'required|exists:sub_categories,id',
-                    ];
-                    return $rules;
-                }
-            default:
-                return [];
-        }
-
+        return [
+           'translations' => 'required|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+            'translations.*.title' => 'required|string|max:255',
+            'translations.*.location' => 'required|string|max:255',
+            'translations.*.description' => 'required|string|max:1000',
+            'price' => 'required|numeric',
+        'cover' => 'nullable|image',
+        'active' => 'required|in:0,1',
+        'pay_later' => 'required|in:0,1',
+        'city_id' => 'required|exists:cities,id',
+        'sub_category_ids' => 'required|array',
+        'sub_category_ids.*' => 'required|exists:sub_categories,id',
+        ];
     }
 }

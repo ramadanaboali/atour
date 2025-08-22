@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GiftRequest;
 use App\Models\Attachment;
 use App\Models\Gift;
-use App\Models\GiftFeature;
-use App\Models\GiftSubCategory;
 use App\Services\General\StorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -62,7 +60,6 @@ class GiftController extends Controller
         return to_route($this->route . '.index');
     }
 
-
     public function update(GiftRequest $request, $id)
     {
         $data = $request->except(['_token', '_method']);
@@ -71,6 +68,10 @@ class GiftController extends Controller
             $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
         $gift->update($data);
+        $gift->translations()->delete();
+        foreach ($request->translations as $tr) {
+            $gift->translations()->create($tr);
+        }
         $gift->subCategory()->sync($data['sub_category_ids']);
         if ($request->hasFile('images')) {
             Attachment::where('model_id', $gift->id)->where('model_type', 'gift')->delete();
@@ -88,8 +89,6 @@ class GiftController extends Controller
         }
         return redirect()->route('admin.gifts.index')->with('success', 'Gift updated successfully.');
     }
-
-
 
     public function list(Request $request): JsonResponse
     {
