@@ -59,17 +59,17 @@ class CityController extends Controller
     }
     public function select(Request $request): JsonResponse|string
     {
-       $data = City::distinct()
-                ->where('active',true)
-                ->where(function ($query) use ($request) {
-                if ($request->filled('q')) {
-                    if(App::isLocale('en')) {
-                        return $query->where('title_en', 'like', '%'.$request->q.'%');
-                    } else {
-                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                    }
-                }
-                })->select('id', 'title_en', 'title_ar')->get();
+        $data = City::distinct()
+                 ->where('active', true)
+                 ->where(function ($query) use ($request) {
+                     if ($request->filled('q')) {
+                         if (App::isLocale('en')) {
+                             return $query->where('title_en', 'like', '%'.$request->q.'%');
+                         } else {
+                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
+                         }
+                     }
+                 })->select('id', 'title_en', 'title_ar')->get();
 
         if ($request->filled('pure_select')) {
             $html = '<option value="">'. __('category.select') .'</option>';
@@ -94,15 +94,20 @@ class CityController extends Controller
     protected function processForm($request, $id = null): City|null
     {
         $item = $id == null ? new City() : City::find($id);
-        $data= $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-            if($request->filled('active')){
-                $item->active = 1;
-            }else{
-                $item->active = 0;
-            }
+        if ($request->filled('active')) {
+            $item->active = 1;
+        } else {
+            $item->active = 0;
+        }
         if ($item->save()) {
+
+              if ($request->has('translations') && is_array($request->translations)) {
+                  $item->translations()->delete();
+                  $item->translations()->createMany($request->translations);
+              }
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
@@ -126,17 +131,17 @@ class CityController extends Controller
             return $item->country?->title;
         })
         ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class=" btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->active == 1 ? '<button class=" btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
         ->filterColumn('title', function ($query, $keyword) {
-            if(App::isLocale('en')) {
+            if (App::isLocale('en')) {
                 return $query->where('title_en', 'like', '%'.$keyword.'%');
             } else {
                 return $query->where('title_ar', 'like', '%'.$keyword.'%');
             }
         })
         ->filterColumn('description', function ($query, $keyword) {
-            if(App::isLocale('en')) {
+            if (App::isLocale('en')) {
                 return $query->where('description_en', 'like', '%'.$keyword.'%');
             } else {
                 return $query->where('description_ar', 'like', '%'.$keyword.'%');

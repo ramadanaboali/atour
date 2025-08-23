@@ -59,25 +59,15 @@ class CountryController extends Controller
     }
     public function select(Request $request): JsonResponse|string
     {
-        $data = Country::distinct()
-                 ->where('active', true)
-                 ->where(function ($query) use ($request) {
-                     if ($request->filled('q')) {
-                         if (App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
-                     }
-                 })->select('id', 'title_en', 'title_ar')->get();
-
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('Country.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
-            }
-            return $html;
-        }
+        $countries = Country::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('countries.id')->get();
+        $data = $countries->map(function ($country) {
+            return [
+                'id' => $country->id,
+                'text' => $country->translations->first()->title ?? '',
+            ];
+        });
         return response()->json($data);
     }
 

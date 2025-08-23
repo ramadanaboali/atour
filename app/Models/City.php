@@ -11,9 +11,10 @@ use Illuminate\Support\Facades\App;
 
 class City extends Model
 {
-    use HasFactory,SoftDeletes;
-     protected $table = 'cities';
-    protected $fillable = ['title_en','title_ar','description_en','description_ar', 'country_id','created_by','updated_by','active','image'];
+    use HasFactory;
+    use SoftDeletes;
+    protected $table = 'cities';
+    protected $fillable = [ 'country_id','created_by','updated_by','active','image'];
     protected $appends = ['title','text','photo'];
 
     public function getPhotoAttribute()
@@ -24,54 +25,54 @@ class City extends Model
 
     public function getTextAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
 
     public function getTitleAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
     public function getDescriptionAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
-        } else {
-            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
-        }
+        return $this->translations->first()->description ?? '';
     }
+
+    public function translations()
+    {
+        return $this->hasMany(CityTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
+
     public function country(): ?BelongsTo
     {
-        return $this->belongsTo(Country::class,'country_id');
+        return $this->belongsTo(Country::class, 'country_id');
     }
 
     public function trips(): ?HasMany
     {
-        return $this->hasMany(Trip::class,'city_id');
+        return $this->hasMany(Trip::class, 'city_id');
     }
 
     public function gifts(): ?HasMany
     {
-        return $this->hasMany(Gift::class,'city_id');
+        return $this->hasMany(Gift::class, 'city_id');
     }
     public function effectivenes(): ?HasMany
     {
-        return $this->hasMany(Effectivenes::class,'city_id');
+        return $this->hasMany(Effectivenes::class, 'city_id');
     }
     public function createdBy(): ?BelongsTo
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
     public function updatedBy(): ?BelongsTo
     {
-        return $this->belongsTo(User::class,'updated_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
 }

@@ -82,6 +82,13 @@ class OnboardingController extends Controller
 
         $item = $item->fill($data);
         if ($item->save()) {
+
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
+
             $folder_path = "onboardings";
             if ($request->hasFile('image')) {
                 $file = $request->file('image');

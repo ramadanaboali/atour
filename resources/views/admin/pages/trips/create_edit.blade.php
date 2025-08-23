@@ -177,10 +177,17 @@
                 @enderror
             </div>
 
-            <div class="mb-1 col-md-4  @error('people') is-invalid @enderror">
-                <label class="form-label" for="people">{{ __('trips.people') }}</label>
-                <input type="number" name="people" id="people" class="form-control" placeholder="" value="{{ $item->people ?? old('people') }}" />
-                @error('people')
+            <div class="mb-1 col-md-4  @error('min_people') is-invalid @enderror">
+                <label class="form-label" for="min_people">{{ __('trips.min_people') }}</label>
+                <input type="number" name="min_people" id="min_people" class="form-control" placeholder="" value="{{ $item->min_people ?? old('min_people') }}" />
+                @error('min_people')
+                <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-1 col-md-4  @error('max_people') is-invalid @enderror">
+                <label class="form-label" for="max_people">{{ __('trips.max_people') }}</label>
+                <input type="number" name="max_people" id="max_people" class="form-control" placeholder="" value="{{ $item->max_people ?? old('max_people') }}" />
+                @error('max_people')
                 <span class="error">{{ $message }}</span>
                 @enderror
             </div>
@@ -413,7 +420,7 @@
 
         // let div = document.createElement('div');
         let langLabel = getLangLabel(availableLangs[lang]);
-        wrapper.innerHTML += `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+        let html = `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
 
                             <div class="col-md-12 d-flex align-items-center ">
                                 <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
@@ -457,11 +464,9 @@
                                 <button type="button" class="btn btn-outline-primary btn-sm add_step" data-index="${index}" data-lang="${lang}">+ {{ __('trips.add_step') }}</button>
                             </div>
                         </div>`;
+        wrapper.insertAdjacentHTML('beforeend', html);
 
-
-        // wrapper.appendChild(innerHTML);
-
-        // Disable added language in dropdown
+                        // Disable added language in dropdown
         select.querySelector('option[value="' + lang + '"]').disabled = true;
         select.value = '';
     });

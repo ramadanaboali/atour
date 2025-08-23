@@ -116,6 +116,7 @@ class TripController extends Controller
                 Attachment::create($attachment);
             }
         }
+        flash(__('trips.messages.updated'))->success();
 
         // Redirect
         return redirect()->route('admin.trips.index')->with('success', 'Trip updated successfully.');

@@ -352,7 +352,8 @@
 
         // let div = document.createElement('div');
         let langLabel = getLangLabel(availableLangs[lang]);
-        wrapper.innerHTML += `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+        let html = `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+
 
      <div class="col-md-12 d-flex align-items-center ">
          <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
@@ -376,8 +377,7 @@
 
  </div>`;
 
-
-        // wrapper.appendChild(innerHTML);
+        wrapper.insertAdjacentHTML('beforeend', html);
 
         // Disable added language in dropdown
         select.querySelector('option[value="' + lang + '"]').disabled = true;

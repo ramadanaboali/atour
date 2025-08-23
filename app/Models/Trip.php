@@ -17,7 +17,8 @@ class Trip extends Model
     use SoftDeletes;
     protected $fillable = [
         'price',
-        'people',
+        'min_people',
+        'max_people',
         'free_cancelation',
         'available_days',
         'pay_later',

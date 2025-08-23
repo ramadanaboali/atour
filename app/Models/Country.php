@@ -14,7 +14,12 @@ class Country extends Model
     protected $table = 'countries';
     protected $fillable = ['active'];
 
+    protected $appends = ['title'];
 
+    public function getTitleAttribute()
+    {
+        return $this->translations->first()->title ?? '';
+    }
     public function translations()
     {
         return $this->hasMany(CountryTranslation::class);
@@ -26,5 +31,5 @@ class Country extends Model
         return $this->translations->where('locale', $locale)->first();
     }
 
-    
+
 }
