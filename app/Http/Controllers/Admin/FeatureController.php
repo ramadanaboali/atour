@@ -103,49 +103,34 @@ class FeatureController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Feature::select('*');
+        $data = Feature::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('features.*');
+
         return FacadesDataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('title', function ($item) {
+                return $item->translations->first()->title ?? '';
+            })
             ->addIndexColumn()
             ->addColumn('photo', function ($item) {
                 return '<img src="' . $item->photo . '" height="100px" width="100px">';
             })
-             ->filterColumn('title', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-             ->filterColumn('description', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('description_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+             
             ->rawColumns(['photo'])
             ->make(true);
     }
     public function select(Request $request): JsonResponse|string
     {
-        $data = Feature::distinct()
-                 ->where(function ($query) use ($request) {
-                     if ($request->filled('q')) {
-                         if (App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
-                     }
-                 })->select('id', 'title_en', 'title_ar')->get();
-
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('category.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
-            }
-            return $html;
-        }
+        $items = Feature::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('features.id')->get();
+        $data = $items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->translations->first()->title ?? '',
+            ];
+        });
         return response()->json($data);
     }
 

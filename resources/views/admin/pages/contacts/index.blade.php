@@ -46,28 +46,49 @@
         </div>
     </div>
 </div>
-<div class="modal fade text-start" id="modalStatus2" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
-
+<div class="modal fade text-start" id="ClientStatus2" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
     <div class="modal-dialog">
-        <form id="statusForm2" method="post" action="#">
-            <input type="hidden" name="_method" value="DELETE">
+        <form id="StatusForm2" method="post" action="#">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.delete.title') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel1">{{ __('admin.dialogs.client_status.title') }}</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {{ __('admin.dialogs.delete.info') }}
+                    {{-- {{ __('admin.dialogs.client_status.info') }} --}}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="status">{{ __('contacts.status') }}</label>
+                            <select name="status" id="status" class="form-control" required>
+                                <option value="">{{ __('admin.select') }}</option>
+                                <option value="onprogress">{{ __('contacts.onprogress') }}</option>
+                                <option value="closed">{{ __('contacts.close') }}</option>
+
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            {{-- <div class="form-group"> --}}
+                            <label for="notes">{{ __('admin.notes') }}</label>
+                            <textarea name="notes" id="notes" class="form-control" rows="3"></textarea>
+                            {{-- </div> --}}
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-danger">{{ __('admin.dialogs.delete.confirm') }}</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">{{ __('admin.dialogs.delete.cancel') }}</button>
+                    <button type="submit" class="btn btn-sm btn-success">{{ __('admin.dialogs.client_status.confirm') }}</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">{{ __('admin.dialogs.client_status.cancel') }}</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+
 
 @stop
 
@@ -184,8 +205,10 @@
     $('body').on('click', '.change_status', function() {
         var url = $(this).attr('data-url');
         // alert('Change status clicked'+url);
-        $('#statusForm2').attr('action', url)
-        $('#modalStatus2').modal('show')
+        $('#StatusForm2').attr('action', url)
+
+        $('#ClientStatus2').modal('show')
+
         return false;
     });
 

@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SettingTranslation extends Model
+class DepartmentTranslation extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['locale', 'type', 'content', 'setting_id'];
+    protected $fillable = [
+        'department_id',
+        'locale',
+        'title',
+    ];
 }

@@ -35,7 +35,7 @@
                 <div class="row">
                     <div id="translations-wrapper" class="w-100">
                         @php
-                        $translations = old('translations', $item->translations ?? []);
+                        $translations = old('translations', $item->termsTranslations ?? []);
                         $availableLangs = config('languages.available');
                         $usedLangs = collect($translations)->pluck('locale')->toArray();
                         @endphp
@@ -67,6 +67,7 @@
                     </button>
                 </div>
 
+                
             </div>
         </div>
     </div>

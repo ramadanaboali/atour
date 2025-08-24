@@ -79,16 +79,14 @@ class FAQController extends Controller
     {
         $item = $id == null ? new FAQ() : FAQ::find($id);
         $data = $request->except(['_token', '_method']);
-
-        $item = $item->fill($data);
+        // dd($data);
+        $item = $item->fill([]);
         if ($item->save()) {
-            $folder_path = "faqs";
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $item->image  = $this->storageService->storeFile($file, $folder_path);
-                $item->save();
-            }
 
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
 
             return $item;
         }
@@ -97,9 +95,15 @@ class FAQController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = FAQ::select('*');
+        $data = FAQ::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('f_a_q_s.*');
+
         return FacadesDataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('question', function ($item) {
+                return $item->translations->first()->question ?? '';
+            })
 
             ->make(true);
     }

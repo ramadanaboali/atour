@@ -14,16 +14,13 @@ class RequirementRequest extends FormRequest
 
     public function rules()
     {
-        if ($this->method() == 'PUT') {
-            return [
-                'title_en' => 'required',
-                'title_ar' => 'required'
-            ];
-        } else {
-            return [
-                'title_en' => 'required',
-                'title_ar' => 'required',
-            ];
-        }
+
+        return [
+                'translations' => 'required|array',
+               'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+               'translations.*.title' => 'required|string|max:255',
+               'translations.*.description' => 'required|string|max:1000',
+               ];
+
     }
 }

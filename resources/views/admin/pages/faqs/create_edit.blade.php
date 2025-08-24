@@ -33,26 +33,155 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="mb-1 col-md-12  @error('question') is-invalid @enderror">
-                            <label class="form-label" for="question">{{ __('admin.question') }}</label>
-                            <input type="text" name="question" id="question" class="form-control" placeholder=""
-                                   value="{{ $item->question ?? old('question') }}" required/>
-                            @error('question')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        @php
+                        $availableLangs = config('languages.available');
 
-                           <div class="mb-1 col-md-12  @error('answer') is-invalid @enderror">
-                            <label class="form-label" for="answer">{{ __('admin.answer') }}</label>
-                            <textarea type="text" name="answer" id="answer" class="form-control editor" placeholder="">{{ $item->answer ?? old('answer') }}</textarea>
-                            @error('answer')
-                            <span class="error">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        $translations = old('translations', $item->translations ?? []);
+                        @endphp
 
+                        <!-- Translations Section -->
+                        <div class="col-12">
+
+                            <div id="translations-wrapper">
+                                @php
+                                $usedLangs = [];
+                                $translations = old('translations', $item->translations ?? []);
+                                @endphp
+                                @foreach($translations as $index => $t)
+                                @php $usedLangs[] = $t['locale']; @endphp
+                                <div class="border rounded p-1 row bg-light translation-row" data-locale="{{ $t['locale'] ?? $t->locale }}">
+                                    <!-- make language label as badge -->
+                                    {{-- add span and button on design --}}
+                                    <div class="col-md-12 d-flex align-items-center ">
+                                        <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">
+
+                                            {{ __('admin.' . (config('languages.available')[$t['locale']] ?? strtoupper($t['locale']))) }}
+                                        </span>
+                                        <div class="ms-auto">
+                                            <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
+                                                <i data-feather="x"></i> {{ __('admin.Remove') }}
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="translations[{{ $index }}][locale]" value="{{ $t['locale'] }}">
+                                    </div>
+                                    <hr>
+                                    <div class="col-md-12">
+                                        <label class="form-label">{{ __('gifts.question') }}</label>
+                                        <input type="text" class="form-control" name="translations[{{ $index }}][question]" value="{{ $t['question'] ?? '' }}" placeholder="{{ __('gifts.question') }}">
+
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        <label class="form-label">{{ __('gifts.answer') }}</label>
+                                        <textarea class="form-control" name="translations[{{ $index }}][answer]" placeholder="{{ __('gifts.answer') }}">{{ $t['answer'] ?? '' }}</textarea>
+                                    </div>
+
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Add translation button -->
+                            <div class="input-group mt-2" id="add-translation-group">
+                                <select id="language-select" class="form-select" style="max-width:200px;">
+                                    <option value="">{{ __('admin.Select Language') }}</option>
+                                    @foreach($availableLangs as $code => $name)
+                                    <option value="{{ $code }}" @if(in_array($code, $usedLangs)) disabled @endif>
+                                        {{ __('admin.'.$name) }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                <button type="button" id="add-translation" class="btn btn-sm btn-primary">
+                                    + {{ __('admin.Add Language') }}
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </form>
 @stop
+@push('scripts')
+<script>
+    let translations = @json(__('scripts'));
+    const availableLangs = @json(config('languages.available'));
+
+    function getLangLabel(lang) {
+        return translations[lang] ? translations[lang] : lang;
+    }
+
+
+    document.getElementById('add-translation').addEventListener('click', function() {
+        let select = document.getElementById('language-select');
+        let lang = select.value;
+        if (!lang) return;
+
+        // Prevent adding same language twice
+        if (document.querySelector('.translation-row[data-locale="' + lang + '"]')) {
+            alert('Language already added.');
+            return;
+        }
+
+        let wrapper = document.getElementById('translations-wrapper');
+        let index = wrapper.querySelectorAll('.translation-row').length;
+
+        // let div = document.createElement('div');
+        let langLabel = getLangLabel(availableLangs[lang]);
+        let html = `<div class="border rounded p-1 row bg-light translation-row" data-locale="${lang}">
+
+
+        <div class="col-md-12 d-flex align-items-center ">
+            <span class="badge bg-secondary me-2" style="font-size: 1rem; padding: 0.5em 1em;">${langLabel}</span>
+            <div class="ms-auto">
+                <button type="button" class="btn btn-outline-danger btn-sm remove-translation" style="padding: 0.25em 0.75em;">
+                    <i data-feather="x"></i> {{ __('admin.Remove') }}
+                </button>
+            </div>
+            <input type="hidden" name="translations[${index}][locale]" value="${lang}">
+        </div>
+        <hr>
+        <div class="col-md-12">
+            <label class="form-label">{{ __('faqs.question') }}</label>
+            <input type="text" class="form-control" name="translations[${index}][question]" value="" placeholder="{{ __('faqs.question') }}">
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label">{{ __('faqs.answer') }}</label>
+            <textarea class="form-control" name="translations[${index}][answer]" placeholder="{{ __('faqs.answer') }}"></textarea>
+        </div>
+
+    </div>`;
+        wrapper.insertAdjacentHTML('beforeend', html);
+
+
+
+        // wrapper.appendChild(innerHTML);
+
+        // Disable added language in dropdown
+        select.querySelector('option[value="' + lang + '"]').disabled = true;
+        select.value = '';
+    });
+
+    // Handle removal
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.remove-translation');
+        if (btn) {
+            let row = btn.closest('.translation-row');
+            let lang = row.getAttribute('data-locale');
+
+            // Re-enable language in dropdown
+            let select = document.getElementById('language-select');
+            let option = select.querySelector('option[value="' + lang + '"]');
+            if (option) option.disabled = false;
+
+            row.remove();
+        }
+    });
+
+</script>
+
+@endpush
+

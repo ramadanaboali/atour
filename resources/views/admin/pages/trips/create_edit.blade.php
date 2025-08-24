@@ -399,9 +399,11 @@
     let translations = @json(__('scripts'));
     const availableLangs = @json(config('languages.available'));
 
-    function getLangLabel(lang) {
-        return translations[lang] ?? lang;
-    }
+     function getLangLabel(lang) {
+     return translations[lang] ? translations[lang] : lang;
+     }
+
+
 
 
     document.getElementById('add-translation').addEventListener('click', function() {

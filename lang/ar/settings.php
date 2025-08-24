@@ -31,5 +31,6 @@ return [
     'tiktok' => 'تيك توك',
     'linkedin' => 'لينكد ان',
     'youtube' => 'اليوتيوب',
+    'helping' => 'المساعدة',
     'xxxxxx' => 'xxxxxx',
 ];

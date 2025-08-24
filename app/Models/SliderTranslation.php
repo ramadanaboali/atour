@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SettingTranslation extends Model
+class SliderTranslation extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['locale', 'type', 'content', 'setting_id'];
+    protected $fillable = ['slider_id', 'locale', 'title', 'description'];
 }

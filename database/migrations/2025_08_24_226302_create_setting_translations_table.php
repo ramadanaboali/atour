@@ -12,6 +12,8 @@ return new class () extends Migration {
      */
     public function up()
     {
+        
+        Schema::dropIfExists('setting_translations');
         Schema::create('setting_translations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('setting_id');

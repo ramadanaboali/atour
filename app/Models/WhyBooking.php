@@ -11,11 +11,7 @@ class WhyBooking extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'title_en',
-        'title_ar',
-        'image',
-        'description_en',
-        'description_ar',
+        'image',     
         'active',
         'created_by',
         'updated_by'
@@ -29,21 +25,28 @@ class WhyBooking extends Model
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/why_bookings/' . $this->attributes['image']) : null) : null;
 
     }
-    public function getTitleAttribute()
+     public function getTextAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
 
+    public function getTitleAttribute()
+    {
+        return $this->translations->first()->title ?? '';
+    }
     public function getDescriptionAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->description ?? '';
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(WhyBookingTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
     }
 }

@@ -9,15 +9,27 @@ class Setting extends Model
 {
     protected $table = 'settings';
     protected $fillable = [];
-    public function translations()
+    public function termsTranslations()
     {
-        return $this->hasMany(SettingTranslation::class);
+        return $this->hasMany(SettingTranslation::class)->where('type', 'terms');
+    }
+    public function privacyTranslations()
+    {
+        return $this->hasMany(SettingTranslation::class)->where('type', 'privacy');
+    }
+    public function aboutTranslations()
+    {
+        return $this->hasMany(SettingTranslation::class)->where('type', 'about');
+    }
+    public function cancelTermTranslations()
+    {
+        return $this->hasMany(SettingTranslation::class)->where('type', 'cancel_terms');
+    }
+    public function helpingTranslations()
+    {
+        return $this->hasMany(SettingTranslation::class)->where('type', 'helping');
     }
 
-    public function translate($locale = null)
-    {
-        $locale = $locale ?? app()->getLocale();
-        return $this->translations->where('locale', $locale)->first();
-    }
+ 
 
 }

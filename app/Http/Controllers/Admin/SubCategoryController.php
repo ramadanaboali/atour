@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\View\View;
+use Mpdf\Tag\Sub;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class SubCategoryController extends Controller
@@ -57,33 +58,17 @@ class SubCategoryController extends Controller
         }
         return to_route($this->route . '.index');
     }
-    public function select(Request $request): JsonResponse|string
+       public function select(Request $request): JsonResponse|string
     {
-       $data = SubCategory::distinct()
-                ->where('active',true)
-                ->where(function ($query) use ($request) {
-                if ($request->filled('q')) {
-                    if(App::isLocale('en')) {
-                        return $query->where('title_en', 'like', '%'.$request->q.'%');
-                    } else {
-                        return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                    }
-                }
-                if ($request->filled('item_id') && !empty ($request->item_id)) {
-                    $query->where('id', '!=', $request->item_id);
-                }
-                if ($request->filled('category') && !empty ($request->category)) {
-                    $query->where('category', $request->category);
-                }
-                })->select('id', 'title_en', 'title_ar')->get();
-
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('category.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
-            }
-            return $html;
-        }
+        $subCategories = SubCategory::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('sub_categories.id')->get();
+        $data = $subCategories->map(function ($subCategory) {
+            return [
+                'id' => $subCategory->id,
+                'text' => $subCategory->translations->first()->title ?? '',
+            ];
+        });
         return response()->json($data);
     }
 
@@ -100,21 +85,26 @@ class SubCategoryController extends Controller
     protected function processForm($request, $id = null): SubCategory|null
     {
         $item = $id == null ? new SubCategory() : SubCategory::find($id);
-        $data= $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
-        if($request->filled('active')){
+        if ($request->filled('active')) {
             $item->active = 1;
-        }else{
+        } else {
             $item->active = 0;
         }
         if ($id == null) {
             $item->created_by = auth()->user()->id;
-        }else{
+        } else {
             $item->updated_by = auth()->user()->id;
         }
         if ($item->save()) {
 
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
 
             return $item;
         }
@@ -123,23 +113,23 @@ class SubCategoryController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = SubCategory::select('*');
+        $data = SubCategory::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('sub_categories.*');
+
         return FacadesDataTables::of($data)
-        ->addIndexColumn()
+            ->addIndexColumn()
+            ->addColumn('title', function ($item) {
+                return $item->translations->first()->title ?? '';
+            })
         ->addColumn('categoryText', function ($item) {
             return __('sub_categories.categories.'.$item->category);
         })
 
         ->editColumn('active', function ($item) {
-            return $item->active==1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>':'<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
+            return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
-        ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+
         ->rawColumns(['category','active','subCategory'])
         ->make(true);
     }

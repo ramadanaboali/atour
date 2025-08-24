@@ -78,16 +78,22 @@ class SliderController extends Controller
     protected function processForm($request, $id = null): Slider|null
     {
         $item = $id == null ? new Slider() : Slider::find($id);
-        $data= $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method']);
 
         $item = $item->fill($data);
         if ($item->save()) {
-        $folder_path = "sliders";
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $item->image  = $this->storageService->storeFile($file, $folder_path);
-            $item->save();
-        }
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
+
+            $folder_path = "sliders";
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $item->image  = $this->storageService->storeFile($file, $folder_path);
+                $item->save();
+            }
 
 
             return $item;
@@ -97,18 +103,16 @@ class SliderController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Slider::select('*');
+        $data = Slider::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('sliders.*');
         return FacadesDataTables::of($data)
             ->addIndexColumn()
             ->addColumn('photo', function ($item) {
                 return '<img src="' . $item->photo . '" height="100px" width="100px">';
             })
-             ->filterColumn('title', function ($query, $keyword) {
-                 if(App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
+             ->addColumn('title', function ($item) {
+                 return $item->translations->first()->title ?? '';
              })
             ->rawColumns(['photo'])
             ->make(true);

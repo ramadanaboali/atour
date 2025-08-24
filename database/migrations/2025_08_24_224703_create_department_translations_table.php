@@ -12,14 +12,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('setting_translations', function (Blueprint $table) {
+        Schema::create('department_translations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('setting_id');
+            $table->unsignedBigInteger('department_id');
             $table->string('locale', 5); // en, ar, fr
-            $table->string('type', 50); // type of setting
-            $table->longText('content')->nullable();
+            $table->text('title')->nullable();
             $table->timestamps();
-            $table->unique(['setting_id', 'locale', 'type']); // كل لغة مرة واحدة فقط
+            $table->unique(['department_id', 'locale']);
         });
     }
 
@@ -30,6 +29,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('setting_translations');
+        Schema::dropIfExists('department_translations');
     }
 };

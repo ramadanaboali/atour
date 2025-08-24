@@ -10,28 +10,32 @@ use Illuminate\Support\Facades\App;
 class Department extends Model
 {
     use HasFactory;
-     use SoftDeletes;
-    protected $fillable = ['title_en','title_ar','active'];
-     protected $table = 'departments';
+    use SoftDeletes;
+    protected $fillable = ['active'];
+    protected $table = 'departments';
     protected $appends = ['title','text'];
-
 
     public function getTextAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
 
     public function getTitleAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
+
+
+    public function translations()
+    {
+        return $this->hasMany(DepartmentTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
+
 
 }

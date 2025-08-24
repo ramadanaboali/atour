@@ -333,8 +333,10 @@
     const availableLangs = @json(config('languages.available'));
 
     function getLangLabel(lang) {
-        return translations[lang] ? ? lang;
+        return translations[lang] ? translations[lang] : lang;
     }
+
+
 
 
     document.getElementById('add-translation').addEventListener('click', function() {

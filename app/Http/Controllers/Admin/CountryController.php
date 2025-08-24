@@ -94,7 +94,11 @@ class CountryController extends Controller
         }
         if ($item->save()) {
 
-            $id != null ? $item->translations()->delete() : null; // مسح القديم
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
 
             foreach ($request->translations as $tr) {
                 $item->translations()->create($tr);

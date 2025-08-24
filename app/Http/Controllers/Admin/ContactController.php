@@ -28,6 +28,18 @@ class ContactController extends Controller
         }
         return to_route($this->route . '.index');
     }
+    public function status(Request $request, $id)
+    {
+        $item = ContactUs::findOrFail($id);
+        if ($request->status=='closed') {
+            $item->closed_at = now();
+        }
+        $item->status = $request->status;
+        $item->notes = $request->notes;
+        $item->save();
+        flash(__('contacts.messages.updated'))->success();
+        return to_route($this->route . '.index');
+    }
 
 
     public function list(Request $request): JsonResponse
@@ -48,13 +60,13 @@ class ContactController extends Controller
                 return $item->created_at->format('Y-m-d H:i');
             })
             ->editColumn('closed_at', function ($item) {
-                return $item->closed_at?->format('Y-m-d H:i');
+                return $item->closed_at;
             })
             ->editColumn('status', function ($item) {
 
+                $icon = 'check';
+                $color = 'success';
                 if ($item->status != "closed" && auth()->user()->can('contacts.status')) {
-                    $icon = 'check';
-                    $color = 'primary';
                     if ($item->status === 'open') {
                         $icon = 'play';
                         $color = 'warning';
@@ -66,8 +78,11 @@ class ContactController extends Controller
                     <button type="button" class="btn btn-sm btn-outline-' . $color . ' me-1 waves-effect change_status " data-url="' . route('admin.contacts.status', $item->id) . '" >
                         <i data-feather="' . $icon . '" ></i>
                     </button>';
-                }
-            return '<span class="badge bg-label-success me-1">' . __('contacts.statuses.'.$item->status) . '</span>';
+                    }
+                        return '<button type="button" class="btn btn-sm btn-outline-' . $color . ' me-1 waves-effect  " >
+                            <i data-feather="' . $icon . '" ></i>
+                        </button>';
+
         })
 
         ->rawColumns(['name','email','phone','created_at','closed_at','status'])

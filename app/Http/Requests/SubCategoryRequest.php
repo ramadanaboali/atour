@@ -15,8 +15,9 @@ class SubCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title_ar' => 'required',
-            'title_en' => 'required',
+             'translations' => 'required|array',
+            'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+            'translations.*.title' => 'required|string|max:255',
             'category'=>'required|in:gift,trip,effectiveness'
         ];
     }

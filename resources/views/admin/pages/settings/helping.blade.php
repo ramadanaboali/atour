@@ -1,11 +1,11 @@
 @extends('admin.layouts.master')
 @section('title')
-<title>{{ config('app.name') }} | {{ __('settings.privacy') }}</title>
+<title>{{ config('app.name') }} | {{ __('settings.helping') }}</title>
 @endsection
 @section('content')
 <form method='post' enctype="multipart/form-data" id="jquery-val-form" action="{{ route('admin.settings.updateTerm') }}">
     <input type="hidden" name="_method" value="POST">
-    <input type="hidden" name="type" value="privacy">
+    <input type="hidden" name="type" value="helping">
     @csrf
     <div class="content-header row">
         <div class="content-header-left col-md-6 col-12 mb-2">
@@ -13,7 +13,7 @@
                 <div class="col-12">
                     <h1 class="bold mb-0 mt-1 text-dark">
                         <i data-feather="box" class="font-medium-2"></i>
-                        <span>{{ __('settings.privacy') }}</span>
+                        <span>{{ __('settings.helping') }}</span>
                     </h1>
                 </div>
             </div>
@@ -35,7 +35,8 @@
                 <div class="row">
                     <div id="translations-wrapper" class="w-100">
                         @php
-                        $translations = old('translations', $item->privacyTranslations ?? []);
+                        $translations = old('translations', $item->helpingTranslations ?? []);
+
                         $availableLangs = config('languages.available');
                         $usedLangs = collect($translations)->pluck('locale')->toArray();
                         @endphp
@@ -141,4 +142,3 @@
 </script>
 
 @endpush
-

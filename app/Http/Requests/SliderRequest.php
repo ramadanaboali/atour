@@ -16,13 +16,17 @@ class SliderRequest extends FormRequest
     {
         if ($this->method() == 'PUT') {
             return [
-                'title_en' => 'required',
-                'title_ar' => 'required'
+                'translations' => 'required|array',
+                'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+                'translations.*.title' => 'required|string|max:255',
+                'translations.*.description' => 'required|string|max:1000',
             ];
-        }else{
+        } else {
             return [
-                'title_en' => 'required',
-                'title_ar' => 'required',
+                'translations' => 'required|array',
+                'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+                'translations.*.title' => 'required|string|max:255',
+                'translations.*.description' => 'required|string|max:1000',
                 'image' => 'required',
             ];
         }

@@ -14,21 +14,23 @@ class WhyBookingRequest extends FormRequest
 
     public function rules()
     {
+
         if ($this->method() == 'PUT') {
             return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-                'description_ar' => 'required',
-                'description_en' => 'required',
+                'translations' => 'required|array',
+                'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+                'translations.*.title' => 'required|string|max:255',
+                'translations.*.description' => 'required|string|max:1000',
             ];
-        }else{
+        } else {
             return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-                'description_ar' => 'required',
-                'description_en' => 'required',
+                'translations' => 'required|array',
+                'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+                'translations.*.title' => 'required|string|max:255',
+                'translations.*.description' => 'required|string|max:1000',
                 'image' => 'required',
             ];
         }
+
     }
 }

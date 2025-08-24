@@ -78,9 +78,15 @@ class RequirementController extends Controller
     protected function processForm($request, $id = null): Requirement|null
     {
         $item = $id == null ? new Requirement() : Requirement::find($id);
-        $data = $request->except(['_token', '_method']);
+        $data = $request->except(['_token', '_method','translations']);
         $item = $item->fill($data);
         if ($item->save()) {
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
+
             return $item;
         }
         return null;
@@ -88,46 +94,29 @@ class RequirementController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Requirement::select('*');
+        $data = Requirement::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('requirements.*');
+
         return FacadesDataTables::of($data)
             ->addIndexColumn()
-
-             ->filterColumn('title', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('title_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('title_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
-             ->filterColumn('description', function ($query, $keyword) {
-                 if (App::isLocale('en')) {
-                     return $query->where('description_en', 'like', '%'.$keyword.'%');
-                 } else {
-                     return $query->where('description_ar', 'like', '%'.$keyword.'%');
-                 }
-             })
+            ->addColumn('title', function ($item) {
+                return $item->translations->first()->title ?? '';
+            })
+             
             ->make(true);
     }
     public function select(Request $request): JsonResponse|string
     {
-        $data = Requirement::distinct()
-                 ->where(function ($query) use ($request) {
-                     if ($request->filled('q')) {
-                         if (App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
-                     }
-                 })->select('id', 'title_en', 'title_ar')->get();
-
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('category.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
-            }
-            return $html;
-        }
+        $items = Requirement::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('requirements.id')->get();
+        $data = $items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'text' => $item->translations->first()->title ?? '',
+            ];
+        });
         return response()->json($data);
     }
 

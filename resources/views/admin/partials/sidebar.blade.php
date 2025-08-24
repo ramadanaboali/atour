@@ -81,6 +81,7 @@
                 </ul>
             </li>
             <li class=" nav-item {{ request()->routeIs('admin.orders*')||request()->routeIs('admin.canceled_orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'open active' : '' }} ">
+
                 <a class="d-flex align-items-center {{ request()->routeIs('admin.orders*')||request()->routeIs('admin.canceled_orders*')|| request()->routeIs('admin.new_orders*')||request()->routeIs('admin.current_orders*') ? 'active' : '' }}" href="#">
                     <i data-feather="user"></i>
                     <span class="menu-title text-truncate" data-i18n="">{{ __('admin.orders_list') }}</span>
@@ -215,12 +216,12 @@
                 </a>
             </li>
             @endcan
-            <li>
+            {{-- <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.jobs.index') }}">
                     <i data-feather="image"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.jobs') }}</span>
                 </a>
-            </li>
+            </li> --}}
             <li>
                 <a class="d-flex align-items-center" href="{{ route('admin.faqs.index') }}">
                     <i data-feather="image"></i>
@@ -327,12 +328,24 @@
                         </a>
                     </li>
                     @endcan
+                    @can('settings.cancel_terms')
+
                     <li class=" nav-item {{ request()->routeIs('admin.settings.cancel_terms')?'active':''}}">
                         <a class="d-flex align-items-center" href="{{ route('admin.settings.cancel_terms') }} ">
                             <i data-feather="circle"></i>
                             <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.cancel_terms') }}</span>
                         </a>
                     </li>
+                    @endcan
+                    @can('settings.helping')
+
+                    <li class=" nav-item {{ request()->routeIs('admin.settings.helping')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.settings.helping') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.helping') }}</span>
+                        </a>
+                    </li>
+                    @endcan
 
                     @can('countries.view')
 
