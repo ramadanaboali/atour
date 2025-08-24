@@ -14,16 +14,12 @@ class ArticleRequest extends FormRequest
 
     public function rules()
     {
-        if ($this->method() == 'PUT') {
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-            ];
-        }else{
-            return [
-                'title_ar' => 'required',
-                'title_en' => 'required',
-            ];
-        }
+      
+return [
+         'translations' => 'required|array',
+         'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+         'translations.*.title' => 'required|string|max:255',
+     ];
+
     }
 }

@@ -71,23 +71,8 @@ class BlogController extends Controller
     {
         $data = Blog::distinct()
                  ->where('active', true)
-                 ->where(function ($query) use ($request) {
-                     if ($request->filled('q')) {
-                         if (App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
-                     }
-                 })->select('id', 'title_en', 'title_ar')->get();
+                 ->get();
 
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('category.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
-            }
-            return $html;
-        }
         return response()->json($data);
     }
 
@@ -119,6 +104,11 @@ class BlogController extends Controller
         }
         if ($item->save()) {
 
+
+            if ($request->has('translations') && is_array($request->translations)) {
+                $item->translations()->delete();
+                $item->translations()->createMany($request->translations);
+            }
 
             $folder_path = "blogs";
             if ($request->hasFile('image')) {
@@ -161,22 +151,22 @@ class BlogController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Blog::select('*');
+        $data = Blog::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->select('blogs.*');
+
         return FacadesDataTables::of($data)
-        ->addIndexColumn()
+            ->addIndexColumn()
+            ->addColumn('title', function ($item) {
+                return $item->translations->first()->title ?? '';
+            })
         ->addColumn('photo', function ($item) {
             return '<img src="' . $item->photo . '" height="100px" width="100px">';
         })
         ->editColumn('active', function ($item) {
             return $item->active == 1 ? '<button class="btn btn-sm btn-outline-success me-1 waves-effect"><i data-feather="check" ></i></button>' : '<button class="btn btn-sm btn-outline-danger me-1 waves-effect"><i data-feather="x" ></i></button>';
         })
-        ->filterColumn('title', function ($query, $keyword) {
-            if (App::isLocale('en')) {
-                return $query->where('title_en', 'like', '%'.$keyword.'%');
-            } else {
-                return $query->where('title_ar', 'like', '%'.$keyword.'%');
-            }
-        })
+       
         ->rawColumns(['photo','active'])
         ->make(true);
     }

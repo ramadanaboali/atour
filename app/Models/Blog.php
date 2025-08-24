@@ -11,19 +11,15 @@ class Blog extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-    'title_en',
-    'title_ar',
     'publisher_name',
     'publisher_image',
     'cover',
-    'content_en',
-    'content_ar',
     'active',
     'created_by',
     'updated_by',
     ];
      protected $table = 'blogs';
-    protected $appends = ['photo','publisherphoto','title','text','content'];
+    protected $appends = ['photo','publisherphoto','title','text','description'];
 
     public function getPhotoAttribute()
     {
@@ -36,31 +32,31 @@ class Blog extends Model
 
     }
 
-    public function getTextAttribute()
+   public function getTextAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
-    public function getContentAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['content_en'] ?? $this->attributes['content_ar'];
-        } else {
-            return $this->attributes['content_ar'] ?? $this->attributes['content_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
 
     public function getTitleAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
+    public function getDescriptionAttribute()
+    {
+        return $this->translations->first()->description ?? '';
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(BlogTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
+    }
+
 
     public function attachments(){
         return $this->hasMany(Attachment::class,'model_id')->where('model_type','blog');
