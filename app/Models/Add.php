@@ -9,32 +9,24 @@ use Illuminate\Support\Facades\App;
 
 class Add extends Model
 {
-   use HasFactory,SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
-        'description_en',
-        'description_ar',
+
         'location',
         'start_date',
         'end_date',
-        'title_en',
-        'title_ar',
+
         'active',
         'image',
         'views',
         'created_by',
         'updated_by'
     ];
-     protected $table = 'adds';
+    protected $table = 'adds';
     protected $appends = ['title','text','description','photo'];
 
-    public function getTextAttribute()
-    {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
-    }
+
 
     public function getPhotoAttribute()
     {
@@ -42,21 +34,30 @@ class Add extends Model
 
     }
 
+
+    public function getTextAttribute()
+    {
+        return $this->translations->first()->title ?? '';
+    }
+
     public function getTitleAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['title_en'] ?? $this->attributes['title_ar'];
-        } else {
-            return $this->attributes['title_ar'] ?? $this->attributes['title_en'];
-        }
+        return $this->translations->first()->title ?? '';
     }
     public function getDescriptionAttribute()
     {
-        if(App::isLocale('en')) {
-            return $this->attributes['description_en'] ?? $this->attributes['description_ar'];
-        } else {
-            return $this->attributes['description_ar'] ?? $this->attributes['description_en'];
-        }
+        return $this->translations->first()->description ?? '';
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(AddTranslation::class);
+    }
+
+    public function translate($locale = null)
+    {
+        $locale = $locale ?? app()->getLocale();
+        return $this->translations->where('locale', $locale)->first();
     }
 
 }
