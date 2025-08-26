@@ -409,7 +409,46 @@
 
                 </ul>
             </li>
-
+            <li class=" nav-item {{ request()->routeIs('admin.security*') ? 'open active' : '' }} ">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.security*') ? 'active' : '' }}" href="#">
+                    <i data-feather="settings"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('security.security') }}</span>
+                </a>
+                <ul class="menu-content">
+            @can('security.dashboard')
+            <li class=" nav-item {{ request()->routeIs('admin.security.*')?'active':''}}">
+                <a class="d-flex align-items-center" href="{{ route('admin.security.dashboard') }} ">
+                    <i data-feather="circle"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('security.security') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('security.audit-trail')
+            <li class=" nav-item {{ request()->routeIs('admin.security.audit-trail')?'active':''}}">
+                <a class="d-flex align-items-center" href="{{ route('admin.security.audit-trail') }} ">
+                    <i data-feather="circle"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('security.audit_trail') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('security.login-attempts')
+            <li class=" nav-item {{ request()->routeIs('admin.security.login-attempts')?'active':''}}">
+                <a class="d-flex align-items-center" href="{{ route('admin.security.login-attempts') }} ">
+                    <i data-feather="circle"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('security.login_attempts') }}</span>
+                </a>
+            </li>
+            @endcan
+            @can('security.2fa.settings')
+            <li class=" nav-item {{ request()->routeIs('admin.security.2fa.settings')?'active':''}}">
+                <a class="d-flex align-items-center" href="{{ route('admin.security.2fa.settings') }} ">
+                    <i data-feather="circle"></i>
+                    <span class="menu-item text-truncate" data-i18n="List">{{ __('security.2fa_settings') }}</span>
+                </a>
+            </li>
+            @endcan
+            </ul>
+            </li>
             {{--addnewrouteheredontdeletemeplease--}}
         </ul>
     </div>

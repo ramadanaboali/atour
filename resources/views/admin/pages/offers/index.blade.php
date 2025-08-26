@@ -23,7 +23,7 @@
                             <span class="active-sorting text-primary">{{ __('offers.actions.create') }}</span>
                         </a>
                         @endcan
-                        @include('admin.pages.offers.filter')
+                        {{-- @include('admin.pages.offers.filter') --}}
                     </div>
             </div>
         </div>
@@ -34,11 +34,11 @@
                 <table class="dt-multilingual table datatables-ajax">
                     <thead>
                     <tr>
-                        <th>{{ __('offers.supplier_name') }}</th>
+                        {{-- <th>{{ __('offers.supplier_name') }}</th>
                         <th>{{ __('offers.supplier_email') }}</th>
-                        <th>{{ __('offers.supplier_phone') }}</th>
-                        <th>{{ __('offers.type') }}</th>
-                        <th>{{ __('offers.model') }}</th>
+                        <th>{{ __('offers.supplier_phone') }}</th> --}}
+                        <th>{{ __('offers.title') }}</th>
+                        <th>{{ __('offers.url') }}</th>
                         <th>{{ __('offers.active') }}</th>
                         @canany('offers.edit','offers.delete')
                             <th width="15%" class="text-center">{{ __('offers.options') }}</th>
@@ -83,11 +83,11 @@
             },
             columns: [
                 /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
-                {data: 'supplier_name', name: 'supplier_name'},
-                {data: 'supplier_email', name: 'supplier_email'},
-                {data: 'supplier_phone', name: 'supplier_phone'},
-                {data: 'typeText', name: 'type'},
+                // {data: 'supplier_name', name: 'supplier_name'},
+                // {data: 'supplier_email', name: 'supplier_email'},
+                // {data: 'supplier_phone', name: 'supplier_phone'},
                 {data: 'title', name: 'title'},
+                {data: 'url', name: 'url'},
                 {data: 'active', name: 'active'},
                 @canany('offers.edit','offers.delete')
                 {data: 'actions',name: 'actions',orderable: false,searchable: false},

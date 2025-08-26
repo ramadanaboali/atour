@@ -6,6 +6,11 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::get('admin/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
     Route::post('admin/login', [App\Http\Controllers\Admin\AuthController::class, 'postLogin'])->name('admin.postLogin');
     Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
+    
+    // 2FA Routes (outside authentication middleware)
+    Route::get('admin/2fa/verify', [App\Http\Controllers\Admin\AuthController::class, 'show2FAForm'])->name('admin.2fa.verify');
+    Route::post('admin/2fa/verify', [App\Http\Controllers\Admin\AuthController::class, 'verify2FA'])->name('admin.2fa.verify');
+    Route::post('admin/2fa/resend', [App\Http\Controllers\Admin\AuthController::class, 'resend2FA'])->name('admin.2fa.resend');
     Route::group(['middleware' => ['language']], function () {
 
         Route::group(
@@ -134,7 +139,23 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('change-password', [App\Http\Controllers\Admin\ProfileController::class, 'changePassword'])->name('profile.change_password');
             Route::post('update-password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.update_password');
 
-
+            // Security Routes
+            Route::prefix('security')->name('security.')->group(function () {
+                Route::get('dashboard', [App\Http\Controllers\Admin\SecurityController::class, 'securityDashboard'])->name('dashboard')->middleware('adminPermission:security.dashboard');
+                Route::get('audit-trail', [App\Http\Controllers\Admin\SecurityController::class, 'auditTrail'])->name('audit-trail')->middleware('adminPermission:security.audit-trail');
+                Route::get('audit-trail/data', [App\Http\Controllers\Admin\SecurityController::class, 'auditTrailData'])->name('audit-trail.data')->middleware('adminPermission:security.audit-trail');
+                Route::get('login-attempts', [App\Http\Controllers\Admin\SecurityController::class, 'loginAttempts'])->name('login-attempts')->middleware('adminPermission:security.login-attempts');
+                Route::get('login-attempts/data', [App\Http\Controllers\Admin\SecurityController::class, 'loginAttemptsData'])->name('login-attempts.data')->middleware('adminPermission:security.login-attempts');
+                
+                // 2FA Settings Routes
+                Route::prefix('2fa')->name('2fa.')->group(function () {
+                    Route::get('settings', [App\Http\Controllers\Admin\SecurityController::class, 'twoFactorSettings'])->name('settings')->middleware('adminPermission:security.2fa.settings');
+                    Route::post('enable', [App\Http\Controllers\Admin\SecurityController::class, 'enable2FA'])->name('enable')->middleware('adminPermission:security.2fa.enable');
+                    Route::post('disable', [App\Http\Controllers\Admin\SecurityController::class, 'disable2FA'])->name('disable')->middleware('adminPermission:security.2fa.disable');
+                    Route::get('setup', [App\Http\Controllers\Admin\SecurityController::class, 'show2FASetupForm'])->name('verify-setup')->middleware('adminPermission:security.2fa.verify-setup');
+                    Route::post('setup', [App\Http\Controllers\Admin\SecurityController::class, 'verify2FASetup'])->name('verify-setup')->middleware('adminPermission:security.2fa.verify-setup');
+                });
+            });
 
         //addnewrouteheredontdeletemeplease
 

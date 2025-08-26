@@ -14,12 +14,12 @@ class BlogRequest extends FormRequest
 
     public function rules()
     {
-       
-return [
-         'translations' => 'required|array',
-         'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
-         'translations.*.title' => 'required|string|max:255',
-     ];
+
+        return [
+                 'translations' => 'required|array',
+                 'translations.*.locale' => 'required|string|in:' . implode(',', array_keys(config('languages.available'))),
+                 'translations.*.title' => 'required|string|max:255',
+             ];
 
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Services\ActivityLogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -18,6 +19,13 @@ class UserController extends Controller
     private $viewEdit   = 'admin.pages.users.create_edit';
     private $viewShow   = 'admin.pages.users.show';
     private $route      = 'admin.users';
+    
+    protected $activityLogService;
+
+    public function __construct(ActivityLogService $activityLogService)
+    {
+        $this->activityLogService = $activityLogService;
+    }
 
     public function index(Request $request): View
     {
@@ -46,22 +54,30 @@ class UserController extends Controller
     public function destroy($id)
     {
         $item = User::where('id', '!=', auth()->id())->findOrFail($id);
+        
         if ($item->delete()) {
+            $this->activityLogService->logDelete(auth()->id(), $item);
             flash(__('users.messages.deleted'))->success();
         }
+        
         return redirect()->route($this->route . '.index');
     }
     public function restore($id)
     {
         $item = User::onlyTrashed()->findOrFail($id);
         $item->update(['deleted_at' => null]);
+        
+        $this->activityLogService->logRestore(auth()->id(), $item);
         flash(__('users.messages.restored'))->success();
+        
         return redirect()->route($this->route . '.index');
     }
 
     public function store(UserRequest $request)
     {
-        if ($this->processForm($request)) {
+        $item = $this->processForm($request);
+        if ($item) {
+            $this->activityLogService->logCreate(auth()->id(), $item);
             flash(__('users.messages.created'))->success();
         }
         return redirect()->route($this->route . '.index');
@@ -69,8 +85,13 @@ class UserController extends Controller
 
     public function update(UserRequest $request, $id)
     {
-        User::findOrFail($id);
-        if ($this->processForm($request, $id)) {
+        $originalItem = User::findOrFail($id);
+        $oldValues = $originalItem->toArray();
+        
+        $updatedItem = $this->processForm($request, $id);
+        if ($updatedItem) {
+            $newValues = $updatedItem->fresh()->toArray();
+            $this->activityLogService->logUpdate(auth()->id(), $updatedItem, $oldValues, $newValues);
             flash(__('users.messages.updated'))->success();
         }
         return redirect()->route($this->route . '.index');

@@ -289,7 +289,10 @@ return [
     'Korean' => 'الكورية',
     'Portuguese' => 'البرتغالية',
     'privacy_policy' => 'سياسة الخصوصية',
-    'Remove' => 'إزالة'
+    'Remove' => 'إزالة',
+    'home' => 'الرئيسية',
+    'is_currently' => 'الآن',
+    
 
 
 ];

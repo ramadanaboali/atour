@@ -14,10 +14,11 @@ class Offer extends Model
         'image',
         'active',
         'type',
-        'vendor_id',
-        'trip_id',
-        'effectivenes_id',
-        'gift_id',
+        'url',
+        // 'vendor_id',
+        // 'trip_id',
+        // 'effectivenes_id',
+        // 'gift_id',
         'active',
     ];
     protected $table = 'offers';
@@ -49,17 +50,17 @@ class Offer extends Model
     {
         return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/offers/' . $this->attributes['image']) : null) : null;
     }
-    public function vendor(){
-        return $this->belongsTo(User::class,'vendor_id');
-    }
-    public function trip(){
-        return $this->belongsTo(Trip::class,'trip_id');
-    }
-    public function gift(){
-        return $this->belongsTo(Gift::class,'gift_id');
-    }
-    public function effectivenes(){
-        return $this->belongsTo(Effectivenes::class,'effectivenes_id');
-    }
+    // public function vendor(){
+    //     return $this->belongsTo(User::class,'vendor_id');
+    // }
+    // public function trip(){
+    //     return $this->belongsTo(Trip::class,'trip_id');
+    // }
+    // public function gift(){
+    //     return $this->belongsTo(Gift::class,'gift_id');
+    // }
+    // public function effectivenes(){
+    //     return $this->belongsTo(Effectivenes::class,'effectivenes_id');
+    // }
 
 }

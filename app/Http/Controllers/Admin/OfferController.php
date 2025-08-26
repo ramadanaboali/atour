@@ -112,21 +112,7 @@ class OfferController extends Controller
         } else {
             $item->active = 0;
         }
-        if ($request->type == "trip") {
-            $item->trip_id = $request->trip_id;
-            $item->gift_id = null;
-            $item->effectivenes_id = null;
-        }
-        if ($request->type == "gift") {
-            $item->gift_id = $request->gift_id;
-            $item->trip_id = null;
-            $item->effectivenes_id = null;
-        }
-        if ($request->type == "effectivenes") {
-            $item->effectivenes_id = $request->effectivenes_id;
-            $item->trip_id = null;
-            $item->gift_id = null;
-        }
+       
 
         if ($item->save()) {
 
@@ -149,7 +135,7 @@ class OfferController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Offer::with(['trip','effectivenes','gift','vendor','translations' => function ($q) {
+        $data = Offer::with(['translations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])
         ->leftJoin('users', 'users.id', 'offers.vendor_id')
@@ -178,29 +164,18 @@ class OfferController extends Controller
         })->groupBy('offers.id')->select('offers.*');
         return FacadesDataTables::of($data)
         ->addIndexColumn()
-        ->addColumn('supplier_name', function ($item) {
-            return $item->vendor?->name;
+        ->addColumn('title', function ($item) {
+            return $item->translations->first()->title ?? '';
         })
-        ->addColumn('typeText', function ($item) {
-            return __('offers.types.'.$item->type);
-        })
-        ->addColumn('supplier_phone', function ($item) {
-            return $item->vendor?->phone;
-        })
-        ->addColumn('supplier_email', function ($item) {
-            return $item->vendor?->email;
-        })
-     
-  ->addColumn('title', function ($item) {
-      return $item->translations->first()->title ?? '';
-  })
-
 
         ->editColumn('active', function ($item) {
             return $item->active == 1 ? '<button type="button" class="btn btn-sm btn-outline-success me-1 waves-effect active_offer" data-url="'.route('admin.offers.changeStatus', ['id' => $item->id]).'"><i data-feather="check" ></i></button>' : '<button type="button" class="btn btn-sm btn-outline-danger me-1 waves-effect active_offer" data-url="'.route('admin.offers.changeStatus', ['id' => $item->id]).'"><i data-feather="x" ></i></button>';
         })
+        ->editColumn('url', function ($item) {
+            return '<a href="'.$item->url.'" target="_blank" class="btn btn-sm btn-outline-success me-1 waves-effect " ><i data-feather="link" ></i></a>' ;
+        })
 
-        ->rawColumns(['typeText','model','active','supplier_name','supplier_phone','supplier_email','title'])
+        ->rawColumns(['title','active','url'])
         ->make(true);
     }
 }

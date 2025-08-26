@@ -96,54 +96,13 @@
                             </button>
                         </div>
                     </div>
+  <div class="col-md-6">
+      <label class="form-label">{{ __('offers.url') }}</label>
+      <input type="text" class="form-control" name="url" value="{{ $item->url ?? old('url') }}" placeholder="{{ __('offers.url') }}">
+
+  </div>
 
 
-                    <div class="mb-1 col-md-4  @error('vendor_id') is-invalid @enderror">
-                        <label class="form-label" for="vendor_id">{{ __('offers.supplier') }}</label>
-                        <select name="vendor_id" id="vendor_id" class="form-control ajax_select2 extra_field" data-ajax--url="{{ route('admin.suppliers.select') }}" onchange="updateAjaxUrl()" data-ajax--cache="false">
-                            @isset($item->vendor)
-                            <option value="{{ $item->vendor_id }}" selected>{{ $item->vendor?->name }}</option>
-                            @endisset
-                        </select>
-                        @error('vendor_id')
-                        <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-1 col-md-4  @error('type') is-invalid @enderror">
-                        <label class="form-label" for="type">{{ __('offers.type') }}</label>
-                        <select name="type" id="type" class="form-control " onchange="updateAjaxUrl()">
-                            <option value="trip" @isset($item->type) {{ $item->type=="trip"?'selected':'' }} @endisset>{{ __('offers.types.trip') }}</option>
-                            <option value="gift" @isset($item->type) {{ $item->type=="gift"?'selected':'' }} @endisset>{{ __('offers.types.gift') }}</option>
-                            <option value="effectivenes" @isset($item->type) {{ $item->type=="effectivenes"?'selected':'' }} @endisset>{{ __('offers.types.effectivenes') }}</option>
-                        </select>
-                        @error('type')
-                        <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-1 col-md-4  @error('trip_id') is-invalid @enderror" id="trip_section" style="display: none">
-                        <label class="form-label" for="trip_id">{{ __('offers.types.trip') }}</label>
-                        <select name="trip_id" id="trip_id" class="form-control ">
-                        </select>
-                        @error('trip_id')
-                        <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-1 col-md-4  @error('gift_id') is-invalid @enderror" id="gift_section" style="display:none">
-                        <label class="form-label" for="gift_id">{{ __('offers.types.gift') }}</label>
-                        <select name="gift_id" id="gift_id" class="form-control ">
-                        </select>
-                        @error('gift_id')
-                        <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-1 col-md-4  @error('effectivenes_id') is-invalid @enderror" id="effectivenes_section" style="display: none">
-                        <label class="form-label" for="effectivenes_id">{{ __('offers.types.effectivenes') }}</label>
-                        <select name="effectivenes_id" id="effectivenes_id" class="form-control ">
-                        </select>
-                        @error('effectivenes_id')
-                        <span class="error">{{ $message }}</span>
-                        @enderror
-                    </div>
                     <div class="mb-1 col-md-4 @error('image') is-invalid @enderror">
                         <label class="form-label" for="image">{{ __('sliders.file') }}</label>
                         <input type="file" class="form-control input" name="image" id="image">
@@ -168,52 +127,7 @@
 @stop
 @push('scripts')
 <script>
-    $(window).on('load', function() {
-        updateAjaxUrl();
-    });
-
-    function updateAjaxUrl() {
-
-        var vendorSelect = $("#vendor_id").val();
-        var type = $("#type").val();
-        var trip_id = {{ $item->trip_id ?? 0 }};
-        var effectivenes_id = {{ $item->effectivenes_id ?? 0 }};
-        var gift_id = {{ $item->gift_id ?? 0 }};
-
-
-        $.ajax({
-            type: 'POST'
-            , url: "{{ route('admin.getOffers') }}"
-            , data: {
-                vendor_id: vendorSelect
-                , type: type
-                , effectivenes_id: effectivenes_id
-                , trip_id: trip_id
-                , gift_id: gift_id
-            }
-            , success: function(data) {
-                if (type === "trip") {
-
-                    $("#trip_id").html(data);
-                    $("#trip_section").show();
-                    $("#effectivenes_section").hide();
-                    $("#gift_section").hide();
-                }
-                if (type === "effectivenes") {
-                    $("#effectivenes_id").html(data);
-                    $("#trip_section").hide();
-                    $("#effectivenes_section").show();
-                    $("#gift_section").hide();
-                }
-                if (type === "gift") {
-                    $("#gift_id").html(data);
-                    $("#trip_section").hide();
-                    $("#effectivenes_section").hide();
-                    $("#gift_section").show();
-                }
-            }
-        });
-    }
+   
     let translations = @json(__('scripts'));
     const availableLangs = @json(config('languages.available'));
 

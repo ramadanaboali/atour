@@ -75,5 +75,69 @@ class User extends Authenticatable
     {
         return $this->hasMany(Trip::class, 'vendor_id');
     }
+
+    public function loginAttempts(): HasMany
+    {
+        return $this->hasMany(LoginAttempt::class);
+    }
+
+    public function activityLogs(): HasMany
+    {
+        return $this->hasMany(UserActivityLog::class);
+    }
+
+    public function generateTwoFactorCode(): string
+    {
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        
+        $this->update([
+            'two_factor_code' => $code,
+            'two_factor_expires_at' => now()->addMinutes(10),
+            'two_factor_verified_at' => null,
+        ]);
+
+        return $code;
+    }
+
+    public function verifyTwoFactorCode(string $code): bool
+    {
+        if ($this->two_factor_code === $code && 
+            $this->two_factor_expires_at && 
+            $this->two_factor_expires_at->isFuture()) {
+            
+            $this->update([
+                'two_factor_code' => null,
+                'two_factor_expires_at' => null,
+                'two_factor_verified_at' => now(),
+                'failed_login_attempts' => 0,
+            ]);
+            
+            return true;
+        }
+        
+        return false;
+    }
+
+    public function isAccountLocked(): bool
+    {
+        return $this->locked_until && $this->locked_until->isFuture();
+    }
+
+    public function incrementFailedAttempts(): void
+    {
+        $this->increment('failed_login_attempts');
+        
+        if ($this->failed_login_attempts >= 5) {
+            $this->update(['locked_until' => now()->addMinutes(30)]);
+        }
+    }
+
+    public function resetFailedAttempts(): void
+    {
+        $this->update([
+            'failed_login_attempts' => 0,
+            'locked_until' => null,
+        ]);
+    }
     
 }
