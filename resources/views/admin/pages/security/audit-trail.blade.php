@@ -186,7 +186,7 @@
 
         // Initialize Select2
         $('.select2').select2({
-            placeholder: "{{ __('security.user ') }}"
+            placeholder: "{{ __('security.user') }}"
             , allowClear: true
         });
     });
