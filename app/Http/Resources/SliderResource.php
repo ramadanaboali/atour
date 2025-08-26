@@ -13,10 +13,6 @@ class SliderResource extends JsonResource
             'id'    => $this->id,
             'title'  => $this->title,
             'description'  => $this->description,
-            'title_en'  => $this->title_en,
-            'title_ar'  => $this->title_ar,
-            'description_en'  => $this->description_en,
-            'description_ar'  => $this->description_ar,
             'url'  => $this->url,
             'image'  => $this->photo,
         ];

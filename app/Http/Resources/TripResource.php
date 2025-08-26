@@ -24,10 +24,9 @@ class TripResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'price' => $this->price,
-            'customer_price' => $this->customer_price,
-
             'start_point' => $this->start_point,
             'end_point' => $this->end_point,
+            'customer_price' => $this->customer_price,
             'trip_requirements' => RequirementResource::collection($this->requirements),
             'program_time' => $this->program_time,
             'start_long' => $this->start_long,
@@ -56,16 +55,8 @@ class TripResource extends JsonResource
             'total_amounts' => totalAmount($this->id, 'trip'),
             'use_coupon' => useCoupon($this->id, 'trip'),
             'use_offers' => useOffers($this->id, 'trip'),
-            'title_en' => $this->title_en,
-            'title_ar' => $this->title_ar,
-            'description_en' => $this->description_en,
-            'description_ar' => $this->description_ar,
-            'start_point_en' => $this->start_point_en,
-            'start_point_ar' => $this->start_point_ar,
-            'end_point_en' => $this->end_point_en,
-            'end_point_ar' => $this->end_point_ar,
-            'program_time_en' => $this->program_time_en,
-            'program_time_ar' => $this->program_time_ar,
+      
+      
         ];
     }
 
