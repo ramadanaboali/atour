@@ -7,35 +7,37 @@
 @push('styles')
 <style>
 .modern-dashboard {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 2rem 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1.5rem 0;
+    min-height: 100vh;
 }
 
 .dashboard-header {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .stat-card-modern {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
 .stat-card-modern:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 45px rgba(31, 38, 135, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
 .stat-card-modern::before {
@@ -44,35 +46,33 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    height: 3px;
+    background: linear-gradient(90deg, #6c757d, #495057);
 }
 
 .stat-value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.25rem;
 }
 
 .stat-label {
     color: #6c757d;
-    font-weight: 500;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
 }
 
 .chart-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
 }
@@ -118,12 +118,12 @@
 }
 
 .revenue-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
     color: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .revenue-value {
@@ -166,11 +166,11 @@
         <div class="dashboard-header animate-fade-in-up">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h1 class="text-white mb-2">{{ __('admin.dashboard') }}</h1>
-                    <p class="text-white-50 mb-0">{{ __('admin.welcome_back') }}</p>
+                    <h1 class="text-dark mb-2">{{ __('admin.dashboard') }}</h1>
+                    <p class="text-muted mb-0">{{ __('admin.welcome_back') }}</p>
                 </div>
                 <div class="col-md-6 text-end">
-                    <div class="text-white-50">
+                    <div class="text-muted">
                         <i data-feather="calendar" class="me-2"></i>
                         {{ now()->format('F j, Y') }}
                     </div>
@@ -210,54 +210,80 @@
 
         <!-- Statistics Cards -->
         <div class="row">
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                 <div class="stat-card-modern animate-fade-in-up animate-delay-1">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="stat-value">{{ $customers }}</div>
                             <div class="stat-label">{{ __('admin.customers') }}</div>
                         </div>
-                        <div class="text-primary opacity-75">
-                            <i data-feather="users" style="width: 48px; height: 48px;"></i>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="users" style="width: 24px; height: 24px;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                 <div class="stat-card-modern animate-fade-in-up animate-delay-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="stat-value">{{ $suppliers }}</div>
                             <div class="stat-label">{{ __('admin.suppliers') }}</div>
                         </div>
-                        <div class="text-warning opacity-75">
-                            <i data-feather="briefcase" style="width: 48px; height: 48px;"></i>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="briefcase" style="width: 24px; height: 24px;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                 <div class="stat-card-modern animate-fade-in-up animate-delay-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="stat-value">{{ $current_orders }}</div>
                             <div class="stat-label">{{ __('admin.current_orders') }}</div>
                         </div>
-                        <div class="text-success opacity-75">
-                            <i data-feather="shopping-bag" style="width: 48px; height: 48px;"></i>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="shopping-bag" style="width: 24px; height: 24px;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
                 <div class="stat-card-modern animate-fade-in-up animate-delay-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <div class="stat-value">{{ $trips + $gifts + $effectiveness }}</div>
-                            <div class="stat-label">{{ __('admin.total_services') }}</div>
+                            <div class="stat-value">{{ $old_orders }}</div>
+                            <div class="stat-label">{{ __('admin.old_orders') }}</div>
                         </div>
-                        <div class="text-info opacity-75">
-                            <i data-feather="package" style="width: 48px; height: 48px;"></i>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="check-circle" style="width: 24px; height: 24px;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <div class="stat-card-modern animate-fade-in-up animate-delay-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-value">{{ $trips }}</div>
+                            <div class="stat-label">{{ __('admin.trips') }}</div>
+                        </div>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="map-pin" style="width: 24px; height: 24px;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <div class="stat-card-modern animate-fade-in-up animate-delay-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-value">{{ $gifts }}</div>
+                            <div class="stat-label">{{ __('admin.gifts') }}</div>
+                        </div>
+                        <div class="text-muted opacity-75">
+                            <i data-feather="gift" style="width: 24px; height: 24px;"></i>
                         </div>
                     </div>
                 </div>
