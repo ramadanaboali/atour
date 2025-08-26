@@ -43,13 +43,14 @@ class ClientController extends Controller
         if ($item->active == 0) {
             $item->active = 1;
             $item->status = "accepted";
-
+            flash(__('clients.messages.change_status_from_pending_to_accepted'))->success();
+            
         } else {
             $item->active = 0;
+            flash(__('clients.messages.change_status_from_accepted_to_pending'))->success();
         }
         $item->save();
-
-        flash(__('clients.messages.updated'))->success();
+        
 
         return back();
     }
@@ -84,6 +85,16 @@ class ClientController extends Controller
     public function destroy($id): RedirectResponse
     {
         $item = Client::findOrFail($id);
+
+        $hasBookings = BookingTrip::where('user_id', $id)->exists() ||
+               BookingGift::where('user_id', $id)->exists() ||
+               BookingEffectivene::where('user_id', $id)->exists();
+
+        if ($hasBookings) {
+            flash(__('suppliers.messages.has_bookings'))->error();
+            return back();
+        }
+
         if ($item->delete()) {
             flash(__('clients.messages.deleted'))->success();
         }
@@ -224,17 +235,17 @@ class ClientController extends Controller
 
         $bookingGift = BookingGift::with(['user', 'vendor'])
             ->where('user_id', $request->user_id)
-            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
+            ->select('id', 'user_id', 'vendor_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingGift' as source"))
             ->get();
 
         $bookingTrip = BookingTrip::with(['user', 'vendor'])
             ->where('user_id', $request->user_id)
-            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
+            ->select('id', 'user_id', 'vendor_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingTrip' as source"))
             ->get();
 
         $bookingEffectivene = BookingEffectivene::with(['user', 'vendor'])
             ->where('user_id', $request->user_id)
-            ->select('id', 'user_id', 'vendor_id','admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
+            ->select('id', 'user_id', 'vendor_id', 'admin_value', 'status', 'total', 'created_at', DB::raw("'BookingEffectivene' as source"))
             ->get();
 
         $data = $bookingGift->merge($bookingTrip)->merge($bookingEffectivene);

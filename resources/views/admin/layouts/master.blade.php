@@ -208,6 +208,37 @@
             </form>
         </div>
     </div>
+
+    <!-- Form Save Confirmation Modal -->
+    <div class="modal fade text-start" id="modalSaveConfirm" tabindex="-1" aria-labelledby="saveConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="saveConfirmLabel">{{ __('admin.dialogs.save.title') }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i data-feather="save" class="me-2 text-primary" style="width: 24px; height: 24px;"></i>
+                        <span>{{ __('admin.dialogs.save.message') }}</span>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <small>{{ __('admin.dialogs.save.info') }}</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmSaveBtn">
+                        <i data-feather="check" class="me-1"></i>
+                        {{ __('admin.dialogs.save.confirm') }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i data-feather="x" class="me-1"></i>
+                        {{ __('admin.dialogs.save.cancel') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{{ $assetsPath }}/vendors/js/vendors.min.js"></script>
     <script src="{{ $assetsPath }}/vendors/js/extensions/toastr.min.js"></script>
     <script src="{{ $assetsPath }}/js/scripts/extensions/ext-component-toastr.min.js"></script>
@@ -288,10 +319,64 @@
                 $('#modalRestore').modal('show')
                 return false;
             })
+
+            // Global form submission handler
+            var pendingForm = null;
+            
+            // Handle all form submissions except specific ones
+            $('form').not('#deleteForm, #restoreForm, #StatusForm, #logout-form').on('submit', function(e) {
+                // Skip if form has data-skip-confirm attribute
+                if ($(this).attr('data-skip-confirm') === 'true') {
+                    return true;
+                }
+                
+                // Skip if form is for search/filter (GET method)
+                if ($(this).attr('method') && $(this).attr('method').toLowerCase() === 'get') {
+                    return true;
+                }
+                
+                // Skip if form has specific classes that shouldn't be confirmed
+                if ($(this).hasClass('no-confirm') || $(this).hasClass('search-form') || $(this).hasClass('filter-form')) {
+                    return true;
+                }
+                
+                e.preventDefault();
+                pendingForm = $(this);
+                $('#modalSaveConfirm').modal('show');
+                return false;
+            });
+            
+            // Handle save confirmation
+            $('#confirmSaveBtn').on('click', function() {
+                if (pendingForm) {
+                    // Add skip confirmation attribute to prevent loop
+                    pendingForm.attr('data-skip-confirm', 'true');
+                    // Submit the form
+                    pendingForm.submit();
+                    // Hide modal
+                    $('#modalSaveConfirm').modal('hide');
+                    pendingForm = null;
+                }
+            });
+            
+            // Clear pending form when modal is hidden
+            $('#modalSaveConfirm').on('hidden.bs.modal', function() {
+                pendingForm = null;
+            });
       
 
             $('.btn_clear').click(function() {
                 $(this).parent().find('.ajax_select2,.select2').val(null).trigger("change")
+            });
+            
+            // Re-initialize feather icons after modal content changes
+            $('#modalSaveConfirm').on('shown.bs.modal', function() {
+                if (feather) {
+                    feather.replace({
+                        width: 16,
+                        height: 16
+                    });
+                }
             });
 
         })

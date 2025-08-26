@@ -54,6 +54,10 @@ class GiftController extends Controller
     public function destroy($id): RedirectResponse
     {
         $item = Gift::findOrFail($id);
+        if ($item->bookings->count()) {
+            flash(__('gifts.messages.has_bookings'))->error();
+            return to_route($this->route . '.index');
+        }
         if ($item->delete()) {
             flash(__('gifts.messages.deleted'))->success();
         }

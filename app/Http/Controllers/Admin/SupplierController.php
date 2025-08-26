@@ -94,12 +94,14 @@ class SupplierController extends Controller
         if ($item->active == 0) {
             $item->active = 1;
             $item->status = "accepted";
+            flash(__('suppliers.messages.change_status_from_pending_to_accepted'))->success();
+
         } else {
             $item->active = 0;
+            flash(__('suppliers.messages.change_status_from_accepted_to_pending'))->success();
         }
 
         $item->save();
-        flash(__('suppliers.messages.updated'))->success();
 
         return back();
     }
@@ -155,6 +157,14 @@ class SupplierController extends Controller
     public function destroy($id): RedirectResponse
     {
         $item = User::findOrFail($id);
+        $hasBookings = BookingTrip::where('vendor_id', $id)->exists() ||
+            BookingGift::where('vendor_id', $id)->exists() ||
+            BookingEffectivene::where('vendor_id', $id)->exists();
+
+        if ($hasBookings) {
+            flash(__('suppliers.messages.has_bookings'))->error();
+            return back();
+        }
         if ($item->delete()) {
             flash(__('suppliers.messages.deleted'))->success();
         }

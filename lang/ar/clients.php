@@ -29,6 +29,9 @@ return [
         'deleted' => 'تم حذف العميل بنجاح .',
         'restored' => 'تم استعادة العميل بنجاح .',
         'deleted_bulk' => 'تم حذف العميل المحددة بنجاح .',
+        'has_bookings' => 'لا يمكن حذف العميل لان لديه حجوزات .',
+        'change_status_from_pending_to_accepted' => 'تم تغيير حالة العميل من معلق إلى نشط .',
+        'change_status_from_accepted_to_pending' => 'تم تغيير حالة العميل من نشط إلى معلق .',
     ],
     'attributes' => [
         'name' => 'اسم العميل',

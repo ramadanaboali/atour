@@ -28,6 +28,9 @@ return [
         'deleted' => 'تم حذف المورد بنجاح .',
         'restored' => 'تم استعادة المورد بنجاح .',
         'deleted_bulk' => 'تم حذف المورد المحددة بنجاح .',
+        'has_bookings' => 'لا يمكن حذف المورد لان لديه حجوزات .',
+        'change_status_from_pending_to_accepted' => 'تم تغيير حالة المورد من معلق إلى نشط .',
+        'change_status_from_accepted_to_pending' => 'تم تغيير حالة المورد من نشط إلى معلق .',
     ],
     'attributes' => [
         'name' => 'اسم المورد',
