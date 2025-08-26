@@ -316,8 +316,9 @@ return [
     'home' => 'الرئيسية',
     'is_currently' => 'الآن',
     'time'=>'الوقت',
-    'new_customer'=>'عملي جديد : :name'
-    
+    'new_customer'=>'عملي جديد : :name',
+    'activity_booked'=>'حجز النشاط : :name في :trip'
+
 
 
 ];

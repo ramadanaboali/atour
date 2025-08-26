@@ -37,7 +37,7 @@ class AdminController extends Controller
         $effectiveness = BookingEffectivene::count();
         $gifts = BookingGift::count();
         $trips = Trip::count();
-        
+
         $getChartData = function ($model) {
             return [
                 __('orders.current')   => $model::whereIn('status', [
@@ -62,16 +62,16 @@ class AdminController extends Controller
             'gifts' => $gifts,
             'effectiveness' => $effectiveness
         ];
-        
+
         $userGrowth = $this->getUserGrowthData();
         $topSuppliers = $this->getTopSuppliers();
         $recentActivity = $this->getRecentActivity();
-        
+
         // Revenue statistics
         $totalRevenue = BookingTrip::where('status', Order::STATUS_COMPLEALED)->sum('total') +
                        BookingGift::where('status', Order::STATUS_COMPLEALED)->sum('total') +
                        BookingEffectivene::where('status', Order::STATUS_COMPLEALED)->sum('total');
-        
+
         $monthlyRevenueAmount = BookingTrip::where('status', Order::STATUS_COMPLEALED)
                                ->whereMonth('created_at', now()->month)
                                ->sum('total') +
@@ -108,11 +108,11 @@ class AdminController extends Controller
     {
         $months = [];
         $revenues = [];
-        
+
         for ($i = 11; $i >= 0; $i--) {
             $date = now()->subMonths($i);
             $months[] = $date->format('M Y');
-            
+
             $revenue = BookingTrip::where('status', Order::STATUS_COMPLEALED)
                       ->whereMonth('created_at', $date->month)
                       ->whereYear('created_at', $date->year)
@@ -125,10 +125,10 @@ class AdminController extends Controller
                       ->whereMonth('created_at', $date->month)
                       ->whereYear('created_at', $date->year)
                       ->sum('total');
-                      
+
             $revenues[] = $revenue;
         }
-        
+
         return [
             'labels' => $months,
             'data' => $revenues
@@ -140,22 +140,22 @@ class AdminController extends Controller
         $months = [];
         $customers = [];
         $suppliers = [];
-        
+
         for ($i = 5; $i >= 0; $i--) {
             $date = now()->subMonths($i);
             $months[] = $date->format('M Y');
-            
+
             $customers[] = User::where('type', User::TYPE_CLIENT)
                           ->whereMonth('created_at', $date->month)
                           ->whereYear('created_at', $date->year)
                           ->count();
-                          
+
             $suppliers[] = User::where('type', User::TYPE_SUPPLIER)
                           ->whereMonth('created_at', $date->month)
                           ->whereYear('created_at', $date->year)
                           ->count();
         }
-        
+
         return [
             'labels' => $months,
             'customers' => $customers,
@@ -173,8 +173,8 @@ class AdminController extends Controller
                   ->map(function ($supplier) {
                       return [
                           'name' => $supplier->name,
-                          'total_services' => $supplier->supplier_trips_count + 
-                                            $supplier->supplier_gifts_count + 
+                          'total_services' => $supplier->supplier_trips_count +
+                                            $supplier->supplier_gifts_count +
                                             $supplier->supplier_effectivenes_count
                       ];
                   });
@@ -183,7 +183,7 @@ class AdminController extends Controller
     private function getRecentActivity()
     {
         $activities = collect();
-        
+
         // Recent bookings
         $recentBookings = BookingTrip::with('user', 'trip')
                          ->latest()
@@ -192,13 +192,13 @@ class AdminController extends Controller
                          ->map(function ($booking) {
                              return [
                                  'type' => 'booking',
-                                 'message' => $booking->user->name . ' booked ' . $booking->trip->title,
+                                 'message' => __('admin.activity_booked', ['name' => $booking->user->name, 'trip' => $booking->trip->title]),
                                  'time' => $booking->created_at->diffForHumans(),
                                  'icon' => 'calendar',
                                  'color' => 'success'
                              ];
                          });
-        
+
         // Recent users
         $recentUsers = User::where('type', User::TYPE_CLIENT)
                           ->latest()
@@ -207,13 +207,13 @@ class AdminController extends Controller
                           ->map(function ($user) {
                               return [
                                   'type' => 'user',
-                                  'message' => __('admin.new_customer',['name'=>$user->name]),
+                                  'message' => __('admin.new_customer', ['name' => $user->name]),
                                   'time' => $user->created_at->diffForHumans(),
                                   'icon' => 'user-plus',
                                   'color' => 'info'
                               ];
                           });
-        
+
         return $activities->merge($recentBookings)
                          ->merge($recentUsers)
                          ->sortByDesc('time')
