@@ -173,14 +173,12 @@
             , dom: 'Bfrtip'
             , buttons: [{
                     extend: 'excel'
-                    , text: '<i data-feather="download"></i> {{ __('
-                    security.export_excel ') }}'
+                    , text: "<i data-feather=\"download\"></i> {{ __('security.export_excel ') }}"
                     , className: 'btn btn-success btn-sm'
                 }
                 , {
                     extend: 'pdf'
-                    , text: '<i data-feather="file-text"></i> {{ __('
-                    security.export_pdf ') }}'
+                    , text: "<i data-feather=\"file-text\"></i> {{ __('security.export_pdf ') }}"
                     , className: 'btn btn-danger btn-sm'
                 }
             ]
@@ -188,8 +186,7 @@
 
         // Initialize Select2
         $('.select2').select2({
-            placeholder: '{{ __('
-            security.user ') }}'
+            placeholder: "{{ __('security.user ') }}"
             , allowClear: true
         });
     });
