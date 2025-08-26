@@ -409,7 +409,8 @@
 
                 </ul>
             </li>
-            <li class=" nav-item {{ request()->routeIs('admin.security*') ? 'open active' : '' }} ">
+            <li class=" nav-item {{ request()->routeIs('admin.security.security') ? 'open active' : '' }} ">
+
                 <a class="d-flex align-items-center {{ request()->routeIs('admin.security*') ? 'active' : '' }}" href="#">
                     <i data-feather="settings"></i>
                     <span class="menu-title text-truncate" data-i18n="">{{ __('security.security') }}</span>
