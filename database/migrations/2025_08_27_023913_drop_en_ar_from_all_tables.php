@@ -15,11 +15,20 @@ return new class extends Migration
     {
         // foreach all_tables any columns end with _en or _ar drop it
         $tables = Schema::getAllTables();
-        foreach ($tables as $table) {
-            $columns = Schema::getColumnListing($table);
+        foreach ($tables as $tableObj) {
+            // For MySQL, the property is 'Tables_in_' . dbname
+            $tableName = null;
+            foreach ($tableObj as $key => $value) {
+                $tableName = $value;
+                break;
+            }
+            if (!$tableName) {
+                continue;
+            }
+            $columns = Schema::getColumnListing($tableName);
             foreach ($columns as $column) {
                 if (str_ends_with($column, '_en') || str_ends_with($column, '_ar')) {
-                    Schema::table($table, function (Blueprint $table) use ($column) {
+                    Schema::table($tableName, function (Blueprint $table) use ($column) {
                         $table->dropColumn($column);
                     });
                 }
