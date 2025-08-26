@@ -315,7 +315,8 @@ return [
     'Remove' => 'إزالة',
     'home' => 'الرئيسية',
     'is_currently' => 'الآن',
-    'time'=>'الوقت'
+    'time'=>'الوقت',
+    'new_customer'=>'عملي جديد : :name'
     
 
 

@@ -207,7 +207,7 @@ class AdminController extends Controller
                           ->map(function ($user) {
                               return [
                                   'type' => 'user',
-                                  'message' => 'New customer: ' . $user->name,
+                                  'message' => __('admin.new_customer',['name'=>$user->name]),
                                   'time' => $user->created_at->diffForHumans(),
                                   'icon' => 'user-plus',
                                   'color' => 'info'
