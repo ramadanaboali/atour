@@ -194,7 +194,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="revenue-card animate-fade-in-up animate-delay-2" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                <div class="revenue-card animate-fade-in-up animate-delay-2" style="background: linear-gradient(135deg, #868e96 0%, #6c757d 100%);">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <div class="revenue-label">{{ __('admin.monthly_revenue') }}</div>
