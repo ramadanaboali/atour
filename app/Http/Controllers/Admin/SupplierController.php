@@ -74,7 +74,7 @@ class SupplierController extends Controller
         $user = User::findOrFail($id);
         // dd($user->supplier);
         $trips = Trip::where('vendor_id', $id)->orderByDesc('id')->get();
-        
+
         // Load rating statistics
         $ratingStats = [
             'average_rating' => $user->average_rating,
@@ -86,7 +86,7 @@ class SupplierController extends Controller
                 ->pluck('count', 'rating')
                 ->toArray()
         ];
-        
+
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -151,14 +151,14 @@ class SupplierController extends Controller
             $item->ban_vendor = 0;
         }
         $payment = [
-            'tax_type' => $request->tax_type,
-            'tax_value' => $request->tax_value,
-            'payment_way_type' => $request->payment_way_type,
-            'payment_way_value' => $request->payment_way_value,
-            'admin_type' => $request->admin_type,
-            'admin_value' => $request->admin_value,
-            'admin_fee_type' => $request->admin_fee_type,
-            'admin_fee_value' => $request->admin_fee_value,
+            'tax_type' => $request->tax_type ?? 0,
+            'tax_value' => $request->tax_value ?? 0,
+            'payment_way_type' => $request->payment_way_type ?? 0,
+            'payment_way_value' => $request->payment_way_value ?? 0,
+            'admin_type' => $request->admin_type ?? 0,
+            'admin_value' => $request->admin_value ?? 0,
+            'admin_fee_type' => $request->admin_fee_type ?? 0,
+            'admin_fee_value' => $request->admin_fee_value ?? 0,
         ];
         UserFee::updateOrCreate(['user_id' => $item->id], $payment);
 
@@ -626,8 +626,8 @@ class SupplierController extends Controller
             ->addColumn('stars', function ($item) {
                 $stars = '';
                 for ($i = 1; $i <= 5; $i++) {
-                    $stars .= $i <= $item->rating 
-                        ? '<i class="fas fa-star text-warning"></i>' 
+                    $stars .= $i <= $item->rating
+                        ? '<i class="fas fa-star text-warning"></i>'
                         : '<i class="far fa-star text-muted"></i>';
                 }
                 return $stars;
@@ -646,7 +646,7 @@ class SupplierController extends Controller
                 return $item->created_at->format('Y-m-d H:i');
             })
             ->addColumn('verification_status', function ($item) {
-                return $item->is_verified 
+                return $item->is_verified
                     ? '<span class="badge bg-success">' . __('ratings.verified') . '</span>'
                     : '<span class="badge bg-warning">' . __('ratings.unverified') . '</span>';
             })
