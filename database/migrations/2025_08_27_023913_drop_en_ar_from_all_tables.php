@@ -17,10 +17,10 @@ return new class extends Migration
         $tables = Schema::getAllTables();
         // dd($tables);
         foreach ($tables as $table) {
-            $columns = Schema::getColumnListing($table->Tables_in_atour);
+            $columns = Schema::getColumnListing($table->Tables_in_projectatoursa_atour);
             foreach ($columns as $column) {
                 if (str_ends_with($column, '_en') || str_ends_with($column, '_ar')) {
-                    Schema::table($table->Tables_in_atour, function (Blueprint $table) use ($column) {
+                    Schema::table($table->Tables_in_projectatoursa_atour, function (Blueprint $table) use ($column) {
                         $table->dropColumn($column);
                     });
                 }
