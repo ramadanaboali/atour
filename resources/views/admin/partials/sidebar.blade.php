@@ -417,7 +417,8 @@
                 </a>
                 <ul class="menu-content">
             @can('security.dashboard')
-            <li class=" nav-item {{ request()->routeIs('admin.security.*')?'active':''}}">
+            <li class=" nav-item {{ request()->routeIs('admin.security.dashboard')?'active':''}}">
+
                 <a class="d-flex align-items-center" href="{{ route('admin.security.dashboard') }} ">
                     <i data-feather="circle"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('security.security') }}</span>
