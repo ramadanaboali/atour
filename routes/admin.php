@@ -391,6 +391,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('adminPermission:clients.edit');
 
             Route::get('clients/show/{id}', [App\Http\Controllers\Admin\ClientController::class, 'show'])->name('clients.show')->middleware('adminPermission:clients.show');
+            Route::get('clients-ratings/list', [App\Http\Controllers\Admin\ClientController::class, 'ratings'])->name('clients.ratings')->middleware('adminPermission:clients.view');
 
 
 

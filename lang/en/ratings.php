@@ -113,6 +113,7 @@ return [
     
     // Supplier ratings page
     'supplier_ratings' => 'Customer Ratings',
+    'client_ratings' => 'My Ratings',
     'average_rating' => 'Average Rating',
     'total_ratings' => 'Reviews',
     'rating_distribution' => 'Rating Distribution',

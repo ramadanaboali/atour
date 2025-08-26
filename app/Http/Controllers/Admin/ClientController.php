@@ -8,6 +8,7 @@ use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
 use App\Models\BookingTrip;
 use App\Models\Client;
+use App\Models\CustomerRating;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -39,7 +40,7 @@ class ClientController extends Controller
     }
     public function status($id)
     {
-        $item = Client::findOrFail($id);
+        $item = User::findOrFail($id);
         if ($item->active == 0) {
             $item->active = 1;
             $item->status = "accepted";
@@ -68,23 +69,35 @@ class ClientController extends Controller
 
     public function edit($id): View
     {
-        $item = Client::findOrFail($id);
+        $item = User::findOrFail($id);
         return view($this->viewEdit, get_defined_vars());
     }
 
     public function show($id): View
     {
-        $item = Client::findOrFail($id);
+        $item = User::findOrFail($id);
         $completedOrders = Order::where("user_id", $item->id)->where('status', Order::STATUS_COMPLEALED)->get();
         $pendingOrders = Order::where("user_id", $item->id)->where('status', Order::STATUS_PENDING)->get();
         $status = [Order::STATUS_COMPLEALED,Order::STATUS_PENDING,Order::STATUS_ACCEPTED,Order::STATUS_REJECTED,Order::STATUS_ONPROGRESS,Order::STATUS_COMPLEALED,Order::STATUS_CANCELED,Order::STATUS_WITHDRWAL];
+
+        // Load rating statistics for this client
+        $ratingStats = [
+            'average_rating' => $item->average_rating,
+            'total_ratings' => $item->total_ratings,
+            'rating_distribution' => $item->customerRatings()
+                ->selectRaw('rating, COUNT(*) as count')
+                ->groupBy('rating')
+                ->orderBy('rating', 'desc')
+                ->pluck('count', 'rating')
+                ->toArray()
+        ];
 
         return view($this->viewShow, get_defined_vars());
     }
 
     public function destroy($id): RedirectResponse
     {
-        $item = Client::findOrFail($id);
+        $item = User::findOrFail($id);
 
         $hasBookings = BookingTrip::where('user_id', $id)->exists() ||
                BookingGift::where('user_id', $id)->exists() ||
@@ -110,7 +123,7 @@ class ClientController extends Controller
     }
     public function select(Request $request): JsonResponse|string
     {
-        $data = Client::distinct()
+        $data = User::distinct()
                  ->where(function ($query) use ($request) {
                      if ($request->filled('q')) {
                          if (App::isLocale('en')) {
@@ -134,7 +147,7 @@ class ClientController extends Controller
 
     public function update(ClientRequest $request, $id): RedirectResponse
     {
-        $item = Client::findOrFail($id);
+        $item = User::findOrFail($id);
         if ($this->processForm($request, $id)) {
             flash(__('clients.messages.updated'))->success();
         }
@@ -143,7 +156,7 @@ class ClientController extends Controller
 
     protected function processForm($request, $id = null): Client|null
     {
-        $item = $id == null ? new Client() : Client::find($id);
+        $item = $id == null ? new Client() : User::find($id);
         $data = $request->except(['_token', '_method']);
         $item = $item->fill($data);
         if ($request->filled('active')) {
@@ -180,7 +193,7 @@ class ClientController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $data = Client::whereNotNull('email')->where(function ($query) use ($request) {
+        $data = User::whereNotNull('email')->where(function ($query) use ($request) {
             if ($request->filled('name')) {
                 $query->where('name', 'like', '%'. $request->name .'%');
             }
@@ -269,6 +282,67 @@ class ClientController extends Controller
                 return $item->created_at?->format('Y-m-d H:i');
             })
             ->rawColumns(['source', 'created_at', 'client', 'vendor'])
+            ->make(true);
+    }
+
+    public function ratings(Request $request): JsonResponse
+    {
+        $data = CustomerRating::with(['supplier', 'service'])
+            ->where('customer_id', $request->user_id)
+            ->when($request->filled('rating_filter'), function ($query) use ($request) {
+                $query->where('rating', $request->rating_filter);
+            })
+            ->when($request->filled('period_filter'), function ($query) use ($request) {
+                switch ($request->period_filter) {
+                    case 'week':
+                        $query->where('created_at', '>=', now()->subWeek());
+                        break;
+                    case 'month':
+                        $query->where('created_at', '>=', now()->subMonth());
+                        break;
+                    case '3months':
+                        $query->where('created_at', '>=', now()->subMonths(3));
+                        break;
+                    case 'year':
+                        $query->where('created_at', '>=', now()->subYear());
+                        break;
+                }
+            })
+            ->orderByDesc('created_at');
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('supplier_name', function ($item) {
+                return $item->supplier ? $item->supplier->name : '-';
+            })
+            ->addColumn('stars', function ($item) {
+                $stars = '';
+                for ($i = 1; $i <= 5; $i++) {
+                    $stars .= $i <= $item->rating 
+                        ? '<i class="fas fa-star text-warning"></i>' 
+                        : '<i class="far fa-star text-muted"></i>';
+                }
+                return $stars;
+            })
+            ->addColumn('service_info', function ($item) {
+                $service = $item->service;
+                if ($service) {
+                    return $service->title . ' (' . ucfirst($item->service_type) . ')';
+                }
+                return ucfirst($item->service_type);
+            })
+            ->editColumn('comment', function ($item) {
+                return $item->comment ? \Illuminate\Support\Str::limit($item->comment, 100) : '-';
+            })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at->format('Y-m-d H:i');
+            })
+            ->addColumn('verification_status', function ($item) {
+                return $item->is_verified 
+                    ? '<span class="badge bg-success">' . __('ratings.verified') . '</span>'
+                    : '<span class="badge bg-warning">' . __('ratings.unverified') . '</span>';
+            })
+            ->rawColumns(['stars', 'verification_status'])
             ->make(true);
     }
 

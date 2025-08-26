@@ -86,12 +86,93 @@
                         __('orders.type'),
                     ]" />
 
-                <!-- Rates -->
-                <x-client-data-table title="{{ __('clients.rates_details') }}" tableClass="datatables-rates" :headers="[
-                        __('orders.rate'),
-                        __('orders.vendor'),
-                        __('orders.comment'),
-                    ]" />
+                <!-- Customer Ratings Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{{ __('ratings.client_ratings') }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Rating Statistics -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h2 class="text-primary mb-1">{{ number_format($ratingStats['average_rating'], 1) }}</h2>
+                                    <div class="mb-2">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star {{ $i <= round($ratingStats['average_rating']) ? 'text-warning' : 'text-muted' }}"></i>
+                                        @endfor
+                                    </div>
+                                    <p class="text-muted mb-0">{{ __('ratings.average_rating') }}</p>
+                                    <small class="text-muted">{{ $ratingStats['total_ratings'] }} {{ __('ratings.total_ratings') }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <h6 class="mb-3">{{ __('ratings.rating_distribution') }}</h6>
+                                @for($i = 5; $i >= 1; $i--)
+                                    @php
+                                        $count = $ratingStats['rating_distribution'][$i] ?? 0;
+                                        $percentage = $ratingStats['total_ratings'] > 0 ? ($count / $ratingStats['total_ratings']) * 100 : 0;
+                                    @endphp
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span class="me-2">{{ $i }}</span>
+                                        <i class="fas fa-star text-warning me-2"></i>
+                                        <div class="progress flex-grow-1 me-3" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $percentage }}%"></div>
+                                        </div>
+                                        <span class="text-muted small">{{ $count }}</span>
+                                    </div>
+                                @endfor
+                            </div>
+                        </div>
+
+                        <!-- Filters -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">{{ __('ratings.filter_by_rating') }}</label>
+                                <select id="rating-filter-client" class="form-select">
+                                    <option value="">{{ __('ratings.all_ratings') }}</option>
+                                    <option value="5">5 {{ __('ratings.stars') }}</option>
+                                    <option value="4">4 {{ __('ratings.stars') }}</option>
+                                    <option value="3">3 {{ __('ratings.stars') }}</option>
+                                    <option value="2">2 {{ __('ratings.stars') }}</option>
+                                    <option value="1">1 {{ __('ratings.star') }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">{{ __('ratings.filter_by_period') }}</label>
+                                <select id="period-filter-client" class="form-select">
+                                    <option value="">{{ __('ratings.all_time') }}</option>
+                                    <option value="week">{{ __('ratings.last_week') }}</option>
+                                    <option value="month">{{ __('ratings.last_month') }}</option>
+                                    <option value="3months">{{ __('ratings.last_3_months') }}</option>
+                                    <option value="year">{{ __('ratings.last_year') }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" id="reset-filters-client" class="btn btn-outline-secondary">
+                                    <i class="fas fa-undo me-1"></i>{{ __('ratings.reset_filters') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Ratings Table -->
+                        <div class="table-responsive">
+                            <table id="client-ratings-table" class="table table-striped datatables-client-ratings">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('ratings.supplier') }}</th>
+                                        <th>{{ __('ratings.rating') }}</th>
+                                        <th>{{ __('ratings.service') }}</th>
+                                        <th>{{ __('ratings.comment') }}</th>
+                                        <th>{{ __('ratings.date') }}</th>
+                                        <th>{{ __('ratings.status') }}</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Customer Ratings Section -->
 
                 <!-- Favorites -->
                 <x-client-data-table title="{{ __('clients.favourit_details') }}" tableClass="datatables-favorite" :headers="[
@@ -192,23 +273,52 @@
         , ]
     );
 
-    initDataTable('.datatables-rates', "{{ route('admin.rates.list') }}", {
-            user_id: item_id
-        }
-        , [{
-                data: 'rate'
-                , name: 'rate'
+    // Client Ratings DataTable
+    var dt_client_ratings_table = $('.datatables-client-ratings');
+    var dt_client_ratings = dt_client_ratings_table.dataTable({
+        processing: true,
+        serverSide: true,
+        searching: true,
+        paging: true,
+        info: false,
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        language: {
+            paginate: {
+                previous: '&nbsp;',
+                next: '&nbsp;'
             }
-            , {
-                data: 'vendor'
-                , name: 'vendor'
+        },
+        ajax: {
+            url: "{{ route('admin.clients.ratings') }}",
+            data: function (d) {
+                d.user_id = item_id;
+                d.rating_filter = $('#rating-filter-client').val();
+                d.period_filter = $('#period-filter-client').val();
             }
-            , {
-                data: 'comment'
-                , name: 'comment'
-            }
-        , ]
-    );
+        },
+        drawCallback: function (settings) {
+            feather.replace();
+        },
+        columns: [
+            {data: 'supplier_name', name: 'supplier_name', orderable: false},
+            {data: 'stars', name: 'rating', orderable: true},
+            {data: 'service_info', name: 'service_info', orderable: false},
+            {data: 'comment', name: 'comment', orderable: false},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'verification_status', name: 'is_verified', orderable: false}
+        ],
+        order: [[4, 'desc']] // Order by date descending
+    });
+
+    // Client ratings filter handlers
+    $('#rating-filter-client, #period-filter-client').on('change', function() {
+        dt_client_ratings.api().ajax.reload();
+    });
+
+    $('#reset-filters-client').on('click', function() {
+        $('#rating-filter-client, #period-filter-client').val('');
+        dt_client_ratings.api().ajax.reload();
+    });
 
     initDataTable('.datatables-favorite', "{{ route('admin.favorites.list') }}", {
             user_id: item_id
