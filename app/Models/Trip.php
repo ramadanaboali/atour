@@ -43,7 +43,19 @@ class Trip extends Model
         'available_days' => 'array',
         'steps_list' => 'array',
     ];
-    protected $appends = [ 'photo', 'customer_price'];
+    protected $appends = [ 'photo', 'customer_price','title','description'];
+
+
+
+    public function getTitleAttribute()
+    {
+        return $this->translations->first()->title ?? '';
+    }
+    public function getDescriptionAttribute()
+    {
+        return $this->translations->first()->description ?? '';
+    }
+
 
     public function getPhotoAttribute()
     {
