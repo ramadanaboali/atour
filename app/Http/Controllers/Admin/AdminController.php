@@ -34,9 +34,10 @@ class AdminController extends Controller
         $old_orders       = BookingTrip::where('status', Order::STATUS_COMPLEALED)->count();
         $canceled_orders  = BookingTrip::where('status', Order::STATUS_CANCELED)->count();
 
-        $effectiveness = BookingEffectivene::where('status', Order::STATUS_CANCELED)->count();
-        $gifts = BookingGift::where('status', Order::STATUS_CANCELED)->count();
+        $effectiveness = BookingEffectivene::count();
+        $gifts = BookingGift::count();
         $trips = Trip::count();
+        
         $getChartData = function ($model) {
             return [
                 __('orders.current')   => $model::whereIn('status', [
@@ -54,6 +55,33 @@ class AdminController extends Controller
         $giftChart          = $getChartData(BookingGift::class);
         $effectivenessChart = $getChartData(BookingEffectivene::class);
 
+        // Additional chart data for modern dashboard
+        $monthlyRevenue = $this->getMonthlyRevenue();
+        $serviceDistribution = [
+            'trips' => $trips,
+            'gifts' => $gifts,
+            'effectiveness' => $effectiveness
+        ];
+        
+        $userGrowth = $this->getUserGrowthData();
+        $topSuppliers = $this->getTopSuppliers();
+        $recentActivity = $this->getRecentActivity();
+        
+        // Revenue statistics
+        $totalRevenue = BookingTrip::where('status', Order::STATUS_COMPLEALED)->sum('total') +
+                       BookingGift::where('status', Order::STATUS_COMPLEALED)->sum('total') +
+                       BookingEffectivene::where('status', Order::STATUS_COMPLEALED)->sum('total');
+        
+        $monthlyRevenueAmount = BookingTrip::where('status', Order::STATUS_COMPLEALED)
+                               ->whereMonth('created_at', now()->month)
+                               ->sum('total') +
+                               BookingGift::where('status', Order::STATUS_COMPLEALED)
+                               ->whereMonth('created_at', now()->month)
+                               ->sum('total') +
+                               BookingEffectivene::where('status', Order::STATUS_COMPLEALED)
+                               ->whereMonth('created_at', now()->month)
+                               ->sum('total');
+
         return view($this->viewIndex, compact(
             'customers',
             'suppliers',
@@ -65,8 +93,131 @@ class AdminController extends Controller
             'giftChart',
             'gifts',
             'effectiveness',
-            'effectivenessChart'
+            'effectivenessChart',
+            'monthlyRevenue',
+            'serviceDistribution',
+            'userGrowth',
+            'topSuppliers',
+            'recentActivity',
+            'totalRevenue',
+            'monthlyRevenueAmount'
         ));
+    }
+
+    private function getMonthlyRevenue()
+    {
+        $months = [];
+        $revenues = [];
+        
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = $date->format('M Y');
+            
+            $revenue = BookingTrip::where('status', Order::STATUS_COMPLEALED)
+                      ->whereMonth('created_at', $date->month)
+                      ->whereYear('created_at', $date->year)
+                      ->sum('total') +
+                      BookingGift::where('status', Order::STATUS_COMPLEALED)
+                      ->whereMonth('created_at', $date->month)
+                      ->whereYear('created_at', $date->year)
+                      ->sum('total') +
+                      BookingEffectivene::where('status', Order::STATUS_COMPLEALED)
+                      ->whereMonth('created_at', $date->month)
+                      ->whereYear('created_at', $date->year)
+                      ->sum('total');
+                      
+            $revenues[] = $revenue;
+        }
+        
+        return [
+            'labels' => $months,
+            'data' => $revenues
+        ];
+    }
+
+    private function getUserGrowthData()
+    {
+        $months = [];
+        $customers = [];
+        $suppliers = [];
+        
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = $date->format('M Y');
+            
+            $customers[] = User::where('type', User::TYPE_CLIENT)
+                          ->whereMonth('created_at', $date->month)
+                          ->whereYear('created_at', $date->year)
+                          ->count();
+                          
+            $suppliers[] = User::where('type', User::TYPE_SUPPLIER)
+                          ->whereMonth('created_at', $date->month)
+                          ->whereYear('created_at', $date->year)
+                          ->count();
+        }
+        
+        return [
+            'labels' => $months,
+            'customers' => $customers,
+            'suppliers' => $suppliers
+        ];
+    }
+
+    private function getTopSuppliers()
+    {
+        return User::where('type', User::TYPE_SUPPLIER)
+                  ->withCount(['supplierTrips', 'supplierGifts', 'supplierEffectivenes'])
+                  ->orderBy('supplier_trips_count', 'desc')
+                  ->limit(5)
+                  ->get()
+                  ->map(function ($supplier) {
+                      return [
+                          'name' => $supplier->name,
+                          'total_services' => $supplier->supplier_trips_count + 
+                                            $supplier->supplier_gifts_count + 
+                                            $supplier->supplier_effectivenes_count
+                      ];
+                  });
+    }
+
+    private function getRecentActivity()
+    {
+        $activities = collect();
+        
+        // Recent bookings
+        $recentBookings = BookingTrip::with('user', 'trip')
+                         ->latest()
+                         ->limit(5)
+                         ->get()
+                         ->map(function ($booking) {
+                             return [
+                                 'type' => 'booking',
+                                 'message' => $booking->user->name . ' booked ' . $booking->trip->title,
+                                 'time' => $booking->created_at->diffForHumans(),
+                                 'icon' => 'calendar',
+                                 'color' => 'success'
+                             ];
+                         });
+        
+        // Recent users
+        $recentUsers = User::where('type', User::TYPE_CLIENT)
+                          ->latest()
+                          ->limit(3)
+                          ->get()
+                          ->map(function ($user) {
+                              return [
+                                  'type' => 'user',
+                                  'message' => 'New customer: ' . $user->name,
+                                  'time' => $user->created_at->diffForHumans(),
+                                  'icon' => 'user-plus',
+                                  'color' => 'info'
+                              ];
+                          });
+        
+        return $activities->merge($recentBookings)
+                         ->merge($recentUsers)
+                         ->sortByDesc('time')
+                         ->take(8);
     }
 
     public function updateToken(Request $request)

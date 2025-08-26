@@ -76,6 +76,22 @@ class User extends Authenticatable
         return $this->hasMany(Trip::class, 'vendor_id');
     }
 
+    // Supplier service relationships for dashboard analytics
+    public function supplierTrips(): HasMany
+    {
+        return $this->hasMany(Trip::class, 'vendor_id');
+    }
+
+    public function supplierGifts(): HasMany
+    {
+        return $this->hasMany(Gift::class, 'vendor_id');
+    }
+
+    public function supplierEffectivenes(): HasMany
+    {
+        return $this->hasMany(Effectivenes::class, 'vendor_id');
+    }
+
     public function loginAttempts(): HasMany
     {
         return $this->hasMany(LoginAttempt::class);

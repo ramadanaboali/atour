@@ -18,6 +18,22 @@ return [
     'users_roles' => 'المستخدمين والصلاحيات',
     'jobs' => 'الوظائف',
     'faqs' => 'FAQ',
+    
+    // Dashboard specific translations
+    'welcome_back' => 'مرحباً بك في لوحة التحكم',
+    'total_revenue' => 'إجمالي الإيرادات',
+    'monthly_revenue' => 'الإيرادات الشهرية',
+    'total_services' => 'إجمالي الخدمات',
+    'revenue_trend' => 'اتجاه الإيرادات (12 شهر)',
+    'service_distribution' => 'توزيع الخدمات',
+    'user_growth' => 'نمو المستخدمين (6 أشهر)',
+    'order_status' => 'توزيع حالة الطلبات',
+    'recent_activity' => 'النشاط الأخير',
+    'top_suppliers' => 'أفضل الموردين',
+    'no_recent_activity' => 'لا يوجد نشاط حديث',
+    'no_suppliers' => 'لا يوجد موردين',
+    'revenue' => 'الإيرادات',
+    'services' => 'الخدمات',
     'messages' => [
         'message_sent_successfully' => 'تم ارسال الرسالة بنجاح',
         'created' => 'تمت الاضافة بنجاح.',

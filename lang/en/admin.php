@@ -18,6 +18,22 @@ return [
     'users_roles' => 'Users & Roles',
     'jobs' => 'Jobs',
     'faqs' => 'FAQ',
+    
+    // Dashboard specific translations
+    'welcome_back' => 'Welcome back to your dashboard',
+    'total_revenue' => 'Total Revenue',
+    'monthly_revenue' => 'Monthly Revenue',
+    'total_services' => 'Total Services',
+    'revenue_trend' => 'Revenue Trend (12 Months)',
+    'service_distribution' => 'Service Distribution',
+    'user_growth' => 'User Growth (6 Months)',
+    'order_status' => 'Order Status Distribution',
+    'recent_activity' => 'Recent Activity',
+    'top_suppliers' => 'Top Suppliers',
+    'no_recent_activity' => 'No recent activity found',
+    'no_suppliers' => 'No suppliers found',
+    'revenue' => 'Revenue',
+    'services' => 'Services',
     'messages' => [
         'message_sent_successfully' => 'Message sent successfully',
         'created' => 'Added successfully.',
