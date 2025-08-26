@@ -93,7 +93,8 @@ class EffectivenesController extends Controller
                 Attachment::create($attachment);
             }
         }
-        return redirect()->route('admin.effectivenes.index')->with('success', 'Effectivenes updated successfully.');
+        flash(__('effectivenes.messages.updated'))->success();
+        return redirect()->route('admin.effectivenes.index');
     }
 
 

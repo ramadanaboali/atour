@@ -46,3 +46,14 @@ Route::post('sendcode', [App\Http\Controllers\Api\V1\AuthController::class, 'sen
 Route::post('send/email', [App\Http\Controllers\Admin\AuthController::class, 'resetPassword'])->name('password.reset');
 Route::get('confirm/email', [App\Http\Controllers\Admin\AuthController::class, 'resetConfirm'])->name('password.confirm');
 Route::post('password/save', [App\Http\Controllers\Admin\AuthController::class, 'savePassword'])->name('password.save');
+
+// Rating Routes
+Route::group(['prefix' => 'ratings'], function () {
+    Route::get('/create', [App\Http\Controllers\RatingController::class, 'create'])->name('ratings.create');
+    Route::post('/store', [App\Http\Controllers\RatingController::class, 'store'])->name('ratings.store');
+    Route::get('/supplier/{supplier}', [App\Http\Controllers\RatingController::class, 'supplierRatings'])->name('ratings.supplier');
+    
+    Route::middleware('auth')->group(function () {
+        Route::get('/my-ratings', [App\Http\Controllers\RatingController::class, 'customerRatings'])->name('ratings.customer');
+    });
+});

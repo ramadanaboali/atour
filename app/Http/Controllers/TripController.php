@@ -57,7 +57,8 @@ class TripController extends Controller
             }
         }
 
+        flash(__('trips.messages.updated'))->success();
         // Redirect
-        return redirect()->route('admin.trips.index')->with('success', 'Trip updated successfully.');
+        return redirect()->route('admin.trips.index');
     }
 }

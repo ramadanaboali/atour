@@ -6,7 +6,7 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::get('admin/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
     Route::post('admin/login', [App\Http\Controllers\Admin\AuthController::class, 'postLogin'])->name('admin.postLogin');
     Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
-    
+
     // 2FA Routes (outside authentication middleware)
     Route::get('admin/2fa/verify', [App\Http\Controllers\Admin\AuthController::class, 'show2FAForm'])->name('admin.2fa.verify');
     Route::post('admin/2fa/verify', [App\Http\Controllers\Admin\AuthController::class, 'verify2FA'])->name('admin.2fa.verify');
@@ -146,7 +146,7 @@ Route::middleware('throttle:60,1')->group(function () {
                 Route::get('audit-trail/data', [App\Http\Controllers\Admin\SecurityController::class, 'auditTrailData'])->name('audit-trail.data')->middleware('adminPermission:security.audit-trail');
                 Route::get('login-attempts', [App\Http\Controllers\Admin\SecurityController::class, 'loginAttempts'])->name('login-attempts')->middleware('adminPermission:security.login-attempts');
                 Route::get('login-attempts/data', [App\Http\Controllers\Admin\SecurityController::class, 'loginAttemptsData'])->name('login-attempts.data')->middleware('adminPermission:security.login-attempts');
-                
+
                 // 2FA Settings Routes
                 Route::prefix('2fa')->name('2fa.')->group(function () {
                     Route::get('settings', [App\Http\Controllers\Admin\SecurityController::class, 'twoFactorSettings'])->name('settings')->middleware('adminPermission:security.2fa.settings');
@@ -157,7 +157,14 @@ Route::middleware('throttle:60,1')->group(function () {
                 });
             });
 
-        //addnewrouteheredontdeletemeplease
+            // Rating Management Routes
+            Route::prefix('ratings')->name('ratings.')->group(function () {
+                Route::get('/', [App\Http\Controllers\RatingController::class, 'adminIndex'])->name('index')->middleware('adminPermission:ratings.view');
+                Route::post('/{id}/toggle-verification', [App\Http\Controllers\RatingController::class, 'toggleVerification'])->name('toggle-verification')->middleware('adminPermission:ratings.edit');
+                Route::delete('/{id}', [App\Http\Controllers\RatingController::class, 'destroy'])->name('destroy')->middleware('adminPermission:ratings.delete');
+            });
+
+            //addnewrouteheredontdeletemeplease
 
             Route::get('effectivenes/select', [App\Http\Controllers\Admin\EffectivenesController::class, 'select'])->name('effectivenes.select');
             Route::delete('effectivenes/bulk', [App\Http\Controllers\Admin\EffectivenesController::class, 'deleteBulk'])->name('effectivenes.deleteBulk')->middleware('adminPermission:effectivenes.delete');
@@ -361,6 +368,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::post('suppliers/save-setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'saveSetting'])->name('suppliers.saveSetting')->middleware('adminPermission:suppliers.setting');
             Route::get('suppliers/show/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'show'])->name('suppliers.show')->middleware('adminPermission:suppliers.show');
             Route::get('suppliers-orders/list', [App\Http\Controllers\Admin\SupplierController::class, 'orders'])->name('suppliers.orders')->middleware('adminPermission:suppliers.view');
+            Route::get('suppliers-ratings/list', [App\Http\Controllers\Admin\SupplierController::class, 'ratings'])->name('suppliers.ratings')->middleware('adminPermission:suppliers.view');
             Route::get('suppliers-payments', [App\Http\Controllers\Admin\SupplierController::class, 'payments'])->name('accounts.payments')->middleware('adminPermission:accounts.payments');
             Route::get('suppliers-accounts', [App\Http\Controllers\Admin\SupplierController::class, 'suppliers'])->name('accounts.suppliers')->middleware('adminPermission:accounts.suppliers');
             Route::post('settlement-accounts/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'settlement'])->name('accounts.settlement')->middleware('adminPermission:accounts.settlement');

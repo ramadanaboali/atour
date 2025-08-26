@@ -14,6 +14,7 @@ use App\Models\SupplierService;
 use App\Models\User;
 use App\Models\UserFee;
 use App\Models\Trip;
+use App\Models\CustomerRating;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -73,6 +74,19 @@ class SupplierController extends Controller
         $user = User::findOrFail($id);
         // dd($user->supplier);
         $trips = Trip::where('vendor_id', $id)->orderByDesc('id')->get();
+        
+        // Load rating statistics
+        $ratingStats = [
+            'average_rating' => $user->average_rating,
+            'total_ratings' => $user->total_ratings,
+            'rating_distribution' => $user->supplierRatings()
+                ->selectRaw('rating, COUNT(*) as count')
+                ->groupBy('rating')
+                ->orderBy('rating', 'desc')
+                ->pluck('count', 'rating')
+                ->toArray()
+        ];
+        
         return view($this->viewShow, get_defined_vars());
     }
 
@@ -579,6 +593,67 @@ class SupplierController extends Controller
         }
         return to_route($this->route . '.index');
     }
+    public function ratings(Request $request): JsonResponse
+    {
+        $data = CustomerRating::with(['customer', 'service'])
+            ->where('supplier_id', $request->user_id)
+            ->when($request->filled('rating_filter'), function ($query) use ($request) {
+                $query->where('rating', $request->rating_filter);
+            })
+            ->when($request->filled('period_filter'), function ($query) use ($request) {
+                switch ($request->period_filter) {
+                    case 'week':
+                        $query->where('created_at', '>=', now()->subWeek());
+                        break;
+                    case 'month':
+                        $query->where('created_at', '>=', now()->subMonth());
+                        break;
+                    case '3months':
+                        $query->where('created_at', '>=', now()->subMonths(3));
+                        break;
+                    case 'year':
+                        $query->where('created_at', '>=', now()->subYear());
+                        break;
+                }
+            })
+            ->orderByDesc('created_at');
+
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('customer_name', function ($item) {
+                return $item->customer ? $item->customer->name : $item->guest_name;
+            })
+            ->addColumn('stars', function ($item) {
+                $stars = '';
+                for ($i = 1; $i <= 5; $i++) {
+                    $stars .= $i <= $item->rating 
+                        ? '<i class="fas fa-star text-warning"></i>' 
+                        : '<i class="far fa-star text-muted"></i>';
+                }
+                return $stars;
+            })
+            ->addColumn('service_info', function ($item) {
+                $service = $item->service;
+                if ($service) {
+                    return $service->title . ' (' . ucfirst($item->service_type) . ')';
+                }
+                return ucfirst($item->service_type);
+            })
+            ->editColumn('comment', function ($item) {
+                return $item->comment ? Str::limit($item->comment, 100) : '-';
+            })
+            ->editColumn('created_at', function ($item) {
+                return $item->created_at->format('Y-m-d H:i');
+            })
+            ->addColumn('verification_status', function ($item) {
+                return $item->is_verified 
+                    ? '<span class="badge bg-success">' . __('ratings.verified') . '</span>'
+                    : '<span class="badge bg-warning">' . __('ratings.unverified') . '</span>';
+            })
+            ->rawColumns(['stars', 'verification_status'])
+            ->make(true);
+    }
+
     private function generateCode()
     {
 

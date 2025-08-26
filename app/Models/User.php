@@ -139,5 +139,26 @@ class User extends Authenticatable
             'locked_until' => null,
         ]);
     }
+
+    // Rating relationships
+    public function customerRatings(): HasMany
+    {
+        return $this->hasMany(CustomerRating::class, 'customer_id');
+    }
+
+    public function supplierRatings(): HasMany
+    {
+        return $this->hasMany(CustomerRating::class, 'supplier_id');
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->supplierRatings()->verified()->avg('rating') ?: 0;
+    }
+
+    public function getTotalRatingsAttribute(): int
+    {
+        return $this->supplierRatings()->verified()->count();
+    }
     
 }

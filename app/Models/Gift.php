@@ -122,4 +122,20 @@ class Gift extends Model
         return round($price, 2);
     }
 
+    // Rating relationships
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(CustomerRating::class, 'service_id')->where('service_type', 'gift');
+    }
+
+    public function getAverageRatingAttribute(): float
+    {
+        return $this->ratings()->verified()->avg('rating') ?: 0;
+    }
+
+    public function getTotalRatingsAttribute(): int
+    {
+        return $this->ratings()->verified()->count();
+    }
+
 }

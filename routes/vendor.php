@@ -93,6 +93,14 @@ Route::group(['prefix' => 'v1'], function () {
 
                 return response()->apiSuccess('Player ID saved successfully');
             });
+               // Public Rating API Routes
+        Route::prefix('ratings')->group(function () {
+            Route::get('/supplier/{supplier}', [App\Http\Controllers\Api\V1\RatingController::class, 'supplierRatings']);
+            Route::get('/supplier/{supplier}/stats', [App\Http\Controllers\Api\V1\RatingController::class, 'supplierStats']);
+            Route::get('/recent', [App\Http\Controllers\Api\V1\RatingController::class, 'recentRatings']);
+            Route::get('/top-suppliers', [App\Http\Controllers\Api\V1\RatingController::class, 'topRatedSuppliers']);
+        });
+
 
             /////user/////
             Route::get('/profile', [App\Http\Controllers\Api\V1\AuthController::class, 'profile']);

@@ -91,7 +91,8 @@ class GiftController extends Controller
                 Attachment::create($attachment);
             }
         }
-        return redirect()->route('admin.gifts.index')->with('success', 'Gift updated successfully.');
+        flash(__('gifts.messages.updated'))->success();
+        return redirect()->route('admin.gifts.index');
     }
 
     public function list(Request $request): JsonResponse
