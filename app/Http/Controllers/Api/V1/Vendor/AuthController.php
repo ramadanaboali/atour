@@ -37,6 +37,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
 use App\Mail\ActivationMail;
+use App\Mail\NewSupplier;
 use App\Models\SupplierService;
 use Carbon\Carbon;
 
@@ -331,6 +332,26 @@ class AuthController extends Controller
                 $user->phone = $user->temperory_phone;
                 $user->save();
             }
+            //send email to users where has permissions suppliers.edit
+            try{
+                $supplierData = [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'code' => 'P-' . $user->code,
+                    'phone' => $user->phone,
+                ];
+                
+                $adminUsers = User::whereHas('permissions', function ($query) {
+                    $query->where('name', 'suppliers.edit');
+                })->get();
+                
+                foreach ($adminUsers as $adminUser) {
+                    Mail::to($adminUser->email)->send(new NewSupplier($adminUser->name, $adminUser->email, $supplierData));
+                }
+            }catch(Exception $e){
+                return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
             return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
         } catch (Exception $e) {
             DB::rollBack();
