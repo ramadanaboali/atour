@@ -7,18 +7,12 @@ use App\Http\Requests\CheckCodeRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ConfirmResetRequest;
 use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\VendorProfileRequest;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ResetRequest;
 use App\Http\Requests\SendCodeRequest;
 use App\Http\Requests\EmailRequest;
 use App\Http\Requests\PhoneRequest;
-use App\Http\Requests\Vendor\Setup1Request;
-use App\Http\Requests\Vendor\Setup2Request;
-use App\Http\Requests\Vendor\Setup3Request;
-use App\Http\Requests\Vendor\Setup4Request;
-use App\Http\Requests\Vendor\Setup5Request;
-use App\Http\Requests\Vendor\Setup6Request;
-use App\Http\Requests\Vendor\Setup7Request;
 use App\Mail\SendCodeResetPassword;
 use App\Models\User;
 use App\Models\Supplier;
@@ -27,19 +21,16 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Artisan;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use App\Http\Requests\VerifyRequest;
 use App\Http\Requests\NewEmailRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Mail\ActivationMail;
-use App\Mail\NewSupplier;
-use App\Models\SupplierService;
+use App\Models\PendingRegistration;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -47,390 +38,219 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
-            $query->where('email', $request->username)->orWhere('phone', $request->username);
-        })->first();
-
-        if ($user) {
-            if (!Auth::attempt(["email" => $request->username, "password" => $request->password])) {
-                if (!Auth::attempt(["phone" => $request->username, "password" => $request->password])) {
-                    return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+        try {
+            $user = $this->findVendorByUsername($request->username);
+            
+            if (!$user) {
+                return apiResponse(false, null, __('api.check_username_passowrd'), null, 422);
             }
-        } else {
-            return apiResponse(false, null, __('api.check_username_passowrd'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+
+            // Check if account is active
+            if ($user->status === 'rejected') {
+                return apiResponse(false, null, __('api.user_not_active'), null, 422);
+            }
+
+            // Attempt authentication
+            $credentials = filter_var($request->username, FILTER_VALIDATE_EMAIL) 
+                ? ['email' => $request->username, 'password' => $request->password]
+                : ['phone' => $request->username, 'password' => $request->password];
+
+            if (!Auth::attempt($credentials)) {
+                return apiResponse(false, null, __('api.check_username_passowrd'), null, 422);
+            }
+
+            // Update last login
+            $user->update(['last_login' => Carbon::now()]);
+            
+            $data = [
+                'user' => auth()->user(),
+                'access_token' => auth()->user()->createToken('auth_token')->plainTextToken
+            ];
+            
+            return apiResponse(true, $data, null, null, 200);
+            
+        } catch (Exception $e) {
+            Log::error('Vendor login error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 500);
         }
-
-        if ($user->status == 'pendding') {
-            return apiResponse(false, null, __('api.user_not_active'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        $user->last_login = Carbon::now();
-        $user->save();
-        $dataR['user'] = auth()->user();
-        $dataR['user_permissions'] = auth()->user()->getAllPermissions();
-        $dataR['access_token'] = auth()->user()->createToken('auth_token')->plainTextToken;
-        return $this->successResponse($dataR, Response::HTTP_CREATED);
-
     }
 
     public function sendOtp(NewEmailRequest $request)
     {
         try {
-            $MsgID = rand(100000, 999999);
-            $data = [
-                'temperory_email' => $request->email,
-                'reset_code' => $MsgID,
-                'status' => 'pendding',
-                'active' => false,
-                'type' => User::TYPE_SUPPLIER,
-            ];
-            $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
-            // Mail::to($request->email)->send(new SendCodeResetPassword($request->email, $MsgID));
-
-            Mail::to($request->email)->send(new ActivationMail($user->name, $MsgID));
-
-            return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
+            $otp = rand(100000, 999999);
+            PendingRegistration::updateOrCreate(
+                ['email' => $request->email],
+                [
+                        'otp_code' => $otp,
+                        'expires_at' => now()->addMinutes(10),
+                        'is_verified' => false,
+                    ]
+            );
+            Mail::to($request->email)->send(new ActivationMail($otp));
+            return apiResponse(true, [], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, $e->getMessage(), null, 400);
         }
     }
     public function verifyOtp(VerifyRequest $request)
     {
-
         try {
-            $user = User::where('temperory_email', $request->email)->first();
-            if (!$user) {
-                return apiResponse(false, null, __('api.not_found'), null, 404);
+            $pending = PendingRegistration::where('email', $request->email)->first();
+            if (!$pending || $pending->otp_code !== $request->code) {
+                return apiResponse(false, null, __('api.invalid_otp'), null, 400);
             }
-            if ($user->reset_code == $request->code) {
-                $user->reset_code = null;
-                $user->code = $this->generateCode();
-                $user->password = Hash::make($request->code);
-                $user->save();
-                return apiResponse(true, $user, __('api.code_success'), null, 200);
+            if ($pending->expires_at < now()) {
+                return apiResponse(false, null, __('api.otp_expired'), null, 400);
             }
-            return apiResponse(false, null, __('api.code_error'), null, 201);
+            $pending->update(['is_verified' => true]);
+            return apiResponse(true, null, __('api.verification_code_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, $e->getMessage(), null, 400);
         }
 
     }
+    /**
+     * Generate unique vendor code
+     */
     private function generateCode()
     {
-
-        $code = 2500001;
-        $user = User::where('type', User::TYPE_SUPPLIER)->whereNotNull('code')->orderby('id', 'desc')->first();
-        if ($user && $user->code != null) {
-            return intval($user->code) + 1;
-        }
-        return $code;
+        $baseCode = 2500001;
+        $lastUser = User::where('type', User::TYPE_SUPPLIER)
+            ->whereNotNull('code')
+            ->orderBy('id', 'desc')
+            ->first();
+            
+        return $lastUser && $lastUser->code ? intval($lastUser->code) + 1 : $baseCode;
     }
-    public function setup1(Setup1Request $request)
+    
+    /**
+     * Generate 6-digit reset code
+     */
+    private function generateResetCode()
     {
-        try {
-            Log::info('setup1');
-
-            DB::beginTransaction();
-            $userInput = [
-                'name' => $request->name,
-                'temperory_phone' => $request->phone,
-                'address' => $request->address,
-                'national_id' => $request->national_id,
-                'active' => false,
-                'status' => 'pendding',
-                'type' => User::TYPE_SUPPLIER,
-            ];
-            $user = User::with('supplier')->where('temperory_email', $request->email)->first();
-            if ($request->has('cover')) {
-                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('cover')->getClientOriginalExtension();
-                $request->file('cover')->move(public_path('storage/users'), $fileNames);
-                $userInput['image'] = $fileNames;
-            }
-            $user->update($userInput);
-
-            $supplier = Supplier::updateOrCreate(['user_id' => $user->id], ['nationality' => $request->nationality,'postal_code' => $request->postal_code]);
-
-            $role = Role::firstOrCreate(['name' => 'supplier'], ['name' => 'supplier','model_type' => 'supplier','can_edit' => 0]);
-
-            if ($user && $role) {
-                $user->syncRoles($role->id);
-                $role->syncPermissions(Permission::whereIn('model_type', ['supplier','general'])->get());
-                Artisan::call('cache:clear');
-            }
-            DB::commit();
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
+        return rand(100000, 999999);
     }
-
-    public function setup2(Setup2Request $request)
+    
+    /**
+     * Find vendor by username (email or phone)
+     */
+    private function findVendorByUsername($username)
     {
-        try {
-            Log::info('setup2');
-
-            $inputs = [
-                'user_id' => $request->user_id,
-                'general_name' => $request->general_name,
-                'description' => $request->description,
-                'url' => $request->url,
-
-
-            ];
-            DB::beginTransaction();
-            if ($request->has('profile')) {
-                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('profile')->getClientOriginalExtension();
-                $request->file('profile')->move(public_path('storage/users'), $fileNames);
-                $inputs['profile'] = $fileNames;
-            }
-            $supplier = Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
-            DB::commit();
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return User::where('type', User::TYPE_SUPPLIER)
+            ->where(function ($query) use ($username) {
+                $query->where('email', $username)->orWhere('phone', $username);
+            })
+            ->first();
     }
-
-    public function setup3(Setup3Request $request)
+    public function register(RegisterRequest $request)
     {
-        try {
-            Log::info('setup3');
-
-            $inputs = [
-                'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
-                'streat' => $request->streat,
-            ];
-            if ($request->has('licence_image')) {
-                $fileNames = time() . rand(0, 999999999) . '.' . $request->file('licence_image')->getClientOriginalExtension();
-                $request->file('licence_image')->move(public_path('storage/users'), $fileNames);
-                $inputs['licence_image'] = $fileNames;
-            }
-            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
-
-            if ($user) {
-                $user_data = [
-                    'banck_name' => $request->bank_name,
-                    'banck_account' => $request->bank_account,
-                    'bank_iban' => $request->bank_iban,
-                    'tax_number' => $request->tax_number,
-                    'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
-                ];
-                $user->update($user_data);
-
-            }
-
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+   
+        $pending = PendingRegistration::where('email', $request->email)
+               ->where('is_verified', true)
+               ->first();
+        if (!$pending) {
+            return apiResponse(false, null, __('api.email_not_verified'), null, 400);
         }
-    }
-
-    public function setup4(Setup4Request $request)
-    {
-        try {
-            Log::info('setup4');
-
-            $inputs = [
-                'type' => $request->type,
-                'user_id' => $request->user_id
-            ];
-            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
-            Log::info('user'.json_encode($user));
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-    public function setup5(Setup5Request $request)
-    {
-        try {
-            Log::info('user_id'.json_encode($request->all()));
-            Log::info('setup5');
-
-            $supplier = Supplier::where('user_id', $request->user_id)->first();
-            if ($supplier) {
-                foreach ($request->sub_category_id as $sub_category_id) {
-                    SupplierService::create([
-                        'supplier_id' => $supplier->id,
-                        'sub_category_id' => $sub_category_id
-                    ]);
-                }
-            }
-
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
-
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-    public function setup6(Setup6Request $request)
-    {
-        try {
-            Log::info('setup6');
-            Log::info('user_id'.json_encode($request->all()));
-
-            $inputs = [
-                         'nationality' => $request->nationality,
-                         'job' => $request->job,
-                         'experience_info' => $request->experience_info,
-                     ];
-
-            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->where('id', $request->user_id)->first();
-            Log::info(json_encode($user));
-            if ($user) {
-                $userinputs = [
-                             'name' => $request->name ?? $user->name,
-                             'email' =>  $user->temperory_email,
-                             'phone' =>  $user->temperory_phone,
-                             'address' => $request->address ?? $user->address,
-                             'city_id' => $request->city_id ?? $user->city_id,
-                         ];
-
-                $image = $request->file('image');
-                if ($image) {
-                    $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                    $request->image->move(public_path('storage/users'), $fileName);
-                    $userinputs['image'] = $fileName;
-                }
-
-                $user->update($userinputs);
-            }
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-    public function setup7(Setup7Request $request)
-    {
-        try {
-            Log::info('setup7');
-
-            $inputs = [
-                'languages' => json_encode($request->languages),
-            ];
-            Supplier::updateOrCreate(['user_id' => $request->user_id], $inputs);
-            $user = User::with('supplier')->find($request->user_id);
-            if ($user) {
-                $user->email = $user->temperory_email;
-                $user->phone = $user->temperory_phone;
-                $user->save();
-            }
-            //send email to users where has permissions suppliers.edit
-            try{
-                $supplierData = [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'code' => 'P-' . $user->code,
-                    'phone' => $user->phone,
-                ];
-                
-                $adminUsers = User::whereHas('permissions', function ($query) {
-                    $query->where('name', 'suppliers.edit');
-                })->get();
-                
-                foreach ($adminUsers as $adminUser) {
-                    Mail::to($adminUser->email)->send(new NewSupplier($adminUser->name, $adminUser->email, $supplierData));
-                }
-            }catch(Exception $e){
-                return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
-
-            return apiResponse(true, $user, __('api.register_success'), null, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'code' => $this->generateCode(),
+            'status' => 'pendding',
+            'active' => 0,
+            'type' => User::TYPE_SUPPLIER
+        ]);
+        $pending->delete();
+        return apiResponse(true, $user, __('api.register_success'), null, 200);
     }
 
     public function sendCode(SendCodeRequest $request)
     {
         try {
             $user = User::findOrFail(auth()->user()->id);
-            $MsgID = rand(100000, 999999);
-            $user->update(['reset_code' => $MsgID]);
-            if ($request->has('username')) {
-                if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
-                    Mail::to($request->username)->send(new SendCodeResetPassword($request->username, $MsgID));
-                } else {
-                    Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
-                }
-            }
-            return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
+            $resetCode = $this->generateResetCode();
+            $user->update(['reset_code' => $resetCode]);
+            
+            $email = $request->has('username') && filter_var($request->username, FILTER_VALIDATE_EMAIL) 
+                ? $request->username 
+                : $user->email;
+                
+            Mail::to($email)->send(new SendCodeResetPassword($email, $resetCode));
+            
+            // Don't expose the actual code in response
+            return apiResponse(true, null, __('api.reset_password_code_send'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Send code error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
-
     }
     public function resetPassword(ResetRequest $request)
     {
         try {
-
-            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
-                $query->where('email', $request->username)->orWhere('phone', $request->username);
-            })->first();
+            $user = $this->findVendorByUsername($request->username);
+            
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
 
-            $MsgID = rand(100000, 999999);
-            $user->update(['reset_code' => $MsgID]);
-            Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $MsgID));
-            return apiResponse(true, [$MsgID], __('api.reset_password_code_send'), null, 200);
+            $resetCode = $this->generateResetCode();
+            $user->update(['reset_code' => $resetCode]);
+            
+            Mail::to($user->email)->send(new SendCodeResetPassword($user->email, $resetCode));
+            
+            // Don't expose the actual code in response
+            return apiResponse(true, null, __('api.reset_password_code_send'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Reset password error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
-
     }
     public function checkCode(CheckCodeRequest $request)
     {
         try {
-            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
-                $query->where('email', $request->username)->orWhere('phone', $request->username);
-            })->first();
+            $user = $this->findVendorByUsername($request->username);
+            
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            if ($user->reset_code == $request->code) {
-                $user->reset_code = null;
-                $user->save();
+            
+            if ($user->reset_code && $user->reset_code == $request->code) {
+                // Don't clear the code here, save it for password reset confirmation
                 return apiResponse(true, null, __('api.code_success'), null, 200);
             }
-            return apiResponse(false, null, __('api.code_error'), null, 201);
+            
+            return apiResponse(false, null, __('api.code_error'), null, 422);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Check code error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
     }
 
     public function confirmReset(ConfirmResetRequest $request)
     {
         try {
-            $user = User::where('type', User::TYPE_SUPPLIER)->where(function ($query) use ($request) {
-                $query->where('email', $request->username)->orWhere('phone', $request->username);
-            })->first();
+            $user = $this->findVendorByUsername($request->username);
+            
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }
-            $user->update(['password' => Hash::make($request->password),'reset_code' => null]);
+            
+            // Verify the reset code if provided
+            if ($request->has('code') && $user->reset_code !== $request->code) {
+                return apiResponse(false, null, __('api.code_error'), null, 422);
+            }
+            
+            $user->update([
+                'password' => Hash::make($request->password),
+                'reset_code' => null
+            ]);
+            
             return apiResponse(true, null, __('api.update_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Confirm reset error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
     }
     public function changePassword(ChangePasswordRequest $request)
@@ -438,123 +258,171 @@ class AuthController extends Controller
         try {
             $user = auth()->user();
             if (!Hash::check($request->current_password, $user->password)) {
-                return apiResponse(false, null, __('api.current_password_invalid'), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+                return apiResponse(false, null, __('api.current_password_invalid'), null, 422);
             }
             $user->update(['password' => Hash::make($request->password)]);
             return apiResponse(true, null, __('api.update_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, $e->getMessage(), null, 422);
         }
     }
 
 
     public function profile(Request $request)
     {
-
         $user = auth()->user();
-        // $data = new UserResource($user);
         return apiResponse(true, $user, null, null, 200);
 
     }
 
-    public function updateProfile(ProfileRequest $request)
+    public function updateProfile(VendorProfileRequest $request)
     {
         try {
-            $currentUser = User::findOrFail(auth()->user()->id);
-            $inputs = [];
-
-            if ($request->birthdate) {
-                $inputs['birthdate'] = $request->birthdate;
+            DB::beginTransaction();
+            
+            $user = User::findOrFail(auth()->user()->id);
+            $supplier = $user->supplier;
+            
+            // Prepare user table updates
+            $userInputs = [];
+            $userFields = [
+                'name', 'phone', 'email', 'birthdate', 'address', 'nationality',
+                'city_id', 'country_id', 'bank_account', 'bank_name', 'bank_iban', 'tax_number'
+            ];
+            
+            foreach ($userFields as $field) {
+                if ($request->filled($field)) {
+                    $userInputs[$field] = $request->input($field);
+                }
             }
 
-            if ($request->phone) {
-                $inputs['phone'] = $request->phone;
-            }
-
-
-            if ($request->name) {
-                $inputs['name'] = $request->name;
-            }
-            if ($request->nationality) {
-                $inputs['nationality'] = $request->nationality;
-            }
-
-            if ($request->password) {
-                $inputs['password'] = Hash::make($request->password);
-            }
-
-            $image = $request->file('image');
-            if ($image) {
+            // Handle image upload for user
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
                 $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
-                $request->image->move(public_path('storage/users'), $fileName);
-                $inputs['image'] = $fileName;
+                $image->move(public_path('storage/users'), $fileName);
+                $userInputs['image'] = $fileName;
             }
 
-            if (count($inputs) > 0) {
-                $currentUser->update($inputs);
+            // Update user table
+            if (!empty($userInputs)) {
+                $userInputs['updated_by'] = auth()->id();
+                $user->update($userInputs);
             }
 
-            return apiResponse(true, null, __('api.update_success'), null, 200);
+            // Prepare supplier table updates
+            $supplierInputs = [];
+            $supplierFields = [
+                'tour_guid', 'profission_guide', 'type', 'streat', 'postal_code',
+                'description', 'short_description', 'url', 'job', 'experience_info',
+                'languages', 'banck_name', 'banck_number', 'place_summary',
+                'place_content', 'expectations', 'general_name', 'national_id', 'rerequest_reason'
+            ];
+            
+            foreach ($supplierFields as $field) {
+                if ($request->filled($field)) {
+                    $supplierInputs[$field] = $request->input($field);
+                }
+            }
+            
+            // Handle supplier nationality separately to avoid conflict with user nationality
+            if ($request->filled('supplier_nationality')) {
+                $supplierInputs['nationality'] = $request->input('supplier_nationality');
+            }
+
+            // Update or create supplier record
+            if (!empty($supplierInputs)) {
+                $supplierInputs['updated_by'] = auth()->id();
+                
+                if ($supplier) {
+                    $supplier->update($supplierInputs);
+                } else {
+                    $supplierInputs['user_id'] = $user->id;
+                    $supplierInputs['created_by'] = auth()->id();
+                    Supplier::create($supplierInputs);
+                }
+            }
+
+            DB::commit();
+            
+            // Return updated user with supplier relationship
+            $updatedUser = $user->fresh(['supplier']);
+            
+            return apiResponse(true, $updatedUser, __('api.update_success'), null, 200);
 
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            DB::rollBack();
+            Log::error('Vendor profile update error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
     }
 
     public function updateEmail(EmailRequest $request)
     {
         try {
-            if (auth()->user()->reset_code != $request->code) {
-                return apiResponse(true, null, __('api.code_success'), null, 200);
+            $user = auth()->user();
+            
+            // Fix: Correct logic for code validation
+            if ($user->reset_code !== $request->code) {
+                return apiResponse(false, null, __('api.code_error'), null, 422);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
-            $inputs = [
+            
+            $user->update([
                 'email' => $request->email,
                 'reset_code' => null
-            ];
-            $data = $currentUser->update($inputs);
-            if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
-            } else {
-                return apiResponse(false, null, __('api.cant_update'), null, 401);
-            }
+            ]);
+            
+            return apiResponse(true, null, __('api.update_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Update email error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
     }
     public function updatePhone(PhoneRequest $request)
     {
         try {
-            if (auth()->user()->reset_code != $request->code) {
-                return apiResponse(true, null, __('api.code_success'), null, 200);
+            $user = auth()->user();
+            
+            // Fix: Correct logic for code validation
+            if ($user->reset_code !== $request->code) {
+                return apiResponse(false, null, __('api.code_error'), null, 422);
             }
-            $currentUser = User::findOrFail(auth()->user()->id);
-            $inputs = [
+            
+            $user->update([
                 'phone' => $request->phone,
                 'reset_code' => null
-            ];
-            $data = $currentUser->update($inputs);
-            if ($data) {
-                return apiResponse(true, null, __('api.update_success'), null, 200);
-            } else {
-                return apiResponse(false, null, __('api.cant_update'), null, 401);
-            }
+            ]);
+            
+            return apiResponse(true, null, __('api.update_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            Log::error('Update phone error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
         }
     }
 
     public function logout(Request $request)
     {
-        $accessToken = Auth::user()->token();
-        DB::table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id)
-            ->update([
-                'revoked' => true
-            ]);
-
-        $accessToken->revoke();
-        $data['message'] = 'Logout successfully';
-        return $this->successResponse($data, Response::HTTP_CREATED);
+        try {
+            // For Sanctum tokens
+            if (auth()->user()->currentAccessToken()) {
+                auth()->user()->currentAccessToken()->delete();
+            }
+            
+            // For Passport tokens (if still using)
+            if (method_exists(auth()->user(), 'token')) {
+                $accessToken = auth()->user()->token();
+                if ($accessToken) {
+                    DB::table('oauth_refresh_tokens')
+                        ->where('access_token_id', $accessToken->id)
+                        ->update(['revoked' => true]);
+                    $accessToken->revoke();
+                }
+            }
+            
+            return apiResponse(true, null, __('api.logout_success'), null, 200);
+        } catch (Exception $e) {
+            Log::error('Logout error: ' . $e->getMessage());
+            return apiResponse(false, null, __('api.validation_error'), null, 422);
+        }
     }
 }

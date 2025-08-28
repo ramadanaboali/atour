@@ -100,10 +100,6 @@ class CountryController extends Controller
                 $item->translations()->createMany($request->translations);
             }
 
-            foreach ($request->translations as $tr) {
-                $item->translations()->create($tr);
-            }
-
             return $item;
         }
         return null;

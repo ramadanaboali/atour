@@ -477,8 +477,8 @@ class SupplierController extends Controller
             'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
             'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
             'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
-            'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
-            'bank_iban', 'tax_number', 'temperory_phone'
+            'ban_vendor', 'pay_on_deliver', 'status', 'bank_account', 'bank_name',
+            'bank_iban', 'tax_number'
         ]);
 
         // Handle password
@@ -504,10 +504,7 @@ class SupplierController extends Controller
 
         // Supplier fields
         $supplierData = $request->only([
-            'tour_guid', 'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat',
-            'postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url', 'profission_guide',
-            'job', 'experience_info', 'languages', 'banck_name', 'banck_number', 'tax_number', 'place_summary',
-            'place_content', 'expectations', 'general_name', 'nationality'
+           'rerequest_reason', 'licence_image', 'profile', 'type', 'country_id', 'city_id', 'streat','postal_code', 'national_id', 'user_id', 'description', 'short_description', 'url','job', 'experience_info',  'place_summary','place_content', 'expectations', 'general_name'
         ]);
         $supplierData['user_id'] = $user->id;
 

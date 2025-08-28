@@ -57,29 +57,24 @@ class CityController extends Controller
         }
         return to_route($this->route . '.index');
     }
-    public function select(Request $request): JsonResponse|string
+     public function select(Request $request): JsonResponse|string
     {
-        $data = City::distinct()
-                 ->where('active', true)
-                 ->where(function ($query) use ($request) {
-                     if ($request->filled('q')) {
-                         if (App::isLocale('en')) {
-                             return $query->where('title_en', 'like', '%'.$request->q.'%');
-                         } else {
-                             return $query->where('title_ar', 'like', '%'.$request->q.'%');
-                         }
-                     }
-                 })->select('id', 'title_en', 'title_ar')->get();
-
-        if ($request->filled('pure_select')) {
-            $html = '<option value="">'. __('category.select') .'</option>';
-            foreach ($data as $row) {
-                $html .= '<option value="'.$row->id.'">'.$row->text.'</option>';
+        $cities = City::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where(function($query) use ($request) {
+            if ($request->filled('country_id')) {
+                $query->where('country_id', $request->country_id);
             }
-            return $html;
-        }
+        })->select('cities.id')->get();
+        $data = $cities->map(function ($city) {
+            return [
+                'id' => $city->id,
+                'text' => $city->translations->first()->title ?? '',
+            ];
+        });
         return response()->json($data);
     }
+
 
 
     public function update(CityRequest $request, $id): RedirectResponse

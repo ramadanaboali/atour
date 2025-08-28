@@ -90,6 +90,11 @@
                         <span class="error">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="mb-1 col-md-4 @error('general_name') is-invalid @enderror">
+                        <label class="form-label" for="general_name">{{ __('suppliers.general_name') }}</label>
+                        <input type="text" name="general_name" id="general_name" class="form-control" value="{{ $item->supplier?->general_name ?? old('general_name') }}">
+                        @error('general_name')<span class="error">{{ $message }}</span>@enderror
+                    </div>
 
 
                     <div class="mb-1 col-md-4  @error('password') is-invalid @enderror">
@@ -107,20 +112,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-1 col-md-4 @error('tour_guid') is-invalid @enderror">
-                        <label class="form-label" for="tour_guid">{{ __('suppliers.tour_guid') }}</label>
-                        <input type="text" name="tour_guid" id="tour_guid" class="form-control" value="{{ $item->supplier?->tour_guid ?? old('tour_guid') }}">
-                        @error('tour_guid')<span class="error">{{ $message }}</span>@enderror
-                    </div>
-
-                    <div class="mb-1 col-md-4 @error('rerequest_reason') is-invalid @enderror">
-                        <label class="form-label" for="rerequest_reason">{{ __('suppliers.rerequest_reason') }}</label>
-                        <input type="text" name="rerequest_reason" id="rerequest_reason" class="form-control" value="{{ $item->supplier?->rerequest_reason ?? old('rerequest_reason') }}">
-                        @error('rerequest_reason')<span class="error">{{ $message }}</span>@enderror
-                    </div>
-
-
-
+                   
 
                     <div class="mb-1 col-md-4 @error('country_id') is-invalid @enderror">
                         <label class="form-label" for="country_id">{{ __('suppliers.country') }}</label>
@@ -183,11 +175,7 @@
                         @error('url')<span class="error">{{ $message }}</span>@enderror
                     </div>
 
-                    <div class="mb-1 col-md-4 @error('profission_guide') is-invalid @enderror">
-                        <label class="form-label" for="profission_guide">{{ __('suppliers.profission_guide') }}</label>
-                        <input type="text" name="profission_guide" id="profission_guide" class="form-control" value="{{ $item->supplier?->profission_guide ?? old('profission_guide') }}">
-                        @error('profission_guide')<span class="error">{{ $message }}</span>@enderror
-                    </div>
+                  
 
                     <div class="mb-1 col-md-4 @error('job') is-invalid @enderror">
                         <label class="form-label" for="job">{{ __('suppliers.job') }}</label>
@@ -195,13 +183,6 @@
                         @error('job')<span class="error">{{ $message }}</span>@enderror
                     </div>
 
-
-
-                    <div class="mb-1 col-md-4 @error('languages') is-invalid @enderror">
-                        <label class="form-label" for="languages">{{ __('suppliers.languages') }}</label>
-                        <input type="text" name="languages[]" id="languages" class="form-control" value="{{ $item->supplier?->languages ?? old('languages') }}">
-                        @error('languages')<span class="error">{{ $message }}</span>@enderror
-                    </div>
 
                     <div class="mb-1 col-md-4 @error('banck_name') is-invalid @enderror">
                         <label class="form-label" for="banck_name">{{ __('suppliers.banck_name') }}</label>
@@ -249,14 +230,13 @@
                         <textarea name="description" id="description" class="form-control">{{ $item->supplier?->description ?? old('description') }}</textarea>
                         @error('description')<span class="error">{{ $message }}</span>@enderror
                     </div>
-
-
-                    <div class="mb-1 col-md-4 @error('general_name') is-invalid @enderror">
-                        <label class="form-label" for="general_name">{{ __('suppliers.general_name') }}</label>
-                        <input type="text" name="general_name" id="general_name" class="form-control" value="{{ $item->supplier?->general_name ?? old('general_name') }}">
-                        @error('general_name')<span class="error">{{ $message }}</span>@enderror
+                    <div class="mb-1 col-md-4 @error('rerequest_reason') is-invalid @enderror">
+                        <label class="form-label" for="rerequest_reason">{{ __('suppliers.rerequest_reason') }}</label>
+                        <textarea name="rerequest_reason" id="rerequest_reason" class="form-control">{{ $item->supplier?->rerequest_reason ?? old('rerequest_reason') }}</textarea>
+                        @error('rerequest_reason')<span class="error">{{ $message }}</span>@enderror
                     </div>
-                    <div class="mb-1 col-md-6 @error('cover') is-invalid @enderror">
+
+                    <div class="mb-1 col-md-4 @error('cover') is-invalid @enderror">
                         <label class="form-label" for="cover">{{ __('suppliers.file') }}</label>
                         <input type="file" class="form-control input" name="cover" id="cover">
                         @error('cover')

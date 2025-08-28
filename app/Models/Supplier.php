@@ -19,8 +19,6 @@ class Supplier extends Model
         'licence_image',
         'profile',
         'type',
-        'country_id',
-        'city_id',
         'streat',
         'postal_code',
         'national_id',
@@ -32,8 +30,8 @@ class Supplier extends Model
         'job',
         'experience_info',
         'languages',
-        'banck_name',
-        'banck_number',
+        'bank_name',
+        'bank_number',
         'tax_number',
         'place_summary',
         'place_content',
@@ -41,21 +39,15 @@ class Supplier extends Model
         'general_name',
         'nationality',
         'created_by',
-        'updated_by'];
+        'updated_by'
+    ];
 
     public function user(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
   
-    public function country(): ?BelongsTo
-    {
-        return $this->belongsTo(Country::class, 'country_id');
-    }
-    public function city(): ?BelongsTo
-    {
-        return $this->belongsTo(City::class, 'city_id');
-    }
+  
     public function createdBy(): ?BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

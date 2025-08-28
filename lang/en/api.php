@@ -50,5 +50,28 @@ return [
     'order_accepted' => 'Your order has been accepted',
     'order_confirmed_save_code' => 'Your order has been successfully accepted. Please save the code :code to confirm the order',
     'order_confirmed_success' => 'Order confirmed successfully',
-    'vendor_not_active' => 'The service provider cannot receive orders at the moment'
+    'vendor_not_active' => 'The service provider cannot receive orders at the moment',
+    'reset_password_code_send' => 'Password reset code has been sent',
+    'current_password_invalid' => 'Current password is incorrect',
+    'logout_success' => 'Logged out successfully',
+    
+    // Profile validation messages
+    'name_min_length' => 'Name must be at least 2 characters',
+    'phone_exists' => 'This phone number is already registered',
+    'email_exists' => 'This email is already registered',
+    'invalid_email' => 'Please enter a valid email address',
+    'invalid_image' => 'Please upload a valid image file',
+    'image_format' => 'Image must be in PNG, JPG, or JPEG format',
+    'image_size' => 'Image size must not exceed 2MB',
+    'invalid_date' => 'Please enter a valid date',
+    'birthdate_future' => 'Birthdate cannot be in the future',
+    'city_not_found' => 'Selected city does not exist',
+    'country_not_found' => 'Selected country does not exist',
+    'invalid_supplier_type' => 'Supplier type must be either company or individual',
+    'invalid_url' => 'Please enter a valid URL',
+    'invalid_otp' => 'Invalid verification code',
+    'otp_expired' => 'Verification code has expired',
+    'verification_code_success' => 'Email verified successfully',
+    'email_not_verified' => 'Please verify your email first',
+    'register_success' => 'Registration completed successfully'
 ];

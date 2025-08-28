@@ -54,6 +54,28 @@ return [
     'order_accepted' => 'تم قبول طلبك',
     'order_confirmed_save_code' => 'تم قبول طلبك بنجاح يرجى الاحتفاظ بالكود :code لتأكيد الطلب',
     'order_confirmed_success' => 'تم تأكيد الاستلام',
-    'vendor_not_active' => 'مقدم الخدمة لا يمكنه تلقى طلبات الان'
-
+    'vendor_not_active' => 'مقدم الخدمة لا يمكنه تلقى طلبات الان',
+    'invalid_otp' => 'رمز التحقق غير صحيح',
+    'otp_expired' => 'رمز التحقق منتهي الصلاحية',
+    'verification_code_success' => 'تم التحقق من الرمز بنجاح',
+    'register_success'=>'تم التسجيل بنجاح',
+    'email_not_verified'=>'البريد الإلكتروني غير مفعل',
+    'reset_password_code_send' => 'تم إرسال رمز إعادة تعيين كلمة المرور',
+    'current_password_invalid' => 'كلمة المرور الحالية غير صحيحة',
+    'logout_success' => 'تم تسجيل الخروج بنجاح',
+    
+    // رسائل التحقق من الملف الشخصي
+    'name_min_length' => 'يجب أن يكون الاسم على الأقل حرفين',
+    'phone_exists' => 'رقم الهاتف مسجل مسبقاً',
+    'email_exists' => 'البريد الإلكتروني مسجل مسبقاً',
+    'invalid_email' => 'يرجى إدخال بريد إلكتروني صحيح',
+    'invalid_image' => 'يرجى رفع ملف صورة صحيح',
+    'image_format' => 'يجب أن تكون الصورة بصيغة PNG أو JPG أو JPEG',
+    'image_size' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت',
+    'invalid_date' => 'يرجى إدخال تاريخ صحيح',
+    'birthdate_future' => 'لا يمكن أن يكون تاريخ الميلاد في المستقبل',
+    'city_not_found' => 'المدينة المحددة غير موجودة',
+    'country_not_found' => 'البلد المحدد غير موجود',
+    'invalid_supplier_type' => 'نوع المورد يجب أن يكون شركة أو فرد',
+    'invalid_url' => 'يرجى إدخال رابط صحيح'
 ];

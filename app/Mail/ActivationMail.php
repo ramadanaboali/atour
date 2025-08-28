@@ -11,12 +11,10 @@ class ActivationMail extends Mailable
     use Queueable;
     use SerializesModels;
 
-    public $userName;
     public $activationCode;
 
-    public function __construct($userName, $activationCode)
+    public function __construct($activationCode)
     {
-        $this->userName = $userName;
         $this->activationCode = $activationCode;
     }
 

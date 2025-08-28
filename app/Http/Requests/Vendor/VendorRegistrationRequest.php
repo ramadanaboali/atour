@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
 
-class Setup1Request extends FormRequest
+class VendorRegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,6 @@ class Setup1Request extends FormRequest
         return [
             'name' => 'required|string|min:2',
             'nationality' => 'required|string|min:2',
-            'address' => 'required|string|min:2',
-            'national_id' => 'required|string|min:2',
             'email' => 'required|email|exists:users,temperory_email',
             'phone' => 'required|unique:users,temperory_phone',
         ];

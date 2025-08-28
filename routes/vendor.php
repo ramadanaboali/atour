@@ -48,7 +48,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('reset-password', [AuthController::class, 'resetPassword']);
         Route::post('confirm-reset', [AuthController::class, 'confirmReset']);
         Route::post('check-code', [AuthController::class, 'checkCode']);
-        Route::post('register', [App\Http\Controllers\Api\V1\AuthController::class, 'register']);
+        Route::post('/register', [AuthController::class, 'register']);
         Route::post('verify', [App\Http\Controllers\Api\V1\AuthController::class, 'verify']);
         Route::get('privacy', [App\Http\Controllers\Api\V1\SettingController::class, 'privacy']);
         Route::get('about', [App\Http\Controllers\Api\V1\SettingController::class, 'about']);
@@ -103,10 +103,10 @@ Route::group(['prefix' => 'v1'], function () {
 
 
             /////user/////
-            Route::get('/profile', [App\Http\Controllers\Api\V1\AuthController::class, 'profile']);
-            Route::post('update-profile', [App\Http\Controllers\Api\V1\AuthController::class, 'updateProfile']);
+            Route::get('/profile', [AuthController::class, 'profile']);
+            Route::post('update-profile', [AuthController::class, 'updateProfile']);
             Route::post('update-image', [App\Http\Controllers\Api\V1\AuthController::class, 'updateimage']);
-            Route::post('logout', [App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
+            Route::post('logout', [AuthController::class, 'logout']);
             Route::delete('delete-account', [App\Http\Controllers\Api\V1\AuthController::class, 'deleteAccount']);
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
 
@@ -155,6 +155,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
             Route::get('notifications-read-all', [VendorController::class, 'readAllNotification']);
             Route::post('change-password', [AuthController::class, 'changePassword']);
+            Route::post('/send-code', [AuthController::class, 'sendCode']);
+            Route::post('/update-email', [AuthController::class, 'updateEmail']);
+            Route::post('/update-phone', [AuthController::class, 'updatePhone']);
 
         });
     });
