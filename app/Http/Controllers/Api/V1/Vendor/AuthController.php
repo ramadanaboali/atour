@@ -286,8 +286,7 @@ class AuthController extends Controller
             // Prepare user table updates
             $userInputs = [];
             $userFields = [
-                'name', 'phone', 'email', 'birthdate', 'address', 'nationality',
-                'city_id', 'country_id', 'bank_account', 'bank_name', 'bank_iban', 'tax_number'
+                'name', 'phone', 'email', 'birthdate', 'address', 'nationality','city_id', 'country_id'
             ];
             
             foreach ($userFields as $field) {
@@ -303,35 +302,57 @@ class AuthController extends Controller
                 $image->move(public_path('storage/users'), $fileName);
                 $userInputs['image'] = $fileName;
             }
-
+            
             // Update user table
             if (!empty($userInputs)) {
                 $userInputs['updated_by'] = auth()->id();
                 $user->update($userInputs);
             }
-
+            
             // Prepare supplier table updates
             $supplierInputs = [];
             $supplierFields = [
-                'tour_guid', 'profission_guide', 'type', 'streat', 'postal_code',
-                'description', 'short_description', 'url', 'job', 'experience_info',
-                'languages', 'banck_name', 'banck_number', 'place_summary',
-                'place_content', 'expectations', 'general_name', 'national_id', 'rerequest_reason'
+                'type', 'streat', 'postal_code',
+                'description', 'short_description', 'url', 'job',
+                'banck_name', 'banck_account','banck_iban', 'general_name', 'national_id','can_pay_later','can_cancel','pay_on_deliver','tax_number','rerequest_reason'
             ];
-            
+  
+            if ($request->hasFile('licence_file')) {
+                $licence_file = $request->file('licence_file');
+                $fileName = time() . rand(0, 999999999) . '.' . $licence_file->getClientOriginalExtension();
+                $licence_file->move(public_path('storage/users'), $fileName);
+                $supplierInputs['licence_file'] = $fileName;
+            }
+            if ($request->hasFile('tax_file')) {
+                $tax_file = $request->file('tax_file');
+                $fileName = time() . rand(0, 999999999) . '.' . $tax_file->getClientOriginalExtension();
+                $tax_file->move(public_path('storage/users'), $fileName);
+                $supplierInputs['tax_file'] = $fileName;
+            }
+            if ($request->hasFile('commercial_register')) {
+                $commercial_register = $request->file('commercial_register');
+                $fileName = time() . rand(0, 999999999) . '.' . $commercial_register->getClientOriginalExtension();
+                $commercial_register->move(public_path('storage/users'), $fileName);
+                $supplierInputs['commercial_register'] = $fileName;
+            }
+            if ($request->hasFile('other_files')) {
+                $other_files = $request->file('other_files');
+                $fileName = time() . rand(0, 999999999) . '.' . $other_files->getClientOriginalExtension();
+                $other_files->move(public_path('storage/users'), $fileName);
+                $supplierInputs['other_files'] = $fileName;
+            }
+            if ($request->hasFile('national_id_file')) {
+                $national_id_file = $request->file('national_id_file');
+                $fileName = time() . rand(0, 999999999) . '.' . $national_id_file->getClientOriginalExtension();
+                $national_id_file->move(public_path('storage/users'), $fileName);
+                $supplierInputs['national_id_file'] = $fileName;
+            }
             foreach ($supplierFields as $field) {
                 if ($request->filled($field)) {
                     $supplierInputs[$field] = $request->input($field);
                 }
-            }
-            
-            // Handle supplier nationality separately to avoid conflict with user nationality
-            if ($request->filled('supplier_nationality')) {
-                $supplierInputs['nationality'] = $request->input('supplier_nationality');
-            }
-
-            // Update or create supplier record
-            if (!empty($supplierInputs)) {
+            }        
+         if (!empty($supplierInputs)) {
                 $supplierInputs['updated_by'] = auth()->id();
                 
                 if ($supplier) {

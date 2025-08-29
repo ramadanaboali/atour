@@ -77,5 +77,6 @@ return [
     'city_not_found' => 'المدينة المحددة غير موجودة',
     'country_not_found' => 'البلد المحدد غير موجود',
     'invalid_supplier_type' => 'نوع المورد يجب أن يكون شركة أو فرد',
-    'invalid_url' => 'يرجى إدخال رابط صحيح'
+    'invalid_url' => 'يرجى إدخال رابط صحيح',
+    'invalid_location'=>'الرابط لا يحتوي على إحداثيات صحيحة'
 ];

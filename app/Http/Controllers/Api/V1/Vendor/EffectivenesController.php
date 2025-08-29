@@ -8,6 +8,7 @@ use App\Http\Requests\Vendor\EffectivenesRequest;
 use App\Http\Resources\EffectivenesResource;
 use App\Models\Attachment;
 use App\Models\Effectivenes;
+use App\Models\EffectiveneTranslation;
 use App\Services\General\StorageService;
 use App\Services\Vendor\EffectivenesService;
 
@@ -38,13 +39,15 @@ class EffectivenesController extends Controller
 
     public function store(EffectivenesRequest $request)
     {
-
+        $locale = $request->header('lang', 'en');
+        
         $folder_path = "images/effectiveness";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
+        
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
@@ -52,38 +55,48 @@ class EffectivenesController extends Controller
             'to_date' => $request->to_date,
             'from_time' => $request->from_time,
             'to_time' => $request->to_time,
-            'title_en' => $request->title_en,
-            'title_ar' => $request->title_ar,
-            'description_en' => $request->description_en,
-            'description_ar' => $request->description_ar,
             'city_id' => $request->city_id,
             'location' => $request->location,
             'lat' => $request->lat,
             'long' => $request->long,
+            'people' => $request->people,
             'price' => $request->price,
             'created_by' => auth()->user()->id,
         ];
+        
         if ($request->filled('free_cancelation')) {
             $data['free_cancelation'] = $request->free_cancelation;
         }
         if ($request->filled('pay_later')) {
             $data['pay_later'] = $request->pay_later;
         }
+        
         $item = $this->service->store($data);
-
-        $images = $request->file('images');
-            $i=0;
-
-        foreach ($images as $image) {
-            $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
-            $attachment = [
-                'model_id' => $item->id,
-                'model_type' => 'effectivenes',
-                'attachment' => $storedPath,
-                'title' => "effectivenes",
-            ];
-            Attachment::create($attachment);
-            $i++;
+        
+        if ($item) {
+            // Create translation
+            EffectiveneTranslation::create([
+                'effectivenes_id' => $item->id,
+                'locale' => $locale,
+                'title' => $request->title,
+                'description' => $request->description,
+            ]);
+            
+            // Handle images
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                $i = 0;
+                foreach ($images as $image) {
+                    $storedPath = $this->storageService->storeFile($image, $folder_path, $i);
+                    Attachment::create([
+                        'model_id' => $item->id,
+                        'model_type' => 'effectivenes',
+                        'attachment' => $storedPath,
+                        'title' => "effectivenes",
+                    ]);
+                    $i++;
+                }
+            }
         }
 
         return response()->apiSuccess(new EffectivenesResource($item));
@@ -91,22 +104,26 @@ class EffectivenesController extends Controller
 
     public function update(EffectivenesRequest $request, Effectivenes $effectivenes)
     {
+        $locale = $request->header('lang', 'en');
+        
         $folder_path = "images/effectiveness";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
+        
         $data = [
-            'title' => $request->title ?? $effectivenes->title,
-            'city_id' => $request->city_id ?? $effectivenes->city_id,
             'cover' => $storedPath ?? $effectivenes->cover,
-            'date' => $request->date ?? $effectivenes->date,
-            'time' => $request->time ?? $effectivenes->time,
+            'from_date' => $request->from_date ?? $effectivenes->from_date,
+            'to_date' => $request->to_date ?? $effectivenes->to_date,
+            'from_time' => $request->from_time ?? $effectivenes->from_time,
+            'to_time' => $request->to_time ?? $effectivenes->to_time,
+            'city_id' => $request->city_id ?? $effectivenes->city_id,
             'location' => $request->location ?? $effectivenes->location,
             'lat' => $request->lat ?? $effectivenes->lat,
             'long' => $request->long ?? $effectivenes->long,
-            'description' => $request->description ?? $effectivenes->description,
+            'people' => $request->people ?? $effectivenes->people,
             'price' => $request->price ?? $effectivenes->price,
             'updated_by' => auth()->user()->id,
         ];
@@ -118,25 +135,43 @@ class EffectivenesController extends Controller
             $data['pay_later'] = $request->pay_later;
         }
 
-
         $item = $this->service->update($data, $effectivenes);
+        
         if ($item) {
-            $images = $request->file('images');
+            // Update or create translation
+            $translation = EffectiveneTranslation::where('effectivenes_id', $effectivenes->id)
+                ->where('locale', $locale)
+                ->first();
+                
+            $translationData = [
+                'title' => $request->title,
+                'description' => $request->description,
+            ];
             
-$i = 0;
-
-            Attachment::where('model_id', $effectivenes->id)->where('model_type', 'effectivenes')->delete();
-            foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
-                $attachment = [
-                    'model_id' => $effectivenes->id,
-                    'model_type' => 'effectivenes',
-                    'attachment' => $storedPath,
-                    'title' => "effectivenes",
-                ];
-                Attachment::create($attachment);
-                                $i++;
-
+            if ($translation) {
+                $translation->update(array_filter($translationData, fn($value) => $value !== null));
+            } else {
+                EffectiveneTranslation::create(array_merge([
+                    'effectivenes_id' => $effectivenes->id,
+                    'locale' => $locale,
+                ], array_filter($translationData, fn($value) => $value !== null)));
+            }
+            
+            // Handle images
+            if ($request->hasFile('images')) {
+                Attachment::where('model_id', $effectivenes->id)->where('model_type', 'effectivenes')->delete();
+                $images = $request->file('images');
+                $i = 0;
+                foreach ($images as $image) {
+                    $storedPath = $this->storageService->storeFile($image, $folder_path, $i);
+                    Attachment::create([
+                        'model_id' => $effectivenes->id,
+                        'model_type' => 'effectivenes',
+                        'attachment' => $storedPath,
+                        'title' => "effectivenes",
+                    ]);
+                    $i++;
+                }
             }
         }
 

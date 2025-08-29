@@ -23,8 +23,6 @@ class Trip extends Model
         'available_days',
         'pay_later',
         'start_long',
-        'end_lat',
-        'start_long',
         'start_lat',
         'end_long',
         'end_lat',
@@ -34,19 +32,25 @@ class Trip extends Model
         'city_id',
         'vendor_id',
         'rate',
-        'steps_list',
         'created_by',
         'updated_by',
     ];
     protected $casts = [
         'available_times' => 'array',
         'available_days' => 'array',
-        'steps_list' => 'array',
     ];
-    protected $appends = [ 'photo', 'customer_price','title','description'];
+    protected $appends = [ 'photo', 'customer_price','title','description','start_point','end_point','program_time','steps_list'];
 
 
 
+    public function getStartPointAttribute()
+    {
+        return $this->translations->first()->start_point ?? '';
+    }
+    public function getEndPointAttribute()
+    {
+        return $this->translations->first()->end_point ?? '';
+    }
     public function getTitleAttribute()
     {
         return $this->translations->first()->title ?? '';
@@ -55,8 +59,14 @@ class Trip extends Model
     {
         return $this->translations->first()->description ?? '';
     }
-
-
+    public function getProgramTimeAttribute()
+    {
+        return $this->translations->first()->program_time ?? '';
+    }
+    public function getStepsListAttribute()
+    {
+        return $this->translations->first()->steps_list[request()->header('lang', 'en')] ?? [];
+    }
     public function getPhotoAttribute()
     {
         return array_key_exists('cover', $this->attributes) ? ($this->attributes['cover'] != null ? asset('storage/' . $this->attributes['cover']) : null) : null;

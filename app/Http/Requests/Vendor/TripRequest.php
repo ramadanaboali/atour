@@ -26,29 +26,46 @@ class TripRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title_en' => 'required|string|min:2',
-            'title_ar' => 'required|string|min:2',
-            'description_en' => 'required|string|min:2',
-            'description_ar' => 'required|string|min:2',
+            // Translation fields (single language based on header)
+            'title' => 'required|string|min:2',
+            'description' => 'required|string|min:2',
+            'start_point' => 'nullable|string|min:2',
+            'end_point' => 'nullable|string|min:2',
+            'program_time' => 'nullable|string|min:2',
+            'steps_list' => 'nullable|array',
+            'steps_list.*' => 'nullable|string',
+            
+            // Main model fields
             'price' => 'required|numeric',
             'cover' => 'required|image',
             'free_cancelation' => 'required|in:0,1',
-            'active' => 'required|in:0,1',
+            'active' => 'nullable|in:0,1',
             'pay_later' => 'required|in:0,1',
             'city_id' => 'required|exists:cities,id',
+            'min_people' => 'nullable|integer|min:1',
+            'max_people' => 'nullable|integer|min:1',
+            'start_long' => 'nullable|numeric',
+            'start_lat' => 'nullable|numeric',
+            'end_long' => 'nullable|numeric',
+            'end_lat' => 'nullable|numeric',
+            
+            // Images and attachments
             'images' => 'required|array',
             'images.*' => 'required|image',
+            
+            // Availability
             'available_days' => 'required|array',
             'available_days.*' => 'required|in:saturday,sunday,monday,tuesday,wednesday,thursday,friday',
-            'featur_ids' => 'required|array',
-            'featur_ids.*' => 'required|exists:features,id',
             'available_times' => 'required|array',
             'available_times.*.from_time' => 'required',
             'available_times.*.to_time' => 'required',
-            'steps_list' => 'nullable|array',
+            
+            // Relations
+            'featur_ids' => 'nullable|array',
+            'featur_ids.*' => 'required|exists:features,id',
             'sub_category_ids' => 'required|array',
             'sub_category_ids.*' => 'required|exists:sub_categories,id',
-            'requirement_ids' => 'required|array',
+            'requirement_ids' => 'nullable|array',
             'requirement_ids.*' => 'required|'. Rule::exists('requirements', 'id')->whereNull('deleted_at'),
         ];
 

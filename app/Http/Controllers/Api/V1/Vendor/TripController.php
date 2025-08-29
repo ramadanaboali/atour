@@ -12,6 +12,7 @@ use App\Models\Offer;
 use App\Models\Trip;
 use App\Models\TripFeature;
 use App\Models\TripSubCategory;
+use App\Models\TripTranslation;
 use App\Services\General\StorageService;
 use App\Services\Vendor\TripService;
 use Illuminate\Support\Facades\Schema;
@@ -43,7 +44,8 @@ class TripController extends Controller
 
     public function storeOffer(TripOfferRequest $request)
     {
-
+        $locale = $request->header('lang', 'en');
+        
         $folder_path = "images/offers";
         $image = null;
         if ($request->hasFile('image')) {
@@ -52,20 +54,24 @@ class TripController extends Controller
         }
         $offer_data = [
             'vendor_id' => auth()->user()->id,
-            'title_en' => $request->title_en,
-            'title_ar' => $request->title_ar,
             'trip_id' => $request->trip_id,
-            'description_en' => $request->description_en,
-            'description_ar' => $request->description_ar,
             'image' => $image,
         ];
         $offer = Offer::create($offer_data);
+        
+        // Create translation for the offer
+        $offer->translations()->create([
+            'locale' => $locale,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+        
         return response()->apiSuccess($offer);
-
     }
     public function store(TripRequest $request)
     {
-
+        $locale = $request->header('lang', 'en');
+        
         $folder_path = "images/trips";
         $storedPath = null;
         if ($request->hasFile('cover')) {
@@ -75,19 +81,9 @@ class TripController extends Controller
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
-            'title_ar' => $request->title_ar,
-            'title_en' => $request->title_en,
-            'description_en' => $request->description_en,
-            'description_ar' => $request->description_ar,
             'price' => $request->price,
-            'start_point_en' => $request->start_point_en,
-            'start_point_ar' => $request->start_point_ar,
-            'end_point_en' => $request->end_point_en,
-            'end_point_ar' => $request->end_point_ar,
-            'program_time_en' => $request->program_time_en,
-            'program_time_ar' => $request->program_time_ar,
-            'people' => $request->people,
-            'steps_list' => $request->steps_list,
+            'min_people' => $request->min_people,
+            'max_people' => $request->max_people,
             'start_long' => $request->start_long,
             'start_lat' => $request->start_lat,
             'end_long' => $request->end_long,
@@ -99,15 +95,37 @@ class TripController extends Controller
             'city_id' => $request->city_id,
             'created_by' => auth()->user()->id,
         ];
+      
         $item = $this->service->store($data);
+        $steps_list = [];
         if ($item) {
-            foreach ($request->sub_category_ids as $sub_category_id) {
-                $feature = [
-                    'trip_id' => $item->id,
-                    'sub_category_id' => $sub_category_id,
-                ];
-                TripSubCategory::create($feature);
+            // Create translation
+          foreach($request->steps_list??[] as $step){
+            $steps_list[$locale][] = $step;
+          }
+        
+            TripTranslation::create([
+                'trip_id' => $item->id,
+                'locale' => $locale,
+                'title' => $request->title,
+                'description' => $request->description,
+                'start_point' => $request->start_point,
+                'end_point' => $request->end_point,
+                'program_time' => $request->program_time,
+                'steps_list' => $steps_list,
+            ]);
+            
+            // Handle subcategories
+            if ($request->sub_category_ids) {
+                foreach ($request->sub_category_ids as $sub_category_id) {
+                    TripSubCategory::create([
+                        'trip_id' => $item->id,
+                        'sub_category_id' => $sub_category_id,
+                    ]);
+                }
             }
+            
+            // Handle features and requirements
             if($request->featur_ids){
                 $item->features()->sync($request->featur_ids);
             }
@@ -115,48 +133,45 @@ class TripController extends Controller
                 $item->requirements()->sync($request->requirement_ids);
             }
 
-            $images = $request->file('images');
-            $i=0;
-            foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path,$i);
-                $attachment = [
-                    'model_id' => $item->id,
-                    'model_type' => 'trip',
-                    'attachment' => $storedPath,
-                    'title' => "trip",
-                ];
-                Attachment::create($attachment);
-                $i++;
+            // Handle images
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                $i = 0;
+                foreach ($images as $image) {
+                    $storedPath = $this->storageService->storeFile($image, $folder_path, $i);
+                    Attachment::create([
+                        'model_id' => $item->id,
+                        'model_type' => 'trip',
+                        'attachment' => $storedPath,
+                        'title' => "trip",
+                    ]);
+                    $i++;
+                }
             }
         }
+        
         return response()->apiSuccess(new TripResource($item));
     }
 
     public function update(TripRequest $request, Trip $trip)
     {
-
-
+        $locale = $request->header('lang', 'en');
+        
         $folder_path = "images/trips";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
+        
         $data = [
             'cover' => $storedPath ?? $trip->cover,
-            'title_ar' => $request->title_ar ?? $trip->title_ar,
-            'title_en' => $request->title_en ?? $trip->title_en,
-            'location_ar' => $request->location_ar ?? $trip->location_ar,
-            'location_en' => $request->location_en ?? $trip->location_en,
-            'description_en' => $request->description_en ?? $trip->description_en,
-            'description_ar' => $request->description_ar ?? $trip->description_ar,
-            'trip_requirements' => $request->trip_requirements ?? $trip->trip_requirements,
             'price' => $request->price ?? $trip->price,
-            'start_point' => $request->start_point ?? $trip->start_point,
-            'program_time' => $request->program_time ?? $trip->program_time,
             'people' => $request->people ?? $trip->people,
-            'long' => $request->long ?? $trip->long,
-            'lat' => $request->lat ?? $trip->lat,
+            'start_long' => $request->start_long ?? $trip->start_long,
+            'start_lat' => $request->start_lat ?? $trip->start_lat,
+            'end_long' => $request->end_long ?? $trip->end_long,
+            'end_lat' => $request->end_lat ?? $trip->end_lat,
             'free_cancelation' => $request->free_cancelation ?? $trip->free_cancelation,
             'available_days' => $request->available_days ?? $trip->available_days,
             'available_times' => $request->available_times ?? $trip->available_times,
@@ -164,44 +179,70 @@ class TripController extends Controller
             'city_id' => $request->city_id ?? $trip->city_id,
             'updated_by' => auth()->user()->id,
         ];
+        
         $item = $this->service->update($data, $trip);
+        
         if ($item) {
+            // Update or create translation
+            $translation = TripTranslation::where('trip_id', $trip->id)
+                ->where('locale', $locale)
+                ->first();
+        $steps_list = [];
+        foreach($request->steps_list??[] as $step){
+            $steps_list[$locale][] = $step;
+          }     
+            $translationData = [
+                'title' => $request->title,
+                'description' => $request->description,
+                'start_point' => $request->start_point,
+                'end_point' => $request->end_point,
+                'program_time' => $request->program_time,
+                'steps_list' => $steps_list,
+            ];
+            
+            if ($translation) {
+                $translation->update(array_filter($translationData, fn($value) => $value !== null));
+            } else {
+                TripTranslation::create(array_merge([
+                    'trip_id' => $trip->id,
+                    'locale' => $locale,
+                ], array_filter($translationData, fn($value) => $value !== null)));
+            }
+            
+            // Handle subcategories
             if ($request->filled('sub_category_ids')) {
                 TripSubCategory::where('trip_id', $trip->id)->delete();
+                foreach ($request->sub_category_ids as $sub_category_id) {
+                    TripSubCategory::create([
+                        'trip_id' => $trip->id,
+                        'sub_category_id' => $sub_category_id,
+                    ]);
+                }
             }
-            foreach ($request->sub_category_ids as $sub_category_id) {
-                $feature = [
-                    'trip_id' => $trip->id,
-                    'sub_category_id' => $sub_category_id,
-                ];
-                TripSubCategory::create($feature);
+            
+            // Handle features and requirements
+            if($request->featur_ids){
+                $item->features()->sync($request->featur_ids);
             }
-            if ($request->filled('featurs')) {
-                TripFeature::where('trip_id', $trip->id)->delete();
+            if($request->requirement_ids){
+                $item->requirements()->sync($request->requirement_ids);
             }
-            foreach ($request->featurs as $feature_data) {
-                $feature = [
-                    'trip_id' => $trip->id,
-                    'title_ar' => $feature_data['title_ar'] ?? null,
-                    'title_en' => $feature_data['title_en'] ?? null,
-                    'description_en' => $feature_data['description_en'] ?? null,
-                    'description_ar' => $feature_data['description_ar'] ?? null,
-                ];
-                TripFeature::create($feature);
-            }
-            $images = $request->file('images');
-            if ($request->filled('images')) {
+            
+            // Handle images
+            if ($request->hasFile('images')) {
                 Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
-            }
-            foreach ($images as $image) {
-                $storedPath = $this->storageService->storeFile($image, $folder_path);
-                $attachment = [
-                    'model_id' => $trip->id,
-                    'model_type' => 'trip',
-                    'attachment' => $storedPath,
-                    'title' => "trip",
-                ];
-                Attachment::create($attachment);
+                $images = $request->file('images');
+                $i = 0;
+                foreach ($images as $image) {
+                    $storedPath = $this->storageService->storeFile($image, $folder_path, $i);
+                    Attachment::create([
+                        'model_id' => $trip->id,
+                        'model_type' => 'trip',
+                        'attachment' => $storedPath,
+                        'title' => "trip",
+                    ]);
+                    $i++;
+                }
             }
         }
 
@@ -217,5 +258,5 @@ class TripController extends Controller
         Offer::where('trip_id', $id)->delete();
         return response()->apiSuccess($this->service->delete($trip));
     }
-
+   
 }

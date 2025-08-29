@@ -30,31 +30,50 @@ class EffectivenesRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'description_en' => 'required|string|min:2',
-                        'description_ar' => 'required|string|min:2',
-                        'title_en' => 'required|string|min:2',
-                        'title_ar' => 'required|string|min:2',
+                        // Translation fields (single language based on header)
+                        'title' => 'required|string|min:2',
+                        'description' => 'required|string|min:2',
+                        
+                        // Main model fields
                         'price' => 'required|numeric',
-                        'from_date'=>'required',
-                        'to_date'=>'required',
-                        'from_time'=>'required',
-                        'to_time'=>'required',
-                        'lat'=>'required',
-                        'long'=>'required',
+                        'from_date' => 'required|date',
+                        'to_date' => 'required|date',
+                        'from_time' => 'required',
+                        'to_time' => 'required',
+                        'lat' => 'required|numeric',
+                        'long' => 'required|numeric',
+                        'location' => 'nullable|string',
+                        'city_id' => 'required|exists:cities,id',
+                        'cover' => 'required|image',
+                        'images' => 'required|array',
+                        'images.*' => 'required|image',
+                        'free_cancelation' => 'nullable|in:0,1',
+                        'pay_later' => 'nullable|in:0,1',
                     ];
                 }
             case 'PATCH':
             case 'PUT':
                 {
-
                     return [
-                        'description_en' => 'nullable|string|min:2',
-                        'description_ar' => 'nullable|string|min:2',
+                        // Translation fields (single language based on header)
+                        'title' => 'nullable|string|min:2',
+                        'description' => 'nullable|string|min:2',
+                        
+                        // Main model fields
                         'price' => 'nullable|numeric',
-                        'date'=>'required',
-                        'time'=>'required',
-                        'lat'=>'required',
-                        'long'=>'required',
+                        'from_date' => 'nullable|date',
+                        'to_date' => 'nullable|date',
+                        'from_time' => 'nullable',
+                        'to_time' => 'nullable',
+                        'lat' => 'nullable|numeric',
+                        'long' => 'nullable|numeric',
+                        'location' => 'nullable|string',
+                        'city_id' => 'nullable|exists:cities,id',
+                        'cover' => 'nullable|image',
+                        'images' => 'nullable|array',
+                        'images.*' => 'required|image',
+                        'free_cancelation' => 'nullable|in:0,1',
+                        'pay_later' => 'nullable|in:0,1',
                     ];
 
                 }
