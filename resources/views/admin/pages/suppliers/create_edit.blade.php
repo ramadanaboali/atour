@@ -184,16 +184,16 @@
                     </div>
 
 
-                    <div class="mb-1 col-md-4 @error('banck_name') is-invalid @enderror">
-                        <label class="form-label" for="banck_name">{{ __('suppliers.banck_name') }}</label>
-                        <input type="text" name="banck_name" id="banck_name" class="form-control" value="{{ $item->supplier?->banck_name ?? old('banck_name') }}">
-                        @error('banck_name')<span class="error">{{ $message }}</span>@enderror
+                    <div class="mb-1 col-md-4 @error('bank_name') is-invalid @enderror">
+                        <label class="form-label" for="bank_name">{{ __('suppliers.bank_name') }}</label>
+                        <input type="text" name="bank_name" id="bank_name" class="form-control" value="{{ $item->supplier?->bank_name ?? old('bank_name') }}">
+                        @error('bank_name')<span class="error">{{ $message }}</span>@enderror
                     </div>
 
-                    <div class="mb-1 col-md-4 @error('banck_number') is-invalid @enderror">
-                        <label class="form-label" for="banck_number">{{ __('suppliers.banck_number') }}</label>
-                        <input type="text" name="banck_number" id="banck_number" class="form-control" value="{{ $item->supplier?->banck_number ?? old('banck_number') }}">
-                        @error('banck_number')<span class="error">{{ $message }}</span>@enderror
+                    <div class="mb-1 col-md-4 @error('bank_number') is-invalid @enderror">
+                        <label class="form-label" for="bank_number">{{ __('suppliers.bank_number') }}</label>
+                        <input type="text" name="bank_number" id="bank_number" class="form-control" value="{{ $item->supplier?->bank_number ?? old('bank_number') }}">
+                        @error('bank_number')<span class="error">{{ $message }}</span>@enderror
                     </div>
 
                     <div class="mb-1 col-md-4 @error('tax_number') is-invalid @enderror">
