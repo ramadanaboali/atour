@@ -210,9 +210,8 @@
                                             <th class="py-1">{{ __('orders.total') }}</th>
                                             <th class="py-1">{{ __('orders.start_point') }}</th>
                                             <th class="py-1">{{ __('orders.end_point') }}</th>
-                                            <th class="py-1">{{ __('orders.cancelation_policy') }}</th>
-                                            <th class="py-1">{{ __('orders.free_cancelation') }}</th>
-                                            <th class="py-1">{{ __('orders.pay_later') }}</th>
+                                            <th class="">{{ __('orders.free_cancelation') }}</th>
+                                            <th class="">{{ __('orders.pay_later') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -225,16 +224,12 @@
                                                 <td>{{ $trip->price }}</td>
                                                 <td>{{ $trip->start_point }}</td>
                                                 <td>{{ $trip->end_point }}</td>
-                                                <td>{{ $trip->cancelation_policy }}</td>
                                                 <td>{{ $trip->free_cancelation==1?'✅':'❌' }}</td>
                                                 <td>{{ $trip->pay_later==1?'✅':'❌' }}</td>
-
                                         </tr>
                                         @endforeach
-
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
@@ -250,7 +245,6 @@
                         </div>
                     </div>
                     <!-- /Rates table -->
-
                     <!-- Customer Ratings Section -->
                     <div class="card">
                         <div class="card-header">
@@ -289,7 +283,6 @@
                                     @endfor
                                 </div>
                             </div>
-
                             <!-- Filters -->
                             <div class="row mb-3">
                                 <div class="col-md-4">
@@ -319,7 +312,6 @@
                                     </button>
                                 </div>
                             </div>
-
                             <!-- Ratings Table -->
                             <div class="table-responsive">
                                 <table id="ratings-table" class="table table-striped datatables-ratings">
