@@ -10,6 +10,7 @@ use App\Http\Resources\TripResource;
 use App\Models\Attachment;
 use App\Models\Offer;
 use App\Models\Trip;
+use App\Models\TripOffer;
 use App\Models\TripFeature;
 use App\Models\TripSubCategory;
 use App\Models\TripTranslation;

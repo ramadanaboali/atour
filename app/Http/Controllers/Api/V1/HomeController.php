@@ -18,6 +18,7 @@ use App\Models\Favorite;
 use App\Models\Gift;
 use App\Models\Offer;
 use App\Models\Trip;
+use App\Models\TripOffer;
 use App\Models\User;
 use App\Services\TapService;
 use Carbon\Carbon;
@@ -43,6 +44,7 @@ class HomeController extends Controller
         }])->where('active', 1)
             ->select('offers.*')
             ->get();
+        $data['vendor_offers'] = TripOffer::get();
         $data['offers'] = OfferResource::collection($offers);
         $cities = City::where('active', true)->limit(10)->paginate(10);
         $data['most_visited'] = CityResource::collection($cities);
