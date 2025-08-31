@@ -13,6 +13,7 @@ use App\Http\Resources\OnboardingResource;
 use App\Http\Resources\FeatureResource;
 use App\Http\Resources\RequirementResource;
 use App\Http\Resources\SubCategoryResource;
+use App\Http\Resources\CityResource;
 use App\Mail\ContactUsMail;
 use App\Models\Add;
 use App\Models\Article;
@@ -118,7 +119,7 @@ class PageController extends Controller
     public function cities()
     {
         $data = City::where('active', 1)->get();
-        // $result = CityResource::collection($data);
+        $result = CityResource::collection($data);
         return apiResponse(true, $data, null, null, 200);
     }
     public function getCity(Request $request, $id)

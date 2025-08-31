@@ -77,6 +77,8 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('currencies', [PageController::class,'currencies']);
         Route::get('sliders', [PageController::class,'sliders']);
         Route::get('countries', [PageController::class,'countries']);
+        Route::get('countries/{id}', [PageController::class,'getCountry']);
+     
         Route::get('categories', [PageController::class,'categories']);
         Route::get('sub_categories', [PageController::class,'sub_categories']);
         Route::get('articles', [PageController::class,'articles']);
@@ -88,11 +90,11 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('offers', [PageController::class,'getOffers']);
         Route::get('top_cities', [PageController::class,'topCities']);
         Route::get('home', [HomeController::class,'home']);
-        Route::get('onboardings', [App\Http\Controllers\Api\V1\PageController::class,'onboardings']);
-        Route::get('features', [App\Http\Controllers\Api\V1\PageController::class,'features']);
-        Route::get('requirements', [App\Http\Controllers\Api\V1\PageController::class,'requirements']);
-        Route::get('all-locations', [App\Http\Controllers\Api\V1\PageController::class,'allLocations']);
-        Route::get('delivery-cost/{city_id}/{vendor_id}', [App\Http\Controllers\Api\V1\PageController::class,'deliveryCost']);
+        Route::get('onboardings', [PageController::class,'onboardings']);
+        Route::get('features', [PageController::class,'features']);
+        Route::get('requirements', [PageController::class,'requirements']);
+        Route::get('all-locations', [PageController::class,'allLocations']);
+        Route::get('delivery-cost/{city_id}/{vendor_id}', [PageController::class,'deliveryCost']);
 
      
         Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
