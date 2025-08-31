@@ -96,6 +96,15 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('all-locations', [PageController::class,'allLocations']);
         Route::get('delivery-cost/{city_id}/{vendor_id}', [PageController::class,'deliveryCost']);
 
+        // Ticket Support Routes
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::get('tickets', [App\Http\Controllers\Api\V1\TicketController::class, 'index']);
+            Route::post('tickets', [App\Http\Controllers\Api\V1\TicketController::class, 'store']);
+            Route::get('tickets/{id}', [App\Http\Controllers\Api\V1\TicketController::class, 'show']);
+            Route::post('tickets/{id}/reply', [App\Http\Controllers\Api\V1\TicketController::class, 'reply']);
+            Route::patch('tickets/{id}/close', [App\Http\Controllers\Api\V1\TicketController::class, 'close']);
+            Route::patch('tickets/{id}/reopen', [App\Http\Controllers\Api\V1\TicketController::class, 'reopen']);
+        });
      
         Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
 

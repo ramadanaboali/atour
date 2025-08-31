@@ -379,6 +379,14 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::put('suppliers/{supplierId}/delivery-costs/{id}', [App\Http\Controllers\Admin\DeliveryCostController::class, 'update'])->name('delivery-costs.update')->middleware('adminPermission:delivery-costs.edit');
             Route::delete('suppliers/{supplierId}/delivery-costs/{id}', [App\Http\Controllers\Admin\DeliveryCostController::class, 'destroy'])->name('delivery-costs.destroy')->middleware('adminPermission:delivery-costs.delete');
 
+            // Ticket Support Routes
+            Route::get('tickets', [App\Http\Controllers\Admin\TicketController::class, 'index'])->name('tickets.index')->middleware('adminPermission:tickets.view');
+            Route::get('tickets/{id}', [App\Http\Controllers\Admin\TicketController::class, 'show'])->name('tickets.show')->middleware('adminPermission:tickets.view');
+            Route::post('tickets/{id}/reply', [App\Http\Controllers\Admin\TicketController::class, 'reply'])->name('tickets.reply')->middleware('adminPermission:tickets.reply');
+            Route::patch('tickets/{id}/assign', [App\Http\Controllers\Admin\TicketController::class, 'assign'])->name('tickets.assign')->middleware('adminPermission:tickets.assign');
+            Route::patch('tickets/{id}/status', [App\Http\Controllers\Admin\TicketController::class, 'updateStatus'])->name('tickets.status')->middleware('adminPermission:tickets.edit');
+            Route::patch('tickets/{id}/priority', [App\Http\Controllers\Admin\TicketController::class, 'updatePriority'])->name('tickets.priority')->middleware('adminPermission:tickets.edit');
+
 
 
 

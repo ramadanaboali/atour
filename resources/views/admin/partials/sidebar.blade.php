@@ -191,9 +191,9 @@
                 </a>
             </li>
             @endcan
-            @can('contacts.view')
+            @can('tickets.view')
             <li>
-                <a class="d-flex align-items-center" href="{{route('admin.contacts.index')}}">
+                <a class="d-flex align-items-center" href="{{route('admin.tickets.index')}}">
                     <i data-feather="phone"></i>
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.suppports_contact_us') }}</span>
                 </a>
