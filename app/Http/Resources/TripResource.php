@@ -50,7 +50,7 @@ class TripResource extends JsonResource
             'features' => FeatureResource::collection($this->features),
             'city' => new CityResource($this->city),
             'vendor' => new UserResource($this->vendor),
-            'offers' => $this->offers,
+            'offers' => [],
             'is_favourit' => $favourit ? 1 : 0,
             'booking_count' => bookingCount($this->id, 'trip'),
             'total_amounts' => totalAmount($this->id, 'trip'),

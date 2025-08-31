@@ -19,7 +19,7 @@ class City extends Model
 
     public function getPhotoAttribute()
     {
-        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/cities/' . $this->attributes['image']) : null) : null;
+        return array_key_exists('image', $this->attributes) ? ($this->attributes['image'] != null ? asset('storage/cities/' . $this->attributes['image']) : asset('atour.jpg')) : asset('atour.jpg');
 
     }
 

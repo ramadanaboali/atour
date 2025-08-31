@@ -10,6 +10,7 @@ class UserResource extends JsonResource
     {
         $data =[];
         $data['id']       = $this->id;
+        $data['code']     = $this->code;
         $data['name']     = $this->name;
         $data['phone']    = $this->phone;
         $data['image']    = $this->photo;

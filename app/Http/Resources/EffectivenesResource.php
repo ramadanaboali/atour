@@ -39,7 +39,7 @@ class EffectivenesResource extends JsonResource
             'city' => new CityResource($this->city),
             'attachments' => AttachmentResource::collection($this->attachments),
             'is_favourit' => $favourit ? 1 : 0,
-             'booking_count' => bookingCount($this->id, 'effectivenes'),
+            'booking_count' => bookingCount($this->id, 'effectivenes'),
             'total_amounts' => totalAmount($this->id, 'effectivenes'),
             'use_coupon' => useCoupon($this->id, 'effectivenes'),
             'use_offers' => useOffers($this->id, 'effectivenes'),

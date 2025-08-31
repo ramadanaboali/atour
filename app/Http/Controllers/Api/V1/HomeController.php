@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
-use App\Http\Resources\EffectivenesResourceCustomer;
-use App\Http\Resources\GiftResourceCustomer;
-use App\Http\Resources\TripResourceCustomer;
+use App\Http\Resources\EffectivenesResource;
+use App\Http\Resources\GiftResource;
+use App\Http\Resources\OfferResource;
+use App\Http\Resources\TripResource;
 use App\Models\BookingEffectivene;
 use App\Models\BookingGift;
 use App\Models\BookingTrip;
@@ -37,37 +38,31 @@ class HomeController extends Controller
                 Auth::setUser($user);
             }
         }
-        $offer = Offer::whereHas('vendor')
-            ->whereHas('vendor', fn ($query) => $query->where('active', 1))
-            ->where('active', 1)
+        $offers = Offer::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('active', 1)
             ->select('offers.*')
-            ->get()
-            ->filter(function ($item) {
-                if (in_array($item->type, ['gift', 'trip', 'effectivenes'])) {
-                    $relatedModel = match ($item->type) {
-                        'gift' => Gift::find($item->gift_id),
-                        'trip' => Trip::find($item->trip_id),
-                        'effectivenes' => Effectivenes::find($item->effectivenes_id),
-                        default => null,
-                    };
-                    return $relatedModel !== null;
-                }
-                return true;
-            });
+            ->get();
+        $data['offers'] = OfferResource::collection($offers);
+        $cities = City::where('active', true)->limit(10)->paginate(10);
+        $data['most_visited'] = CityResource::collection($cities);
 
-        $data['offers'] = $offer->values();
-        $data['offer'] = null;
-
-        $data['most_visited'] = City::where('active', true)->get();
-        $old_experiences = Trip::whereHas('vendor')->join('users', function ($query) {
+        $old_experiences = Trip::whereHas('translations' , function ($q) {
+            $q->where('locale', app()->getLocale());
+        })->join('users', function ($query) {
             $query->on('users.id', '=', 'trips.vendor_id')->where('users.active', 1);
         })->where('trips.active', true)->select('trips.*')->get();
 
-        $data['old_experiences'] = TripResourceCustomer::collection($old_experiences);
-        $effectivenes = Effectivenes::whereHas('vendor')->join('users', function ($query) {
+        $data['old_experiences'] = TripResource::collection($old_experiences);
+       
+       
+        $effectivenes = Effectivenes::whereHas('translations' , function ($q) {
+            $q->where('locale', app()->getLocale());
+        })->join('users', function ($query) {
             $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
-        })->where('effectivenes.active', true)->where('from_date', '>=', date('Y-m-d'))->where('to_date', '<=', date('Y-m-d'))->select('effectivenes.*')->get();
-        $data['effectivenes'] = EffectivenesResourceCustomer::collection($effectivenes);
+        })->where('effectivenes.active', true)->where('from_date', '<=', date('Y-m-d'))->where('to_date', '>=', date('Y-m-d'))->select('effectivenes.*')->get();
+
+        $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
         return apiResponse(true, $data, null, null, 200);
     }
@@ -80,21 +75,33 @@ class HomeController extends Controller
     }
     public function trips()
     {
-        $trips = Trip::where('active', true)->get();
-        $data = TripResourceCustomer::collection($trips);
+        $trips = Trip::whereHas('translations' , function ($q) {
+            $q->where('locale', app()->getLocale());
+        })->join('users', function ($query) {
+            $query->on('users.id', '=', 'trips.vendor_id')->where('users.active', 1);
+        })->where('trips.active', true)->select('trips.*')->get();
+        $data = TripResource::collection($trips);
         return apiResponse(true, $data, null, null, 200);
     }
     public function similler_trips($id)
     {
-        $trip = Trip::findOrFail($id);
-        $trips = Trip::where('vendor_id', $trip->vendor_id)->where('active', true)->get();
-        $data = TripResourceCustomer::collection($trips);
+        $trip = Trip::with('translations')->findOrFail($id);
+        $trips = Trip::whereHas('translations', function ($query) use ($trip) {
+            $query->where('locale', app()->getLocale())
+                ->where('title', 'like', '%' . $trip->title . '%');
+        })->where('vendor_id', $trip->vendor_id)
+            ->where('active', true)
+            ->where('id', '!=', $id)
+            ->orderByDesc('id')
+            ->limit(10)
+            ->get();
+        $data = TripResource::collection($trips);
         return apiResponse(true, $data, null, null, 200);
     }
     public function trip($id)
     {
         $trip = Trip::findOrFail($id);
-        $data = new TripResourceCustomer($trip);
+        $data = new TripResource($trip);
         return apiResponse(true, $data, null, null, 200);
     }
     public function getYearlyAvailability(Trip $trip)
@@ -126,26 +133,34 @@ class HomeController extends Controller
     }
     public function gifts()
     {
-        $gifts = Gift::where('active', true)->get();
-        $data = GiftResourceCustomer::collection($gifts);
+        $gifts = Gift::whereHas('translations' , function ($q) {
+            $q->where('locale', app()->getLocale());
+        })->join('users', function ($query) {
+            $query->on('users.id', '=', 'gifts.vendor_id')->where('users.active', 1);
+        })->where('gifts.active', true)->select('gifts.*')->get();
+        $data = GiftResource::collection($gifts);
         return apiResponse(true, $data, null, null, 200);
     }
     public function gift($id)
     {
         $gift = Gift::findOrFail($id);
-        $data = new GiftResourceCustomer($gift);
+        $data = new GiftResource($gift);
         return apiResponse(true, $data, null, null, 200);
     }
     public function effectivenes()
     {
-        $effectivenes = Effectivenes::where('active', true)->get();
-        $data = EffectivenesResourceCustomer::collection($effectivenes);
+        $effectivenes = Effectivenes::whereHas('translations' , function ($q) {
+            $q->where('locale', app()->getLocale());
+        })->join('users', function ($query) {
+            $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
+        })->where('effectivenes.active', true)->select('effectivenes.*')->get();
+        $data = EffectivenesResource::collection($effectivenes);
         return apiResponse(true, $data, null, null, 200);
     }
     public function effectivene($id)
     {
         $effectivene = Effectivenes::findOrFail($id);
-        $data = new EffectivenesResourceCustomer($effectivene);
+        $data = new EffectivenesResource($effectivene);
         return apiResponse(true, $data, null, null, 200);
     }
     public function saveFavourite($type, $id)
@@ -178,13 +193,13 @@ class HomeController extends Controller
     public function favourite()
     {
         $trips = Trip::leftJoin('favorites', 'favorites.model_id', 'trips.id')->where('favorites.model_type', 'like', 'trip%')->where('favorites.user_id', auth()->user()->id)->select('trips.*')->get();
-        $data['trips'] = TripResourceCustomer::collection($trips);
+        $data['trips'] = TripResource::collection($trips);
 
         $effectivenes = Effectivenes::leftJoin('favorites', 'favorites.model_id', 'effectivenes.id')->where('favorites.model_type', 'like', 'effectivene%')->where('favorites.user_id', auth()->user()->id)->select('effectivenes.*')->get();
-        $data['effectivenes'] = EffectivenesResourceCustomer::collection($effectivenes);
+        $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
 
         $gifts = Gift::leftJoin('favorites', 'favorites.model_id', 'gifts.id')->where('favorites.model_type', 'like', 'gift%')->where('favorites.user_id', auth()->user()->id)->select('gifts.*')->get();
-        $data['gifts'] = GiftResourceCustomer::collection($gifts);
+        $data['gifts'] = GiftResource::collection($gifts);
 
 
 
