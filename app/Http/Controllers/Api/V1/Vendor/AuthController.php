@@ -271,6 +271,7 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
         $user = auth()->user();
+        $user=$user->with('supplier')->first();
         return apiResponse(true, $user, null, null, 200);
 
     }
