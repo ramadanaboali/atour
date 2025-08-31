@@ -32,7 +32,7 @@ class DeliveryCostController extends Controller
                     return $row->created_at->format('Y-m-d H:i:s');
                 })
                 ->addColumn('cost_formatted', function ($row) {
-                    return number_format($row->cost, 2) . ' ' . __('delivery.currency');
+                    return number_format($row->cost, 2);
                 })
                 ->addColumn('status', function ($row) {
                     return $row->active 
