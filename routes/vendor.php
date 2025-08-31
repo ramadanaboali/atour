@@ -62,6 +62,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('currencies', [App\Http\Controllers\Api\V1\PageController::class,'currencies']);
         Route::get('sliders', [App\Http\Controllers\Api\V1\PageController::class,'sliders']);
         Route::get('countries', [App\Http\Controllers\Api\V1\PageController::class,'countries']);
+        Route::get('countries/{id}', [App\Http\Controllers\Api\V1\PageController::class,'getCountry']);
         Route::get('categories', [App\Http\Controllers\Api\V1\PageController::class,'categories']);
         Route::get('sub_categories', [App\Http\Controllers\Api\V1\PageController::class,'sub_categories']);
         Route::get('articles', [App\Http\Controllers\Api\V1\PageController::class,'articles']);

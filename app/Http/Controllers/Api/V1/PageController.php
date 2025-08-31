@@ -164,6 +164,14 @@ class PageController extends Controller
         $result = CountryResource::collection($data);
         return apiResponse(true, $result, null, null, 200);
     }
+    public function getCountry($id)
+    {
+        $data = City::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('country_id', $id)->where('active', 1)->get();
+        $result = CityResource::collection($data);
+        return apiResponse(true, $result, null, null, 200);
+    }
 
     public function categories()
     {
