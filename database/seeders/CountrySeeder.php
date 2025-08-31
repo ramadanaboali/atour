@@ -17,14 +17,11 @@ class CountrySeeder extends Seeder
     public function run()
     {
         $countries = [
-            ['en' => 'Saudi Arabia', 'ar' => 'المملكة العربية السعودية'],
-            ['en' => 'United Arab Emirates', 'ar' => 'الإمارات العربية المتحدة'],
             ['en' => 'Kuwait', 'ar' => 'الكويت'],
             ['en' => 'Qatar', 'ar' => 'قطر'],
             ['en' => 'Bahrain', 'ar' => 'البحرين'],
             ['en' => 'Oman', 'ar' => 'عمان'],
             ['en' => 'Jordan', 'ar' => 'الأردن'],
-            ['en' => 'Egypt', 'ar' => 'مصر'],
             ['en' => 'Lebanon', 'ar' => 'لبنان'],
             ['en' => 'Syria', 'ar' => 'سوريا'],
             ['en' => 'Iraq', 'ar' => 'العراق'],
