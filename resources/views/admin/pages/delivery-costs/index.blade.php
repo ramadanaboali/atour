@@ -61,17 +61,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="mb-1 col-12">
-                            <label for="city_id" class="form-label">{{ __('delivery.city') }} <span class="text-danger">*</span></label>
-                            <select name="city_id" id="city_id" class="form-select" required>
-                                <option value="">{{ __('delivery.select_city') }}</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}">
-                                        {{ $city->title }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                         <div class="mb-1 col-md-12  @error('city_id') is-invalid @enderror">
+                        <label class="form-label" for="city_id">{{ __('suppliers.city') }}</label>
+                        <select name="city_id" id="city_id" class="form-control ajax_select2 extra_field" data-ajax--url="{{ route('admin.cities.select') }}" data-ajax--cache="true">
+                            @isset($item->city)
+                            <option value="{{ $item->city->id }}" selected>{{ $item->city->title }}</option>
+                            @endisset
+                        </select>
+                        @error('city_id')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
                         <div class="mb-1 col-12">
                             <label for="cost" class="form-label">{{ __('delivery.cost') }} <span class="text-danger">*</span></label>
                             <input type="number" step="0.01" min="0" name="cost" id="cost" class="form-control" placeholder="{{ __('delivery.cost_placeholder') }}" required>
