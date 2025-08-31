@@ -23,6 +23,7 @@ class Trip extends Model
         'available_days',
         'pay_later',
         'start_long',
+        'type',
         'start_lat',
         'end_long',
         'end_lat',

@@ -56,15 +56,10 @@ class TripController extends Controller
             'vendor_id' => auth()->user()->id,
             'trip_id' => $request->trip_id,
             'image' => $image,
-        ];
-        $offer = Offer::create($offer_data);
-        
-        // Create translation for the offer
-        $offer->translations()->create([
-            'locale' => $locale,
             'title' => $request->title,
             'description' => $request->description,
-        ]);
+        ];
+        $offer = TripOffer::create($offer_data);
         
         return response()->apiSuccess($offer);
     }

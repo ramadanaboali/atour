@@ -21,6 +21,7 @@ class Effectivenes extends Model
         'to_date',
         'to_time',
         'location',
+        'type',
         'lat',
         'long',
         'people',
