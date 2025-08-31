@@ -133,7 +133,15 @@ class HomeController extends Controller
     }
     public function gifts()
     {
-        $gifts = Gift::whereHas('translations' , function ($q) {
+
+        $sub_category_id = request('sub_category_id');
+        $gifts = Gift::where(function($q)use($sub_category_id){
+            if($sub_category_id){
+                $q->whereHas('subcategory', function ($q2) use ($sub_category_id) {
+                    $q2->where('sub_category_id', $sub_category_id);                    
+                });
+            }
+        })->whereHas('translations' , function ($q) {
             $q->where('locale', app()->getLocale());
         })->join('users', function ($query) {
             $query->on('users.id', '=', 'gifts.vendor_id')->where('users.active', 1);
