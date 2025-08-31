@@ -19,6 +19,7 @@ use App\Models\Article;
 use App\Models\Attachment;
 use App\Models\Blog;
 use App\Models\City;
+use App\Models\DeliveryCost;
 use App\Models\ContactUs;
 use App\Models\Country;
 use App\Models\Currency;
@@ -349,6 +350,13 @@ class PageController extends Controller
         $data = $trips->merge($effectivenes)->merge($gifts);
         return apiResponse(true, LocationResource::collection($data), null, null, 200);
 
+    }
+
+    public function DeliveryCost($city_id, $vendor_id)
+    {
+        $deliveryCost = DeliveryCost::where('city_id', $city_id)->where('user_id', $vendor_id)->first();
+        
+        return apiResponse(true, ["cost" => $deliveryCost->cost ?? 0], null, null, 200);
     }
 
 }
