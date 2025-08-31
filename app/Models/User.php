@@ -176,5 +176,11 @@ class User extends Authenticatable
     {
         return $this->supplierRatings()->verified()->count();
     }
+
+    // Delivery cost relationship
+    public function deliveryCosts(): HasMany
+    {
+        return $this->hasMany(DeliveryCost::class);
+    }
     
 }

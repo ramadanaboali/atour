@@ -373,6 +373,12 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('suppliers-accounts', [App\Http\Controllers\Admin\SupplierController::class, 'suppliers'])->name('accounts.suppliers')->middleware('adminPermission:accounts.suppliers');
             Route::post('settlement-accounts/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'settlement'])->name('accounts.settlement')->middleware('adminPermission:accounts.settlement');
 
+            // Delivery Cost Routes
+            Route::get('suppliers/{supplierId}/delivery-costs', [App\Http\Controllers\Admin\DeliveryCostController::class, 'index'])->name('delivery-costs.index')->middleware('adminPermission:delivery-costs.view');
+            Route::post('suppliers/{supplierId}/delivery-costs', [App\Http\Controllers\Admin\DeliveryCostController::class, 'store'])->name('delivery-costs.store')->middleware('adminPermission:delivery-costs.edit');
+            Route::put('suppliers/{supplierId}/delivery-costs/{id}', [App\Http\Controllers\Admin\DeliveryCostController::class, 'update'])->name('delivery-costs.update')->middleware('adminPermission:delivery-costs.edit');
+            Route::delete('suppliers/{supplierId}/delivery-costs/{id}', [App\Http\Controllers\Admin\DeliveryCostController::class, 'destroy'])->name('delivery-costs.destroy')->middleware('adminPermission:delivery-costs.delete');
+
 
 
 

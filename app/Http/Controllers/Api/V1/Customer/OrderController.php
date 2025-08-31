@@ -115,35 +115,35 @@ class OrderController extends Controller
             $data['vendor_id'] = $item->vendor_id;
             $admin_value = 0;
             $order_fees = [];
-            if ($item->vendor?->feeSetting) {
-                if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->tax_value;
-                    $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+            if ($item->vendor?->supplier?->feeSetting) {
+                if ($item->vendor?->supplier?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = $item->vendor?->supplier?->feeSetting?->tax_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                    $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                    $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+                if ($item->vendor?->supplier?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = $item->vendor?->supplier?->feeSetting?->payment_way_value;
 
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                    $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_value;
-                    $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = $item->vendor?->supplier?->feeSetting?->admin_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                    $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                    $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = $item->vendor?->supplier?->feeSetting?->admin_fee_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                    $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
                 }
             }
 
@@ -247,36 +247,36 @@ class OrderController extends Controller
 
             $admin_value = 0;
             $order_fees = [];
-            if ($item->vendor?->feeSetting) {
-                if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->tax_value;
-                    $order_fees['tax_value'] = $item->vendor?->feeSetting?->tax_value;
+            if ($item->vendor?->supplier?->feeSetting) {
+                if ($item->vendor?->supplier?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = $item->vendor?->supplier?->feeSetting?->tax_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                    $order_fees['tax_value'] = ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                    $order_fees['payment_way_value'] = $item->vendor?->feeSetting?->payment_way_value;
+                if ($item->vendor?->supplier?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = $item->vendor?->supplier?->feeSetting?->payment_way_value;
 
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                    $order_fees['payment_way_value'] = ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_value;
-                    $order_fees['admin_value'] = $item->vendor?->feeSetting?->admin_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = $item->vendor?->supplier?->feeSetting?->admin_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                    $order_fees['admin_value'] = ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                    $order_fees['admin_fee_value'] = $item->vendor?->feeSetting?->admin_fee_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = $item->vendor?->supplier?->feeSetting?->admin_fee_value;
 
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                    $order_fees['admin_fee_value'] = ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
                 }
             }
 
@@ -369,6 +369,8 @@ class OrderController extends Controller
             $data['total'] = $item->price * ($request->quantity ?? 1);
             $data['vendor_id'] = $item->vendor_id;
             $data['gift_id'] = $request->gift_id;
+            $data['delivery_cost'] = $request->delivery_cost??0;
+            $data['city_id'] = $request->city_id;
             $data['lat'] = $request->lat;
             $data['long'] = $request->long;
             $data['payment_way'] = $request->payment_way;
@@ -379,36 +381,36 @@ class OrderController extends Controller
             $data['quantity'] = $request->quantity;
             $admin_value = 0;
             $order_fees = [];
-            if ($item->vendor?->feeSetting) {
-                if ($item->vendor?->feeSetting?->tax_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->tax_value;
-                    $order_fees['tax_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->tax_value;
+            if ($item->vendor?->supplier?->feeSetting) {
+                if ($item->vendor?->supplier?->feeSetting?->tax_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->tax_value;
+                    $order_fees['tax_value'] = ($request->quantity ?? 1) * $item->vendor?->supplier?->feeSetting?->tax_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
-                    $order_fees['tax_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->tax_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
+                    $order_fees['tax_value'] = ($request->quantity ?? 1) * ($item->vendor?->supplier?->feeSetting?->tax_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->payment_way_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->payment_way_value;
-                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->payment_way_value;
+                if ($item->vendor?->supplier?->feeSetting?->payment_way_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->payment_way_value;
+                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * $item->vendor?->supplier?->feeSetting?->payment_way_value;
 
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
-                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
+                    $order_fees['payment_way_value'] = ($request->quantity ?? 1) * ($item->vendor?->supplier?->feeSetting?->payment_way_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_value;
-                    $order_fees['admin_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_value;
+                    $order_fees['admin_value'] = ($request->quantity ?? 1) * $item->vendor?->supplier?->feeSetting?->admin_value;
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
-                    $order_fees['admin_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
+                    $order_fees['admin_value'] = ($request->quantity ?? 1) * ($item->vendor?->supplier?->feeSetting?->admin_value * $item->price) / 100;
                 }
-                if ($item->vendor?->feeSetting?->admin_fee_type == 'const') {
-                    $admin_value += $item->vendor?->feeSetting?->admin_fee_value;
-                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * $item->vendor?->feeSetting?->admin_fee_value;
+                if ($item->vendor?->supplier?->feeSetting?->admin_fee_type == 'const') {
+                    $admin_value += $item->vendor?->supplier?->feeSetting?->admin_fee_value;
+                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * $item->vendor?->supplier?->feeSetting?->admin_fee_value;
 
                 } else {
-                    $admin_value += ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
-                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * ($item->vendor?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $admin_value += ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
+                    $order_fees['admin_fee_value'] = ($request->quantity ?? 1) * ($item->vendor?->supplier?->feeSetting?->admin_fee_value * $item->price) / 100;
                 }
                 $admin_value = $admin_value * ($request->quantity ?? 1);
             }

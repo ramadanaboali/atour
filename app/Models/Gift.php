@@ -98,7 +98,7 @@ class Gift extends Model
     public function calculateAdminFees()
     {
         $price = 0;
-        $vendor = $this->vendor;
+        $vendor = $this->vendor?->supplier;
 
         if ($vendor && $vendor->feeSetting) {
             $feeSetting = $vendor->feeSetting;

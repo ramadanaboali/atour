@@ -214,6 +214,9 @@
                     var settingUrl = '{{ route("admin.suppliers.setting", ":id") }}';
                     settingUrl = settingUrl.replace(':id', row.id);
 
+                    var deliveryCostUrl = '{{ route("admin.delivery-costs.index", ":id") }}';
+                    deliveryCostUrl = deliveryCostUrl.replace(':id', row.id);
+
                     return `
                                <div class="dropdown">
                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow waves-effect waves-float waves-light" data-bs-toggle="dropdown">
@@ -249,6 +252,12 @@
                         <a class="dropdown-item "  href="` + settingUrl + `" >
                             <i data-feather="settings" class="font-medium-2"></i>
                                 <span>{{ __('suppliers.actions.settings') }}</span>
+                        </a>
+                        @endcan
+                                         @can('clients.status')
+                        <a class="dropdown-item" href="` + deliveryCostUrl + `">
+                            <i data-feather="truck" class="font-medium-2"></i>
+                                <span>{{ __('delivery.actions.manage') }}</span>
                         </a>
                         @endcan
                         </div>

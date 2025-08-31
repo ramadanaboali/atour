@@ -302,6 +302,14 @@
                         </a>
                     </li>
                     @endcan
+                    @can('gift_types.view')
+                    <li class=" nav-item {{ request()->routeIs('admin.gift_types*')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.gift_types.index') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.gift_types') }}</span>
+                        </a>
+                    </li>
+                    @endcan
                     @can('sliders.view')
 
                     <li class=" nav-item {{ request()->routeIs('admin.sliders*')?'active':''}}">
