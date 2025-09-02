@@ -118,6 +118,7 @@ return [
     'general_name' => 'الاسم العام',
     'experience_info' => 'معلومات الخبرة',
     'profission_guide' => 'مرشد محترف',
-    'job' => 'المهنة'
+    'job' => 'المهنة',
+    'national_image'=>'صورة الهوية'
 
 ];

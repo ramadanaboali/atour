@@ -257,7 +257,7 @@
                         @error('general_name')<span class="error">{{ $message }}</span>@enderror
                     </div>
                     <div class="mb-1 col-md-6 @error('cover') is-invalid @enderror">
-                        <label class="form-label" for="cover">{{ __('suppliers.file') }}</label>
+                        <label class="form-label" for="cover">{{ __('suppliers.national_image') }}</label>
                         <input type="file" class="form-control input" name="cover" id="cover">
                         @error('cover')
                         <span class="error">{{ $message }}</span>
