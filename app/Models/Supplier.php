@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -64,9 +65,9 @@ class Supplier extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-    public function subCategory(): ?HasMany
+    public function subCategory(): ?BelongsToMany
     {
-        return $this->hasMany(SubCategory::class, 'supplier_id');
+        return $this->belongsToMany(SubCategory::class, 'supplier_sub_category','supplier_id','sub_category_id');
     }
 
     protected $appends = ['photo','licence_file'];
