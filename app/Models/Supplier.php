@@ -67,7 +67,7 @@ class Supplier extends Model
     }
     public function subCategory(): ?BelongsToMany
     {
-        return $this->belongsToMany(SubCategory::class, 'supplier_sub_category','supplier_id','sub_category_id');
+        return $this->belongsToMany(SubCategory::class, 'supplier_services','supplier_id','sub_category_id');
     }
 
     protected $appends = ['photo','licence_file'];
