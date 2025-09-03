@@ -119,6 +119,9 @@ return [
     'experience_info' => 'معلومات الخبرة',
     'profission_guide' => 'مرشد محترف',
     'job' => 'المهنة',
-    'national_image'=>'صورة الهوية'
+    'national_image'=>'صورة الهوية',
+    'sub_category'=>'التصنيف الفرعي',
+    'select_type'=>'اختر النوع',
+    'individual'=>'فرد',
 
 ];

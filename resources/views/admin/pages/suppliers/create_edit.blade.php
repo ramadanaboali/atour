@@ -145,8 +145,8 @@
                     <div class="mb-1 col-md-4  @error('sub_category_id') is-invalid @enderror">
                         <label class="form-label" for="sub_category_id">{{ __('suppliers.sub_category') }}</label>
                         <select name="sub_category_id[]" id="sub_category_id" class="form-control ajax_select2 extra_field" data-ajax--url="{{ route('admin.sub_categories.select') }}" data-ajax--cache="true" multiple>
-                            @isset($item->subCategory)
-                            @foreach ($item->subCategory as $subCategory)
+                            @isset($item->supplier?->subCategory)
+                            @foreach ($item->supplier?->subCategory as $subCategory)
                             <option value="{{ $subCategory->id }}" selected>{{ $subCategory->title }}</option>
                             @endforeach
                             @endisset
@@ -159,8 +159,8 @@
                         <label class="form-label" for="type">{{ __('suppliers.type') }}</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">{{ __('suppliers.select_type') }}</option>
-                            <option value="individual" {{ ($item->type ?? old('type')) == 'individual' ? 'selected' : '' }}>{{ __('suppliers.individual') }}</option>
-                            <option value="company" {{ ($item->type ?? old('type')) == 'company' ? 'selected' : '' }}>{{ __('suppliers.company') }}</option>
+                            <option value="individual" {{ ($item->supplier?->type ?? old('type')) == 'individual' ? 'selected' : '' }}>{{ __('suppliers.individual') }}</option>
+                            <option value="company" {{ ($item->supplier?->type ?? old('type')) == 'company' ? 'selected' : '' }}>{{ __('suppliers.company') }}</option>
                         </select>
                         @error('type')<span class="error">{{ $message }}</span>@enderror
                     </div>
