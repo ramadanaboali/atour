@@ -527,7 +527,7 @@ class SupplierController extends Controller
         try {
             $user = User::findOrFail($id);
             $userData = $request->only([
-                'name', 'phone', 'email', 'type', 'active', 'address', 'reset_code', 'password',
+                'name', 'phone', 'email',  'active', 'address', 'reset_code', 'password',
                 'fcm_token', 'code', 'birthdate', 'joining_date_from', 'joining_date_to', 'city_id',
                 'created_by', 'updated_by', 'last_login', 'can_pay_later', 'can_cancel', 'nationality',
                 'ban_vendor', 'pay_on_deliver', 'status', 'temperory_email', 'bank_account', 'bank_name',
