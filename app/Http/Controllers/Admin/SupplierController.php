@@ -538,9 +538,15 @@ class SupplierController extends Controller
             } else {
                 unset($userData['password']);
             }
-            if ($request->hasFile('image')) {
-                $userData['image'] = $request->file('image')->store('users', 'public');
+
+
+            $image = $request->file('image');
+            if ($image) {
+                $fileName = time() . rand(0, 999999999) . '.' . $image->getClientOriginalExtension();
+                $request->image->move(public_path('storage/users'), $fileName);
+                $userData['image'] = $fileName;
             }
+
 
             $user->update($userData);
             $supplierData = $request->only([

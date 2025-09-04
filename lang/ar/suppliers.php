@@ -83,7 +83,7 @@ return [
     'company' => 'شركة',
     'indivedual' => 'فرد',
     'type' => 'النوع',
-    'country' => 'المدينة',
+    'country' => 'الدولة',
     'streat' => 'الشارع',
     'postal_code' => 'الرمز البريدى',
     'short_description' => 'الوصف القصير',
