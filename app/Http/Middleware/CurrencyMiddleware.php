@@ -9,14 +9,14 @@ class CurrencyMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $currencyCode = $request->header('currency', 'SAR'); // default SAR
+        $currencyCode = $request->header('currency', 'EUR'); // default SAR
         $currency = Currency::where('code', $currencyCode)->first();
 
         if (!$currency) {
             $currency = Currency::where('code', 'SAR')->first();
         }
 
-app()->instance('currency', $currency);
+        app()->instance('currency', $currency);
 
         // app()->singleton('currency', fn () => $currency);
 
