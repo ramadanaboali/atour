@@ -15,7 +15,7 @@ function convertPrice($amount)
         $rate = $currency->rate;
     }
 
-    return round($amount * $rate, 2);
+    return round(($amount * $rate), 2);
 }
 
 function currencyCode()
