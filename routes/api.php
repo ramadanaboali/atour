@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['prefix' => 'v1'], function () {
-    Route::group(['middleware' => ['languageMobile']], function () {
+    Route::group(['middleware' => ['languageMobile','currency']], function () {
         Route::post('/send-otp', [AuthController::class, 'sendOtp']);
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
         Route::post('/reset', [AuthController::class, 'resetPassword']);
@@ -118,7 +118,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
         Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
 
-        Route::group(['middleware' => ['auth:sanctum','currency']], function () {
+        Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/store-player-id', function (Request $request) {
                 $request->validate([
                     'player_id' => 'required|string',
