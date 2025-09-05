@@ -18,6 +18,8 @@ class CurrencyMiddleware
 
         app()->instance('currency', $currency);
 
+dd(app('currency'));
+
         // app()->singleton('currency', fn () => $currency);
 
         return $next($request);
