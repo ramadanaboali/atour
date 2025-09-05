@@ -78,7 +78,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('sliders', [PageController::class,'sliders']);
         Route::get('countries', [PageController::class,'countries']);
         Route::get('countries/{id}', [PageController::class,'getCountry']);
-     
+
         Route::get('categories', [PageController::class,'categories']);
         Route::get('sub_categories', [PageController::class,'sub_categories']);
         Route::get('articles', [PageController::class,'articles']);
@@ -105,10 +105,19 @@ Route::group(['prefix' => 'v1'], function () {
             Route::patch('tickets/{id}/close', [App\Http\Controllers\Api\V1\TicketController::class, 'close']);
             Route::patch('tickets/{id}/reopen', [App\Http\Controllers\Api\V1\TicketController::class, 'reopen']);
         });
-     
+
         Route::get('notifications-read/{id}', [VendorController::class, 'readNotification']);
 
         Route::get('trip-calendar/{trip}', [HomeController::class,'getYearlyAvailability']);
+
+        Route::get('trips', [HomeController::class,'trips']);
+        Route::get('gifts', [HomeController::class,'gifts']);
+        Route::get('effectivenes', [HomeController::class,'effectivenes']);
+        Route::get('similar_trips/{id}', [HomeController::class,'similler_trips']);
+        Route::get('trips/{id}', [HomeController::class,'trip']);
+        Route::get('gifts/{id}', [HomeController::class,'gift']);
+        Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
+        Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
 
         Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('/store-player-id', function (Request $request) {
@@ -128,31 +137,24 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('contact-us', [PageController::class, 'contactUs']);
 
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
-            Route::get('trips', [HomeController::class,'trips']);
-            Route::get('gifts', [HomeController::class,'gifts']);
-            Route::get('effectivenes', [HomeController::class,'effectivenes']);
-            Route::get('similar_trips/{id}', [HomeController::class,'similler_trips']);
-            Route::get('trips/{id}', [HomeController::class,'trip']);
-            Route::get('gifts/{id}', [HomeController::class,'gift']);
-            Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
-            Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
+
             Route::get('bookings', [OrderController::class, 'bookings']);
             Route::get('save-favourite/{type}/{id}', [HomeController::class, 'saveFavourite']);
             Route::get('remove-favourite/{type}/{id}', [HomeController::class, 'deleteFavourite']);
             Route::get('favourite', [HomeController::class, 'favourite']);
-            Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
             Route::get('trip-pay/{id}', [OrderController::class, 'tripPay']);
-            Route::post('booking-effectivene', [OrderController::class, 'bookingEffectivenes']);
             Route::get('effectivene-pay/{id}', [OrderController::class, 'effectivenePay']);
-            Route::post('booking-gift', [OrderController::class, 'bookingGifts']);
             Route::get('gift-pay/{id}', [OrderController::class, 'giftPay']);
             Route::get('cancel/{type}/{id}', [OrderController::class, 'cancelOrder']);
             Route::get('rates', [PageController::class, 'getAllRates']);
             Route::get('rates/{id}/{type}', [PageController::class, 'getRates']);
-            Route::post('save_rate', [PageController::class, 'saveRates']);
             Route::get('get_prefered_setting', [PageController::class, 'getPreferedSetting']);
-            Route::post('change_prefered_setting', [PageController::class, 'changePreferedSetting']);
             Route::get('change-language/{language}', [PageController::class, 'changeLang']);
+            Route::post('booking-gift', [OrderController::class, 'bookingGifts']);
+            Route::post('change_prefered_setting', [PageController::class, 'changePreferedSetting']);
+            Route::post('booking-trip', [OrderController::class, 'bookingTrip']);
+            Route::post('booking-effectivene', [OrderController::class, 'bookingEffectivenes']);
+            Route::post('save_rate', [PageController::class, 'saveRates']);
             Route::post('/update-profile', [AuthController::class, 'updateProfile']);
             Route::post('/send-code', [AuthController::class, 'sendCode']);
             Route::post('/change-password', [AuthController::class, 'changePassword']);

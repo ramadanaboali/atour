@@ -19,7 +19,7 @@ class User extends Authenticatable
     use SoftDeletes;
 
     protected $table = 'users';
-    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','code','birthdate','city_id','country_id','created_by','updated_by','last_login','nationality','status'];
+    protected $fillable = ['name', 'phone', 'email', 'image', 'type', 'active','address','reset_code','password','fcm_token','code','birthdate','city_id','country_id','created_by','updated_by','last_login','nationality','status','lang'];
 
     /**
      * The attributes that should be hidden for serialization.

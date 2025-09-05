@@ -36,6 +36,7 @@ use App\Models\WhyBooking;
 use App\Models\Feature;
 use App\Models\Onboarding;
 use App\Models\Requirement;
+use App\Models\User;
 use App\Services\General\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -216,9 +217,11 @@ class PageController extends Controller
         return apiResponse(true, $data, null, null, 200);
     }
 
-    public function getPreferedSetting()
+    public function changeLanguage(Request $request)
     {
-        $data = UserPreferedSetting::where('user_id', Auth::id())->first();
+        $data = User::find(Auth::id());
+        $data->lang = $request->lang;
+        $data->save();
         return apiResponse(true, $data, null, null, 200);
     }
 
