@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 function convertPrice($amount)
 {
-    if (!app()->bound('currency')) {
-        $currency = Currency::where('code', 'SAR')->first();
-        app()->instance('currency', $currency);
+    $rate = 1;
+    if (app()->bound('currency')) {
+        $currency = app('currency');
+        $rate = $currency->rate;
     }
 
-    $currency = app('currency');
-    return round($amount * $currency->rate, 2);
+    return round($amount * $rate, 2);
 }
 
 function currencyCode()
