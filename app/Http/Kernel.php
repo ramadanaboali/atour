@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
+            
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -75,5 +76,7 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'log.activity' => \App\Http\Middleware\LogUserActivity::class,
+        'currency' => \App\Http\Middleware\CurrencyMiddleware::class,
+
     ];
 }

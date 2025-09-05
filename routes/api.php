@@ -43,7 +43,6 @@ Route::get('/send-user', function (Request $request) {
 });
 
 
-
 Route::get('/notifications', function (Request $request) {
     return response()->json(Notification::latest()->get());
 });
@@ -119,7 +118,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('effectivenes/{id}', [HomeController::class,'effectivene']);
         Route::get('trip-programs/{id}', [HomeController::class,'tripPrograms']);
 
-        Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::group(['middleware' => ['auth:sanctum','currency']], function () {
             Route::post('/store-player-id', function (Request $request) {
                 $request->validate([
                     'player_id' => 'required|string',

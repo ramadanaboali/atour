@@ -1,12 +1,19 @@
 <?php
 
+use App\Models\Currency;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
+
 function convertPrice($amount)
 {
+    if (!app()->bound('currency')) {
+        $currency = Currency::where('code', 'SAR')->first();
+        app()->instance('currency', $currency);
+    }
+
     $currency = app('currency');
     return round($amount * $currency->rate, 2);
 }

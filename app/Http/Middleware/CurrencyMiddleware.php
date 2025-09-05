@@ -16,7 +16,9 @@ class CurrencyMiddleware
             $currency = Currency::where('code', 'SAR')->first();
         }
 
-        app()->singleton('currency', fn () => $currency);
+app()->instance('currency', $currency);
+
+        // app()->singleton('currency', fn () => $currency);
 
         return $next($request);
     }
