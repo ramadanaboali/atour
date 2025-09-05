@@ -5,6 +5,23 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
+function convertPrice($amount)
+{
+    $currency = app('currency');
+    return round($amount * $currency->rate, 2);
+}
+
+function currencyCode()
+{
+    return app('currency')->code;
+}
+
+function currencySymbol()
+{
+    return app('currency')->symbol;
+}
+
+
 if (!function_exists('bookingCount')) {
     function bookingCount($id,$type)
     {

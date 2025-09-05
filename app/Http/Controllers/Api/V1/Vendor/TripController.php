@@ -46,7 +46,7 @@ class TripController extends Controller
     public function storeOffer(TripOfferRequest $request)
     {
         $locale = $request->header('lang', 'en');
-        
+
         $folder_path = "images/offers";
         $image = null;
         if ($request->hasFile('image')) {
@@ -61,13 +61,13 @@ class TripController extends Controller
             'description' => $request->description,
         ];
         $offer = TripOffer::create($offer_data);
-        
+
         return response()->apiSuccess($offer);
     }
     public function store(TripRequest $request)
     {
         $locale = $request->header('lang', 'en');
-        
+
         $folder_path = "images/trips";
         $storedPath = null;
         if ($request->hasFile('cover')) {
@@ -78,6 +78,7 @@ class TripController extends Controller
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
             'price' => $request->price,
+            'is_group' => $request->is_group,
             'min_people' => $request->min_people,
             'max_people' => $request->max_people,
             'start_long' => $request->start_long,
@@ -91,15 +92,15 @@ class TripController extends Controller
             'city_id' => $request->city_id,
             'created_by' => auth()->user()->id,
         ];
-      
+
         $item = $this->service->store($data);
         $steps_list = [];
         if ($item) {
             // Create translation
-          foreach($request->steps_list??[] as $step){
-            $steps_list[$locale][] = $step;
-          }
-        
+            foreach ($request->steps_list ?? [] as $step) {
+                $steps_list[$locale][] = $step;
+            }
+
             TripTranslation::create([
                 'trip_id' => $item->id,
                 'locale' => $locale,
@@ -110,7 +111,7 @@ class TripController extends Controller
                 'program_time' => $request->program_time,
                 'steps_list' => $steps_list,
             ]);
-            
+
             // Handle subcategories
             if ($request->sub_category_ids) {
                 foreach ($request->sub_category_ids as $sub_category_id) {
@@ -120,12 +121,12 @@ class TripController extends Controller
                     ]);
                 }
             }
-            
+
             // Handle features and requirements
-            if($request->featur_ids){
+            if ($request->featur_ids) {
                 $item->features()->sync($request->featur_ids);
             }
-            if($request->requirement_ids){
+            if ($request->requirement_ids) {
                 $item->requirements()->sync($request->requirement_ids);
             }
 
@@ -145,25 +146,27 @@ class TripController extends Controller
                 }
             }
         }
-        
+
         return response()->apiSuccess(new TripResource($item));
     }
 
     public function update(TripRequest $request, Trip $trip)
     {
         $locale = $request->header('lang', 'en');
-        
+
         $folder_path = "images/trips";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
-        
+
         $data = [
             'cover' => $storedPath ?? $trip->cover,
             'price' => $request->price ?? $trip->price,
-            'people' => $request->people ?? $trip->people,
+            'is_group' => $request->is_group ?? $trip->is_group,
+            'min_people' => $request->min_people ?? $trip->min_people,
+            'max_people' => $request->max_people ?? $trip->max_people,
             'start_long' => $request->start_long ?? $trip->start_long,
             'start_lat' => $request->start_lat ?? $trip->start_lat,
             'end_long' => $request->end_long ?? $trip->end_long,
@@ -175,18 +178,18 @@ class TripController extends Controller
             'city_id' => $request->city_id ?? $trip->city_id,
             'updated_by' => auth()->user()->id,
         ];
-        
+
         $item = $this->service->update($data, $trip);
-        
+
         if ($item) {
             // Update or create translation
             $translation = TripTranslation::where('trip_id', $trip->id)
                 ->where('locale', $locale)
                 ->first();
-        $steps_list = [];
-        foreach($request->steps_list??[] as $step){
-            $steps_list[$locale][] = $step;
-          }     
+            $steps_list = [];
+            foreach ($request->steps_list ?? [] as $step) {
+                $steps_list[$locale][] = $step;
+            }
             $translationData = [
                 'title' => $request->title,
                 'description' => $request->description,
@@ -195,16 +198,16 @@ class TripController extends Controller
                 'program_time' => $request->program_time,
                 'steps_list' => $steps_list,
             ];
-            
+
             if ($translation) {
-                $translation->update(array_filter($translationData, fn($value) => $value !== null));
+                $translation->update(array_filter($translationData, fn ($value) => $value !== null));
             } else {
                 TripTranslation::create(array_merge([
                     'trip_id' => $trip->id,
                     'locale' => $locale,
-                ], array_filter($translationData, fn($value) => $value !== null)));
+                ], array_filter($translationData, fn ($value) => $value !== null)));
             }
-            
+
             // Handle subcategories
             if ($request->filled('sub_category_ids')) {
                 TripSubCategory::where('trip_id', $trip->id)->delete();
@@ -215,15 +218,15 @@ class TripController extends Controller
                     ]);
                 }
             }
-            
+
             // Handle features and requirements
-            if($request->featur_ids){
+            if ($request->featur_ids) {
                 $item->features()->sync($request->featur_ids);
             }
-            if($request->requirement_ids){
+            if ($request->requirement_ids) {
                 $item->requirements()->sync($request->requirement_ids);
             }
-            
+
             // Handle images
             if ($request->hasFile('images')) {
                 Attachment::where('model_id', $trip->id)->where('model_type', 'trip')->delete();
@@ -246,13 +249,13 @@ class TripController extends Controller
     }
     public function delete($id)
     {
-        $trip=$this->service->get($id);
-        if(count($trip->bookings)){
+        $trip = $this->service->get($id);
+        if (count($trip->bookings)) {
             return response()->apiFail(__('api.trip_has_bookings'));
         }
         $this->storageService->deleteFile($trip->cover);
         Offer::where('trip_id', $id)->delete();
         return response()->apiSuccess($this->service->delete($trip));
     }
-   
+
 }

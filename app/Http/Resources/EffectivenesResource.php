@@ -18,8 +18,8 @@ class EffectivenesResource extends JsonResource
  
             'title' => $this->title,
             'description' => $this->description,
-            'price' => $this->price,
-            'customer_price' => $this->customer_price,
+            'price' => convertPrice($this->price),
+            'customer_price' => convertPrice($this->customer_price),
             'people' => $this->people,
             'from_date' => $this->from_date,
             'to_date' => $this->to_date,

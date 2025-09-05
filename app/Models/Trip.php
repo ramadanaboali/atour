@@ -35,6 +35,7 @@ class Trip extends Model
         'rate',
         'created_by',
         'updated_by',
+        'is_group',
     ];
     protected $casts = [
         'available_times' => 'array',

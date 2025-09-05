@@ -25,6 +25,7 @@ class Gift extends Model
         'rate',
         'created_by',
         'updated_by',
+        'quantity',
     ];
     public function translations()
     {

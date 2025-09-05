@@ -42,8 +42,9 @@ class TripRequest extends FormRequest
             'active' => 'nullable|in:0,1',
             'pay_later' => 'required|in:0,1',
             'city_id' => 'required|exists:cities,id',
-            'min_people' => 'nullable|integer|min:1',
-            'max_people' => 'nullable|integer|min:1',
+            'is_group' => 'required|in:0,1',
+            'min_people' => 'required_if:is_group,0|integer|min:1',
+            'max_people' => 'required_if:is_group,0|integer|gte:min_people',
             'start_long' => 'nullable|numeric',
             'start_lat' => 'nullable|numeric',
             'end_long' => 'nullable|numeric',
@@ -68,9 +69,8 @@ class TripRequest extends FormRequest
             'requirement_ids' => 'nullable|array',
             'requirement_ids.*' => 'required|'. Rule::exists('requirements', 'id')->whereNull('deleted_at'),
         ];
-
-
     }
+   
     protected function failedValidation(Validator $validator)
     {
         $errors = (new ValidationException($validator))->errors();
