@@ -53,6 +53,7 @@ class GiftController extends Controller
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
             'long' => $request->long,
+            'quantity' => $request->quantity,
             'lat' => $request->lat,
             'price' => $request->price,
             'free_cancelation' => $request->free_cancelation,
@@ -118,6 +119,8 @@ class GiftController extends Controller
             'cover' => $storedPath ?? $gift->cover,
             'long' => $request->long ?? $gift->long,
             'lat' => $request->lat ?? $gift->lat,
+                        'quantity' => $request->quantity?? $gift->quantity,
+
             'price' => $request->price ?? $gift->price,
             'free_cancelation' => $request->free_cancelation ?? $gift->free_cancelation,
             'pay_later' => $request->pay_later ?? $gift->pay_later,
