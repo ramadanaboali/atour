@@ -9,7 +9,7 @@ class CurrencyMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $currencyCode = $request->header('currency', 'EUR'); // default SAR
+        $currencyCode = $request->header('currency', 'SAR'); // default SAR
         $currency = Currency::where('code', $currencyCode)->first();
 
         if (!$currency) {
