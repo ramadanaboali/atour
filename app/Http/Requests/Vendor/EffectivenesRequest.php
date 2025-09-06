@@ -33,7 +33,9 @@ class EffectivenesRequest extends FormRequest
                         // Translation fields (single language based on header)
                         'title' => 'required|string|min:2',
                         'description' => 'required|string|min:2',
-                        
+                        'is_group' => 'required|in:0,1',
+                        'min_people' => 'required_if:is_group,0|integer|min:1',
+                        'max_people' => 'required_if:is_group,0|integer|gte:min_people',
                         // Main model fields
                         'price' => 'required|numeric',
                         'from_date' => 'required|date',
@@ -58,7 +60,9 @@ class EffectivenesRequest extends FormRequest
                         // Translation fields (single language based on header)
                         'title' => 'nullable|string|min:2',
                         'description' => 'nullable|string|min:2',
-                        
+                        'is_group' => 'required|in:0,1',
+                        'min_people' => 'required_if:is_group,0|integer|min:1',
+                        'max_people' => 'required_if:is_group,0|integer|gte:min_people',
                         // Main model fields
                         'price' => 'nullable|numeric',
                         'from_date' => 'nullable|date',

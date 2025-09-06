@@ -194,6 +194,20 @@
                         @enderror
                     </div>
 
+                    @if(!isset($item))
+                    <div class="mb-1 col-md-4  @error('vendor_id') is-invalid @enderror">
+                        <label class="form-label" for="vendor_id">{{ __('effectivenes.vendor') }}</label>
+                        <select name="vendor_id" id="vendor_id" class="form-control ajax_select2 extra_field" data-ajax--url="{{ route('admin.suppliers.select') }}" data-ajax--cache="true">
+                            @isset($item->vendor)
+                            <option value="{{ $item->vendor->id }}" selected>{{ $item->vendor->name }}</option>
+                            @endisset
+                        </select>
+                        @error('vendor_id')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>                    
+                    @endif
+
                     <div class="mb-1 col-md-4  @error('price') is-invalid @enderror">
                         <label class="form-label" for="price">{{ __('effectivenes.price') }}</label>
                         <input type="number" name="price" id="price" class="form-control" placeholder="" value="{{ $item->price ?? old('price') }}" required />
@@ -202,10 +216,25 @@
                         @enderror
                     </div>
 
-                    <div class="mb-1 col-md-4  @error('people') is-invalid @enderror">
-                        <label class="form-label" for="people">{{ __('effectivenes.people') }}</label>
-                        <input type="number" name="people" id="people" class="form-control" placeholder="" value="{{ $item->people ?? old('people') }}" required />
-                        @error('people')
+                    <div class="mb-1 col-md-4">
+                        <label class="form-label" for="is_group">{{ __('effectivenes.is_group') }}</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_group" id="is_group" value="1" {{ (isset($item) && $item->is_group) || old('is_group') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="is_group">{{ __('effectivenes.group_event') }}</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-1 col-md-4 people-field @error('min_people') is-invalid @enderror">
+                        <label class="form-label" for="min_people">{{ __('effectivenes.min_people') }}</label>
+                        <input type="number" name="min_people" id="min_people" class="form-control" placeholder="" value="{{ $item->min_people ?? old('min_people') }}" required />
+                        @error('min_people')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-1 col-md-4 people-field @error('max_people') is-invalid @enderror">
+                        <label class="form-label" for="max_people">{{ __('effectivenes.max_people') }}</label>
+                        <input type="number" name="max_people" id="max_people" class="form-control" placeholder="" value="{{ $item->max_people ?? old('max_people') }}" required />
+                        @error('max_people')
                         <span class="error">{{ $message }}</span>
                         @enderror
                     </div>
@@ -399,6 +428,26 @@
             row.remove();
         }
     });
+
+    // Handle is_group toggle
+    const isGroupCheckbox = document.getElementById('is_group');
+    const peopleFields = document.querySelectorAll('.people-field');
+    
+    function togglePeopleFields() {
+        peopleFields.forEach(field => {
+            if (isGroupCheckbox.checked) {
+                field.style.display = 'none';
+            } else {
+                field.style.display = 'block';
+            }
+        });
+    }
+    
+    // Initialize on page load
+    togglePeopleFields();
+    
+    // Add event listener
+    isGroupCheckbox.addEventListener('change', togglePeopleFields);
 
 </script>
 

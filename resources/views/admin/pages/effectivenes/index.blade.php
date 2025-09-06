@@ -14,6 +14,13 @@
                 </div>
             </div>
         </div>
+        <div class="content-header-right col-md-6 col-12 text-md-end">
+            @can('effectivenes.create')
+                <a href="{{ route('admin.effectivenes.create') }}" class="btn btn-primary mb-1">
+                    <i data-feather="plus" class="me-25"></i>
+                    <span>{{ __('effectivenes.actions.create') }}</span>
+                </a>
+            @endcan
         {{--  --}}
     </div>
     <div class="content-body">

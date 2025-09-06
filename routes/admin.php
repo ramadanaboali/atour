@@ -195,6 +195,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('trips/select', [App\Http\Controllers\Admin\TripController::class, 'select'])->name('trips.select');
             Route::delete('trips/bulk', [App\Http\Controllers\Admin\TripController::class, 'deleteBulk'])->name('trips.deleteBulk')->middleware('adminPermission:trips.delete');
             Route::get('trips/list', [App\Http\Controllers\Admin\TripController::class, 'list'])->name('trips.list')->middleware('adminPermission:trips.view');
+            Route::get('trips/create', [App\Http\Controllers\Admin\TripController::class, 'create'])->name('trips.create')->middleware('adminPermission:trips.view');
             Route::post('trips', [App\Http\Controllers\Admin\TripController::class, 'store'])->name('trips.store')->middleware('adminPermission:trips.create');
             Route::delete('trips/{id}', [App\Http\Controllers\Admin\TripController::class, 'destroy'])->name('trips.destroy')->middleware('adminPermission:trips.delete');
             Route::get('trips', [App\Http\Controllers\Admin\TripController::class, 'index'])->name('trips.index')->middleware('adminPermission:trips.view');

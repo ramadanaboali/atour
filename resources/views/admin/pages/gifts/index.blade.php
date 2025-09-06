@@ -14,7 +14,18 @@
                 </div>
             </div>
         </div>
-        {{--  --}}
+        <div class="content-header-right text-md-end col-md-6 col-12 d-md-block ">
+            <div class="mb-1 breadcrumb-right">
+                @can('gifts.create')
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.gifts.create') }}">
+                            <i data-feather="plus"></i>
+                            <span class="active-sorting text-primary">{{ __('gifts.actions.create') }}</span>
+                        </a>
+                    </div>
+                @endcan
+            </div>
+        </div>
     </div>
     <div class="content-body">
         <div class="card">

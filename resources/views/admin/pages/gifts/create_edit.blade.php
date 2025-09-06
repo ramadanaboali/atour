@@ -142,8 +142,19 @@
                         </div>
                     </div>
 
-
-
+                    @if(!isset($item))
+                    <div class="mb-1 col-md-4  @error('vendor_id') is-invalid @enderror">
+                        <label class="form-label" for="vendor_id">{{ __('gifts.vendor') }}</label>
+                        <select name="vendor_id" id="vendor_id" class="form-control ajax_select2 extra_field" data-ajax--url="{{ route('admin.suppliers.select') }}" data-ajax--cache="true">
+                            @isset($item->vendor)
+                            <option value="{{ $item->vendor->id }}" selected>{{ $item->vendor->name }}</option>
+                            @endisset
+                        </select>
+                        @error('vendor_id')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>                    
+                    @endif
                     <div class="mb-1 col-md-4  @error('long') is-invalid @enderror">
                         <label class="form-label" for="long">{{ __('gifts.long') }}</label>
                         <input type="text" name="long" id="long" class="form-control" placeholder="" value="{{ $item->long ?? old('long') }}" required />
@@ -155,6 +166,13 @@
                         <label class="form-label" for="lat">{{ __('gifts.lat') }}</label>
                         <input type="text" name="lat" id="lat" class="form-control" placeholder="" value="{{ $item->lat ?? old('lat') }}" required />
                         @error('lat')
+                        <span class="error">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-1 col-md-4  @error('quantity') is-invalid @enderror">
+                        <label class="form-label" for="quantity">{{ __('gifts.quantity') }}</label>
+                        <input type="text" name="quantity" id="quantity" class="form-control" placeholder="" value="{{ $item->quantity ?? old('quantity') }}" required />
+                        @error('quantity')
                         <span class="error">{{ $message }}</span>
                         @enderror
                     </div>

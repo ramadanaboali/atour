@@ -108,6 +108,8 @@ return [
     'start_point' => 'نقطة البداية',
     'end_point' => 'نقطة النهاية',
     'program_time' => 'وقت البرنامج',
+    'is_group' => 'مجموعة',
+    'group_trip'=> 'رحلة جماعية',
     
 
 ];

@@ -38,6 +38,45 @@ class GiftController extends Controller
         return view($this->viewEdit, get_defined_vars());
     }
 
+    public function store(GiftRequest $request): RedirectResponse
+    {
+        $data = $request->except(['_token', '_method']);
+        
+        // Handle cover upload
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+        
+        // Create gift
+        $gift = Gift::create($data);
+        
+        // Create translations
+        foreach ($request->translations as $tr) {
+            $gift->translations()->create($tr);
+        }
+        
+        // Sync sub categories
+        $gift->subCategory()->sync($data['sub_category_ids']);
+        
+        // Handle images
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                $storedPath = $image->store('gift_images', 'public');
+                $attachment = [
+                    'model_id' => $gift->id,
+                    'model_type' => 'gift',
+                    'attachment' => $storedPath,
+                    'title' => "gift",
+                ];
+                Attachment::create($attachment);
+            }
+        }
+        
+        flash(__('gifts.messages.created'))->success();
+        return redirect()->route('admin.gifts.index');
+    }
+
     public function edit($id): View
     {
         $item = Gift::findOrFail($id);

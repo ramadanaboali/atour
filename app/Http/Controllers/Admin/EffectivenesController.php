@@ -38,6 +38,42 @@ class EffectivenesController extends Controller
         return view($this->viewEdit, get_defined_vars());
     }
 
+    public function store(EffectivenesRequest $request): RedirectResponse
+    {
+        $data = $request->except(['_token', '_method']);
+        
+        // Handle cover upload
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+        
+        // Create effectivenes
+        $effectivenes = Effectivenes::create($data);
+        
+        // Create translations
+        foreach ($request->translations as $tr) {
+            $effectivenes->translations()->create($tr);
+        }
+        
+        // Handle images
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                $storedPath = $image->store('effectivenes_images', 'public');
+                $attachment = [
+                    'model_id' => $effectivenes->id,
+                    'model_type' => 'effectivenes',
+                    'attachment' => $storedPath,
+                    'title' => "effectivenes",
+                ];
+                Attachment::create($attachment);
+            }
+        }
+        
+        flash(__('effectivenes.messages.created'))->success();
+        return redirect()->route('admin.effectivenes.index');
+    }
+
     public function edit($id): View
     {
         $item = Effectivenes::findOrFail($id);

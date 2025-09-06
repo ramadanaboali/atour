@@ -40,6 +40,60 @@ class TripController extends Controller
         return view($this->viewEdit, get_defined_vars());
     }
 
+    public function store(TripRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        
+        // Format available_times
+        $available_times = [];
+        foreach ($data['available_times']['from_time'] as $index => $from_time) {
+            $available_times[] = [
+                'from_time' => $from_time,
+                'to_time' => $data['available_times']['to_time'][$index]
+            ];
+        }
+        $data['available_times'] = $available_times;
+
+        // Format available_days
+        $data['available_days'] = array_values($data['available_days']);
+
+        // Handle cover upload
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        // Create trip
+        $trip = Trip::create($data);
+
+        // Create translations
+        foreach ($request->translations as $tr) {
+            $trip->translations()->create($tr);
+        }
+        
+        // Sync relationships
+        $trip->requirements()->sync($data['requirement_ids']);
+        $trip->subCategory()->sync($data['sub_category_ids']);
+        $trip->features()->sync($data['featur_ids']);
+
+        // Handle images
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                $storedPath = $image->store('trip_images', 'public');
+                $attachment = [
+                    'model_id' => $trip->id,
+                    'model_type' => 'trip',
+                    'attachment' => $storedPath,
+                    'title' => "trip",
+                ];
+                Attachment::create($attachment);
+            }
+        }
+        
+        flash(__('trips.messages.created'))->success();
+        return redirect()->route('admin.trips.index');
+    }
+
     public function edit($id): View
     {
         $item = Trip::findOrFail($id);
