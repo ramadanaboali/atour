@@ -20,7 +20,8 @@ return [
         'filter' => 'بحث',
         'back' => 'العودة للخلف',
         'settings'=> 'الضبط',
-
+        'actions' => 'الإجراءات',
+        'send_notification' => 'إرسال إشعار',
     ],
     'messages' => [
         'created' => 'تم إضافة المورد بنجاح .',
@@ -124,6 +125,9 @@ return [
     'job' => 'المهنة',
     'sub_category' => 'الفئة الفرعية',
     'select_type' => 'اختر النوع',
-    'individual' => 'فرد'
-
+    'individual' => 'فرد',
+    'notification_title' => 'عنوان الإشعار',
+    'notification_message' => 'رسالة الإشعار',
+    'notification_will_be_sent_to' => 'سيتم إرسال الإشعار إلى',
+    'notification_sent_successfully' => 'تم إرسال الإشعار بنجاح',
 ];

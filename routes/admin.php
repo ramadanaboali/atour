@@ -368,6 +368,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('suppliers/setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'setting'])->name('suppliers.setting')->middleware('adminPermission:suppliers.setting');
             Route::post('suppliers/save-setting/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'saveSetting'])->name('suppliers.saveSetting')->middleware('adminPermission:suppliers.setting');
             Route::get('suppliers/show/{id}', [App\Http\Controllers\Admin\SupplierController::class, 'show'])->name('suppliers.show')->middleware('adminPermission:suppliers.show');
+            Route::post('suppliers/{id}/send-notification', [App\Http\Controllers\Admin\SupplierController::class, 'sendNotification'])->name('suppliers.send-notification')->middleware('adminPermission:suppliers.edit');
             Route::get('suppliers-orders/list', [App\Http\Controllers\Admin\SupplierController::class, 'orders'])->name('suppliers.orders')->middleware('adminPermission:suppliers.view');
             Route::get('suppliers-ratings/list', [App\Http\Controllers\Admin\SupplierController::class, 'ratings'])->name('suppliers.ratings')->middleware('adminPermission:suppliers.view');
             Route::get('suppliers-payments', [App\Http\Controllers\Admin\SupplierController::class, 'payments'])->name('accounts.payments')->middleware('adminPermission:accounts.payments');
@@ -406,6 +407,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('clients/{id}/edit', [App\Http\Controllers\Admin\ClientController::class, 'edit'])->name('clients.edit')->middleware('adminPermission:clients.edit');
 
             Route::get('clients/show/{id}', [App\Http\Controllers\Admin\ClientController::class, 'show'])->name('clients.show')->middleware('adminPermission:clients.show');
+            Route::post('clients/{id}/send-notification', [App\Http\Controllers\Admin\ClientController::class, 'sendNotification'])->name('clients.send-notification')->middleware('adminPermission:clients.edit');
             Route::get('clients-ratings/list', [App\Http\Controllers\Admin\ClientController::class, 'ratings'])->name('clients.ratings')->middleware('adminPermission:clients.view');
 
 

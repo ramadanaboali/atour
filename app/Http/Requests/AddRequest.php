@@ -20,6 +20,7 @@ class AddRequest extends FormRequest
                 'start_date' => 'required',
                 'end_date' => 'required',
                 'location' => 'required',
+                'notification_recipients' => 'nullable|in:all,clients,vendors',
             ];
         }else{
             return [
@@ -28,6 +29,7 @@ class AddRequest extends FormRequest
                 'end_date' => 'required',
                 'location' => 'required',
                 'image' => 'required|image',
+                'notification_recipients' => 'nullable|in:all,clients,vendors',
             ];
         }
     }

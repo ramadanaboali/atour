@@ -109,7 +109,23 @@ class AddController extends Controller
                 $item->save();
             }
             if ($request->send_notification == 1) {
-                $users = User::get();
+                $notificationRecipients = $request->notification_recipients ?? 'all';
+                
+                $users = collect();
+                
+                switch ($notificationRecipients) {
+                    case 'clients':
+                        $users = User::where('type', User::TYPE_CLIENT)->get();
+                        break;
+                    case 'vendors':
+                        $users = User::where('type', User::TYPE_SUPPLIER)->get();
+                        break;
+                    case 'all':
+                    default:
+                        $users = User::whereIn('type', [User::TYPE_CLIENT, User::TYPE_SUPPLIER])->get();
+                        break;
+                }
+                
                 foreach ($users as $user) {
                     OneSignalService::sendToUser($user->id, $item->title, $item->description);
                 }

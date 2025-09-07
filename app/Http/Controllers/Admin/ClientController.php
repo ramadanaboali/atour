@@ -11,6 +11,7 @@ use App\Models\Client;
 use App\Models\CustomerRating;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\OneSignalService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -165,13 +166,8 @@ class ClientController extends Controller
             $item->active = 0;
         }
         $item->type = User::TYPE_CLIENT;
-        if ($request->filled('email')) {
-            $item->temperory_email = $request->email;
-        }
-        if ($request->filled('phone')) {
-            $item->temperory_phone = $request->phone;
-        }
-
+      
+     
         if ($item->save()) {
 
             if ($request->filled('password')) {
@@ -344,6 +340,30 @@ class ClientController extends Controller
             })
             ->rawColumns(['stars', 'verification_status'])
             ->make(true);
+    }
+
+    public function sendNotification(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        try {
+            OneSignalService::sendToUser($user->id, $request->title, $request->message);
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('clients.notification_sent_successfully')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.error_occurred') . ': ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 }

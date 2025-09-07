@@ -61,10 +61,37 @@
                         </ul>
 
                         <div class="d-flex justify-content-center pt-2">
-                            <a href="{{ route('admin.clients.edit',['id'=>$item->id]) }}" class="btn btn-primary me-1">{{ __('clients.actions.edit') }}</a>
-                            <a class="btn btn-outline-danger suspend-user client_status" data-url="{{ route("admin.clients.status", ['id'=>$item->id]) }}" href="#">
-                                {{ __('clients.actions.status') }}
-                            </a>
+                            <div class="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle waves-effect waves-float waves-light" data-bs-toggle="dropdown">
+                                    <i data-feather="settings" class="font-medium-2"></i>
+                                    <span>{{ __('clients.actions.actions') }}</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    @can('clients.edit')
+                                    <a class="dropdown-item" href="{{ route('admin.clients.edit', $item->id) }}">
+                                        <i data-feather="edit-2" class="font-medium-2"></i>
+                                        <span>{{ __('clients.actions.edit') }}</span>
+                                    </a>
+                                    @endcan
+                                    @can('clients.delete')
+                                    <a class="dropdown-item delete_item" data-url="{{ route('admin.clients.destroy', $item->id) }}" href="#">
+                                        <i data-feather="trash" class="font-medium-2"></i>
+                                        <span>{{ __('clients.actions.delete') }}</span>
+                                    </a>
+                                    @endcan
+                                    @can('clients.status')
+                                    <a class="dropdown-item client_status" data-url="{{ route('admin.clients.status', $item->id) }}" href="#">
+                                        <i data-feather="circle" class="font-medium-2"></i>
+                                        <span>{{ __('clients.actions.status') }}</span>
+                                    </a>
+                                    @endcan
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">
+                                        <i data-feather="bell" class="font-medium-2"></i>
+                                        <span>{{ __('clients.actions.send_notification') }}</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -205,6 +232,48 @@
         </div>
     </section>
 </div>
+
+<!-- Send Notification Modal -->
+<div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendNotificationModalLabel">
+                    <i data-feather="bell" class="font-medium-2"></i>
+                    {{ __('clients.actions.send_notification') }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="sendNotificationForm" action="{{ route('admin.clients.send-notification', $item->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="notification_title" class="form-label">{{ __('clients.notification_title') }}</label>
+                        <input type="text" class="form-control" id="notification_title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notification_message" class="form-label">{{ __('clients.notification_message') }}</label>
+                        <textarea class="form-control" id="notification_message" name="message" rows="4" required></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        <i data-feather="info" class="font-medium-2"></i>
+                        {{ __('clients.notification_will_be_sent_to') }}: <strong>{{ $item->name }}</strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ __('admin.cancel') }}
+                    </button>
+                    <button type="button" id="sendNotification" class="btn btn-primary">
+                        <i data-feather="send" class="font-medium-2"></i>
+                        {{ __('clients.actions.send_notification') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @push('scripts')
@@ -333,6 +402,46 @@
             }
         , ]
     );
+
+    // Handle notification form submission
+    $('#sendNotification').on('click', function(e) {
+        e.preventDefault();
+        
+        const form = $("#sendNotificationForm");
+        const submitBtn = $(this);
+        const originalText = submitBtn.html();
+        
+        // Show loading state
+        submitBtn.prop('disabled', true).html('<i class="spinner-border spinner-border-sm me-1"></i>{{ __("admin.sending") }}...');
+        
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#sendNotificationModal').modal('hide');
+                    form[0].reset();
+                    
+                    // Show success message
+                    toastr.success(response.message || '{{ __("clients.notification_sent_successfully") }}');
+                } else {
+                    toastr.error(response.message || '{{ __("admin.error_occurred") }}');
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = '{{ __("admin.error_occurred") }}';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                toastr.error(errorMessage);
+            },
+            complete: function() {
+                // Reset button state
+                submitBtn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
 
 </script>
 @endpush

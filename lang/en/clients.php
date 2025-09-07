@@ -21,6 +21,8 @@ return [
         'setting' => 'Settings',
         'back' => 'Back',
         'status' => 'Status',
+        'actions' => 'Actions',
+        'send_notification' => 'Send Notification',
     ],
     'messages' => [
         'created' => 'Client has been added successfully.',
@@ -95,4 +97,8 @@ return [
     'orders_details' => 'Order Details',
     'rates_details' => 'Rating Details',
     'favourit_details' => 'Favorite Details',
+    'notification_title' => 'Notification Title',
+    'notification_message' => 'Notification Message',
+    'notification_will_be_sent_to' => 'Notification will be sent to',
+    'notification_sent_successfully' => 'Notification sent successfully',
 ];

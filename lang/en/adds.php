@@ -68,4 +68,8 @@ return [
     'views' => 'Views',
     'date' => 'Date',
     'send_notification' => 'Send Notification',
+    'notification_recipients' => 'Send To',
+    'all_users' => 'All Users',
+    'clients_only' => 'Clients Only',
+    'vendors_only' => 'Vendors Only',
 ];

@@ -150,7 +150,19 @@
                             @enderror
                         </div>
                         
-                        <div class="mb-1 col-md-6 @error('image') is-invalid @enderror">
+                        <div class="mb-1 col-md-4 @error('notification_recipients') is-invalid @enderror" id="notification-recipients-wrapper" style="display: none;">
+                            <label class="form-label" for="notification_recipients">{{ __('adds.notification_recipients') }}</label>
+                            <select name="notification_recipients" id="notification_recipients" class="form-select">
+                                <option value="all" {{ old('notification_recipients', 'all') == 'all' ? 'selected' : '' }}>{{ __('adds.all_users') }}</option>
+                                <option value="clients" {{ old('notification_recipients') == 'clients' ? 'selected' : '' }}>{{ __('adds.clients_only') }}</option>
+                                <option value="vendors" {{ old('notification_recipients') == 'vendors' ? 'selected' : '' }}>{{ __('adds.vendors_only') }}</option>
+                            </select>
+                            @error('notification_recipients')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        
+                        <div class="mb-1 col-md-4 @error('image') is-invalid @enderror">
                             <label class="form-label" for="image">{{ __('adds.file') }}</label>
                             <input type="file" class="form-control input" name="image" id="image">
                             @error('image')
@@ -244,6 +256,25 @@
             if (option) option.disabled = false;
 
             row.remove();
+        }
+    });
+
+    // Handle notification recipients dropdown visibility
+    document.getElementById('send_notification').addEventListener('change', function() {
+        const recipientsWrapper = document.getElementById('notification-recipients-wrapper');
+        if (this.checked) {
+            recipientsWrapper.style.display = 'block';
+        } else {
+            recipientsWrapper.style.display = 'none';
+        }
+    });
+
+    // Show dropdown if send_notification is already checked (for edit mode)
+    document.addEventListener('DOMContentLoaded', function() {
+        const sendNotificationCheckbox = document.getElementById('send_notification');
+        const recipientsWrapper = document.getElementById('notification-recipients-wrapper');
+        if (sendNotificationCheckbox.checked) {
+            recipientsWrapper.style.display = 'block';
         }
     });
 

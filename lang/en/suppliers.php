@@ -20,6 +20,8 @@ return [
         'filter' => 'Search',
         'back' => 'Go Back',
         'settings' => 'Settings',
+        'actions' => 'Actions',
+        'send_notification' => 'Send Notification',
     ],
     'messages' => [
         'created' => 'Supplier added successfully.',
@@ -109,4 +111,8 @@ return [
     'percentage' => 'Percentage',
     'national_id' => 'National ID',
     'const' => 'Fixed Value',
+    'notification_title' => 'Notification Title',
+    'notification_message' => 'Notification Message',
+    'notification_will_be_sent_to' => 'Notification will be sent to',
+    'notification_sent_successfully' => 'Notification sent successfully',
 ];

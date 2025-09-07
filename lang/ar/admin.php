@@ -317,7 +317,8 @@ return [
     'is_currently' => 'الآن',
     'time'=>'الوقت',
     'new_customer'=>'عميل جديد : :name',
-    'activity_booked'=>':name حجز النشاط : :trip'
+    'activity_booked'=>':name حجز النشاط : :trip',
+    'cancel'=>'الغاء'
 
 
 
