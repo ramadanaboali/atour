@@ -21,7 +21,8 @@ return [
         'setting' => 'ضبط',
         'back' => 'العودة للخلف',
         'status' => 'الحالة',
-
+        'actions' => 'الإجراءات',
+        'send_notification' => 'إرسال إشعار',
     ],
     'messages' => [
         'created' => 'تم إضافة العميل بنجاح .',
@@ -99,5 +100,8 @@ return [
     'orders_details'=>'تفاصيل الطلبات',
     'rates_details'=>'تفاصيل التقيمات',
     'favourit_details'=>'تفاصيل المفضلة',
-
+    'notification_title' => 'عنوان الإشعار',
+    'notification_message' => 'رسالة الإشعار',
+    'notification_will_be_sent_to' => 'سيتم إرسال الإشعار إلى',
+    'notification_sent_successfully' => 'تم إرسال الإشعار بنجاح',
 ];
