@@ -228,6 +228,83 @@
                     <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.faqs') }}</span>
                 </a>
             </li>
+            
+            <!-- Accountants Section -->
+            {{-- @can('accountants.view')
+            <li class="nav-item {{ request()->routeIs('admin.accountants*') ? 'open active' : '' }}">
+                <a class="d-flex align-items-center {{ request()->routeIs('admin.accountants*') ? 'active' : '' }}" href="#">
+                    <i data-feather="dollar-sign"></i>
+                    <span class="menu-title text-truncate" data-i18n="">{{ __('admin.accountants') }}</span>
+                </a>
+                <ul class="menu-content">
+                    @can('accountants.dashboard')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.dashboard') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.dashboard') }}">
+                            <i data-feather="pie-chart"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.dashboard') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.revenue')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.revenue*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.revenue') }}">
+                            <i data-feather="trending-up"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.revenue_management') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.expenses')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.expenses*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.expenses') }}">
+                            <i data-feather="trending-down"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.expenses_management') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.transactions')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.transactions*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.transactions') }}">
+                            <i data-feather="credit-card"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.transactions') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.commissions')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.commissions*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.commissions') }}">
+                            <i data-feather="percent"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.commissions') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.payouts')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.payouts*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.payouts') }}">
+                            <i data-feather="send"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.supplier_payouts') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.reports')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.reports*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.reports') }}">
+                            <i data-feather="file-text"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.financial_reports') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('accountants.taxes')
+                    <li class="nav-item {{ request()->routeIs('admin.accountants.taxes*') ? 'active' : '' }}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.accountants.taxes') }}">
+                            <i data-feather="file-text"></i>
+                            <span class="menu-item text-truncate">{{ __('admin.tax_management') }}</span>
+                        </a>
+                    </li>
+                    @endcan
+                </ul>
+            </li>
+            @endcan --}}
+            
             <li class=" nav-item {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'open active' : '' }} ">
                 <a class="d-flex align-items-center {{ request()->routeIs('admin.users*')|| request()->routeIs('admin.roles*') ? 'active' : '' }}" href="#">
                     <i data-feather="user"></i>

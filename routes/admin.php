@@ -438,6 +438,18 @@ Route::middleware('throttle:60,1')->group(function () {
 
             Route::post('getOffers', [App\Http\Controllers\Admin\AdminController::class, 'getOffers'])->name('getOffers');
 
+            // Accountants Routes
+            Route::prefix('accountants')->name('accountants.')->group(function () {
+                Route::get('dashboard', [App\Http\Controllers\Admin\AccountantController::class, 'dashboard'])->name('dashboard')->middleware('adminPermission:accountants.dashboard');
+                Route::get('revenue', [App\Http\Controllers\Admin\AccountantController::class, 'revenue'])->name('revenue')->middleware('adminPermission:accountants.revenue');
+                Route::get('expenses', [App\Http\Controllers\Admin\AccountantController::class, 'expenses'])->name('expenses')->middleware('adminPermission:accountants.expenses');
+                Route::get('transactions', [App\Http\Controllers\Admin\AccountantController::class, 'transactions'])->name('transactions')->middleware('adminPermission:accountants.transactions');
+                Route::get('commissions', [App\Http\Controllers\Admin\AccountantController::class, 'commissions'])->name('commissions')->middleware('adminPermission:accountants.commissions');
+                Route::get('payouts', [App\Http\Controllers\Admin\AccountantController::class, 'payouts'])->name('payouts')->middleware('adminPermission:accountants.payouts');
+                Route::get('reports', [App\Http\Controllers\Admin\AccountantController::class, 'reports'])->name('reports')->middleware('adminPermission:accountants.reports');
+                Route::get('taxes', [App\Http\Controllers\Admin\AccountantController::class, 'taxes'])->name('taxes')->middleware('adminPermission:accountants.taxes');
+            });
+
 
         });
     });
