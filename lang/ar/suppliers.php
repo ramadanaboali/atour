@@ -41,6 +41,7 @@ return [
         'unarchived' => 'غير مخبأ',
         'settings' => 'الضبط',
         'create' => 'إضافة',
+        'actions'=>'الإجراءات',
     ],
     'send_notification' => 'إرسال إشعار',
     'notification_title' => 'عنوان الإشعار',

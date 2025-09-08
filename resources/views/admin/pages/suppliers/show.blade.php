@@ -62,7 +62,7 @@
                                     @can('suppliers.edit')
                                     <div class="btn-group">
                                         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {{ __('suppliers.actions') }}
+                                            {{ __('suppliers.actions.actions') }}
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
