@@ -68,4 +68,8 @@ return [
     'views' => 'المشاهدات',
     'date' => 'التاريخ',
     'send_notification' => 'ارسال اشعار',
+    'notification_recipient' => 'مستقبلي الإشعار',
+    'all_users' => 'جميع المستخدمين',
+    'clients_only' => 'العملاء فقط',
+    'suppliers_only' => 'الموردين فقط',
 ];

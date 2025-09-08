@@ -59,8 +59,27 @@
                                     </li>
                                 </ul>
                                 <div class="d-flex justify-content-center pt-2">
-
-                                   
+                                    @can('suppliers.edit')
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {{ __('suppliers.actions') }}
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('admin.suppliers.edit', $user->id) }}">
+                                                    <i data-feather="edit-2" class="me-50"></i>
+                                                    {{ __('suppliers.edit') }}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#sendNotificationModal">
+                                                    <i data-feather="bell" class="me-50"></i>
+                                                    {{ __('suppliers.send_notification') }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -390,3 +409,80 @@
 
     </script>
 @endpush
+
+<!-- Send Notification Modal -->
+<div class="modal fade" id="sendNotificationModal" tabindex="-1" aria-labelledby="sendNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendNotificationModalLabel">{{ __('suppliers.send_notification') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="sendNotificationForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="notificationTitle" class="form-label">{{ __('suppliers.notification_title') }}</label>
+                        <input type="text" class="form-control" id="notificationTitle" name="title" required maxlength="255">
+                    </div>
+                    <div class="mb-3">
+                        <label for="notificationMessage" class="form-label">{{ __('suppliers.notification_message') }}</label>
+                        <textarea class="form-control" id="notificationMessage" name="message" rows="4" required maxlength="1000"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('suppliers.cancel') }}</button>
+                    <button type="submit" class="btn btn-primary" id="sendNotificationBtn">
+                        <span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span>
+                        {{ __('suppliers.send_notification') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('sendNotificationForm');
+    const submitBtn = document.getElementById('sendNotificationBtn');
+    const spinner = submitBtn.querySelector('.spinner-border');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        spinner.classList.remove('d-none');
+        
+        const formData = new FormData(form);
+        
+        fetch('{{ route("admin.suppliers.sendNotification", $user->id) }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                toastr.success(data.message);
+                form.reset();
+                $('#sendNotificationModal').modal('hide');
+            } else {
+                toastr.error(data.message || '{{ __("admin.error_occurred") }}');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastr.error('{{ __("admin.error_occurred") }}');
+        })
+        .finally(() => {
+            // Hide loading state
+            submitBtn.disabled = false;
+            spinner.classList.add('d-none');
+        });
+    });
+});
+</script>

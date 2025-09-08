@@ -14,6 +14,7 @@ use App\Models\SupplierService;
 use App\Models\User;
 use App\Models\UserFee;
 use App\Models\Trip;
+use App\Services\OneSignalService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -584,5 +585,32 @@ class SupplierController extends Controller
             return intval($user->code) + 1;
         }
         return $code;
+    }
+
+    /**
+     * Send notification to individual supplier
+     */
+    public function sendNotification(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        try {
+            OneSignalService::sendToUser($user->id, $request->title, $request->message);
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('suppliers.notification_sent_successfully')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('admin.error_occurred') . ': ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

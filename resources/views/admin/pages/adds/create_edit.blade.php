@@ -97,6 +97,23 @@
                             <span class="error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-1 col-md-4 @error('notification_recipient') is-invalid @enderror" id="notification_recipient_div" style="display: none;">
+                            <label class="form-label" for="notification_recipient">{{ __('adds.notification_recipient') }}</label>
+                            <select name="notification_recipient" id="notification_recipient" class="form-control">
+                                <option value="all" {{ (old('notification_recipient', $item->notification_recipient ?? 'all') == 'all') ? 'selected' : '' }}>
+                                    {{ __('adds.all_users') }}
+                                </option>
+                                <option value="clients" {{ (old('notification_recipient', $item->notification_recipient ?? '') == 'clients') ? 'selected' : '' }}>
+                                    {{ __('adds.clients_only') }}
+                                </option>
+                                <option value="suppliers" {{ (old('notification_recipient', $item->notification_recipient ?? '') == 'suppliers') ? 'selected' : '' }}>
+                                    {{ __('adds.suppliers_only') }}
+                                </option>
+                            </select>
+                            @error('notification_recipient')
+                            <span class="error">{{ $message }}</span>
+                            @enderror
+                        </div>
                           <div class="mb-1 col-md-6  @error('description_en') is-invalid @enderror">
                             <label class="form-label" for="description_en">{{ __('admin.description_en') }}</label>
                             <textarea type="text" name="description_en" id="description_en" class="form-control" placeholder="">{{ $item->description_en ?? old('description_en') }}</textarea>
@@ -131,3 +148,27 @@
         </div>
     </form>
 @stop
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sendNotificationCheckbox = document.getElementById('send_notification');
+    const notificationRecipientDiv = document.getElementById('notification_recipient_div');
+    
+    // Function to toggle notification recipient dropdown
+    function toggleNotificationRecipient() {
+        if (sendNotificationCheckbox.checked) {
+            notificationRecipientDiv.style.display = 'block';
+        } else {
+            notificationRecipientDiv.style.display = 'none';
+        }
+    }
+    
+    // Initial check
+    toggleNotificationRecipient();
+    
+    // Add event listener
+    sendNotificationCheckbox.addEventListener('change', toggleNotificationRecipient);
+});
+</script>
+@endpush
