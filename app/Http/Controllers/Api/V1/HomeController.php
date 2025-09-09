@@ -29,7 +29,6 @@ class HomeController extends Controller
 {
     public function home(Request $request)
     {
-
         $token = $request->header('Authorization');
         if ($token) {
             $token = str_replace('Bearer ', '', $token);
@@ -39,32 +38,116 @@ class HomeController extends Controller
                 Auth::setUser($user);
             }
         }
+
+        $filter = $request->input('filter', 'all');
+        $data = [];
+
+        // Base query for active offers with translations
         $offers = Offer::with(['translations' => function ($q) {
             $q->where('locale', app()->getLocale());
-        }])->where('active', 1)
-            ->select('offers.*')
-            ->get();
-        $data['vendor_offers'] = TripOffer::get();
-        $data['offers'] = OfferResource::collection($offers);
-        $cities = City::where('active', true)->limit(10)->paginate(10);
-        $data['most_visited'] = CityResource::collection($cities);
+        }])->where('active', 1);
 
-        $old_experiences = Trip::whereHas('translations' , function ($q) {
-            $q->where('locale', app()->getLocale());
-        })->join('users', function ($query) {
-            $query->on('users.id', '=', 'trips.vendor_id')->where('users.active', 1);
-        })->where('trips.active', true)->select('trips.*')->get();
+        // Apply filters based on the request
+        switch ($filter) {
+            case 'popular_tours':
+                $tours = Trip::withCount('bookings')
+                ->orderBy('bookings_count', 'desc')
+                ->where('active', true)
+                ->limit(10)
+                ->get();
+                $data['tours'] = TripResource::collection($tours);
+                break;
 
-        $data['old_experiences'] = TripResource::collection($old_experiences);
-       
-       
-        $effectivenes = Effectivenes::whereHas('translations' , function ($q) {
-            $q->where('locale', app()->getLocale());
-        })->join('users', function ($query) {
-            $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
-        })->where('effectivenes.active', true)->where('from_date', '<=', date('Y-m-d'))->where('to_date', '>=', date('Y-m-d'))->select('effectivenes.*')->get();
+            case 'popular_events':
+                $events = Effectivenes::withCount('bookings')
+                    ->orderBy('bookings_count', 'desc')
+                    ->where('active', true)
+                    ->where('from_date', '>=', now())
+                    ->limit(10)
+                    ->get();
+                $data['events'] = EffectivenesResource::collection($events);
+                break;
 
-        $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
+            case 'popular_gifts':
+                $gifts = Gift::withCount('bookings')
+                    ->orderBy('bookings_count', 'desc')
+                    ->where('active', true)
+                    ->limit(10)
+                    ->get();
+                $data['gifts'] = GiftResource::collection($gifts);
+                break;
+
+            case 'popular_cities':
+                $cities = City::withCount(['trips', 'effectivenes', 'gifts'])
+                    ->orderByRaw('(trips_count + effectivenes_count + gifts_count) DESC')
+                    ->where('active', true)
+                    ->limit(10)
+                    ->get();
+                $data['cities'] = CityResource::collection($cities);
+                break;
+
+            case 'popular_countries':
+                $cities = City::with('country')
+                    ->select('cities.*', \DB::raw('(SELECT COUNT(*) FROM trips WHERE trips.city_id = cities.id) as trips_count'))
+                    ->orderBy('trips_count', 'desc')
+                    ->where('active', true)
+                    ->groupBy('cities.country_id')
+                    ->limit(10)
+                    ->get();
+                $data['cities'] = CityResource::collection($cities);
+                break;
+
+            case 'nearest':
+                $userCityId = $user->city_id ?? null;
+                if ($userCityId) {
+                    $tours = Trip::where('city_id', $userCityId)
+                        ->where('active', true)
+                        ->orderBy('created_at', 'desc')
+                        ->limit(10)
+                        ->get();
+                    $data['tours'] = TripResource::collection($tours);
+                }
+                break;
+
+            case 'highest_rated':
+                $tours = Trip::withAvg('ratings as avg_rating', 'rating')
+                    ->orderBy('avg_rating', 'desc')
+                    ->where('active', true)
+                    ->limit(10)
+                    ->get();
+                $data['tours'] = TripResource::collection($tours);
+                break;
+
+            default:
+                // Default home data
+                $offers = $offers->get();
+                $data['vendor_offers'] = TripOffer::get();
+                $data['offers'] = OfferResource::collection($offers);
+                
+                $cities = City::where('active', true)->limit(10)->paginate(10);
+                $data['most_visited'] = CityResource::collection($cities);
+
+                $old_experiences = Trip::whereHas('translations', function ($q) {
+                    $q->where('locale', app()->getLocale());
+                })->join('users', function ($query) {
+                    $query->on('users.id', '=', 'trips.vendor_id')->where('users.active', 1);
+                })->where('trips.active', true)->select('trips.*')->get();
+
+                $data['old_experiences'] = TripResource::collection($old_experiences);
+
+                $effectivenes = Effectivenes::whereHas('translations', function ($q) {
+                    $q->where('locale', app()->getLocale());
+                })->join('users', function ($query) {
+                    $query->on('users.id', '=', 'effectivenes.vendor_id')->where('users.active', 1);
+                })->where('effectivenes.active', true)
+                  ->where('from_date', '<=', date('Y-m-d'))
+                  ->where('to_date', '>=', date('Y-m-d'))
+                  ->select('effectivenes.*')
+                  ->get();
+
+                $data['effectivenes'] = EffectivenesResource::collection($effectivenes);
+                break;
+        }
 
         return apiResponse(true, $data, null, null, 200);
     }

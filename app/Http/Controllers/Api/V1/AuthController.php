@@ -65,7 +65,6 @@ class AuthController extends Controller
     {
         $userInput = [
             'email' => $request->email,
-            'temperory_email' => $request->email,
             'joining_date_from' => date('Y-m-d'),
             'name' => $request->name,
             'phone' => $request->phone,
@@ -79,7 +78,7 @@ class AuthController extends Controller
         if ($user) {
             $user->update($userInput);
         } else {
-            $user = User::updateOrCreate(['temperory_email' => $request->email], $userInput);
+            $user = User::updateOrCreate(['email' => $request->email], $userInput);
         }
 
 
@@ -121,14 +120,13 @@ class AuthController extends Controller
         try {
             $MsgID = rand(100000, 999999);
             $data = [
-                'temperory_email' => $request->email,
                 'reset_code' => $MsgID,
                 'status' => 'pendding',
                 'active' => false,
                 'type' => User::TYPE_CLIENT,
             ];
-            $user = User::updateOrCreate(['temperory_email' => $request->email], $data);
-            Mail::to($user->temperory_email)->send(new ActivationMail($user->name, $MsgID));
+            $user = User::updateOrCreate(['email' => $request->email], $data);
+            Mail::to($user->email)->send(new ActivationMail($user->name, $MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -138,7 +136,7 @@ class AuthController extends Controller
     {
 
         try {
-            $user = User::where('temperory_email', $request->email)->orWhere('email', $request->email)->first();
+            $user = User::where('email', $request->email)->orWhere('email', $request->email)->first();
             if (!$user) {
                 return apiResponse(false, null, __('api.not_found'), null, 404);
             }

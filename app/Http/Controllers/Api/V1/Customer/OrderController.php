@@ -95,12 +95,21 @@ class OrderController extends Controller
             if ($item->vendor?->active == 0) {
                 return response()->apiFail(__('api.vendor_not_active'));
             }
+            
+            // Validate group size if it's not a group booking
+            if ($item->is_group == 0) {
+                $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
+                $totalPeople = (int)$booking_count + (int)$request->people_number + (int)$request->children_number;
+                if ($totalPeople < $item->min_people || $totalPeople > $item->max_people) {
+                    return response()->apiFail(__('api.group_size_not_allowed', [
+                        'min' => $item->min_people,
+                        'max' => $item->max_people
+                    ]));
+                }
+            }
             $booking_date = $this->convertArabicNumbersToEnglish($request->booking_date);
             Log::info($booking_date);
-            $booking_count = BookingTrip::where('trip_id', $request->trip_id)->whereNotIn('status', [Order::STATUS_REJECTED, Order::STATUS_CANCELED])->where('booking_date', $booking_date)->selectRaw('SUM(people_number + children_number) as total')->first()->total;
-            if (((int)$booking_count + (int)$request->children_number + (int)$request->people_number) > (int)$item->people) {
-                return response()->apiFail(__('api.trip_compleated_cant_compleate_reservation'));
-            }
+            
             $data = $request->all();
             $quantity = ((int) $request->children_number + (int) $request->people_number) ?? 1;
             $data['user_id'] = auth()->user()->id;
@@ -484,6 +493,19 @@ class OrderController extends Controller
             return response()->apiFail(__('api.order_paid_befor'));
         }
     }
+    public function getBooking($type,$id)
+    {
+        if ($type == 'gift') {
+            $order = BookingGift::with(['user','vendor','gift'])->findOrFail($id);
+        } elseif ($type == 'effectivene') {
+            $order = BookingEffectivene::with(['user','vendor','effectivene'])->findOrFail($id);
+        } else {
+            $order = BookingTrip::with(['user','vendor','trip'])->findOrFail($id);
+        }
+        return response()->apiSuccess($order);
+    }
+
+
     public function bookings(Request $request)
     {
 
@@ -620,10 +642,6 @@ class OrderController extends Controller
 
     public function cancelOrder($type, $id)
     {
-        Log::info('sss');
-        Log::info($type);
-        Log::info($id);
-        Log::info('sss');
         if ($type == 'gift') {
             $order = BookingGift::findOrFail($id);
             $message = __('api.cancel_gift_booking_code', ['item_name' => $order->gift?->title]);
@@ -635,8 +653,12 @@ class OrderController extends Controller
             $message = __('api.cancel_trip_booking_code', ['item_name' => $order->trip?->title]);
         }
 
-        $order->cancel_date = date('Y-m-d H:-i:s');
+        // Check if order was created more than 48 hours ago
+        if ($order->created_at->diffInHours(now()) >= 48) {
+            return response()->apiFail(__('api.cancellation_period_expired'));
+        }
 
+        $order->cancel_date = now();
         $order->status = Order::STATUS_CANCELED;
 
         $order->save();

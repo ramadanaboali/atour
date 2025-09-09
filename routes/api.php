@@ -138,6 +138,7 @@ Route::group(['prefix' => 'v1'], function () {
             Route::post('fcm-token', [App\Http\Controllers\Api\V1\AuthController::class, 'updateToken']);
 
             Route::get('bookings', [OrderController::class, 'bookings']);
+            Route::get('bookings/{type}/{id}', [OrderController::class, 'getBooking']);
             Route::get('save-favourite/{type}/{id}', [HomeController::class, 'saveFavourite']);
             Route::get('remove-favourite/{type}/{id}', [HomeController::class, 'deleteFavourite']);
             Route::get('favourite', [HomeController::class, 'favourite']);
