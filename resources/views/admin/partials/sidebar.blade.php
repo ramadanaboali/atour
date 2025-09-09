@@ -485,6 +485,12 @@
                             <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.terms') }}</span>
                         </a>
                     </li>
+                    <li class=" nav-item {{ request()->routeIs('admin.settings.client_terms')?'active':''}}">
+                        <a class="d-flex align-items-center" href="{{ route('admin.settings.client_terms') }} ">
+                            <i data-feather="circle"></i>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.client_terms') }}</span>
+                        </a>
+                    </li>
                     <li class=" nav-item {{ request()->routeIs('admin.settings.experience')?'active':''}}">
                         <a class="d-flex align-items-center" href="{{ route('admin.settings.experience') }} ">
                             <i data-feather="circle"></i>

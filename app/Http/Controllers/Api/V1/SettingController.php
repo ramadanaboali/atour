@@ -106,6 +106,20 @@ class SettingController extends Controller
         }
         return apiResponse(true, $data, null, null, 200);
     }
+    public function client_terms()
+    {
+
+
+        $item = Setting::with(['translations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('key', 'client_terms')->first();
+        if ($item && count($item->translations)>0) {
+            $data = $item->translations[0];
+        }else{
+            $data=null;
+        }
+        return apiResponse(true, $data, null, null, 200);
+    }
 
     public function privacy()
     {

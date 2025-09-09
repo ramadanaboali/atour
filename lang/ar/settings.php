@@ -33,4 +33,5 @@ return [
     'youtube' => 'اليوتيوب',
     'helping' => 'المساعدة',
     'xxxxxx' => 'xxxxxx',
+    'client_terms'=>'الشروط والاحكام للعملاء'
 ];

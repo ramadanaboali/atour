@@ -345,7 +345,8 @@ return [
     'time'=>'الوقت',
     'new_customer'=>'عميل جديد : :name',
     'activity_booked'=>':name حجز النشاط : :trip',
-    'cancel'=>'الغاء'
+    'cancel'=>'الغاء',
+    'client_terms'=>'الشروط للعملاء'
 
 
 

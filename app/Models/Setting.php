@@ -13,6 +13,10 @@ class Setting extends Model
     {
         return $this->hasMany(SettingTranslation::class)->where('type', 'terms');
     }
+    public function clientTermsTranslations()
+    {
+        return $this->hasMany(SettingTranslation::class)->where('type', 'client_terms');
+    }
     public function privacyTranslations()
     {
         return $this->hasMany(SettingTranslation::class)->where('type', 'privacy');

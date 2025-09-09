@@ -69,6 +69,13 @@ class SettingController extends Controller
             ->first();
         return view('admin.pages.settings.terms', get_defined_vars());
     }
+    public function client_terms(): View
+    {
+        $item = $this->setting
+            ->where('key', 'client_terms')
+            ->first();
+        return view('admin.pages.settings.client_terms', get_defined_vars());
+    }
 
     public function about(): View
     {
@@ -109,8 +116,11 @@ class SettingController extends Controller
         if ($request->type == "terms") {
             $item->termsTranslations()->delete();
         }
+        if ($request->type == "client_terms") {
+            $item->clientTermsTranslations()->delete();
+        }
         if ($request->type == "privacy") {
-            $item->termsTranslations()->delete();
+            $item->privacyTranslations()->delete();
         }
 
         if ($request->type == "about") {
@@ -134,6 +144,9 @@ class SettingController extends Controller
             }
             if ($request->type == 'about') {
                 $item->aboutTranslations()->create($tr);
+            }
+            if ($request->type == 'client_terms') {
+                $item->clientTermsTranslations()->create($tr);
             }
 
             if ($request->type == 'privacy') {

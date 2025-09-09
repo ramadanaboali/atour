@@ -66,6 +66,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('privacy', [SettingController::class, 'privacy']);
         Route::get('about', [SettingController::class, 'about']);
         Route::get('terms', [SettingController::class, 'terms']);
+        Route::get('client_terms', [SettingController::class, 'client_terms']);
         Route::get('contact', [SettingController::class, 'contact']);
         Route::get('header', [SettingController::class,'header']);
         Route::get('ads', [PageController::class,'ads']);
