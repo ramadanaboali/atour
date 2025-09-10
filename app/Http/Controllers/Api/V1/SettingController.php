@@ -99,8 +99,8 @@ class SettingController extends Controller
         $item = Setting::with(['termsTranslations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])->where('key', 'terms')->first();
-        if ($item && count($item->translations)>0) {
-            $data = $item->translations[0];
+        if ($item && count($item->termsTranslations)>0) {
+            $data = $item->termsTranslations[0];
         }else{
             $data=null;
         }
@@ -113,8 +113,8 @@ class SettingController extends Controller
         $item = Setting::with(['clientTermsTranslations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])->where('key', 'client_terms')->first();
-        if ($item && count($item->translations)>0) {
-            $data = $item->translations[0];
+        if ($item && count($item->clientTermsTranslations)>0) {
+            $data = $item->clientTermsTranslations[0];
         }else{
             $data=null;
         }
@@ -128,8 +128,8 @@ class SettingController extends Controller
         $item = Setting::with(['privacyTranslations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])->where('key', 'privacy')->first();
-        if ($item && count($item->translations)>0) {
-            $data = $item->translations[0];
+        if ($item && count($item->privacyTranslations)>0) {
+            $data = $item->privacyTranslations[0];
         }else{
             $data=null;
         }
