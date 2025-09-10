@@ -126,7 +126,7 @@ class AuthController extends Controller
                 'type' => User::TYPE_CLIENT,
             ];
             $user = User::updateOrCreate(['email' => $request->email], $data);
-            Mail::to($user->email)->send(new ActivationMail($user->name, $MsgID));
+            Mail::to($user->email)->send(new ActivationMail($MsgID));
             return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
