@@ -41,30 +41,29 @@ class GiftController extends Controller
     public function store(GiftRequest $request)
     {
         $locale = $request->header('lang', 'en');
-        
+
         $folder_path = "images/gifts";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
-        
+
         $data = [
             'cover' => $storedPath,
             'vendor_id' => auth()->user()->id,
             'long' => $request->long,
-            'quantity' => $request->quantity,
             'lat' => $request->lat,
             'price' => $request->price,
             'free_cancelation' => $request->free_cancelation,
             'pay_later' => $request->pay_later,
             'city_id' => $request->city_id,
-            'quantity' => $request->quantity??,
+            'quantity' => $request->quantity ?? 0,
             'created_by' => auth()->user()->id,
         ];
-        
+
         $item = $this->service->store($data);
-        
+
         if ($item) {
             // Create translation
             GiftTranslation::create([
@@ -74,7 +73,7 @@ class GiftController extends Controller
                 'description' => $request->description,
                 'location' => $request->location,
             ]);
-            
+
             // Handle subcategories
             if ($request->sub_category_ids) {
                 foreach ($request->sub_category_ids as $sub_category_id) {
@@ -101,26 +100,26 @@ class GiftController extends Controller
                 }
             }
         }
-        
+
         return response()->apiSuccess(new GiftResource($item));
     }
 
     public function update(GiftRequest $request, Gift $gift)
     {
         $locale = $request->header('lang', 'en');
-        
+
         $folder_path = "images/gifts";
         $storedPath = null;
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $storedPath = $this->storageService->storeFile($file, $folder_path);
         }
-        
+
         $data = [
             'cover' => $storedPath ?? $gift->cover,
             'long' => $request->long ?? $gift->long,
             'lat' => $request->lat ?? $gift->lat,
-                        'quantity' => $request->quantity?? $gift->quantity,
+                        'quantity' => $request->quantity ?? $gift->quantity,
 
             'price' => $request->price ?? $gift->price,
             'free_cancelation' => $request->free_cancelation ?? $gift->free_cancelation,
@@ -129,30 +128,30 @@ class GiftController extends Controller
             'quantity' => $request->quantity ?? $gift->quantity,
             'updated_by' => auth()->user()->id,
         ];
-        
+
         $item = $this->service->update($data, $gift);
-        
+
         if ($item) {
             // Update or create translation
             $translation = GiftTranslation::where('gift_id', $gift->id)
                 ->where('locale', $locale)
                 ->first();
-                
+
             $translationData = [
                 'title' => $request->title,
                 'description' => $request->description,
                 'location' => $request->location,
             ];
-            
+
             if ($translation) {
-                $translation->update(array_filter($translationData, fn($value) => $value !== null));
+                $translation->update(array_filter($translationData, fn ($value) => $value !== null));
             } else {
                 GiftTranslation::create(array_merge([
                     'gift_id' => $gift->id,
                     'locale' => $locale,
-                ], array_filter($translationData, fn($value) => $value !== null)));
+                ], array_filter($translationData, fn ($value) => $value !== null)));
             }
-            
+
             // Handle subcategories
             if ($request->filled('sub_category_ids')) {
                 GiftSubCategory::where('gift_id', $gift->id)->delete();
@@ -186,7 +185,7 @@ class GiftController extends Controller
     }
     public function delete($id)
     {
-        $gift=$this->service->get($id);
+        $gift = $this->service->get($id);
         return response()->apiSuccess($this->service->delete($gift));
     }
 
