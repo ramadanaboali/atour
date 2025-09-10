@@ -18,6 +18,7 @@ use App\Http\Requests\NewEmailRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\ActivationMail;
 use App\Mail\SendCodeResetPassword;
+use App\Models\PendingRegistration;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -63,29 +64,27 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $userInput = [
-            'email' => $request->email,
-            'joining_date_from' => date('Y-m-d'),
+   
+        $pending = PendingRegistration::where('email', $request->email)
+               ->where('is_verified', true)
+               ->first();
+        if (!$pending) {
+            return apiResponse(false, null, __('api.email_not_verified'), null, 400);
+        }
+        $user = User::create([
             'name' => $request->name,
+            'email' => $request->email,
             'phone' => $request->phone,
+            'password' => Hash::make($request->password),
             'code' => $this->generateCode(),
             'status' => 'accepted',
-            'active' => 1,
-            'type' => User::TYPE_CLIENT,
-            'password' => Hash::make($request->password),
-        ];
-        $user = User::where('email', $request->email)->first();
-        if ($user) {
-            $user->update($userInput);
-        } else {
-            $user = User::updateOrCreate(['email' => $request->email], $userInput);
-        }
-
-
-        return $this->successResponse($user, 200);
-
+            'active' => 0,
+            'type' => User::TYPE_CLIENT
+        ]);
+        $pending->delete();
+        return apiResponse(true, $user, __('api.register_success'), null, 200);
     }
-
+   
     private function generateCode()
     {
 
@@ -118,36 +117,35 @@ class AuthController extends Controller
     public function sendOtp(NewEmailRequest $request)
     {
         try {
-            $MsgID = rand(100000, 999999);
-            $data = [
-                'reset_code' => $MsgID,
-                'status' => 'pendding',
-                'active' => false,
-                'type' => User::TYPE_CLIENT,
-            ];
-            $user = User::updateOrCreate(['email' => $request->email], $data);
-            Mail::to($user->email)->send(new ActivationMail($MsgID));
-            return apiResponse(true, [$MsgID], __('api.verification_code'), null, 200);
+            $otp = rand(100000, 999999);
+            PendingRegistration::updateOrCreate(
+                ['email' => $request->email],
+                [
+                        'otp_code' => $otp,
+                        'expires_at' => now()->addMinutes(10),
+                        'is_verified' => false,
+                    ]
+            );
+            Mail::to($request->email)->send(new ActivationMail($otp));
+            return apiResponse(true, [], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, $e->getMessage(), null, 400);
         }
     }
     public function verifyOtp(VerifyRequest $request)
     {
-
         try {
-            $user = User::where('email', $request->email)->orWhere('email', $request->email)->first();
-            if (!$user) {
-                return apiResponse(false, null, __('api.not_found'), null, 404);
+            $pending = PendingRegistration::where('email', $request->email)->first();
+            if (!$pending || $pending->otp_code !== $request->code) {
+                return apiResponse(false, null, __('api.invalid_otp'), null, 400);
             }
-            if ($user->reset_code == $request->code) {
-                $user->reset_code = null;
-                $user->save();
-                return apiResponse(true, $user, __('api.code_success'), null, 200);
+            if ($pending->expires_at < now()) {
+                return apiResponse(false, null, __('api.otp_expired'), null, 400);
             }
-            return apiResponse(false, null, __('api.code_error'), null, 201);
+            $pending->update(['is_verified' => true]);
+            return apiResponse(true, null, __('api.verification_code_success'), null, 200);
         } catch (Exception $e) {
-            return apiResponse(false, null, $e->getMessage(), null, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return apiResponse(false, null, $e->getMessage(), null, 400);
         }
 
     }
