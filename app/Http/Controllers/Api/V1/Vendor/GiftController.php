@@ -59,6 +59,7 @@ class GiftController extends Controller
             'free_cancelation' => $request->free_cancelation,
             'pay_later' => $request->pay_later,
             'city_id' => $request->city_id,
+            'quantity' => $request->quantity??,
             'created_by' => auth()->user()->id,
         ];
         
@@ -125,6 +126,7 @@ class GiftController extends Controller
             'free_cancelation' => $request->free_cancelation ?? $gift->free_cancelation,
             'pay_later' => $request->pay_later ?? $gift->pay_later,
             'city_id' => $request->city_id ?? $gift->city_id,
+            'quantity' => $request->quantity ?? $gift->quantity,
             'updated_by' => auth()->user()->id,
         ];
         
