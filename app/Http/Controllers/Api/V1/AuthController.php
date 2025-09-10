@@ -127,7 +127,7 @@ class AuthController extends Controller
                     ]
             );
             Mail::to($request->email)->send(new ActivationMail($otp));
-            return apiResponse(true, [], __('api.verification_code'), null, 200);
+            return apiResponse(true, [$otp], __('api.verification_code'), null, 200);
         } catch (Exception $e) {
             return apiResponse(false, null, $e->getMessage(), null, 400);
         }
