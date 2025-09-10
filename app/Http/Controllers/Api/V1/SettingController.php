@@ -96,7 +96,7 @@ class SettingController extends Controller
     {
 
 
-        $item = Setting::with(['translations' => function ($q) {
+        $item = Setting::with(['termsTranslations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])->where('key', 'terms')->first();
         if ($item && count($item->translations)>0) {
@@ -110,7 +110,7 @@ class SettingController extends Controller
     {
 
 
-        $item = Setting::with(['translations' => function ($q) {
+        $item = Setting::with(['clientTermsTranslations' => function ($q) {
             $q->where('locale', app()->getLocale());
         }])->where('key', 'client_terms')->first();
         if ($item && count($item->translations)>0) {
@@ -124,12 +124,15 @@ class SettingController extends Controller
     public function privacy()
     {
 
-        if (App::isLocale('en')) {
-            $data = Setting::where('key', 'LIKE', 'privacy_content_en')->value('value');
-        } else {
-            $data = Setting::where('key', 'LIKE', 'privacy_content_ar')->value('value');
+      
+        $item = Setting::with(['privacyTranslations' => function ($q) {
+            $q->where('locale', app()->getLocale());
+        }])->where('key', 'privacy')->first();
+        if ($item && count($item->translations)>0) {
+            $data = $item->translations[0];
+        }else{
+            $data=null;
         }
-
         return apiResponse(true, $data, null, null, 200);
     }
 }
