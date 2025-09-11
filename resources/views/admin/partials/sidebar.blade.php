@@ -33,7 +33,7 @@
                     <li class=" nav-item  {{ request()->routeIs('admin.new_clients.index')?'active':''}}">
                         <a class="d-flex align-items-center" href="{{ route('admin.new_clients.index') }} ">
                             <i data-feather="circle"></i>
-                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.new_clients') }}</span>
+                            <span class="menu-item text-truncate" data-i18n="List">{{ __('admin.clients') }}</span>
                         </a>
                     </li>
                     @endcan

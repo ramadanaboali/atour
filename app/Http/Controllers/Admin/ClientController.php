@@ -190,6 +190,7 @@ class ClientController extends Controller
     public function list(Request $request): JsonResponse
     {
         $data = User::whereNotNull('email')->where(function ($query) use ($request) {
+            // Basic filters
             if ($request->filled('name')) {
                 $query->where('name', 'like', '%'. $request->name .'%');
             }
@@ -209,10 +210,83 @@ class ClientController extends Controller
                 $query->where('active', $request->active);
             }
             if ($request->filled('joining_date')) {
-                $query->where('joining_date_from', $request->joining_date);
+                $query->whereDate('created_at', $request->joining_date);
             }
             if ($request->filled('status')) {
                 $query->where('status', $request->status);
+            }
+
+            // Date filters (today, this week, this month)
+            if ($request->filled('date_filter')) {
+                $now = now();
+                switch ($request->date_filter) {
+                    case 'today':
+                        $query->whereDate('created_at', $now->toDateString());
+                        break;
+                    case 'week':
+                        $query->whereBetween('created_at', [
+                            $now->startOfWeek()->toDateTimeString(),
+                            $now->endOfWeek()->toDateTimeString()
+                        ]);
+                        break;
+                    case 'month':
+                        $query->whereMonth('created_at', $now->month)
+                              ->whereYear('created_at', $now->year);
+                        break;
+                }
+            }
+
+            // Account status filters
+            if ($request->filled('account_status')) {
+                if ($request->account_status === 'activated') {
+                    $query->where('active', 1);
+                } elseif ($request->account_status === 'non_activated') {
+                    $query->where('active', 0);
+                }
+            }
+
+            // Account activity filters
+            if ($request->filled('account_activity')) {
+                // $query->whereHas('orders', function($q) use ($request) {
+                //     if ($request->account_activity === 'with_orders') {
+                //         $q->where('status', '!=', 'cancelled');
+                //     }
+                // }, $request->account_activity === 'with_orders' ? '>=' : '=', 0);
+            }
+
+            // Gender filter
+            if ($request->filled('gender')) {
+                $query->where('gender', $request->gender);
+            }
+
+            // Growth rate filter
+            if ($request->filled('growth_period')) {
+                $days = (int)$request->growth_period;
+                $endDate = now();
+                $startDate = now()->subDays($days);
+                
+                // Calculate the previous period
+                $previousPeriodStart = $startDate->copy()->subDays($days);
+                
+                // Get count of users at the end of the previous period
+                $previousPeriodCount = User::where('created_at', '<=', $previousPeriodStart)
+                    ->where('type', User::TYPE_CLIENT)
+                    ->count();
+                
+                // Get count of new users in the current period
+                $newUsersCount = User::whereBetween('created_at', [$startDate, $endDate])
+                    ->where('type', User::TYPE_CLIENT)
+                    ->count();
+                
+                // Calculate growth rate (prevent division by zero)
+                $growthRate = $previousPeriodCount > 0 
+                    ? ($newUsersCount / $previousPeriodCount) * 100 
+                    : 0;
+                
+                // Store growth rate in session to display in the view
+                session()->flash('growth_rate', number_format($growthRate, 2));
+                session()->flash('growth_period', $days);
+                session()->flash('new_users_count', $newUsersCount);
             }
         })->where('type', User::TYPE_CLIENT)->select('users.*');
         return FacadesDataTables::of($data)
@@ -224,7 +298,7 @@ class ClientController extends Controller
                 return $item->created_at?->format('Y-m-d H:i');
             })
             ->addColumn('order_count', function ($item) {
-                return 0;
+                return $item->orders_count;
             })
             ->editColumn('code', function ($item) {
                 return $item->code ? 'C-'.$item->code : '';

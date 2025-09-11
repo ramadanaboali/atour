@@ -104,4 +104,24 @@ return [
     'notification_message' => 'رسالة الإشعار',
     'notification_will_be_sent_to' => 'سيتم إرسال الإشعار إلى',
     'notification_sent_successfully' => 'تم إرسال الإشعار بنجاح',
+    
+    // Filters
+    'filters' => [
+        'today' => 'اليوم',
+        'this_week' => 'هذا الأسبوع',
+        'this_month' => 'هذا الشهر',
+        'activated' => 'مفعل',
+        'non_activated' => 'غير مفعل',
+        'with_orders' => 'لديه طلبات',
+        'without_orders' => 'لا يوجد طلبات',
+        'male' => 'ذكر',
+        'female' => 'أنثى',
+        'unspecified' => 'غير محدد',
+        'growth_rate' => 'معدل النمو',
+        'weekly_growth' => 'النمو الأسبوعي',
+        'monthly_growth' => 'النمو الشهري',
+        'quarterly_growth' => 'النمو الربع سنوي',
+        'yearly_growth' => 'النمو السنوي',
+        'reset' => 'إعادة تعيين الفلاتر',
+    ],
 ];

@@ -15,17 +15,24 @@
         </div>
     </div>
     <div class="content-header-right text-md-end col-md-6 col-12 d-md-block ">
-        <div class="mb-1 breadcrumb-right">
-            <div class="dropdown">
-                @can('clients.create')
-                <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.clients.create') }}">
-                    <i data-feather="plus"></i>
-                    <span class="active-sorting text-primary">{{ __('clients.actions.create') }}</span>
-                </a>
-                @endcan
-                @include('admin.pages.clients.filter')
-            </div>
-        </div>
+      <div class="mb-1 breadcrumb-right">
+          <div class="dropdown">
+              @can('clients.create')
+              <a class="btn btn-sm btn-outline-primary me-1 waves-effect" href="{{ route('admin.clients.create') }}">
+                  <i data-feather="plus"></i>
+                  <span class="active-sorting text-primary">{{ __('clients.actions.create') }}</span>
+              </a>
+              @endcan
+          </div>
+      </div>
+    </div>
+  
+</div>
+<div class="row card">
+      <div class="card-body col-md-12 col-12 ">
+             
+                @include('admin.pages.clients.filter_buttons')
+        
     </div>
 </div>
 <div class="content-body">
@@ -35,7 +42,8 @@
                 <thead>
                     <tr>
                         <th>{{ __('clients.code') }}</th>
-                        <th>{{ __('clients.image') }}</th>
+                        <th>{{ __('clients.name') }}</th>
+                        <th>{{ __('clients.name') }}</th>
                         <th>{{ __('clients.name') }}</th>
                         <th>{{ __('clients.email') }}</th>
                         <th>{{ __('clients.phone') }}</th>
@@ -43,6 +51,8 @@
                         <th>{{ __('clients.address') }}</th>
                         <th>{{ __('clients.active') }}</th>
                         <th>{{ __('clients.joining_date') }}</th>
+                        <th>{{ __('clients.orders_count') }}</th>
+                        <th>{{ __('clients.orders_count') }}</th>
                         <th>{{ __('clients.orders_count') }}</th>
                         @canany('clients.edit','clients.delete')
                         <th width="15%" class="text-center">{{ __('clients.options') }}</th>
@@ -89,6 +99,23 @@
                 d.city_id = $('#filterForm #city_id').val();
                 d.joining_date = $('#filterForm #joining_date').val();
                 d.active = $('#filterForm #active').val();
+
+                d.status = $('#hiddenstatus').val();
+                d.name = $('#filterForm #name').val();
+                d.email = $('#filterForm #email').val();
+                d.phone = $('#filterForm #phone').val();
+                d.birthdate = $('#filterForm #birthdate').val();
+                d.city_id = $('#filterForm #city_id').val();
+                d.joining_date = $('#filterForm #joining_date').val();
+                d.active = $('#filterForm #active').val();
+                
+                // New filter parameters
+                d.date_filter = $('.btn-date-filter.active').data('period');
+                d.account_status = $('.btn-status-filter.active').data('status');
+                d.account_activity = $('.btn-activity-filter.active').data('activity');
+                d.gender = $('.btn-gender-filter.active').data('gender');
+                d.growth_period = $('.growth-rate-filter.active').data('period');
+            
             }
         }
         , drawCallback: function(settings) {
@@ -96,55 +123,37 @@
         }
         , columns: [
             /*{data: 'DT_RowIndex', name: 'DT_RowIndex'},*/
+           { data: 'code', name: 'code' },
+            { data: 'name', name: 'name' },
+            { data: 'phone', name: 'phone' },
+            { data: 'email', name: 'email' },
+            { data: 'gender', name: 'gender' },
+            { data: 'nationality', name: 'nationality' },
+            { data: 'birthdate', name: 'birthdate' },
+            { data: 'active', name: 'active' },
+            { data: 'joining_date', name: 'joining_date' },
+            { data: 'last_login', name: 'last_login' },
+            { 
+                data: 'order_count', 
+                name: 'order_count',
+                orderable: false,
+                searchable: false
+            },
+            { 
+                data: 'order_count', 
+                name: 'order_count',
+                orderable: false,
+                searchable: false
+            },
+            { data: 'update_at', name: 'update_at' },
+            @canany('clients.edit', 'clients.delete')
             {
-                data: 'code'
-                , name: 'code'
+                data: 'actions',
+                name: 'actions',
+                orderable: false,
+                searchable: false
             }
-            , {
-                data: 'photo'
-                , name: 'photo'
-            }
-            , {
-                data: 'name'
-                , name: 'name'
-            }
-            , {
-                data: 'email'
-                , name: 'email'
-            }
-            , {
-                data: 'phone'
-                , name: 'phone'
-            }
-            , {
-                data: 'birthdate'
-                , name: 'birthdate'
-            }
-            , {
-                data: 'address'
-                , name: 'address'
-            }
-            , {
-                data: 'active'
-                , name: 'active'
-            }
-            , {
-                data: 'joining_date'
-                , name: 'joining_date'
-            }
-            , {
-                data: 'order_count'
-                , name: 'order_count'
-                , orderable: false
-                , searchable: false
-            }
-            , @canany('clients.edit', 'clients.delete') {
-                data: 'actions'
-                , name: 'actions'
-                , orderable: false
-                , searchable: false
-            }
-            , @endcanany
+            @endcanany
         ]
         , columnDefs: [
 
@@ -200,7 +209,79 @@
             @endcanany
         ]
     });
+    // Handle date filter buttons
+    $('.btn-date-filter').on('click', function() {
+        $('.btn-date-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        // Remove other active filters
+        $('.btn-status-filter, .btn-activity-filter, .btn-gender-filter, .growth-rate-filter').removeClass('active');
+        
+        dt_ajax.DataTable().ajax.reload();
+    });
+    
+    // Handle status filter buttons
+    $('.btn-status-filter').on('click', function() {
+        $('.btn-status-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        // Remove other active filters
+        $('.btn-date-filter, .btn-activity-filter, .btn-gender-filter, .growth-rate-filter').removeClass('active');
+        
+        dt_ajax.DataTable().ajax.reload();
+    });
+    
+    // Handle activity filter buttons
+    $('.btn-activity-filter').on('click', function() {
+        $('.btn-activity-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        // Remove other active filters
+        $('.btn-date-filter, .btn-status-filter, .btn-gender-filter, .growth-rate-filter').removeClass('active');
+        
+        dt_ajax.DataTable().ajax.reload();
+    });
+    
+    // Handle gender filter buttons
+    $('.btn-gender-filter').on('click', function() {
+        $('.btn-gender-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        // Remove other active filters
+        $('.btn-date-filter, .btn-status-filter, .btn-activity-filter, .growth-rate-filter').removeClass('active');
+        
+        dt_ajax.DataTable().ajax.reload();
+    });
+    
+    // Handle growth rate filter
+    $('.growth-rate-filter').on('click', function(e) {
+        e.preventDefault();
+        $('.growth-rate-filter').removeClass('active');
+        $(this).addClass('active');
+        
+        // Remove other active filters
+        $('.btn-date-filter, .btn-status-filter, .btn-activity-filter, .btn-gender-filter').removeClass('active');
+        
+        dt_ajax.DataTable().ajax.reload();
+    });
+    
+    // Reset all filters
+    $('#resetFilters').on('click', function() {
+        // Remove active class from all filter buttons
+        $('.btn-date-filter, .btn-status-filter, .btn-activity-filter, .btn-gender-filter, .growth-rate-filter').removeClass('active');
+        
+        // Clear any date range pickers or other inputs if needed
+        $('.flatpickr-basic').val('');
+        
+        // Reload the table without filters
+        dt_ajax.DataTable().ajax.reload();
+    });
+  
+    // Handle the advanced filter form submission
     $('.btn_filter').click(function() {
+        // Remove any active filter buttons when using the advanced filter
+        $('.btn-date-filter, .btn-status-filter, .btn-activity-filter, .btn-gender-filter, .growth-rate-filter').removeClass('active');
+        
         dt_ajax.DataTable().ajax.reload();
     });
   

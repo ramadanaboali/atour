@@ -1,7 +1,7 @@
-<button type="button" class="btn btn-sm btn-outline-primary bg-white me-1 waves-effect border-0" type="button" data-bs-toggle="modal" data-bs-target="#filterModal">
-    <i data-feather='zoom-in'></i>
+
+<button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#filterModal">
+    <i data-feather='filter'></i>
     <span class="active-sorting text-primary">{{ __('clients.advanced_filter') }}</span>
-    <i data-feather='chevron-left'></i>
 </button>
 <div class="modal modal-slide-in fade" id="filterModal">
     <div class="modal-dialog sidebar-sm">

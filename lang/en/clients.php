@@ -101,4 +101,24 @@ return [
     'notification_message' => 'Notification Message',
     'notification_will_be_sent_to' => 'Notification will be sent to',
     'notification_sent_successfully' => 'Notification sent successfully',
+    
+    // Filters
+    'filters' => [
+        'today' => 'Today',
+        'this_week' => 'This Week',
+        'this_month' => 'This Month',
+        'activated' => 'Activated',
+        'non_activated' => 'Non-Activated',
+        'with_orders' => 'With Orders',
+        'without_orders' => 'Without Orders',
+        'male' => 'Male',
+        'female' => 'Female',
+        'unspecified' => 'Unspecified',
+        'growth_rate' => 'Growth Rate',
+        'weekly_growth' => 'Weekly Growth',
+        'monthly_growth' => 'Monthly Growth',
+        'quarterly_growth' => 'Quarterly Growth',
+        'yearly_growth' => 'Yearly Growth',
+        'reset' => 'Reset Filters',
+    ],
 ];
